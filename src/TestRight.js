@@ -1,4 +1,4 @@
-require('../../mootools-node');
+require('mootools');
 
 
 module.exports = function(driver) {
