@@ -8,13 +8,13 @@ module.exports = function(TR) {
 		},
 		
 		open: function open() {
-			this.loginPage.toSeleniumElement().click();
+			this.loginPage.click();
 		},
 		
 		login: function login(email, password) {
-			this.email.toSeleniumElement().sendKeys(email);
-			this.password.toSeleniumElement().sendKeys(password);
-			this.loginSubmit.toSeleniumElement().click();
+			this.email = email;
+			this.password = password;
+			this.loginSubmit.click();
 		}
 	});
 }
