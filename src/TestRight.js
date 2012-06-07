@@ -1,9 +1,8 @@
 require('mootools');
 
 
-module.exports = function(driver) {
-	return {
-		Widget: require('./model/Widget')(driver),
-		Feature: require('./model/Feature')
-	}
+module.exports = {
+	Widget:		require('./model/Widget'),
+	Feature:	require('./model/Feature'),
+	Runner:		require('./controller/Runner')
 }

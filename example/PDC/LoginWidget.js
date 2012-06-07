@@ -1,4 +1,4 @@
-module.exports = function(TR) {
+module.exports = function(TR, driver) {
 	return new TR.Widget("login", {
 		elements: {
 			email:		{ id: "login_email" },
@@ -16,5 +16,5 @@ module.exports = function(TR) {
 			this.password = password;
 			this.loginSubmit.click();
 		}
-	});
+	}, driver);
 }

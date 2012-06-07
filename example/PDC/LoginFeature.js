@@ -1,5 +1,5 @@
 module.exports = function(TR, driver) {
-	var loginWidget = require('./LoginWidget')(TR);
+	var loginWidget = require('./LoginWidget')(TR, driver);
 	
 	return new TR.Feature("A user should be able to log in", function(callback) {
 		loginWidget.open();
