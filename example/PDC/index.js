@@ -12,26 +12,28 @@ driver.get(config.baseURL)
 
 
 var TR = require('../../src/TestRight.js')(driver);
-var loginWidget = require('./LoginWidget')(TR);
 
-driver.get(config.baseURL).then(function() {
+var loginFeature = require('./LoginFeature')(TR, driver);
+
+var displayResults = function displayResults(succeeded) {
+	if (succeeded) {
+		console.log('✔ ' + loginFeature.description);
+		growl('Success!');
+	} else {
+		console.log('✘ ' + loginFeature.description + ' fails');
+		growl('Fail!', { priority: 4 });
+	}
+}
+
+var evaluateFeature = function evaluateFeature(feature) {
 	try {
-		loginWidget.open();
-		loginWidget.login('toto@toto.com', 'tototo');
-		
-		driver.getTitle().then(function(title) {
-			if (title.contains("Polytech'Move")) {
-				console.log(loginWidget.name + ' works');
-				growl('Success!');
-			} else {
-				console.log(loginWidget.name + ' fails');
-				growl('Fail!', { priority: 4 });
-			}
-		});
+		feature.test(displayResults);
 	} catch (error) {
 		growl('Crash!\n' + error, { priority: 4 });
 		throw error;
 	} finally {
 		driver.quit();
 	}
-});
+}
+
+driver.get(config.baseURL).then(evaluateFeature.bind(this, loginFeature));
