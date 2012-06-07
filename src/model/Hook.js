@@ -1,12 +1,32 @@
 var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver');
 
 
+/** Adds a getter and a setter to the given Object, allowing access to the Selenium element corresponding to the given hook description.
+* The getter dynamically retrieves the Selenium element pointed at by the given selector description.
+* The setter will pass the value to the Hook.handleInput method.
+*
+*@param	target	The Object to which the getter and setter will be added.
+*@param	key	The name of the property to add to the target object.
+*@param	typeAndSelector	A hook descriptor, as defined in the Hook constructor.
+*@param	driver	The WebDriver instance in which the described elements are to be sought.
+*
+*@see	Hook
+*@see	Hook#handleInput
+*/
+exports.addHook = function addHook(target, key, typeAndSelector, driver) {
+	var hook = new Hook(typeAndSelector, driver);
+	target.__defineGetter__(key, hook.toSeleniumElement.bind(hook));
+	target.__defineSetter__(key, hook.handleInput.bind(hook));
+}
+
+
 /** A Hook allows one to target a specific element on a web page.
 * It is a wrapper around both a selector and its type (css, xpath, id…).
 *
 *@param	hook	A single value-pair hash whose key may be one of `css`, `id`, or any other value of Selenium's `By` class; and whose value must be a string of the matching form.
+*@param	driver	The WebDriver instance in which the described elements are to be sought.
 */
-module.exports = function Hook(hook, driver) {
+var Hook = function Hook(hook, driver) {
 	this.type = Object.getOwnPropertyNames(hook)[0];
 	this.selector = hook[this.type];
 	

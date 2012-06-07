@@ -15,9 +15,7 @@ module.exports = function widgetInitWithinDriver(driver) { // TODO: improve this
 			this.name = name;
 			
 			Object.each(values.elements, function(typeAndSelector, key) {
-				var hook = new Hook(typeAndSelector, driver);
-				this.__defineGetter__(key, hook.toSeleniumElement.bind(hook));
-				this.__defineSetter__(key, hook.handleInput.bind(hook));
+				Hook.addHook(this, key, typeAndSelector, driver);
 			}, this);
 			
 			delete values.elements;
