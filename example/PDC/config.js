@@ -1,16 +1,13 @@
-var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver');
-
-
-exports.driver = new webdriver.Builder()
-	.usingServer('http://localhost:4444/wd/hub')
-	.withCapabilities({
-		'browserName': 'chrome',
-		'version': '',
-		'platform': 'ANY',
-		'javascriptEnabled': true,
-		'chrome.binary': '/Applications/Browsers/Google Chrome.app/Contents/MacOS/Google Chrome',
-		'firefox_binary': '/Applications/Browsers/Firefox.app/Contents/MacOS/firefox',
-	}).build()
-
-exports.baseURL = 'http://pdc.refedd.org/';
+module.exports = {
+	baseURL: 'http://pdc.refedd.org/', //TODO: add environments support (production / dev…)
+	
+	driverCapabilities: {
+		browserName: 'firefox',
+		version: '',
+		platform: 'ANY',
+		javascriptEnabled: true,
+		firefox_binary: '/Applications/Browsers/Firefox-headless.app/Contents/MacOS/firefox',
+		'chrome.binary': '/Applications/Browsers/Google Chrome.app/Contents/MacOS/Google Chrome'
+	}
+}
 	
