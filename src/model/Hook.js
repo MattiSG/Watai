@@ -19,4 +19,13 @@ module.exports = function Hook(hook, driver) {
 	this.toSeleniumElement = function toSeleniumElement() {
 		return this.driver.findElement(webdriver.By[this.type](this.selector)); //TODO: cache?
 	}
+	
+	/** Sends the given sequence of keystrokes to the element pointed by this hook.
+	*
+	*@param	input	A string that will be sent to this element.
+	*@see	http://seleniumhq.org/docs/03_webdriver.html#sendKeys
+	*/
+	this.handleInput = function handleInput(input) {
+		this.toSeleniumElement().sendKeys(input);
+	}
 }
