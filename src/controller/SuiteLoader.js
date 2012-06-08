@@ -63,12 +63,15 @@ module.exports = new Class({
 			throw err;
 		}
 		
+		var featureFiles = []; 
 		files.forEach(function(file) {
 			if (file.contains(this.paths.featureMarker))
-				this.loadFeature(this.path + file);
+				featureFiles.push(this.path + file);
 			else if (file.contains(this.paths.widgetMarker))
 				this.loadWidget(this.path + file);
 		}, this);
+		
+		featureFiles.forEach(this.loadFeature.bind(this));
 	},
 	
 	/**
