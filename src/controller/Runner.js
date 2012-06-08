@@ -25,7 +25,7 @@ module.exports = new Class({
 	*@param	feature	A Feature for this Runner to evaluate.
 	*/
 	addFeature: function addFeature(feature) {
-		this.features.push(feature);
+		this.features.unshift(feature);
 	},
 	
 	/** Returns the WebDriver instance this Runner created for the current run.
