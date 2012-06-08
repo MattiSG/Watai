@@ -37,6 +37,11 @@ module.exports = new Class({
 	handleFeatureResult: function handleFeatureResult(feature, succeeded) {
 		console.log((succeeded ? '✔' : '✘') + '	' + feature.description);
 		
+		this.currentFeature++;
+		
+		if (this.currentFeature < this.features.length)
+			this.evaluateFeature(this.features[this.currentFeature]);
+		
 		if (! succeeded)
 			this.failed = true;
 	},
@@ -54,11 +59,11 @@ module.exports = new Class({
 	
 	run: function run() {
 		this.failed = false;
+		this.currentFeature = 0;
 
-		var runner = this;		
+		var runner = this;
 		this.driver.get(this.config.baseURL).then(function() {
-			for (var i = 0; i < runner.features.length; i++)
-				runner.evaluateFeature(runner.features[i]);
+			runner.evaluateFeature(runner.features[0]);
 		});
 	}
 });
