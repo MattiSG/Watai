@@ -2,24 +2,29 @@ module.exports = function(TR, driver) {
 	var toolbar = require('./ToolbarWidget')(TR, driver),
 		manager = require('./NameEditorWidget')(TR, driver);
 		
-	var newName = 'Totok';
+	var newName = 'Totoka';
 	
 	return new TR.Feature("A user should be able to change his name", function(assert) {
 		toolbar.editUser();
 		
 		var works = true;
 
-		var oldName = manager.username.value;
-		manager.setUsername(newName);
+		var oldName;
 		
-		if (manager.username.value != newName)
-			works = false;
+		manager.getUsername().then(function(value) {
+			oldName = value;
 			
-		manager.setUsername(oldName);
-
-		if (manager.username.value != oldName)
-			works = false;
-		
-		assert(works);
+			manager.setUsername(newName).then(function() {
+				manager.getUsername().then(function(newVal) { 
+					assert(newVal == newName)
+				}).then(function() {
+					manager.setUsername(oldName).then(function() {
+						manager.getUsername().then(function(nextVal) {
+							assert(nextVal == oldName);
+						});
+					});
+				});
+			});
+		});
 	});
 }

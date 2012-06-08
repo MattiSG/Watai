@@ -6,9 +6,14 @@ module.exports = function(TR, driver) {
 			username:		{ id: 'profile_display_name' }
 		},
 		
+		getUsername: function getUsername() {
+			return this.username.getAttribute('value');
+		},
+		
 		setUsername: function setUsername(newName) {
+			this.username.clear();
 			this.username = newName;
-			this.username.submit();
+			return this.username.submit();
 		}
 	}, driver);
 }
