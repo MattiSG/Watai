@@ -19,7 +19,10 @@ module.exports = new Class({
 		config: 'config.js',
 		/** If a file contains this string, it is considered as a feature description to be loaded.
 		*/
-		featureMarker: 'Feature.js'
+		featureMarker: 'Feature.js',
+		/** If a file contains this string, it is considered as a widget description to be loaded.
+		*/
+		widgetMarker: 'Widget.js'
 	},
 	
 	/** Will be set to the name of the loaded test suite.
@@ -63,6 +66,8 @@ module.exports = new Class({
 		files.forEach(function(file) {
 			if (file.contains(this.paths.featureMarker))
 				this.loadFeature(this.path + file);
+			else if (file.contains(this.paths.widgetMarker))
+				this.loadWidget(this.path + file);
 		}, this);
 	},
 	
@@ -73,6 +78,15 @@ module.exports = new Class({
 	*/
 	loadFeature: function loadFeature(featureFile) {
 		this.runner.addFeature(require(featureFile)(TR, this.runner.getDriver()));
+	},
+	
+	/**
+	*@param	widgetFile	Path to a widget description file. See examples to see how such a file should be written.
+	*
+	*@see	#loadAllFiles
+	*/
+	loadWidget: function loadWidget(widgetFile) {
+		GLOBAL[pathsUtils.basename(widgetFile, '.js')] = require(widgetFile)(TR, this.runner.getDriver());
 	},
 	
 	/** Asks the underlying Runner instance to execute all tests.
