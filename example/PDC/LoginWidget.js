@@ -1,10 +1,10 @@
 module.exports = function(TR, driver) {
-	return new TR.Widget("login", {
+	return new TR.Widget('login', {
 		elements: {
-			email:		{ id: "login_email" },
-			password:	{ id: "login_password" },
-			loginSubmit:{ xpath: "//input[@type='submit'][1]" },
-			loginPage:	{ linkText: "Connexion" }
+			email:		{ id: 'login_email' },
+			password:	{ id: 'login_password' },
+			loginSubmit:{ xpath: '//input[@type="submit"][1]' },
+			loginPage:	{ linkText: 'Connexion' }
 		},
 		
 		open: function open() {
