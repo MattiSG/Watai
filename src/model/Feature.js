@@ -55,15 +55,10 @@ module.exports = new Class({
 				matchesLeft = Object.getLength(hooksVals);
 
 			Object.each(hooksVals, function(expected, attribute) {
-				console.log('[DEBUG] Evaluating attribute: ' + attribute);
-
 				eval(attribute).getText().then(function(actual) { //TODO: replace eval with an object walker
-					console.log('[DEBUG] Callback assert for: ' + attribute + ' expected: ' + expected);
-					
-					assert.equal(expected, actual, attribute + ' was "' + actual + '" instead of "' + expected + '"');
-					
-					//TODO: call reject() if fail
-					
+					if (expected != actual)
+						evaluator.reject(attribute + ' was "' + actual + '" instead of "' + expected + '"');
+						
 					if (--matchesLeft == 0)
 						evaluator.resolve();
 				});
@@ -79,15 +74,30 @@ module.exports = new Class({
 		var deferred = promises.defer(),
 			stepIndex = 0;
 		
-		var evaluateNext;
+		var evaluateNext,
+			failureReasons = [];
+		
+		var handleFailure = function handleFailure(message) {
+			failureReasons.push(message);
+			evaluateNext();
+		}
 		
 		evaluateNext = (function(value) {
-			if (stepIndex == this.steps.length)
-				return deferred.resolve(true);
+			if (stepIndex == this.steps.length) {
+				if (failureReasons.length == 0)
+					return deferred.resolve();
+				else
+					return deferred.reject(failureReasons.join('\n'));
+			}
 			
-			promises.when(this.steps[stepIndex](),
-						  evaluateNext,
-						  deferred.reject);
+			try {
+				promises.when(this.steps[stepIndex](),
+							  evaluateNext,
+							  handleFailure);
+			} catch (error) {
+				handleFailure(error);
+			}
+			
 			stepIndex++;
 		}).bind(this);
 		

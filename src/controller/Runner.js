@@ -34,26 +34,29 @@ module.exports = new Class({
 		return this.driver;
 	},
 	
-	handleFeatureResult: function handleFeatureResult(feature, succeeded) {
-		console.log((succeeded === true ? '✔' : '✘') + '	' + feature.description);
+	handleFeatureResult: function handleFeatureResult(feature, message) {
+		console.log((message === true ? '✔' : '✘') + '	' + feature.description);
+
+		if (message !== true) {
+			console.log('	' + message);
+			this.failed = true;
+		}
 		
 		this.currentFeature++;
-		
+				
 		if (this.currentFeature < this.features.length)
 			this.evaluateFeature(this.features[this.currentFeature]);
-		
-		if (! succeeded)
-			this.failed = true;
+		else
+			this.driver.quit();
 	},
 	
 	evaluateFeature: function evaluateFeature(feature) {
 		try {
-			feature.test().then(this.handleFeatureResult.bind(this, feature));
+			feature.test().then(this.handleFeatureResult.bind(this, feature, true),
+								this.handleFeatureResult.bind(this, feature)); // leave last arg to pass failure description
 		} catch (error) {
 			growl('Error!\n' + error, { priority: 4 });
 			throw error;
-		} finally {
-			this.driver.quit();
 		}
 	},
 	
