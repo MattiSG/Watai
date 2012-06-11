@@ -3,6 +3,8 @@ var fs = require('fs'),
 
 var TR = require('../TestRight')();
 
+var VERBOSE = false;
+
 
 /** A SuiteLoader handles all test description files loading and Runner setup.
 * A test description folder should contain a `config.js` file, and any number of feature (`*Feature.js`) and widget (`*Widget.js`) description files.
@@ -42,7 +44,7 @@ module.exports = new Class({
 		try {
 			config = require(this.path + this.paths.config);
 		} catch (error) {
-			console.log('No configuration file (' + this.paths.config + ') found in "' + this.path + '"!');
+			console.log('No loadable configuration file (' + this.paths.config + ') in "' + this.path + '"!');
 			throw error;
 		}
 		
@@ -80,6 +82,8 @@ module.exports = new Class({
 	*@see	#loadAllFiles
 	*/
 	loadFeature: function loadFeature(featureFile) {
+		if (VERBOSE)
+			console.log('+ loaded ' + featureFile)
 		this.runner.addFeature(require(featureFile)(TR, this.runner.getDriver()));
 	},
 	
@@ -89,6 +93,8 @@ module.exports = new Class({
 	*@see	#loadAllFiles
 	*/
 	loadWidget: function loadWidget(widgetFile) {
+		if (VERBOSE)
+			console.log('- loaded ' + widgetFile);
 		GLOBAL[pathsUtils.basename(widgetFile, '.js')] = require(widgetFile)(TR, this.runner.getDriver());
 	},
 	
