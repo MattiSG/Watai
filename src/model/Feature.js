@@ -1,4 +1,4 @@
-var promises = require('node-promise'),
+var promises = require('q'),
 	assert = require('assert');
 
 
