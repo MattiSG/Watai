@@ -1,6 +1,8 @@
 var Hook = require('./Hook');
 
 
+var VERBOSE = true;
+
 /** A Widget models a set of controls on a website.
 */
 module.exports = new Class({
@@ -13,14 +15,20 @@ module.exports = new Class({
 	initialize: function init(name, values, driver) {
 		this.name = name;
 		
+		var widget = this;
+		
 		Object.each(values.elements, function(typeAndSelector, key) {
-			Hook.addHook(this, key, typeAndSelector, driver);
-		}, this);
+			Hook.addHook(widget, key, typeAndSelector, driver);
+		});
 		
 		delete values.elements;
 		
 		Object.each(values, function(method, key) {
-			this[key] = method.bind(this); //TODO: handle elements overloading
-		}, this);
+			widget[key] = function() {
+				if (VERBOSE)
+					console.log('	Widget "' + name + '" did ' + key);
+				method.apply(widget, arguments); //TODO: handle elements overloading
+			}
+		});
 	}
 });
