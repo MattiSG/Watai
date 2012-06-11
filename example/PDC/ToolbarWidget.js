@@ -7,11 +7,11 @@ module.exports = function(TR, driver) {
 		},
 		
 		logout: function() {
-			this.logoutLink.click();
+			return this.logoutLink.click();
 		},
 		
 		editUser: function() {
-			this.editUserLink.click();
+			return this.editUserLink.click();
 		}
 	}, driver);
 }

@@ -8,13 +8,13 @@ module.exports = function(TR, driver) {
 		},
 		
 		open: function open() {
-			this.loginPage.click();
+			return this.loginPage.click();
 		},
 		
 		login: function login(email, password) {
 			this.email = email;
 			this.password = password;
-			this.loginSubmit.click();
+			return this.loginSubmit.click();
 		}
 	}, driver);
 }
