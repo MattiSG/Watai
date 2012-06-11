@@ -3,11 +3,11 @@ module.exports = function(TR, driver) {
 		newName = 'Totoka';
 	
 	return new TR.Feature("A user should be able to change his name", [
-		ToolbarWidget.editUser,
-		{ 'ToolbarWidget.username': '1' },
+		ToolbarWidget.editUser.bind(ToolbarWidget),
+		{ 'ToolbarWidget.username': oldName },
 		NameEditorWidget.setUsername.bind(NameEditorWidget, newName),
-		{ 'ToolbarWidget.username': '2' },
+		{ 'ToolbarWidget.username': newName },
 		NameEditorWidget.setUsername.bind(NameEditorWidget, oldName),
-		{ 'ToolbarWidget.username': '3' }
+		{ 'ToolbarWidget.username': oldName }
 	]);
 }
