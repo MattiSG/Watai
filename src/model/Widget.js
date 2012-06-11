@@ -11,6 +11,7 @@ module.exports = new Class({
 	*@param	values	A hash with the following form:
 	*	`elements`: a hash mapping attribute names to a hook. A hook is a one-pair hash mapping a selector type to an actual selector.
 	*	a series of methods definitions, i.e. `name: function name(…) { … }`, that will be made available
+	*@param	driver	The WebDriver instance in which this widget should look for its elements.
 	*/
 	initialize: function init(name, values, driver) {
 		this.name = name;
