@@ -30,26 +30,40 @@ module.exports = new Class({
 	},
 	
 	loadScenario: function loadScenario(scenario) {
-		scenario.forEach(function(step) {
-			this.steps.push(this.promiseStep(step));
-		}, this);
-	},
-	
-	promiseStep: function promiseStep(step) {
-		switch (typeOf(step)) {
-			case 'function':
-				return step;
-			case 'object':
-				return this.constructMatchAssertion(step);
-			default:
-				throw 'Unknown description step in feature "' + this.description + '": ' + step;
+		for (var stepIndex = 0; stepIndex < scenario.length; stepIndex++) {
+			var step = scenario[stepIndex]; // takes all values listed in a scenario
+			var promiseCreator; // a function that will return a promise
+			
+			switch (typeOf(step)) {
+				case 'function':
+					var nextStep = scenario[stepIndex + 1];
+					if (typeOf(nextStep) == 'array') {
+						console.log('funcdef over two steps: ' + step + ' **** ' +  nextStep);
+						var tmp = nextStep.concat();
+						promiseCreator = function() {
+							console.log('dafuq?');
+							return step.apply(null, tmp);
+						}
+						stepIndex++;
+					} else {
+						promiseCreator = step;
+					}
+					break;
+				case 'object':
+					promiseCreator = this.buildAssertionPromise(step);
+					break;
+				default:
+					throw 'Unknown description step in feature "' + this.description + '": ' + step;
+			}
+			
+			this.steps.push(promiseCreator);
 		}
 	},
 	
 	/**
 	*@param	hooksVals	A hash whose keys match some widgets' attributes, pointing at values that are expected values for those attributes.
 	*/
-	constructMatchAssertion: function constructMatchAssertion(hooksVals) {
+	buildAssertionPromise: function buildAssertionPromise(hooksVals) {
 		return function() {
 			var evaluator = promises.defer(),
 				matchesLeft = Object.getLength(hooksVals);
