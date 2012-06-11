@@ -50,23 +50,49 @@ module.exports = new Class({
 	*@param	hooksVals	A hash whose keys match some widgets' attributes, pointing at values that are expected values for those attributes.
 	*/
 	constructMatchAssertion: function constructMatchAssertion(hooksVals) {
-		var evaluators = Object.map(hooksVals, function(expected, attribute) {
-			console.log('for: ' + attribute + ' expected: ' + expected);
-			return eval(attribute).getText().then(function(actual) { //TODO: replace eval with an object walker
-				assert.equal(expected, actual, attribute + ' was "' + actual + '" instead of "' + expected + '"');
-				
-				//DEBUGGING HERE: symptom: `expected` is shared, not updated properly. Always maps to '1'.
-				
-				
+		return function() {
+			var evaluator = promises.defer(),
+				matchesLeft = Object.getLength(hooksVals);
+
+			Object.each(hooksVals, function(expected, attribute) {
+				console.log('[DEBUG] Evaluating attribute: ' + attribute);
+
+				eval(attribute).getText().then(function(actual) { //TODO: replace eval with an object walker
+					console.log('[DEBUG] Callback assert for: ' + attribute + ' expected: ' + expected);
+					
+					assert.equal(expected, actual, attribute + ' was "' + actual + '" instead of "' + expected + '"');
+					
+					//TODO: call reject() if fail
+					
+					if (--matchesLeft == 0)
+						evaluator.resolve();
+				});
 			});
-		});
-		
-		return promises.all.bind(promises, Object.values(evaluators));
+			
+			return evaluator.promise;
+		}
 	},
 	
 	/** Evaluate this feature.
 	*/
-	test: function evaluate(callback) {
-		promises.seq(this.steps).then(callback);
+	test: function evaluate() {
+		var deferred = promises.defer(),
+			stepIndex = 0;
+		
+		var evaluateNext;
+		
+		evaluateNext = (function(value) {
+			if (stepIndex == this.steps.length)
+				return deferred.resolve(true);
+			
+			promises.when(this.steps[stepIndex](),
+						  evaluateNext,
+						  deferred.reject);
+			stepIndex++;
+		}).bind(this);
+		
+		evaluateNext();
+		
+		return deferred.promise;
 	}
 });

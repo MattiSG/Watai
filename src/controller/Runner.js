@@ -35,7 +35,7 @@ module.exports = new Class({
 	},
 	
 	handleFeatureResult: function handleFeatureResult(feature, succeeded) {
-		console.log((succeeded ? '✔' : '✘') + '	' + feature.description);
+		console.log((succeeded === true ? '✔' : '✘') + '	' + feature.description);
 		
 		this.currentFeature++;
 		
@@ -48,7 +48,7 @@ module.exports = new Class({
 	
 	evaluateFeature: function evaluateFeature(feature) {
 		try {
-			feature.test(this.handleFeatureResult.bind(this, feature));
+			feature.test().then(this.handleFeatureResult.bind(this, feature));
 		} catch (error) {
 			growl('Error!\n' + error, { priority: 4 });
 			throw error;
