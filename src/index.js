@@ -23,7 +23,7 @@ main(args);
 /** The CLI takes paths to test description folders as arguments.
 * Any number of paths may be given.
 *
-*@param	{Array.<String>}	This **function**, as opposed to the CLI, takes in an array of paths. The CLI takes varargs.
+*@param	{Array.<String>}	folders	This **function**, as opposed to the CLI, takes in an array of paths. The CLI takes varargs.
 *
 *@see	SuiteLoader
 */

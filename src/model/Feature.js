@@ -34,9 +34,10 @@ var Feature = new Class({
 	
 	/** Parses an array that describes states and transitions and transforms it into a sequence of promises to be evaluated.
 	*
-	*@private
 	*@param		{Array}	scenario	An array that describes states and transitions. See class documentation for formatting.
 	*@returns	{Array.<function>}	An array of promises representing the given scenario.
+	*
+	*@private
 	*/
 	loadScenario: function loadScenario(scenario) {
 		var result = [];

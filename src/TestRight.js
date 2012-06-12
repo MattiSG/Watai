@@ -6,6 +6,7 @@ var MooTools = require('mootools');
 /** This flag triggers various detailed logging operations across all classes.
 * Set it to `true` when debugging.
 *
+*@constant
 *@type	{boolean}
 */
 var VERBOSE = false;

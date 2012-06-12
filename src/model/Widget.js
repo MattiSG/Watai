@@ -32,4 +32,4 @@ var Widget = new Class({
 	}
 });
 
-module.exports = Widget;
+module.exports = Widget;	// CommonJS export
