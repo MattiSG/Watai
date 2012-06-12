@@ -16,25 +16,44 @@ var promises = require('q'),
 */
 var Feature = new Class({
 	/** A sequence of promises to be executed in order, constructed after the scenario for this feature.
+	*
+	*@private
 	*/
 	steps: [],
 	
 	/**
-	*@param	description	A plaintext description of the feature, advised to be written in a BDD fashion.
-	*@param	scenario	An array that describes states and transitions.
+	*
+	*@param	{String}	description	A plaintext description of the feature, advised to be written in a BDD fashion.
+	*@param	{Array}		scenario	An array that describes states and transitions. See class documentation for formatting.
 	*/
 	initialize: function init(description, scenario) {
 		this.description = description;
 		
-		this.loadScenario(scenario);
+		this.steps = this.loadScenario(scenario);
 	},
 	
+	/** Parses an array that describes states and transitions and transforms it into a sequence of promises to be evaluated.
+	*
+	*@private
+	*@param		{Array}	scenario	An array that describes states and transitions. See class documentation for formatting.
+	*@returns	{Array.<function>}	An array of promises representing the given scenario.
+	*/
 	loadScenario: function loadScenario(scenario) {
+		var result = [];
+		
 		scenario.forEach(function(step) {
-			this.steps.push(this.promiseStep(step));
+			result.push(this.promiseStep(step));
 		}, this);
+		
+		return result;
 	},
 	
+	/** Parses a scenario step and returns the corresponding promise.
+	*
+	*@private
+	*@param		{function|object}	step	Either a widget method or an object describing a widget state.
+	*@returns	{function}	A closure returing an evaluatable promise for an asynchronous action.
+	*/
 	promiseStep: function promiseStep(step) {
 		switch (typeOf(step)) {
 			case 'function':
@@ -46,8 +65,13 @@ var Feature = new Class({
 		}
 	},
 	
-	/**
-	*@param	hooksVals	A hash whose keys match some widgets' attributes, pointing at values that are expected values for those attributes.
+	/** Parses a widget state description and creates an assertive closure returning the promise for assertions results upon evaluation.
+	*
+	*@private
+	*@param		{Object}	hooksVals	A hash whose keys match some widgets' attributes, pointing at values that are expected values for those attributes.
+	*@returns	{function}	A parameter-less closure asserting the described state and returning a promise that will be either:
+	*	- rejected if any assertion fails, passing a string parameter that describes the first failed match;
+	*	- resolved if all assertions pass, with no parameter.
 	*/
 	constructMatchAssertion: function constructMatchAssertion(hooksVals) {
 		return function() {
@@ -68,7 +92,11 @@ var Feature = new Class({
 		}
 	},
 	
-	/** Evaluate this feature.
+	/** Asynchronously evaluates the scenario given to this feature.
+	*
+	*@returns	{Promise}	A promise that will be either:
+	*	- rejected if any assertion or action fails, passing an array of strings that describe reason(s) for failure(s) (one reason per item in the array);
+	*	- resolved if all assertions pass, with no parameter.
 	*/
 	test: function evaluate() {
 		var deferred = promises.defer(),
@@ -87,7 +115,7 @@ var Feature = new Class({
 				if (failureReasons.length == 0)
 					return deferred.resolve();
 				else
-					return deferred.reject(failureReasons.join('\n'));
+					return deferred.reject(failureReasons);
 			}
 			
 			try {
