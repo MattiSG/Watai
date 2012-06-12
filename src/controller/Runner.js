@@ -1,8 +1,9 @@
 var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver');
 var growl = require('growl');
 
-
-module.exports = new Class({
+/**@class Runs all features and manages the driver in which they are run.
+*/
+var Runner = new Class({
 	/** Whether any test did fail during the current run or not.
 	*/
 	failed: false,
@@ -70,3 +71,5 @@ module.exports = new Class({
 		});
 	}
 });
+
+module.exports = Runner;

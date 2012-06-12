@@ -6,12 +6,12 @@ var TR = require('../TestRight')();
 var VERBOSE = false;
 
 
-/** A SuiteLoader handles all test description files loading and Runner setup.
+/**@class A SuiteLoader handles all test description files loading and Runner setup.
 * A test description folder should contain a `config.js` file, and any number of feature (`*Feature.js`) and widget (`*Widget.js`) description files.
 *
 * _Since we're currently in high-speed iterative development, hence without formal documentation, see the `example` folder for more information on how to write such files._
 */
-module.exports = new Class({
+var SuiteLoader = new Class({
 	/** Defines all naming patterns conventions for test description folders.
 	* Used for magical autoload.
 	*/
@@ -108,3 +108,5 @@ module.exports = new Class({
 		this.runner.run();
 	}
 });
+
+module.exports = SuiteLoader;

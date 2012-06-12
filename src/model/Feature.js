@@ -2,7 +2,7 @@ var promises = require('q'),
 	assert = require('assert');
 
 
-/** A Feature models a sequence of actions to be executed through Widgets.
+/**@class	A Feature models a sequence of actions to be executed through Widgets.
 * 
 * A feature description file contains a simple descriptive array listing widget methods to execute and widget state descriptors to assert.
 * More formally, such an array is ordered and its members may be:
@@ -14,7 +14,7 @@ var promises = require('q'),
 * - a widget state descripting hash maps each of its members to an assertion inside a promise, evaluating all of them completely asynchronously.
 * All those promises are then evaluated sequentially upon calling the `test` method of a Feature.
 */
-module.exports = new Class({
+var Feature = new Class({
 	/** A sequence of promises to be executed in order, constructed after the scenario for this feature.
 	*/
 	steps: [],
@@ -106,3 +106,6 @@ module.exports = new Class({
 		return deferred.promise;
 	}
 });
+
+
+module.exports = Feature;	// CommonJS export
