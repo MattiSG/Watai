@@ -3,8 +3,6 @@ var fs = require('fs'),
 
 var TR = require('../TestRight')();
 
-var VERBOSE = false;
-
 
 /**@class A SuiteLoader handles all test description files loading and Runner setup.
 * A test description folder should contain a `config.js` file, and any number of feature (`*Feature.js`) and widget (`*Widget.js`) description files.

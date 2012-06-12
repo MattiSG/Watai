@@ -1,10 +1,6 @@
 var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver');
 
 
-/** This variable specifies whether accesses and modifications applied to elements pointed by hooks should be logged.
-*/
-var VERBOSE = false;
-
 /** Adds a getter and a setter to the given Object, allowing access to the Selenium element corresponding to the given hook description.
 * The getter dynamically retrieves the Selenium element pointed at by the given selector description.
 * The setter will pass the value to the Hook.handleInput method.

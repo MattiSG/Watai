@@ -1,8 +1,6 @@
 var Hook = require('./Hook');
 
 
-var VERBOSE = false;
-
 /**@class A Widget models a set of controls on a website.
 */
 var Widget = new Class({
