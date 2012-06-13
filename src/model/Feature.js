@@ -35,7 +35,6 @@ var Feature = new Class({
 	*
 	*@param		{Array}	scenario	An array that describes states and transitions. See class documentation for formatting.
 	*@returns	{Array.<function>}	An array of promises representing the given scenario.
-	*
 	*@private
 	*/
 	loadScenario: function loadScenario(scenario) {
@@ -65,6 +64,13 @@ var Feature = new Class({
 		return result;
 	},
 	
+	/** Normalizes an operational closure (i.e. a function that modifies a widget's state) to a format compatible with scenario steps execution.
+	*
+	*@param	{Function}	func	The raw function to execute.
+	*@param	{Array}		params	Parameters to bind to this function.
+	*@returns	{Function}	A bound function, ready for execution as a step.
+	*@private
+	*/
 	buildFunctionalPromise: function buildFunctionalPromise(func, params) {
 		return func.apply.bind(func, null, params);	//TODO: handle errors like `func` not being a function
 	},
