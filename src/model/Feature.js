@@ -16,7 +16,6 @@ var promises = require('q'),
 */
 var Feature = new Class({
 	/** A sequence of promises to be executed in order, constructed after the scenario for this feature.
-	*
 	*@private
 	*/
 	steps: [],
@@ -40,6 +39,8 @@ var Feature = new Class({
 	*@private
 	*/
 	loadScenario: function loadScenario(scenario) {
+		var result = [];
+		
 		for (var stepIndex = 0; stepIndex < scenario.length; stepIndex++) {
 			var step = scenario[stepIndex]; // takes all values listed in a scenario
 			var promiseCreator; // a function that will return a promise
@@ -48,12 +49,7 @@ var Feature = new Class({
 				case 'function':
 					var nextStep = scenario[stepIndex + 1];
 					if (typeOf(nextStep) == 'array') {
-						console.log('funcdef over two steps: ' + step + ' **** ' +  nextStep);
-						var tmp = nextStep.concat();
-						promiseCreator = function() {
-							console.log('dafuq?');
-							return step.apply(null, tmp);
-						}
+						promiseCreator = this.buildFunctionalPromise(step, nextStep);
 						stepIndex++;
 					} else {
 						promiseCreator = step;
@@ -66,8 +62,14 @@ var Feature = new Class({
 					throw 'Unknown description step in feature "' + this.description + '": ' + step;
 			}
 			
-			this.steps.push(promiseCreator);
+			result.push(promiseCreator);
 		}
+		
+		return result;
+	},
+	
+	buildFunctionalPromise: function buildFunctionalPromise(func, params) {
+		return func.apply.bind(func, null, params);
 	},
 	
 	/** Parses a widget state description and creates an assertive closure returning the promise for assertions results upon evaluation.
