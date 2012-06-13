@@ -5,9 +5,9 @@ module.exports = function(TR, driver) {
 	return new TR.Feature("A user should be able to change his name", [
 		ToolbarWidget.editUser,
 		{ 'ToolbarWidget.username': oldName },
-		NameEditorWidget.setUsername, [newName],
+		NameEditorWidget.setUsername, newName,
 		{ 'ToolbarWidget.username': newName },
-		NameEditorWidget.setUsername, [oldName],
+		NameEditorWidget.setUsername, oldName,
 		{ 'ToolbarWidget.username': oldName }
 	]);
 }

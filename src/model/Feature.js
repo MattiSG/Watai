@@ -47,19 +47,16 @@ var Feature = new Class({
 			
 			switch (typeOf(step)) {
 				case 'function':
-					var nextStep = scenario[stepIndex + 1];
-					if (typeOf(nextStep) == 'array') {
-						promiseCreator = this.buildFunctionalPromise(step, nextStep);
-						stepIndex++;
-					} else {
-						promiseCreator = step;
-					}
+					promiseCreator = step;
 					break;
 				case 'object':
 					promiseCreator = this.buildAssertionPromise(step);
 					break;
-				default:
-					throw 'Unknown description step in feature "' + this.description + '": ' + step;
+				default:	// any other value type will be considered a parameter to the previous function
+							// if you need to pass objects or functions as parameters, just embed them in arrays
+							// arrays will be unwrapped as a list of parameters
+					promiseCreator = this.buildFunctionalPromise(result.pop(),
+																 typeOf(step) == 'array' ? step : [ step ]);
 			}
 			
 			result.push(promiseCreator);
@@ -69,7 +66,7 @@ var Feature = new Class({
 	},
 	
 	buildFunctionalPromise: function buildFunctionalPromise(func, params) {
-		return func.apply.bind(func, null, params);
+		return func.apply.bind(func, null, params);	//TODO: handle errors like `func` not being a function
 	},
 	
 	/** Parses a widget state description and creates an assertive closure returning the promise for assertions results upon evaluation.
