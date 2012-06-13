@@ -2,7 +2,7 @@ var promises = require('q'),
 	assert = require('assert');
 
 
-/** A Feature models a sequence of actions to be executed through Widgets.
+/**@class	A Feature models a sequence of actions to be executed through Widgets.
 * 
 * A feature description file contains a simple descriptive array listing widget methods to execute and widget state descriptors to assert.
 * More formally, such an array is ordered and its members may be:
@@ -14,21 +14,31 @@ var promises = require('q'),
 * - a widget state descripting hash maps each of its members to an assertion inside a promise, evaluating all of them completely asynchronously.
 * All those promises are then evaluated sequentially upon calling the `test` method of a Feature.
 */
-module.exports = new Class({
+var Feature = new Class({
 	/** A sequence of promises to be executed in order, constructed after the scenario for this feature.
+	*
+	*@private
 	*/
 	steps: [],
 	
 	/**
-	*@param	description	A plaintext description of the feature, advised to be written in a BDD fashion.
-	*@param	scenario	An array that describes states and transitions.
+	*
+	*@param	{String}	description	A plaintext description of the feature, advised to be written in a BDD fashion.
+	*@param	{Array}		scenario	An array that describes states and transitions. See class documentation for formatting.
 	*/
 	initialize: function init(description, scenario) {
 		this.description = description;
 		
-		this.loadScenario(scenario);
+		this.steps = this.loadScenario(scenario);
 	},
 	
+	/** Parses an array that describes states and transitions and transforms it into a sequence of promises to be evaluated.
+	*
+	*@param		{Array}	scenario	An array that describes states and transitions. See class documentation for formatting.
+	*@returns	{Array.<function>}	An array of promises representing the given scenario.
+	*
+	*@private
+	*/
 	loadScenario: function loadScenario(scenario) {
 		for (var stepIndex = 0; stepIndex < scenario.length; stepIndex++) {
 			var step = scenario[stepIndex]; // takes all values listed in a scenario
@@ -60,8 +70,13 @@ module.exports = new Class({
 		}
 	},
 	
-	/**
-	*@param	hooksVals	A hash whose keys match some widgets' attributes, pointing at values that are expected values for those attributes.
+	/** Parses a widget state description and creates an assertive closure returning the promise for assertions results upon evaluation.
+	*
+	*@private
+	*@param		{Object}	hooksVals	A hash whose keys match some widgets' attributes, pointing at values that are expected values for those attributes.
+	*@returns	{function}	A parameter-less closure asserting the described state and returning a promise that will be either:
+	*	- rejected if any assertion fails, passing a string parameter that describes the first failed match;
+	*	- resolved if all assertions pass, with no parameter.
 	*/
 	buildAssertionPromise: function buildAssertionPromise(hooksVals) {
 		return function() {
@@ -82,7 +97,11 @@ module.exports = new Class({
 		}
 	},
 	
-	/** Evaluate this feature.
+	/** Asynchronously evaluates the scenario given to this feature.
+	*
+	*@returns	{Promise}	A promise that will be either:
+	*	- rejected if any assertion or action fails, passing an array of strings that describe reason(s) for failure(s) (one reason per item in the array);
+	*	- resolved if all assertions pass, with no parameter.
 	*/
 	test: function evaluate() {
 		var deferred = promises.defer(),
@@ -101,7 +120,7 @@ module.exports = new Class({
 				if (failureReasons.length == 0)
 					return deferred.resolve();
 				else
-					return deferred.reject(failureReasons.join('\n'));
+					return deferred.reject(failureReasons);
 			}
 			
 			try {
@@ -120,3 +139,6 @@ module.exports = new Class({
 		return deferred.promise;
 	}
 });
+
+
+module.exports = Feature;	// CommonJS export

@@ -1,11 +1,9 @@
 var Hook = require('./Hook');
 
 
-var VERBOSE = false;
-
-/** A Widget models a set of controls on a website.
+/**@class A Widget models a set of controls on a website.
 */
-module.exports = new Class({
+var Widget = new Class({
 	/**
 	*@param	name	Name of this widget.
 	*@param	values	A hash with the following form:
@@ -33,3 +31,5 @@ module.exports = new Class({
 		});
 	}
 });
+
+module.exports = Widget;	// CommonJS export

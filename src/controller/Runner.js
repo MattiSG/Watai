@@ -1,17 +1,43 @@
-var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver');
-var growl = require('growl');
+var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver'),
+	growl = require('growl');
 
 
-module.exports = new Class({
+/**@class Manages a set of features and the driver in which they are run.
+*
+* A `Runner` is mostly set up through a configuration object.
+* Such an object should contain the following items:
+*	- `baseURL`: the URL at which the driver should start;
+*	- `driverCapabilities`: an object that will be passed straight to the WebDriver instance.
+*
+* The chosen implementation for WebDriver is the [official WebDriverJS](https://code.google.com/p/selenium/wiki/WebDriverJs) by the Selenium team. Make sure you use this module and not one of the other implementations, since this code has not been tested with any other.
+*/
+var Runner = new Class({
 	/** Whether any test did fail during the current run or not.
+	*@type	{boolean}
+	*@private
 	*/
 	failed: false,
+	
+	/** The list of all features to evaluate with this configuration.
+	*@type	{Array.<Feature>}
+	*@private
+	*/
+	features: [],
+	
+	/** Index of the currently evaluated feature.
+	*@type	{integer}
+	*@private
+	*/
+	currentFeature: 0,
 
-	/**
+	/** A runner is set up by passing it a configuration object.
+	*
+	*@param	{Object}	config	A configuration object, as defined above.
+	*
+	*@see	WebDriver.Builder#withCapabilities
 	*/
 	initialize: function init(config) {
 		this.config = config;
-		this.features = [];
 		
 		this.driver = new webdriver.Builder()
 						.usingServer('http://localhost:4444/wd/hub')
@@ -21,35 +47,45 @@ module.exports = new Class({
 		DRIVER = this.driver;
 	},
 	
-	/**
-	*@param	feature	A Feature for this Runner to evaluate.
+	/** Adds the given Feature to the list of those that this Runner will evaluate.
+	*
+	*@param	{Feature}	feature	A Feature for this Runner to evaluate.
+	*@returns	This Runner, for chaining.
 	*/
 	addFeature: function addFeature(feature) {
 		this.features.unshift(feature);
+		return this;
 	},
 	
 	/** Returns the WebDriver instance this Runner created for the current run.
+	*
+	*@returns	WebDriver
 	*/
 	getDriver: function getDriver() {
 		return this.driver;
 	},
 	
-	handleFeatureResult: function handleFeatureResult(feature, message) {
-		console.log((message === true ? '✔' : '✘') + '	' + feature.description);
+	/** Starts evaluation of all features added to this Runner.
+	*
+	*@returns	{Runner}	This Runner, for chainability.
+	*/
+	//TODO: should return a promise for results
+	run: function run() {
+		this.failed = false;
+		this.currentFeature = 0;
 
-		if (message !== true) {
-			console.log('	' + message);
-			this.failed = true;
-		}
+		var runner = this;
+		this.driver.get(this.config.baseURL).then(function() {
+			runner.evaluateFeature(runner.features[0]);
+		});
 		
-		this.currentFeature++;
-				
-		if (this.currentFeature < this.features.length)
-			this.evaluateFeature(this.features[this.currentFeature]);
-		else
-			this.driver.quit();
+		return this;
 	},
 	
+	/** Prepares and triggers the evaluation of the given feature.
+	*
+	*@private
+	*/
 	evaluateFeature: function evaluateFeature(feature) {
 		try {
 			feature.test().then(this.handleFeatureResult.bind(this, feature, true),
@@ -60,13 +96,36 @@ module.exports = new Class({
 		}
 	},
 	
-	run: function run() {
-		this.failed = false;
-		this.currentFeature = 0;
+	/** Callback handler upon feature evaluation.
+	* Displays result, errors if there were any, and calls the `postFeature` handler.
+	*
+	*@private
+	*
+	*@see	#postFeature
+	*/
+	handleFeatureResult: function handleFeatureResult(feature, message) {
+		console.log((message === true ? '✔' : '✘') + '	' + feature.description);
 
-		var runner = this;
-		this.driver.get(this.config.baseURL).then(function() {
-			runner.evaluateFeature(runner.features[0]);
-		});
+		if (message !== true) {
+			console.log('	' + message);
+			this.failed = true;
+		}
+		
+		this.postFeature();
+	},
+	
+	/** Increments the feature index, starts evaluation of the next feature, and quits the driver if all features were evaluated.
+	*
+	*@private
+	*/
+	postFeature: function postFeature() {
+		this.currentFeature++;
+		
+		if (this.currentFeature < this.features.length)
+			this.evaluateFeature(this.features[this.currentFeature]);
+		else
+			this.driver.quit();
 	}
 });
+
+module.exports = Runner;	// CommonJS export
