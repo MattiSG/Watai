@@ -1,8 +1,10 @@
-module.exports = function(TR, driver) {
-	return new TR.Feature("A user should be able to log in", [
+{
+	description: 'A user should be able to log in',
+	
+	scenario: [
 		LoginWidget.open,
-		LoginWidget.login, ['toto@toto.com', 'tototo'],
+		LoginWidget.login, [email, password],
 		
-		{ 'ToolbarWidget.username': 'Totok' }
-	]);
+		{ 'ToolbarWidget.username': oldName }
+	]
 }

@@ -1,0 +1,2 @@
+oldName = 'Totok'
+newName = 'Totoka'
