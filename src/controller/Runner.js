@@ -93,6 +93,7 @@ var Runner = new Class({
 		} catch (error) {
 			growl('Error!\n' + error, { priority: 4 });
 			throw error;
+			driver.quit();
 		}
 	},
 	
