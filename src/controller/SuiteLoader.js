@@ -117,7 +117,7 @@ var SuiteLoader = new Class({
 	loadData: function loadData(dataFile) {
 		if (VERBOSE)
 			console.log('~ loading ' + dataFile);
-
+		
 		vm.runInContext(fs.readFileSync(dataFile),
 						this.context);
 						
@@ -136,8 +136,9 @@ var SuiteLoader = new Class({
 			console.log('- loading ' + widgetFile);
 		
 		var widgetName = pathsUtils.basename(widgetFile, '.js');
+		
 		vm.runInContext('var ' + widgetName + ' = '
-						+ 'new Widget(' + widgetName + ','
+						+ 'new Widget("' + widgetName + '",'
 						+ fs.readFileSync(widgetFile) + ','
 						+ 'driver)',
 						this.context);
