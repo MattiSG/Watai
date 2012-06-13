@@ -9,7 +9,7 @@ var MooTools = require('mootools');
 *@constant
 *@type	{boolean}
 */
-var VERBOSE = false;
+var VERBOSE = true;
 GLOBAL.VERBOSE = VERBOSE;	// export flag
 
 /**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
@@ -26,14 +26,11 @@ GLOBAL.VERBOSE = VERBOSE;	// export flag
 *
 *Embedded as a function to avoid problems with cyclic references (modules in this namespace that need access to other classes). 
 */
-//TODO: make sure this cyclic refs problem can't be solved with direct inclusion instead of using this delayed evaluation trick
-var TestRight = function() {
-	return {
-		Widget:		require('./model/Widget'),
-		Feature:	require('./model/Feature'),
-		Runner:		require('./controller/Runner'),
-		SuiteLoader:require('./controller/SuiteLoader')
-	}
+var TestRight = {
+	Widget:		require('./model/Widget'),
+	Feature:	require('./model/Feature'),
+	Runner:		require('./controller/Runner'),
+	SuiteLoader:require('./controller/SuiteLoader')
 }
 
 module.exports = TestRight;	// CommonJS export

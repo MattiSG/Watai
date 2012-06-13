@@ -1,4 +1,4 @@
-var TR = require('./TestRight')();
+var TR = require('./TestRight');
 
 
 // =========================== //

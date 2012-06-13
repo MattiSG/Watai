@@ -1,7 +1,10 @@
 var fs = require('fs'),
-	pathsUtils = require('path');
+	pathsUtils = require('path'),
+	vm = require('vm');
 
-var TR = require('../TestRight')();
+var Widget = require('../model/Widget'),
+	Feature = require('../model/Feature'),
+	Runner = require('./Runner');
 
 
 /**@class A SuiteLoader handles all test description files loading and Runner setup.
@@ -23,10 +26,13 @@ var SuiteLoader = new Class({
 		config: 'config.js',
 		/** If a file contains this string, it is considered as a feature description to be loaded.
 		*/
-		featureMarker: 'Feature.js',
+		featureMarker:	'Feature.js',
 		/** If a file contains this string, it is considered as a widget description to be loaded.
 		*/
-		widgetMarker: 'Widget.js'
+		widgetMarker:	'Widget.js',
+		/** If a file contains this string, it is considered as a data suite to be loaded.
+		*/
+		dataMarker:		'Data.js'
 	},
 	
 	/** Will be set to the name of the loaded test suite.
@@ -39,6 +45,17 @@ var SuiteLoader = new Class({
 	*@private
 	*/
 	runner: null,
+	
+	/** Sandbox for features, widgets and data load.
+	* Will always offer the `driver` magical variable to give access to the WebDriver instance in user code.
+	*
+	*@type	VM
+	*@see	
+	*@private
+	*/
+	context: null,
+	
+	features: [],
 	
 	/** Creates a new `Runner` based on the given configuration, and initiates Widgets and Features parsing.
 	*
@@ -57,7 +74,13 @@ var SuiteLoader = new Class({
 			throw error;
 		}
 		
-		this.runner = new TR.Runner(config);
+		this.runner = new Runner(config);
+		this.context = vm.createContext({
+			driver: this.runner.getDriver(),
+			Widget: Widget,
+			Feature: Feature,
+			__features__: this.features
+		});
 		
 		fs.readdir(this.path, this.loadAllFiles.bind(this));
 	},
@@ -76,33 +99,32 @@ var SuiteLoader = new Class({
 			throw err;
 		}
 		
-		var featureFiles = []; 
+		var featureFiles = [],
+			widgetFiles = [];
 		files.forEach(function(file) {
-			if (file.contains(this.paths.featureMarker))
-				featureFiles.push(this.path + file);
+			if (file.contains(this.paths.dataMarker))
+				this.loadData(this.path + file);
 			else if (file.contains(this.paths.widgetMarker))
-				this.loadWidget(this.path + file);
+				widgetFiles.push(this.path + file);	// we don't load them immediately in order to make referenced data values available first
+			else if (file.contains(this.paths.featureMarker))
+				featureFiles.push(this.path + file);	// we don't load them immediately in order to make referenced widgets available first
 		}, this);
 		
+		widgetFiles.forEach(this.loadWidget.bind(this));		
 		featureFiles.forEach(this.loadFeature.bind(this));
 	},
 	
-	/** Loads the given file as a feature file into this SuiteLoader's underlying runner.
-	*
-	*@param	featureFile	Path to a feature description file. See examples to see how such a file should be written.
-	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
-	*
-	*@see	#loadAllFiles
-	*/
-	loadFeature: function loadFeature(featureFile) {
+	loadData: function loadData(dataFile) {
 		if (VERBOSE)
-			console.log('+ loaded ' + featureFile)
-		this.runner.addFeature(require(featureFile)(TR, this.runner.getDriver()));
-		
+			console.log('~ loading ' + dataFile);
+
+		vm.runInContext(fs.readFileSync(dataFile),
+						this.context);
+						
 		return this;
 	},
 	
-	/** Loads the given file as a widget file into the global namespace.
+	/** Loads the given file as a widget globally into this Loader's managed namespace.
 	*
 	*@param	widgetFile	Path to a widget description file. See examples to see how such a file should be written.
 	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
@@ -111,8 +133,36 @@ var SuiteLoader = new Class({
 	*/
 	loadWidget: function loadWidget(widgetFile) {
 		if (VERBOSE)
-			console.log('- loaded ' + widgetFile);
-		GLOBAL[pathsUtils.basename(widgetFile, '.js')] = require(widgetFile)(TR, this.runner.getDriver());
+			console.log('- loading ' + widgetFile);
+		
+		var widgetName = pathsUtils.basename(widgetFile, '.js');
+		vm.runInContext('var ' + widgetName + ' = '
+						+ 'new Widget(' + widgetName + ','
+						+ fs.readFileSync(widgetFile) + ','
+						+ 'driver)',
+						this.context);
+		
+		return this;
+	},
+	
+	/** Loads the given file as a feature into this SuiteLoader's underlying runner.
+	*
+	*@param	featureFile	Path to a feature description file. See examples to see how such a file should be written.
+	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
+	*
+	*@see	#loadAllFiles
+	*/
+	loadFeature: function loadFeature(featureFile) {
+		if (VERBOSE)
+			console.log('+ loading ' + featureFile);
+
+		vm.runInContext('var featureContents = ' + fs.readFileSync(featureFile) + ';'
+						+ '__features__.push(new Feature('
+						+								 'featureContents.description,'
+						+								 'featureContents.scenario));',
+						this.context);
+		
+		this.runner.addFeature(this.features.pop());
 		
 		return this;
 	},
