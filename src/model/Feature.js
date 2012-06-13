@@ -42,23 +42,21 @@ var Feature = new Class({
 		
 		for (var stepIndex = 0; stepIndex < scenario.length; stepIndex++) {
 			var step = scenario[stepIndex]; // takes all values listed in a scenario
-			var promiseCreator; // a function that will return a promise
 			
-			switch (typeOf(step)) {
-				case 'function':
-					promiseCreator = step;
-					break;
-				case 'object':
-					promiseCreator = this.buildAssertionPromise(step);
-					break;
-				default:	// any other value type will be considered a parameter to the previous function
-							// if you need to pass objects or functions as parameters, just embed them in arrays
-							// arrays will be unwrapped as a list of parameters
-					promiseCreator = this.buildFunctionalPromise(result.pop(),
-																 typeOf(step) == 'array' ? step : [ step ]);
-			}
-			
-			result.push(promiseCreator);
+			/* So, this is going to be a bit hard. Stay with me  ;)
+			 * Scenarios are loaded in a different context, absolutely clean by default (see SuiteLoader).
+			 * Therefore, steps in the scenario are clean of any protoype augmentation.
+			 * MooTools, for example, allows proper type introspection through prototype augmentation. This is not usable here.
+			 * But we still need to do introspection to offer proper heuristics. Tricks to achieve this are below.
+			 */
+			result.push(	step instanceof Function ?
+							step
+						  : typeof step == 'object' && step.length >= 0 ?	// an Array have a length property, not an Object; as a consequence, `length` is a reserved property for state description hashes
+						    this.buildFunctionalPromise(result.pop(), step)
+						  : typeof step == 'object' ?
+						    this.buildAssertionPromise(step) // if this is a Hash, it is a description value
+						  : this.buildFunctionalPromise(result.pop(), [ step ])	// default: this is a primitive value, we normalize it by wrapping
+						);
 		}
 		
 		return result;
