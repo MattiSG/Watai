@@ -2,7 +2,7 @@ var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javasc
 
 
 /**@class	A Hook allows one to target a specific element on a web page.
-* It is a wrapper around both a selector and its type (css, xpath, id…).
+* It is a wrapper around both a selector and its type (css, xpath, id‚Ä¶).
 *
 *@param	hook	A single value-pair hash whose key may be one of `css`, `id`, or any other value of Selenium's `By` class; and whose value must be a string of the matching form.
 *@param	driver	The WebDriver instance in which the described elements are to be sought.

@@ -1,5 +1,5 @@
 module.exports = {
-	baseURL: 'http://pdc.refedd.org/', //TODO: add environments support (production / dev…)
+	baseURL: 'http://pdc.refedd.org/', //TODO: add environments support (production / dev‚Ä¶)
 	
 	driverCapabilities: {
 		browserName: 'firefox',
