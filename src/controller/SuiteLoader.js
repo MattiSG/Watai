@@ -10,9 +10,11 @@ var Widget = require('../model/Widget'),
 /**@class A SuiteLoader handles all test description files loading and Runner setup.
 * A test description folder should contain a `config.js` file, and any number of feature (`*Feature.js`) and widget (`*Widget.js`) description files.
 *
-* Features will be loaded in an internally-managed Runner, and Widgets will be made available in the global namespace.
-*
 * _Since we're currently in high-speed iterative development, hence without formal documentation, see the `example` folder for more information on how to write such files._
+*
+* Features will be loaded in an internally-managed Runner, and all Widgets, Features and datasets will be made available in an internally-managed VM context (i.e. every definition is made in isolation).
+*
+*@see	http://nodejs.org/api/vm.html
 */
 var SuiteLoader = new Class({
 	/** Defines all naming patterns conventions for test description folders.
@@ -75,11 +77,14 @@ var SuiteLoader = new Class({
 		}
 		
 		this.runner = new Runner(config);
-		this.context = vm.createContext({
-			driver: this.runner.getDriver(),
+		this.context = vm.createContext({	// items listed in this hash will be made available globally to loaded widgets and features
+			// used for instanciation
 			Widget: Widget,
 			Feature: Feature,
-			__features__: this.features
+			// making it available for global access like loading URLs, getting title…
+			driver: this.runner.getDriver(),
+			// hook to pass instanciated features to this context
+			__features__: this.features	
 		});
 		
 		fs.readdir(this.path, this.loadAllFiles.bind(this));
@@ -105,15 +110,22 @@ var SuiteLoader = new Class({
 			if (file.contains(this.paths.dataMarker))
 				this.loadData(this.path + file);
 			else if (file.contains(this.paths.widgetMarker))
-				widgetFiles.push(this.path + file);	// we don't load them immediately in order to make referenced data values available first
+				widgetFiles.push(this.path + file);	// don't load them immediately in order to make referenced data values available first
 			else if (file.contains(this.paths.featureMarker))
-				featureFiles.push(this.path + file);	// we don't load them immediately in order to make referenced widgets available first
+				featureFiles.push(this.path + file);	// don't load them immediately in order to make referenced widgets available first
 		}, this);
 		
 		widgetFiles.forEach(this.loadWidget.bind(this));		
 		featureFiles.forEach(this.loadFeature.bind(this));
 	},
 	
+	/** Loads the given definitions globally into this Loader's managed namespace.
+	*
+	*@param	dataFile	Path to a data description file. This is simply a list of variable definitions.
+	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
+	*
+	*@see	#loadAllFiles
+	*/
 	loadData: function loadData(dataFile) {
 		if (VERBOSE)
 			console.log('~ loading ' + dataFile);
@@ -174,7 +186,7 @@ var SuiteLoader = new Class({
 	*/
 	run: function run() {
 		var underline = '';
-		this.name.length.times(function() { underline += '-' });
+		this.name.length.times(function() { underline += '-' });	//TODO: remove trailing slashes from printed names
 		console.log(this.name + '\n' + underline);
 		
 		this.runner.run();
