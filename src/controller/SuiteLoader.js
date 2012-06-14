@@ -171,7 +171,8 @@ var SuiteLoader = new Class({
 							this.context,
 							LOG_FILE);
 		} catch (error) {
-			throw('Syntax error in file "' + dataFile + '"');
+			console.error('**Error in file "' + dataFile + '"**');
+			throw error;
 		}
 						
 		return this;
@@ -199,7 +200,8 @@ var SuiteLoader = new Class({
 							this.context,
 							LOG_FILE);
 		} catch (error) {
-			throw('Syntax error in file "' + widgetFile + '"');
+			console.error('**Error in file "' + widgetFile + '"**');
+			throw error;
 		}
 		
 		return this;
@@ -226,7 +228,8 @@ var SuiteLoader = new Class({
 							this.context,
 							LOG_FILE);
 		} catch (error) {
-			throw('Syntax error in file "' + featureFile + '"');
+			console.error('**Error in file "' + featureFile + '"**');
+			throw error;
 		}
 		
 		this.runner.addFeature(this.features.pop());
