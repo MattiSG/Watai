@@ -20,7 +20,7 @@ GLOBAL.VERBOSE = VERBOSE;	// export flag
 *@constant
 *@type	{String}
 */
-var LOG_FILE = 'log/VM.log';
+var LOG_FILE = 'log/vm.log';
 GLOBAL.LOG_FILE = LOG_FILE;	// export value
 
 /**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
