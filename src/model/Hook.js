@@ -29,7 +29,9 @@ var Hook = function Hook(hook, driver) {
 	*@private
 	*/
 	this.handleInput = function handleInput(input) {
-		this.toSeleniumElement().sendKeys(input);
+		var elm = this.toSeleniumElement();
+		elm.clear();
+		elm.sendKeys(input);
 	}
 }
 
@@ -56,7 +58,7 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	target.__defineSetter__(key, function(input) {
 		if (VERBOSE)
 			console.log('	- set ' + target.name + '’s ' + key + ' to “' + input + '”');
-
+		
 		hook.handleInput(input);
 	});
 }

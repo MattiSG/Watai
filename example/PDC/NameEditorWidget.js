@@ -8,7 +8,6 @@
 	},
 	
 	setUsername: function setUsername(newName) {
-		this.username.clear();
 		this.username = newName;
 		return this.username.submit();
 	}
