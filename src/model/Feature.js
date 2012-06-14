@@ -20,10 +20,18 @@ var Feature = new Class({
 	*/
 	steps: [],
 	
-	/**
+	/** A hash with all widgets accessible to this Feature, indexed on their names.
+	*@type	{Object.<String, Widget>}
+	*@see	Widget
+	*@private
+	*/
+	widgets: {},
+	
+	/** 
 	*
 	*@param	{String}	description	A plaintext description of the feature, advised to be written in a BDD fashion.
 	*@param	{Array}		scenario	An array that describes states and transitions. See class documentation for formatting.
+	*@param	{Object.<String, Widget>}	widgets	A hash listing all widgets accessible to this Feature, indexed on their names.
 	*/
 	initialize: function init(description, scenario, widgets) {
 		this.description = description;
@@ -84,7 +92,8 @@ var Feature = new Class({
 	*	- resolved if all assertions pass, with no parameter.
 	*/
 	buildAssertionPromise: function buildAssertionPromise(hooksVals) {
-		var widgets = this.widgets;
+		var widgets = this.widgets;	// making the closure complete for later evaluation
+		
 		return function() {
 			var evaluator = promises.defer(),
 				matchesLeft = Object.getLength(hooksVals);

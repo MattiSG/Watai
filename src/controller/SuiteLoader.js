@@ -37,6 +37,22 @@ var SuiteLoader = new Class({
 		dataMarker:		'Data.js'
 	},
 	
+	/** Lists all predefined globals in the suite loading context, and how they are referenced in that context.
+	*
+	*@constant
+	*/
+	contextGlobals: {
+		/** A hash containing all loaded widgets, indexed on their name.
+		*/
+		widgetsList:	'__widgets__',
+		/** An array containing all features, in their loading order.
+		*/
+		featuresList:	'__features__',
+		/** The name of the offered logging function.
+		*/
+		logger:			'log'
+	},
+	
 	/** Will be set to the name of the loaded test suite.
 	*@private
 	*/
@@ -57,22 +73,11 @@ var SuiteLoader = new Class({
 	*/
 	context: null,
 	
-	/** Defines all “magic” globals defined in the suite loading context.
+	/** List of all loaded features.
+	* This array will act as a bridge between this execution context and the loading context: upon loading (in a different context), features are referenced inside this array, hence making them available in _this_ context.
 	*
-	*@constant
+	*@private
 	*/
-	contextGlobals: {
-		/** A hash containing all loaded widgets, indexed on their name.
-		*/
-		widgetsList:	'__widgets__',
-		/** An array containing all features, in their loading order.
-		*/
-		featuresList:	'__features__',
-		/** The name of the offered logging function.
-		*/
-		logger:			'log'
-	},
-	
 	features: [],
 	
 	/** Creates a new `Runner` based on the given configuration, and initiates Widgets and Features parsing.
