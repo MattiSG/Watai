@@ -49,13 +49,13 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	var hook = new Hook(typeAndSelector, driver);
 	target.__defineGetter__(key, function() {
 		if (VERBOSE)
-			console.log((target.name || '') + ' accessed ' + key);
+			console.log('	' + (target.name || '') + ' accessed ' + key);
 			
 		return hook.toSeleniumElement(hook);
 	});
 	target.__defineSetter__(key, function(input) {
 		if (VERBOSE)
-			console.log((target.name || '') + ' set ' + key + ' to "' + input + '"');
+			console.log('	' + (target.name || '') + ' set ' + key + ' to "' + input + '"');
 
 		hook.handleInput(input);
 	});
