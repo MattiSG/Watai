@@ -166,9 +166,13 @@ var SuiteLoader = new Class({
 		if (VERBOSE)
 			console.log('~ loading ' + dataFile);
 		
-		vm.runInContext(fs.readFileSync(dataFile),
-						this.context,
-						LOG_FILE);
+		try {
+			vm.runInContext(fs.readFileSync(dataFile),
+							this.context,
+							LOG_FILE);
+		} catch (error) {
+			throw('Syntax error in file "' + dataFile + '"');
+		}
 						
 		return this;
 	},
@@ -186,13 +190,17 @@ var SuiteLoader = new Class({
 		
 		var widgetName = pathsUtils.basename(widgetFile, '.js');
 		
-		vm.runInContext(widgetName + ' = '
-						+ '__widgets__["' + widgetName + '"] = '
-						+ 'new Widget("' + widgetName + '",'
-						+ fs.readFileSync(widgetFile) + ','
-						+ 'driver);',
-						this.context,
-						LOG_FILE);
+		try {
+			vm.runInContext(widgetName + ' = '
+							+ '__widgets__["' + widgetName + '"] = '
+							+ 'new Widget("' + widgetName + '",'
+							+ fs.readFileSync(widgetFile) + ','
+							+ 'driver);',
+							this.context,
+							LOG_FILE);
+		} catch (error) {
+			throw('Syntax error in file "' + widgetFile + '"');
+		}
 		
 		return this;
 	},
@@ -207,15 +215,19 @@ var SuiteLoader = new Class({
 	loadFeature: function loadFeature(featureFile) {
 		if (VERBOSE)
 			console.log('+ loading ' + featureFile);
-
-		vm.runInContext('var featureContents = ' + fs.readFileSync(featureFile) + ';'
-						+ '__features__.push(new Feature('
-						+								 'featureContents.description,'
-						+								 'featureContents.scenario,'
-						+								 '__widgets__'
-						+ '));',
-						this.context,
-						LOG_FILE);
+		
+		try {
+			vm.runInContext('var featureContents = ' + fs.readFileSync(featureFile) + ';'
+							+ '__features__.push(new Feature('
+							+								 'featureContents.description,'
+							+								 'featureContents.scenario,'
+							+								 '__widgets__'
+							+ '));',
+							this.context,
+							LOG_FILE);
+		} catch (error) {
+			throw('Syntax error in file "' + featureFile + '"');
+		}
 		
 		this.runner.addFeature(this.features.pop());
 		
