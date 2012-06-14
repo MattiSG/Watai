@@ -50,8 +50,8 @@ var Hook = function Hook(hook, driver) {
 Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	var hook = new Hook(typeAndSelector, driver);
 	target.__defineGetter__(key, function() {
-		if (VERBOSE)
-			console.log('	- accessed ' + target.name + '’s ' + key);
+//		if (VERBOSE)
+//			console.log('	- accessed ' + target.name + '’s ' + key);
 			
 		return hook.toSeleniumElement(hook);
 	});

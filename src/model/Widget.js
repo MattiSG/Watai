@@ -71,7 +71,7 @@ var Widget = new Class({
 				deferred.reject.bind(deferred, 'Missing element ' + attribute)
 			);
 		} catch (error) {
-			deferred.reject('Error while trying to check presence of element "' + attribute + '"');
+			deferred.reject('Error while trying to check presence of element "' + attribute + '": ' + error);
 		}
 		
 		return deferred.promise;
