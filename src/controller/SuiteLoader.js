@@ -84,7 +84,9 @@ var SuiteLoader = new Class({
 			// making it available for global access like loading URLs, getting title…
 			driver: this.runner.getDriver(),
 			// hook to pass instanciated features to this context
-			__features__: this.features	
+			__features__: this.features,
+			// this has to be passed, for simpler access, but mostly because only the console in the current context has access to the standard output
+			log: console.log
 		});
 		
 		fs.readdir(this.path, this.loadAllFiles.bind(this));
