@@ -53,7 +53,8 @@ var Runner = new Class({
 	*@returns	This Runner, for chaining.
 	*/
 	addFeature: function addFeature(feature) {
-		this.features.unshift(feature);
+		this.features.push(feature);
+		
 		return this;
 	},
 	

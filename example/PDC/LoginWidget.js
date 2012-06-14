@@ -3,11 +3,11 @@
 		email:		{ id: 'login_email' },
 		password:	{ id: 'login_password' },
 		loginSubmit:{ xpath: '//input[@type="submit"][1]' },
-		loginPage:	{ linkText: 'Connexion' }
+		loginLink:	{ linkText: 'Connexion' }
 	},
 	
 	open: function open() {
-		return this.loginPage.click();
+		return this.loginLink.click();
 	},
 	
 	login: function login(email, password) {
