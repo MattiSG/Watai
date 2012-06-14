@@ -11,7 +11,7 @@ var Widget = new Class({
 	*@type	{String}
 	*/
 	name: '',
-	
+
 	/**
 	*@param	name	Name of this widget.
 	*@param	values	A hash with the following form:
@@ -22,10 +22,22 @@ var Widget = new Class({
 	initialize: function init(name, values, driver) {
 		this.name = name;
 		
+		
 		var widget = this;
 		
 		Object.each(values.elements, function(typeAndSelector, key) {
 			Hook.addHook(widget, key, typeAndSelector, driver);
+			
+			Object.each(Widget.magic, function(matcher, method) {
+				var matches = matcher.exec(key);
+				if (matches) {	// `exec` returns `null` if no match was found
+					var basename = matches[1];
+					widget[basename] = function() {
+						console.log('	- ' + method + 'ed “' + basename + '”');
+						return widget[key][method]();
+					};	// no immediate access to avoid calling the getter, which would trigger a Selenium access
+				}
+			});
 		});
 		
 		delete values.elements;
@@ -65,5 +77,19 @@ var Widget = new Class({
 		return deferred.promise;
 	}
 });
+
+/** Maps magic element regexps from the action that should be generated.
+* _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`.
+*
+* Keys are names of the methods that should be added to the element, and values are regexps that trigger the magic.
+* The name of the generated member is the content of the first capturing parentheses match in the regexp.
+*
+*@see	RegExp#exec
+*@static
+*@private
+*/
+Widget.magic = {
+	click: /(.+)Link$/
+}
 
 module.exports = Widget;	// CommonJS export

@@ -3,6 +3,6 @@
 	
 	scenario: [
 		ToolbarWidget.logout,
-		LoginWidget.has, 'loginLink'
+		LoginWidget.has, 'openLink'
 	]
 }
