@@ -1,3 +1,5 @@
+var promises = require('q');
+
 var Hook = require('./Hook');
 
 
@@ -35,6 +37,8 @@ var Widget = new Class({
 				method.apply(widget, arguments); //TODO: handle elements overloading
 			}
 		});
+		
+		this.has = this.has.bind(this);
 	},
 	
 	/** Checks that the given element is found on the page.
@@ -43,16 +47,22 @@ var Widget = new Class({
 	*@returns	{boolean}	Whether the element was found or not.
 	*/
 	has: function has(attribute) {
-		if (VERBOSE)
-			console.log('	- checked presence of ' + attribute);
+		var deferred = promises.defer();
 	
 		try {
-			this[attribute];
-			return true;
+			this[attribute].then(function() {
+					if (VERBOSE)
+						console.log('	- checked presence of ' + attribute);
+	
+					deferred.resolve();;
+				},
+				deferred.reject.bind(deferred, 'Missing element ' + attribute)
+			);
 		} catch (error) {
-			console.error('> ', error.message);
-			return false;
+			deferred.reject('Error while trying to check presence of element "' + attribute + '"');
 		}
+		
+		return deferred.promise;
 	}
 });
 
