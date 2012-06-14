@@ -4,6 +4,12 @@ var Hook = require('./Hook');
 /**@class A Widget models a set of controls on a website.
 */
 var Widget = new Class({
+	/** The name of this widget.
+	* Automatically set to the name of its containing file upon parsing.
+	*@type	{String}
+	*/
+	name: '',
+	
 	/**
 	*@param	name	Name of this widget.
 	*@param	values	A hash with the following form:
@@ -25,10 +31,28 @@ var Widget = new Class({
 		Object.each(values, function(method, key) {
 			widget[key] = function() {
 				if (VERBOSE)
-					console.log('	Widget "' + name + '" did ' + key);
+					console.log('	- did ' + key + ' ' + Array.prototype.slice.call(arguments).join(', '));
 				method.apply(widget, arguments); //TODO: handle elements overloading
 			}
 		});
+	},
+	
+	/** Checks that the given element is found on the page.
+	*
+	*@param	{String}	attribute	The name of the element whose presence is to be checked.
+	*@returns	{boolean}	Whether the element was found or not.
+	*/
+	has: function has(attribute) {
+		if (VERBOSE)
+			console.log('	- checked presence of ' + attribute);
+	
+		try {
+			this[attribute];
+			return true;
+		} catch (error) {
+			console.error('> ', error.message);
+			return false;
+		}
 	}
 });
 
