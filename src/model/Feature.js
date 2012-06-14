@@ -99,7 +99,9 @@ var Feature = new Class({
 				matchesLeft = Object.getLength(hooksVals);
 
 			Object.each(hooksVals, function(expected, attribute) {
-				eval('widgets.' + attribute).getText().then(function(actual) { //TODO: replace eval with an object walker
+				var target = Object.getFromPath(widgets, attribute);
+				
+				target.getText().then(function(actual) {
 					if (expected != actual)
 						evaluator.reject(attribute + ' was "' + actual + '" instead of "' + expected + '"');
 						

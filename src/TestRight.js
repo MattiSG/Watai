@@ -1,6 +1,7 @@
 /* This library depends on MooTools 1.4+.
 */
 var MooTools = require('mootools');
+require('./lib/mootools-additions');
 
 
 /** This flag triggers various detailed logging operations across all classes.
