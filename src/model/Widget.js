@@ -27,17 +27,7 @@ var Widget = new Class({
 		
 		Object.each(values.elements, function(typeAndSelector, key) {
 			Hook.addHook(widget, key, typeAndSelector, driver);
-			
-			Object.each(Widget.magic, function(matcher, method) {
-				var matches = matcher.exec(key);
-				if (matches) {	// `exec` returns `null` if no match was found
-					var basename = matches[1];
-					widget[basename] = function() {
-						console.log('	- ' + method + 'ed “' + basename + '”');
-						return widget[key][method]();
-					};	// no immediate access to avoid calling the getter, which would trigger a Selenium access
-				}
-			});
+			widget.addMagic(key);
 		});
 		
 		delete values.elements;
@@ -51,6 +41,29 @@ var Widget = new Class({
 		});
 		
 		this.has = this.has.bind(this);
+	},
+	
+	/** Add magic methods on specially-formatted elements.
+	* _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`.
+	*
+	*@see	Widget#magic
+	*@private
+	*/
+	addMagic: function addMagic(key) {
+		var widget = this;
+		
+		Object.each(Widget.magic, function(matcher, method) {
+			var matches = matcher.exec(key);
+			if (matches) {	// `exec` returns `null` if no match was found
+				var basename = matches[1];
+				widget[basename] = function() {
+					if (VERBOSE)
+						console.log('	- ' + method + 'ed “' + basename + '”');
+					
+					return widget[key][method]();
+				}	// no immediate access to avoid calling the getter, which would trigger a Selenium access
+			}
+		});
 	},
 	
 	/** Checks that the given element is found on the page.
