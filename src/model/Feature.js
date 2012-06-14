@@ -108,7 +108,7 @@ var Feature = new Class({
 	*/
 	test: function evaluate() {
 		var deferred = promises.defer(),
-			stepIndex = 0;
+			stepIndex = -1;
 		
 		var evaluateNext,
 			failureReasons = [];
@@ -119,6 +119,8 @@ var Feature = new Class({
 		}
 		
 		evaluateNext = (function(value) {
+			stepIndex++;
+
 			if (stepIndex == this.steps.length) {
 				if (failureReasons.length == 0)
 					return deferred.resolve();
@@ -133,8 +135,6 @@ var Feature = new Class({
 			} catch (error) {
 				handleFailure(error);
 			}
-			
-			stepIndex++;
 		}).bind(this);
 		
 		evaluateNext();
