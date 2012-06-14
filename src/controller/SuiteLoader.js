@@ -57,6 +57,22 @@ var SuiteLoader = new Class({
 	*/
 	context: null,
 	
+	/** Defines all “magic” globals defined in the suite loading context.
+	*
+	*@constant
+	*/
+	contextGlobals: {
+		/** A hash containing all loaded widgets, indexed on their name.
+		*/
+		widgetsList:	'__widgets__',
+		/** An array containing all features, in their loading order.
+		*/
+		featuresList:	'__features__',
+		/** The name of the offered logging function.
+		*/
+		logger:			'log'
+	},
+	
 	features: [],
 	
 	/** Creates a new `Runner` based on the given configuration, and initiates Widgets and Features parsing.
@@ -77,19 +93,32 @@ var SuiteLoader = new Class({
 		}
 		
 		this.runner = new Runner(config);
-		this.context = vm.createContext({	// items listed in this hash will be made available globally to loaded widgets and features
+		this.context = vm.createContext(this.buildContext());
+		
+		fs.readdir(this.path, this.loadAllFiles.bind(this));
+	},
+	
+	/** Generates the list of variables that will be offered globally to Widgets, Features and Data elements.
+	*
+	*@see	http://nodejs.org/api/vm.html#vm_vm_runincontext_code_context_filename
+	*@returns	{Hash}	The context description, i.e. a list of elements to offer globally in the suite loading context.
+	*@private
+	*/
+	buildContext: function buildContext() {
+		var result = {
 			// used for instanciation
 			Widget: Widget,
 			Feature: Feature,
 			// making it available for global access like loading URLs, getting title…
-			driver: this.runner.getDriver(),
-			// hook to pass instanciated features to this context
-			__features__: this.features,
-			// this has to be passed, for simpler access, but mostly because only the console in the current context has access to the standard output
-			log: console.log
-		});
+			driver: this.runner.getDriver()
+		}
 		
-		fs.readdir(this.path, this.loadAllFiles.bind(this));
+		result[this.contextGlobals.featuresList] = this.features;	// hook to pass instanciated features to this context
+		result[this.contextGlobals.widgetsList] = {};	// stays in the managed context, but necessary for features to have a reference to all widgets, since they are evaluated in _this_ context, not their instanciation one…
+			
+		result[this.contextGlobals.logger] = console.log; // this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
+		
+		return result;
 	},
 	
 	/** Callback handler after `readdir`ing the test description directory.
@@ -152,10 +181,11 @@ var SuiteLoader = new Class({
 		
 		var widgetName = pathsUtils.basename(widgetFile, '.js');
 		
-		vm.runInContext('var ' + widgetName + ' = '
+		vm.runInContext(widgetName + ' = '
+						+ '__widgets__["' + widgetName + '"] = '
 						+ 'new Widget("' + widgetName + '",'
 						+ fs.readFileSync(widgetFile) + ','
-						+ 'driver)',
+						+ 'driver);',
 						this.context,
 						LOG_FILE);
 		
@@ -176,7 +206,9 @@ var SuiteLoader = new Class({
 		vm.runInContext('var featureContents = ' + fs.readFileSync(featureFile) + ';'
 						+ '__features__.push(new Feature('
 						+								 'featureContents.description,'
-						+								 'featureContents.scenario));',
+						+								 'featureContents.scenario,'
+						+								 '__widgets__'
+						+ '));',
 						this.context,
 						LOG_FILE);
 		

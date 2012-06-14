@@ -25,8 +25,10 @@ var Feature = new Class({
 	*@param	{String}	description	A plaintext description of the feature, advised to be written in a BDD fashion.
 	*@param	{Array}		scenario	An array that describes states and transitions. See class documentation for formatting.
 	*/
-	initialize: function init(description, scenario) {
+	initialize: function init(description, scenario, widgets) {
 		this.description = description;
+		
+		this.widgets = widgets;
 		
 		this.steps = this.loadScenario(scenario);
 	},
@@ -82,12 +84,13 @@ var Feature = new Class({
 	*	- resolved if all assertions pass, with no parameter.
 	*/
 	buildAssertionPromise: function buildAssertionPromise(hooksVals) {
+		var widgets = this.widgets;
 		return function() {
 			var evaluator = promises.defer(),
 				matchesLeft = Object.getLength(hooksVals);
 
 			Object.each(hooksVals, function(expected, attribute) {
-				eval(attribute).getText().then(function(actual) { //TODO: replace eval with an object walker
+				eval('widgets.' + attribute).getText().then(function(actual) { //TODO: replace eval with an object walker
 					if (expected != actual)
 						evaluator.reject(attribute + ' was "' + actual + '" instead of "' + expected + '"');
 						
