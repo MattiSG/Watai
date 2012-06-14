@@ -131,7 +131,8 @@ var SuiteLoader = new Class({
 			console.log('~ loading ' + dataFile);
 		
 		vm.runInContext(fs.readFileSync(dataFile),
-						this.context);
+						this.context,
+						LOG_FILE);
 						
 		return this;
 	},
@@ -153,7 +154,8 @@ var SuiteLoader = new Class({
 						+ 'new Widget("' + widgetName + '",'
 						+ fs.readFileSync(widgetFile) + ','
 						+ 'driver)',
-						this.context);
+						this.context,
+						LOG_FILE);
 		
 		return this;
 	},
@@ -173,7 +175,8 @@ var SuiteLoader = new Class({
 						+ '__features__.push(new Feature('
 						+								 'featureContents.description,'
 						+								 'featureContents.scenario));',
-						this.context);
+						this.context,
+						LOG_FILE);
 		
 		this.runner.addFeature(this.features.pop());
 		

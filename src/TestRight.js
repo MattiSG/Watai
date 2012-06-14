@@ -12,6 +12,16 @@ var MooTools = require('mootools');
 var VERBOSE = true;
 GLOBAL.VERBOSE = VERBOSE;	// export flag
 
+/** This value stores where individual Runner contexts stack traces should be stored.
+*
+*@see	http://nodejs.org/api/vm.html#vm_vm_runincontext_code_context_filename (filename parameter)
+*
+*@constant
+*@type	{String}
+*/
+var LOG_FILE = 'log/VM.log';
+GLOBAL.LOG_FILE = LOG_FILE;	// export value
+
 /**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
 *
 *Example usage:
