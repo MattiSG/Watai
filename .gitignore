@@ -1,2 +1,4 @@
 .DS_Store
 chromedriver.log
+npm-debug.log
+log/vm.log
