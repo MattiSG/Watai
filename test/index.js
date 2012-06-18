@@ -1,13 +1,6 @@
-require('mocha');
-require('should');
+require('./helpers');
 
-var pathsUtils = require('path');
+var testFiles = require('./testFilesList');
 
-
-var src = '../src/';
-
-exports.test = function test(file, suite) {
-	require(src + file);
-	
-	describe(pathsUtils.basename(file), suite);
-}
+for (var i = 0; i < testFiles.length; i++)
+	require('./' + testFiles[i]);
