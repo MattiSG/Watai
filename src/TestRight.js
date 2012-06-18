@@ -11,7 +11,7 @@ require('./lib/mootools-additions');
 *@type	{boolean}
 */
 var VERBOSE = true;
-GLOBAL.VERBOSE = VERBOSE;	// export flag
+GLOBAL.VERBOSE = VERBOSE;	// Node export
 
 /** This value stores where individual Runner contexts stack traces should be stored.
 *
@@ -21,21 +21,19 @@ GLOBAL.VERBOSE = VERBOSE;	// export flag
 *@type	{String}
 */
 var LOG_FILE = 'log/vm.log';
-GLOBAL.LOG_FILE = LOG_FILE;	// export value
+GLOBAL.LOG_FILE = LOG_FILE;	// Node export
 
 /**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
 *
 *Example usage:
-*	var TestRight = require('TestRight')();
+*	var TestRight = require('TestRight');
 *	var myWidget = new TestRight.Widget(…);
 *
 *…which you could also decide to write this way:
-*	var TR = require('TestRight')();
+*	var TR = require('TestRight');
 *	var myWidget = new TR.Widget(…);
 *
 *You are therefore free of choosing your own namespacing pattern.
-*
-*Embedded as a function to avoid problems with cyclic references (modules in this namespace that need access to other classes). 
 */
 var TestRight = {
 	Widget:		require('./model/Widget'),
