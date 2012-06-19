@@ -9,30 +9,27 @@ describe('Widget', function() {
 		id:		{ id: 'toto' },
 		css:	{ css: '.tutu' },
 		missing:{ id: 'inexistant' },
-		field:	{ css: 'input[name="field"]' }
+		field:	{ css: 'input[name="field"]' },
+		p3Link:	{ linkText: 'This paragraph is embedded in a link' }
 	}
+	
+	var subject = new TestRight.Widget('Test widget', {
+		elements: elements,
+		submit: function submit(value) {
+			this.field = value;
+			return this.field.submit();
+		}
+	}, driver);
+	
 			
 	describe('parsing', function() {
-		var subject = new TestRight.Widget('Test widget', {
-			elements: elements,
-			submit: function submit(value) {
-				this.field = value;
-				return this.field.submit();
-			}
-		}, driver);
-		
 		it('should add all elements as properties', function() {
 			for (var key in elements)
 				if (elements.hasOwnProperty(key)
-					&& key != 'missing')	// Should.js' property checker accesses the property, which would therefore make the missing element throw because it is unreachable
+					&& key != 'missing') {	// Should.js' property checker accesses the property, which would therefore make the missing element throw because it is unreachable
 					subject.should.have.property(key);
-		});
-		
-		it('should transform elements into hooks', function(done) {
-			subject.id.getText().then(function(text) {
-				text.should.equal('This paragraph has id toto');
-				done();
-			});
+					subject[key].should.be.a('object');
+				}
 		});
 		
 		it('should bind methods properly', function(done) {
@@ -43,12 +40,24 @@ describe('Widget', function() {
 				done();
 			});
 		});
+		
+		it('should do some magic on *Link names', function() {
+			subject.should.have.property('p3');
+			subject.p3.should.be.a('function');	// on 'link', this should be a shortcut to clicking the element, not a simple access
+		});
 	});
 	
-	describe('accesses', function() {
-		it('should throw an error if an unreachable element is accessed', function() {
+	describe('element access', function() {
+		it('should map elements to hooks', function(done) {
+			subject.id.getText().then(function(text) {
+				text.should.equal('This paragraph has id toto');
+				done();
+			});
+		});
+	
+		xit('should throw an error if an unreachable element is accessed', function() {
 			(function() {
-				subject.missing;
+				subject.missing.click();	//TODO: can't test this directly, as the exception is raised on a callback from the Selenium server… No clue for the moment.
 			}).should.throw();
 		});
 	});
