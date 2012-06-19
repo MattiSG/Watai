@@ -1,7 +1,7 @@
 var Hook = require('../../src/model/Hook');
 
 
-/* Exported because is also used in WidgetTest.
+/* Exported to be also used in WidgetTest.
 */
 exports.checkHook = checkHook = function checkHook(subject, hookName, expectedContent) {
 	it('should add a hook to the target object', function() {

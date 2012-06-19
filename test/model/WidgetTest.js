@@ -1,27 +1,26 @@
-var HookTest = require('./HookTest');
+/* Exported to be also used in FeatureTest.
+*/
+var elements = {
+	id:		{ id: 'toto' },
+	css:	{ css: '.tutu' },
+	missing:{ id: 'inexistant' },
+	field:	{ css: 'input[name="field"]' },
+	p3Link:	{ linkText: 'This paragraph is embedded in a link' }
+}
+
+exports.testWidget = subject = new TestRight.Widget('Test widget', {
+	elements: elements,
+	submit: function submit(value) {
+		this.field = value;
+		return this.field.submit();
+	}
+}, driver);
 
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 * It relies on some external setup, see `test/helpers` and `test/index.js`.
 */
 describe('Widget', function() {
-	var elements = {
-		id:		{ id: 'toto' },
-		css:	{ css: '.tutu' },
-		missing:{ id: 'inexistant' },
-		field:	{ css: 'input[name="field"]' },
-		p3Link:	{ linkText: 'This paragraph is embedded in a link' }
-	}
-	
-	var subject = new TestRight.Widget('Test widget', {
-		elements: elements,
-		submit: function submit(value) {
-			this.field = value;
-			return this.field.submit();
-		}
-	}, driver);
-	
-			
 	describe('parsing', function() {
 		it('should add all elements as properties', function() {
 			for (var key in elements)
