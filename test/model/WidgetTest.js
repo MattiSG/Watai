@@ -15,6 +15,10 @@ describe('Widget', function() {
 	describe('parsing', function() {
 		var subject = new TestRight.Widget('Test widget', {
 			elements: elements,
+			submit: function submit(value) {
+				this.field = value;
+				return this.field.submit();
+			}
 		}, driver);
 		
 		it('should add all elements as properties', function() {
@@ -26,6 +30,15 @@ describe('Widget', function() {
 		it('should transform elements into hooks', function(done) {
 			subject.id.getText().then(function(text) {
 				text.should.equal('This paragraph has id toto');
+				done();
+			});
+		});
+		
+		it('should bind methods properly', function(done) {
+			subject.submit('something');
+			
+			subject.field.getAttribute('value').then(function(value) {
+				value.should.equal('Default');	// because the page has been reloaded
 				done();
 			});
 		});

@@ -36,7 +36,8 @@ var Widget = new Class({
 			widget[key] = function() {
 				if (VERBOSE)
 					console.log('	- did ' + key + ' ' + Array.prototype.slice.call(arguments).join(', '));
-				method.apply(widget, arguments); //TODO: handle elements overloading
+				
+				method.apply(widget, arguments);	//TODO: handle elements overloading
 			}
 		});
 		
