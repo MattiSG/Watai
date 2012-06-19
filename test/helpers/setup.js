@@ -1,4 +1,4 @@
-require('./index').test('../test/helpers/setup', function() {
+describe('setup', function() {
 	it('should define the "driver" global', function() {
 		require('should').exist(driver);
 	});

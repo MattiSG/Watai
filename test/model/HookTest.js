@@ -1,7 +1,10 @@
 var Hook = require('../../src/model/Hook');
 
 
-require('../helpers').test('model/Hook', function() {
+/** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
+* It relies on some external setup, see `test/helpers` and `test/index.js`.
+*/
+describe('Hook', function() {
 	var hooksTarget = {};
 	
 	var checkHook = function checkHook(hookName, expectedContent) {
