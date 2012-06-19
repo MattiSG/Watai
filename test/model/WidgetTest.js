@@ -54,6 +54,20 @@ describe('Widget', function() {
 				done();
 			});
 		});
+		
+		it('should say that an existing element is present', function(done) {
+			subject.has('id').then(function(presence) {
+				presence.should.be.ok;
+				done();
+			});
+		});
+		
+		it('should say that a missing element is not present', function(done) {
+			subject.has('missing').then(function(presence) {
+				presence.should.not.be.ok;
+				done();
+			});
+		});
 	
 		xit('should throw an error if an unreachable element is accessed', function() {
 			(function() {

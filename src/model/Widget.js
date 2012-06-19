@@ -70,7 +70,7 @@ var Widget = new Class({
 	/** Checks that the given element is found on the page.
 	*
 	*@param	{String}	attribute	The name of the element whose presence is to be checked.
-	*@returns	{boolean}	Whether the element was found or not.
+	*@returns	{Promise}	A promise that passes its `then`handler a `boolean`, whether the element was found or not.
 	*/
 	has: function has(attribute) {
 		var deferred = promises.defer();
@@ -78,11 +78,15 @@ var Widget = new Class({
 		try {
 			this[attribute].then(function() {
 					if (VERBOSE)
-						console.log('	- checked presence of ' + attribute);
+						console.log('	-', attribute, 'is present on the page');
 	
-					deferred.resolve();;
-				},
-				deferred.reject.bind(deferred, 'Missing element ' + attribute)
+					deferred.resolve(true);
+				}, function() {
+					if (VERBOSE)
+						console.log('	-', attribute, 'is missing on the page');
+	
+					deferred.resolve(false);				
+				}
 			);
 		} catch (error) {
 			deferred.reject('Error while trying to check presence of element "' + attribute + '": ' + error);
