@@ -6,9 +6,7 @@ require('./index').test('../test/helpers/setup', function() {
 	it('should point the webdriver to the support page', function(done) {
 		this.timeout(15000);
 		
-		driver.get('file:///Users/eurogiciel/Documents/Watai/test/resources/page.html').then(function(wut) {
-			console.log(wut);
-			
+		driver.get('file:///Users/eurogiciel/Documents/Watai/test/resources/page.html').then(function() {
 			done();
 		});
 	});
