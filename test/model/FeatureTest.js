@@ -1,3 +1,5 @@
+var promises = require('q');
+
 var WidgetTest = require('./WidgetTest');
 
 
@@ -9,10 +11,10 @@ describe('Feature', function() {
 		return new TestRight.Feature('Test feature', scenario, [ WidgetTest.testWidget ]);
 	}
 
-	var failingFeatureReason = 'It’s a trap!';
+	var failureReason = 'It’s a trap!';
 	var failingFeatureTest = function() {
 		return featureWithScenario([
-			function() { throw failingFeatureReason }
+			function() { throw failureReason }
 		]).test();
 	}
 	
@@ -22,19 +24,31 @@ describe('Feature', function() {
 		});
 
 		it('of a failing function should be rejected', function(done) {
-			failingFeatureTest().then(function() {
-				should.fail();
-			}, function() {
-				done();	// can't pass it directly, Mocha complains about params not being an error…
+			failingFeatureTest().then(should.fail, function() {
+				done();	// can't pass it directly, Mocha complains about param not being an error…
 			});
 		});
 		
-		it('of a failing function should be rejected with reasons passed', function(done) {
-			failingFeatureTest().then(function() {
-				should.fail();
-			}, function(reasons) {
+		it('of a failing function should be rejected and reasons passed', function(done) {
+			failingFeatureTest().then(should.fail, function(reasons) {
 				reasons.should.have.length(1);
-				reasons[0].should.equal(failingFeatureReason);
+				reasons[0].should.equal(failureReason);
+				done();
+			});
+		});
+		
+		it('of a failing promise should be rejected and reasons passed', function(done) {
+			featureWithScenario([
+				function() {
+					var promise = promises.defer();
+
+					promise.reject(failureReason);
+					
+					return promise.deferred;
+				}
+			]).test().then(should.fail, function(reasons) {
+				reasons.should.have.length(1);
+				reasons[0].should.equal(failureReason);
 				done();
 			});
 		});
