@@ -53,6 +53,17 @@ require('../helpers').test('model/Hook', function() {
 			
 			checkHook(hookName, 'This paragraph is embedded in a link');
 		});
+		
+		it('should work on a field too', function(done) {
+			var target = 'field';
+				
+			Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, driver);
+			
+			hooksTarget[target].getAttribute('value').then(function(content) {
+				content.should.equal('Default');
+				done();
+			});
+		});
 	});
 	
 	describe('setter', function() {
