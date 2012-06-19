@@ -11,11 +11,12 @@ GLOBAL.driver = new webdriver.Builder()
 						  .usingServer(config.connectURL)
 						  .withCapabilities(config.driverCapabilities)
 						  .build();
+						  
 
 var src = '../../src/';
 
 exports.test = function test(file, suite) {
-	require(src + '/' + file);
+	var className = pathsUtils.basename(file);
 	
-	describe(pathsUtils.basename(file), suite);
+	describe(className, suite);
 }
