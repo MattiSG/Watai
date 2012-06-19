@@ -11,3 +11,5 @@ GLOBAL.driver = new webdriver.Builder()
 						  .usingServer(config.connectURL)
 						  .withCapabilities(config.driverCapabilities)
 						  .build();
+						  
+GLOBAL.TestRight = require('../../src/TestRight');

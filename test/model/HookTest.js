@@ -1,28 +1,30 @@
 var Hook = require('../../src/model/Hook');
 
 
+/* Exported because is also used in WidgetTest.
+*/
+exports.checkHook = checkHook = function checkHook(subject, hookName, expectedContent) {
+	it('should add a hook to the target object', function() {
+		subject.should.have.property(hookName);
+	});
+	
+	it('should return an object when accessed', function() {
+		subject[hookName].should.be.a('object');
+	});
+	
+	it('should have the correct text in the retrieved element', function(done) {
+		subject[hookName].getText().then(function(content) {
+			content.should.equal(expectedContent);
+			done();
+		});
+	});
+}
+
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 * It relies on some external setup, see `test/helpers` and `test/index.js`.
 */
 describe('Hook', function() {
 	var hooksTarget = {};
-	
-	var checkHook = function checkHook(hookName, expectedContent) {
-		it('should add a hook to the target object', function() {
-			hooksTarget.should.have.property(hookName);
-		});
-		
-		it('should return an object when accessed', function() {
-			hooksTarget[hookName].should.be.a('object');
-		});
-		
-		it('should have the correct text in the retrieved element', function(done) {
-			hooksTarget[hookName].getText().then(function(content) {
-				content.should.equal(expectedContent);
-				done();
-			});
-		});
-	}
 	
 	describe('selector', function() {
 		describe('with ID', function() {
@@ -30,7 +32,7 @@ describe('Hook', function() {
 			
 			Hook.addHook(hooksTarget, hookName, { id: 'toto' }, driver);
 			
-			checkHook(hookName, 'This paragraph has id toto');
+			checkHook(hooksTarget, hookName, 'This paragraph has id toto');
 		});
 
 		describe('with CSS', function() {
@@ -38,7 +40,7 @@ describe('Hook', function() {
 			
 			Hook.addHook(hooksTarget, hookName, { css: '.tutu' }, driver);
 			
-			checkHook(hookName, 'This paragraph has class tutu');
+			checkHook(hooksTarget, hookName, 'This paragraph has class tutu');
 		});
 
 		describe('with Xpath', function() {
@@ -46,7 +48,7 @@ describe('Hook', function() {
 			
 			Hook.addHook(hooksTarget, hookName, { xpath: '//div[@id="selectors"]/p[3]' }, driver);
 			
-			checkHook(hookName, 'This paragraph is the third of the selectors div');
+			checkHook(hooksTarget, hookName, 'This paragraph is the third of the selectors div');
 		});
 		
 		describe('with link text', function() {
@@ -54,7 +56,7 @@ describe('Hook', function() {
 			
 			Hook.addHook(hooksTarget, hookName, { linkText: 'This paragraph is embedded in a link' }, driver);
 			
-			checkHook(hookName, 'This paragraph is embedded in a link');
+			checkHook(hooksTarget, hookName, 'This paragraph is embedded in a link');
 		});
 		
 		it('should work on a field too', function(done) {
