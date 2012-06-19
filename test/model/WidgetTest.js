@@ -8,7 +8,7 @@ describe('Widget', function() {
 	var elements = {
 		id:		{ id: 'toto' },
 		css:	{ css: '.tutu' },
-//		missing:{ id: 'inexistant' }, //TODO: handle missing elements?
+		missing:{ id: 'inexistant' },
 		field:	{ css: 'input[name="field"]' }
 	}
 			
@@ -23,7 +23,8 @@ describe('Widget', function() {
 		
 		it('should add all elements as properties', function() {
 			for (var key in elements)
-				if (elements.hasOwnProperty(key))
+				if (elements.hasOwnProperty(key)
+					&& key != 'missing')	// Should.js' property checker accesses the property, which would therefore make the missing element throw because it is unreachable
 					subject.should.have.property(key);
 		});
 		
@@ -41,6 +42,14 @@ describe('Widget', function() {
 				value.should.equal('Default');	// because the page has been reloaded
 				done();
 			});
+		});
+	});
+	
+	describe('accesses', function() {
+		it('should throw an error if an unreachable element is accessed', function() {
+			(function() {
+				subject.missing;
+			}).should.throw();
 		});
 	});
 });
