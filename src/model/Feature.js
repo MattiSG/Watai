@@ -103,7 +103,7 @@ var Feature = new Class({
 				
 				target.getText().then(function(actual) {
 					if (expected != actual)
-						evaluator.reject(attribute + ' was "' + actual + '" instead of "' + expected + '"');
+						evaluator.reject(attribute + ' was "' + actual + '" instead of "' + expected + '"');	//TODO: shouldn't it throw, so that we leave the external `each` loop immediately?
 						
 					if (--matchesLeft == 0)
 						evaluator.resolve();
@@ -151,7 +151,7 @@ var Feature = new Class({
 			}
 		}).bind(this);
 		
-		evaluateNext();
+		evaluateNext();	//TODO: make async
 		
 		return deferred.promise;
 	}
