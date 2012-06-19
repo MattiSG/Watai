@@ -22,12 +22,37 @@ require('../helpers').test('model/Hook', function() {
 			});
 		}
 		
-		describe('ID selection', function() {
+		describe('with ID', function() {
 			var hookName = 'id';
 			
 			Hook.addHook(hooksTarget, hookName, { id: 'toto' }, driver);
 			
 			checkHook(hookName, 'This paragraph has id toto');
 		});
+
+		describe('with CSS', function() {
+			var hookName = 'css';
+			
+			Hook.addHook(hooksTarget, hookName, { css: '.tutu' }, driver);
+			
+			checkHook(hookName, 'This paragraph has class tutu');
+		});
+
+		describe('with Xpath', function() {
+			var hookName = 'xpath';
+			
+			Hook.addHook(hooksTarget, hookName, { xpath: '//div[@id="selectors"]/p[3]' }, driver);
+			
+			checkHook(hookName, 'This paragraph is the third of the selectors div');
+		});
+		
+		describe('with link text', function() {
+			var hookName = 'linkText';
+			
+			Hook.addHook(hooksTarget, hookName, { linkText: 'This paragraph is embedded in a link' }, driver);
+			
+			checkHook(hookName, 'This paragraph is embedded in a link');
+		});
+
 	});
 });
