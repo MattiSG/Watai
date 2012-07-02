@@ -1,5 +1,5 @@
 module.exports = {
-	connectURL: 'http://localhost:4444/wd/hub',
+	connectURL: 'http://127.0.0.1:4444/wd/hub',
 	
 	supportPageURL: 'file:///Users/eurogiciel/Documents/Watai/test/resources/page.html',
 	

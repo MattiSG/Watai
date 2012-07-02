@@ -40,7 +40,7 @@ var Runner = new Class({
 		this.config = config;
 		
 		this.driver = new webdriver.Builder()
-						.usingServer('http://localhost:4444/wd/hub')
+						.usingServer('http://127.0.0.1:4444/wd/hub')	//TODO: extract connect URL and put it in config
 						.withCapabilities(config.driverCapabilities)
 						.build();
 						
