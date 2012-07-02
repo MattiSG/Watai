@@ -34,8 +34,7 @@ var Widget = new Class({
 		
 		Object.each(values, function(method, key) {
 			widget[key] = function() {
-				if (VERBOSE)
-					console.log('	- did ' + key + ' ' + Array.prototype.slice.call(arguments).join(', '));
+				logger.log('	- did ' + key + ' ' + Array.prototype.slice.call(arguments).join(', '));
 				
 				method.apply(widget, arguments);	//TODO: handle elements overloading
 			}
@@ -58,8 +57,7 @@ var Widget = new Class({
 			if (matches) {	// `exec` returns `null` if no match was found
 				var basename = matches[1];
 				widget[basename] = function() {
-					if (VERBOSE)
-						console.log('	- ' + method + 'ed “' + basename + '”');
+					logger.log('	- ' + method + 'ed “' + basename + '”');
 					
 					return widget[key][method]();
 				}	// no immediate access to avoid calling the getter, which would trigger a Selenium access
@@ -77,13 +75,11 @@ var Widget = new Class({
 	
 		try {
 			this[attribute].then(function() {
-					if (VERBOSE)
-						console.log('	-', attribute, 'is present on the page');
+					logger.log('	-', attribute, 'is present on the page');
 	
 					deferred.resolve(true);
 				}, function() {
-					if (VERBOSE)
-						console.log('	-', attribute, 'is missing on the page');
+					logger.log('	-', attribute, 'is missing on the page');
 	
 					deferred.resolve(false);				
 				}

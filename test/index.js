@@ -4,8 +4,6 @@ require('./helpers');
 *REMEMBER YOU'LL NEED TO START THE SELENIUM SERVER TO RUN THESE TESTS!
 */
 
-GLOBAL.VERBOSE = false;
-
 var testFiles = require('./resources/testFilesList');
 
 for (var i = 0; i < testFiles.length; i++)

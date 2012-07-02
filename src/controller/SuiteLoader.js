@@ -163,8 +163,7 @@ var SuiteLoader = new Class({
 	*@see	#loadAllFiles
 	*/
 	loadData: function loadData(dataFile) {
-		if (VERBOSE)
-			console.log('~ loading ' + dataFile);
+		logger.log('~ loading ' + dataFile);
 		
 		try {
 			vm.runInContext(fs.readFileSync(dataFile),
@@ -186,8 +185,7 @@ var SuiteLoader = new Class({
 	*@see	#loadAllFiles
 	*/
 	loadWidget: function loadWidget(widgetFile) {
-		if (VERBOSE)
-			console.log('- loading ' + widgetFile);
+		logger.log('- loading ' + widgetFile);
 		
 		var widgetName = pathsUtils.basename(widgetFile, '.js');
 		
@@ -215,8 +213,7 @@ var SuiteLoader = new Class({
 	*@see	#loadAllFiles
 	*/
 	loadFeature: function loadFeature(featureFile) {
-		if (VERBOSE)
-			console.log('+ loading ' + featureFile);
+		logger.log('+ loading ' + featureFile);
 		
 		try {
 			vm.runInContext('var featureContents = ' + fs.readFileSync(featureFile) + ';'

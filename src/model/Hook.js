@@ -53,8 +53,7 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 		return hook.toSeleniumElement(hook);
 	});
 	target.__defineSetter__(key, function(input) {
-		if (VERBOSE)
-			console.log('	- set ' + target.name + '’s ' + key + ' to “' + input + '”');
+		logger.log('	- set ' + target.name + '’s ' + key + ' to “' + input + '”');
 		
 		hook.handleInput(input);
 	});

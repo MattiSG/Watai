@@ -4,14 +4,11 @@ var MooTools = require('mootools');
 require('./lib/mootools-additions');
 
 
-/** This flag triggers various detailed logging operations across all classes.
-* Set it to `true` when debugging.
+/** This object is used to log all operations.
 *
 *@constant
-*@type	{boolean}
 */
-var VERBOSE = true;
-GLOBAL.VERBOSE = VERBOSE;	// Node export
+GLOBAL.logger = console;	// Node export
 
 /** This value stores where individual Runner contexts stack traces should be stored.
 *
