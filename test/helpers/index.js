@@ -1,15 +1,16 @@
+var pathsUtils = require('path');
 require('mocha');
 require('should');
-
-var pathsUtils = require('path'),
-	webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver');
 	
 
 exports.config = config = require('../resources/webdriver-config');
+
+var webdriver = require(config.webdriverjsPath);
+
 	
 GLOBAL.driver = new webdriver.Builder()
-						  .usingServer(config.connectURL)
-						  .withCapabilities(config.driverCapabilities)
-						  .build();
+							 .usingServer(config.connectURL)
+							 .withCapabilities(config.driverCapabilities)
+							 .build();
 						  
 GLOBAL.TestRight = require('../../src/TestRight');

@@ -3,6 +3,8 @@ module.exports = {
 	
 	supportPageURL: 'file:///Users/eurogiciel/Documents/Watai/test/resources/page.html',
 	
+	webdriverjsPath: '/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver',
+	
 	driverCapabilities: {
 		browserName: 'chrome',
 		version: '',
