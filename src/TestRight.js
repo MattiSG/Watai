@@ -24,8 +24,8 @@ GLOBAL.logger = new (winston.Logger)({
 *@constant
 *@type	{String}
 */
-var LOG_FILE = 'log/vm.log';
-GLOBAL.LOG_FILE = LOG_FILE;	// Node export
+var VM_LOG_FILE = 'log/vm.log';
+GLOBAL.VM_LOG_FILE = VM_LOG_FILE;	// Node export
 
 /**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
 *
