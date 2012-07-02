@@ -24,33 +24,43 @@ describe('Feature', function() {
 		});
 
 		it('of a failing function should be rejected', function(done) {
-			failingFeatureTest().then(should.fail, function() {
-				done();	// can't pass it directly, Mocha complains about param not being an error…
-			});
+			failingFeatureTest().then(function() {
+					done(new Error('Resolved instead of rejected!'));
+				}, function() {
+					done();	// can't pass it directly, Mocha complains about param not being an error…
+				}
+			);
 		});
 		
 		it('of a failing function should be rejected and reasons passed', function(done) {
-			failingFeatureTest().then(should.fail, function(reasons) {
-				reasons.should.have.length(1);
-				reasons[0].should.equal(failureReason);
-				done();
-			});
+			failingFeatureTest().then(function() {
+					done(new Error('Resolved instead of rejected!'));
+				}, function(reasons) {
+					reasons.should.have.length(1);
+					reasons[0].should.equal(failureReason);
+					done();
+				}
+			);
 		});
 		
 		it('of a failing promise should be rejected and reasons passed', function(done) {
 			featureWithScenario([
 				function() {
 					var promise = promises.defer();
-
+					
 					promise.reject(failureReason);
 					
+					console.error('> step called');
 					return promise.deferred;
 				}
-			]).test().then(should.fail, function(reasons) {
-				reasons.should.have.length(1);
-				reasons[0].should.equal(failureReason);
-				done();
-			});
+			]).test().then(function() {
+					done(new Error('Resolved instead of rejected!'));
+				}, function(reasons) {	// second callback is the error callback, that's the one we're testing a call for
+					reasons.should.have.length(1);
+					reasons[0].should.equal(failureReason);
+					done();
+				}
+			);
 		});
 	});
 });
