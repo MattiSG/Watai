@@ -1,6 +1,9 @@
 var fs = require('fs'),
 	pathsUtils = require('path'),
 	vm = require('vm');
+	
+var logger = require('winston').loggers.get('steps'),
+	suitesLogger = require('winston').loggers.get('suites');
 
 var Widget = require('../model/Widget'),
 	Feature = require('../model/Feature'),
@@ -93,7 +96,7 @@ var SuiteLoader = new Class({
 		try {
 			config = require(this.path + this.paths.config);
 		} catch (error) {
-			console.log('No loadable configuration file (' + this.paths.config + ') in "' + this.path + '"!');
+			logger.error('No loadable configuration file (' + this.paths.config + ') in "' + this.path + '"!', {path: this.path });
 			throw error;
 		}
 		
@@ -121,7 +124,7 @@ var SuiteLoader = new Class({
 		result[this.contextGlobals.featuresList] = this.features;	// hook to pass instanciated features to this context
 		result[this.contextGlobals.widgetsList] = {};	// stays in the managed context, but necessary for features to have a reference to all widgets, since they are evaluated in _this_ context, not their instanciation one…
 			
-		result[this.contextGlobals.logger] = console.log; // this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
+		result[this.contextGlobals.logger] = logger.info; // this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
 		
 		return result;
 	},
@@ -136,7 +139,7 @@ var SuiteLoader = new Class({
 	*/
 	loadAllFiles: function loadAllFiles(err, files) {
 		if (err) {
-			console.log('Error while trying to load description files in "' + this.path + '"!');
+			suitesLogger.error('Error while trying to load description files in "' + this.path + '"!', { path: this.path });
 			throw err;
 		}
 		
@@ -170,7 +173,7 @@ var SuiteLoader = new Class({
 							this.context,
 							VM_LOG_FILE);
 		} catch (error) {
-			console.error('**Error in file "' + dataFile + '"**');
+			suitesLogger.error('**Error in file "' + dataFile + '"**', { path : dataFile });
 			throw error;
 		}
 						
@@ -198,7 +201,7 @@ var SuiteLoader = new Class({
 							this.context,
 							VM_LOG_FILE);
 		} catch (error) {
-			console.error('**Error in file "' + widgetFile + '"**');
+			suitesLogger.error('**Error in file "' + widgetFile + '"**', { path: widgetFile });
 			throw error;
 		}
 		
@@ -225,7 +228,7 @@ var SuiteLoader = new Class({
 							this.context,
 							VM_LOG_FILE);
 		} catch (error) {
-			console.error('**Error in file "' + featureFile + '"**');
+			suitesLogger.error('**Error in file "' + featureFile + '"**', { path: featureFile });
 			throw error;
 		}
 		
@@ -241,7 +244,8 @@ var SuiteLoader = new Class({
 	run: function run() {
 		var underline = '';
 		this.name.length.times(function() { underline += '-' });	//TODO: remove trailing slashes from printed names
-		console.log(this.name + '\n' + underline);
+		suitesLogger.info(this.name);
+		suitesLogger.info(underline);
 		
 		this.runner.run();
 		

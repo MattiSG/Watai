@@ -1,21 +1,33 @@
-/* This library depends on MooTools 1.4+.
-*/
+/* This library depends on [MooTools 1.4+](http://mootools.net). */
 var MooTools = require('mootools');
-			   require('./lib/mootools-additions');
+			 	require('./lib/mootools-additions');
+/* Logging is done with [Winston](https://github.com/flatiron/winston). */
 var winston = require('winston');
 
 
-/** This object is used to log all operations.
-*
-*@constant
+/** The `suites` logger logs suites names and feature status.
 */
-GLOBAL.logger = new (winston.Logger)({
-	transports: [
-		new (winston.transports.Console)(),
-		new (winston.transports.File)({ filename: 'log/execution.log' })
-	]
-});	// Node export
+winston.loggers.add('suites', {
+	console: {
+		level: 'silly',
+		colorize: 'true'
+	},
+	file: {
+		filename: 'log/execution.log'
+	}
+});
 
+/** The `steps` logger logs atomic actions on widgets.
+*/
+winston.loggers.add('steps', {
+	console: {
+		level: 'silly',
+		colorize: 'true'
+	},
+	file: {
+		filename: 'log/execution.log'
+	}
+});
 
 /** This value stores where individual Runner contexts stack traces should be stored.
 *

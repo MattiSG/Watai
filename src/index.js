@@ -42,5 +42,5 @@ function main(folders) {
 /** Prints CLI synopsis.
 */
 function showHelp() {
-	console.log("Usage: " + process.argv[1] + " path/to/description/folder [another [yetAnother […]]]");
+	console.error("Usage: " + process.argv[1] + " path/to/description/folder [another [yetAnother […]]]");
 }

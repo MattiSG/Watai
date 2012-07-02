@@ -1,5 +1,7 @@
 var promises = require('q');
 
+var logger = require('winston').loggers.get('steps');
+
 var Hook = require('./Hook');
 
 

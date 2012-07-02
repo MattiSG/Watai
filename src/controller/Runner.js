@@ -1,5 +1,7 @@
 var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver'),
 	growl = require('growl');
+	
+var logger = require('winston').loggers.get('suites');
 
 
 /**@class Manages a set of features and the driver in which they are run.
@@ -92,7 +94,7 @@ var Runner = new Class({
 			feature.test().then(this.handleFeatureResult.bind(this, feature, true),
 								this.handleFeatureResult.bind(this, feature)); // leave last arg to pass failure description
 		} catch (error) {
-			growl('Error!\n' + error, { priority: 4 });
+			growl('Error!\n' + error, { priority: 4 });	//TODO: do not *depend on* growl
 			throw error;
 			driver.quit();
 		}
@@ -106,10 +108,11 @@ var Runner = new Class({
 	*@see	#postFeature
 	*/
 	handleFeatureResult: function handleFeatureResult(feature, message) {
-		console.log((message === true ? '✔' : '✘') + '	' + feature.description);
-
-		if (message !== true) {
-			console.log('	' + message);
+		if (message === true) {
+			logger.info('✔	' + feature.description);
+		} else {
+			logger.warn('✘	' + feature.description);
+			logger.debug('	' + message);
 			this.failed = true;
 		}
 		

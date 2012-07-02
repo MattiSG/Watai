@@ -1,5 +1,7 @@
 var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver');
 
+var logger = require('winston').loggers.get('steps');
+
 
 /**@class	A Hook allows one to target a specific element on a web page.
 * It is a wrapper around both a selector and its type (css, xpath, id…).
