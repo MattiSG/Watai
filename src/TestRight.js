@@ -1,14 +1,21 @@
 /* This library depends on MooTools 1.4+.
 */
 var MooTools = require('mootools');
-require('./lib/mootools-additions');
+			   require('./lib/mootools-additions');
+var winston = require('winston');
 
 
 /** This object is used to log all operations.
 *
 *@constant
 */
-GLOBAL.logger = console;	// Node export
+GLOBAL.logger = new (winston.Logger)({
+	transports: [
+		new (winston.transports.Console)(),
+		new (winston.transports.File)({ filename: 'log/execution.log' })
+	]
+});	// Node export
+
 
 /** This value stores where individual Runner contexts stack traces should be stored.
 *
