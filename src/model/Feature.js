@@ -143,7 +143,7 @@ var Feature = new Class({
 			}
 			
 			try {
-				promises.when(this.steps[stepIndex](),
+				promises.when(this.steps[stepIndex](),	// see https://github.com/kriskowal/q#the-middle
 							  evaluateNext,
 							  handleFailure);
 			} catch (error) {

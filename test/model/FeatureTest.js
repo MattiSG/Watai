@@ -46,12 +46,11 @@ describe('Feature', function() {
 		it('of a failing promise should be rejected and reasons passed', function(done) {
 			featureWithScenario([
 				function() {
-					var promise = promises.defer();
+					var deferred = promises.defer();
+
+					deferred.reject(failureReason);
 					
-					promise.reject(failureReason);
-					
-					console.error('> step called');
-					return promise.deferred;
+					return deferred.promise;
 				}
 			]).test().then(function() {
 					done(new Error('Resolved instead of rejected!'));
