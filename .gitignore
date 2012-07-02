@@ -2,3 +2,5 @@
 chromedriver.log
 npm-debug.log
 log/vm.log
+build
+test/coverage.html
