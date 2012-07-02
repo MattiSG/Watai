@@ -9,7 +9,7 @@ var args = process.argv.slice(2); // extract CLI arguments, see http://docs.node
 
 if (args.length == 0) {
 	showHelp();
-	return 2;
+	require('process').exit(2);
 }
 
 main(args);
