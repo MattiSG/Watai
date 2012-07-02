@@ -60,4 +60,4 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	});
 }
 
-exports.addHook = Hook.addHook;	// CommonJS export
+module.exports = Hook;	// CommonJS export

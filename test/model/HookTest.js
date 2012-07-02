@@ -1,6 +1,3 @@
-var Hook = require('../../src/model/Hook');
-
-
 /* Exported to be also used in WidgetTest.
 */
 exports.checkHook = checkHook = function checkHook(subject, hookName, expectedContent) {
@@ -30,7 +27,7 @@ describe('Hook', function() {
 		describe('with ID', function() {
 			var hookName = 'id';
 			
-			Hook.addHook(hooksTarget, hookName, { id: 'toto' }, driver);
+			TestRight.Hook.addHook(hooksTarget, hookName, { id: 'toto' }, driver);
 			
 			checkHook(hooksTarget, hookName, 'This paragraph has id toto');
 		});
@@ -38,7 +35,7 @@ describe('Hook', function() {
 		describe('with CSS', function() {
 			var hookName = 'css';
 			
-			Hook.addHook(hooksTarget, hookName, { css: '.tutu' }, driver);
+			TestRight.Hook.addHook(hooksTarget, hookName, { css: '.tutu' }, driver);
 			
 			checkHook(hooksTarget, hookName, 'This paragraph has class tutu');
 		});
@@ -46,7 +43,7 @@ describe('Hook', function() {
 		describe('with Xpath', function() {
 			var hookName = 'xpath';
 			
-			Hook.addHook(hooksTarget, hookName, { xpath: '//div[@id="selectors"]/p[3]' }, driver);
+			TestRight.Hook.addHook(hooksTarget, hookName, { xpath: '//div[@id="selectors"]/p[3]' }, driver);
 			
 			checkHook(hooksTarget, hookName, 'This paragraph is the third of the selectors div');
 		});
@@ -54,7 +51,7 @@ describe('Hook', function() {
 		describe('with link text', function() {
 			var hookName = 'linkText';
 			
-			Hook.addHook(hooksTarget, hookName, { linkText: 'This paragraph is embedded in a link' }, driver);
+			TestRight.Hook.addHook(hooksTarget, hookName, { linkText: 'This paragraph is embedded in a link' }, driver);
 			
 			checkHook(hooksTarget, hookName, 'This paragraph is embedded in a link');
 		});
@@ -62,7 +59,7 @@ describe('Hook', function() {
 		it('should work on a field too', function(done) {
 			var target = 'field';
 				
-			Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, driver);
+			TestRight.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, driver);
 			
 			hooksTarget[target].getAttribute('value').then(function(content) {
 				content.should.equal('Default');
@@ -76,7 +73,7 @@ describe('Hook', function() {
 			var target = 'field',
 				newContent = 'new content';
 				
-			Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, driver);
+			TestRight.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, driver);
 			
 			hooksTarget[target] = newContent;
 

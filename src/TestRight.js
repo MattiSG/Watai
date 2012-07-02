@@ -38,6 +38,7 @@ GLOBAL.LOG_FILE = LOG_FILE;	// Node export
 var TestRight = {
 	Widget:		require('./model/Widget'),
 	Feature:	require('./model/Feature'),
+	Hook:		require('./model/Hook'),	//protected, but exported for easier testing
 	Runner:		require('./controller/Runner'),
 	SuiteLoader:require('./controller/SuiteLoader')
 }
