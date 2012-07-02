@@ -3,7 +3,7 @@ require('mocha');
 require('should');
 	
 
-exports.config = config = require('../resources/webdriver-config');
+exports.config = config = require('../config');
 
 var webdriver = require(config.webdriverjsPath);
 

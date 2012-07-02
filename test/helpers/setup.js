@@ -7,7 +7,7 @@ describe('setup', function() {
 	});
 	
 	it('should point the webdriver to the support page', function(done) {
-		this.timeout(15000);
+		this.timeout(config.browserWarmupTimeout);
 		
 		driver.get(config.supportPageURL).then(function() {
 			done();
