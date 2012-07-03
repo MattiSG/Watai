@@ -10,12 +10,22 @@
 			<p id="toto">This paragraph has id <code>toto</code></p>
 			<p class="tutu">This paragraph has class <code>tutu</code></p>
 			<p>This paragraph is the third of the <code>selectors</code> div</p>
-			<p><a href="#">This paragraph is embedded in a link</a></p>
+			<p><a id="link" href="#">This paragraph is embedded in a link</a></p>
 		</div>
 		
 		<form id="form" action="#">
 			<input name="field" type="text" value="Default"/>
 			<input type="submit" value="Submit"/>
 		</form>
+		
+		<ol id="eventMarkers">
+			<li id="clickedLink">#link has not been clicked yet</li>
+		</ol>
+		
+		<script type="text/javascript">
+			document.getElementById('link').onclick = function() {
+				document.getElementById('clickedLink').innerText = '#link has been clicked';
+			}
+		</script>
 	</body>
 </html>

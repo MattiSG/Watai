@@ -8,6 +8,10 @@ var elements = {
 	p3Link:	{ linkText: 'This paragraph is embedded in a link' }
 }
 
+var checkerElements = {
+	p3Clicked:	{ id: 'clickedLink' }
+}
+
 exports.testWidget = subject = new TestRight.Widget('Test widget', {
 	elements: elements,
 	submit: function submit(value) {
@@ -47,6 +51,10 @@ describe('Widget', function() {
 	});
 	
 	describe('element access', function() {
+		var checker = new TestRight.Widget('Events results widget', {
+			elements: checkerElements
+		}, driver);
+	
 		it('should map elements to hooks', function(done) {
 			subject.id.getText().then(function(text) {
 				text.should.equal('This paragraph has id toto');
@@ -72,6 +80,14 @@ describe('Widget', function() {
 			(function() {
 				subject.missing.click();	//TODO: can't test this directly, as the exception is raised on a callback from the Selenium server… No clue for the moment.
 			}).should.throw();
+		});
+		
+		it('should bind magically created link methods to clicking', function(done) {
+			subject.p3();
+			checker.p3Clicked.getText().then(function(text) {
+				text.should.equal('#link has been clicked');
+				done();
+			});
 		});
 	});
 });
