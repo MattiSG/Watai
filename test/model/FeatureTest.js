@@ -100,9 +100,15 @@ describe('Feature', function() {
 	});
 	
 	describe('scenarios with widget states descriptions', function() {
-		var expectedTexts = {};
+		var expectedTexts = {},
+			wrongTexts    = {},
+			firstKey;	// the first key of expected texts. Yes, it is used in a test.
 		Object.each(WidgetTest.expectedTexts, function(text, key) {	// we need to namespace all attributes to TestWidget
 			expectedTexts['TestWidget.' + key] = text;
+			wrongTexts['TestWidget.' + key] = text + ' **modified**';
+			
+			if (! firstKey)
+				firstKey = 'TestWidget.' + key;
 		});
 		
 		
@@ -120,8 +126,21 @@ describe('Feature', function() {
 			String(featureFromScenario.steps[0]).should.equal(String(directCall));
 		});
 			
-		xit('that fail should be rejected and reasons passed', function(done) {
-			
+		it('that fail should be rejected and reasons passed', function(done) {
+			featureWithScenario([
+				wrongTexts
+			]).test().then(function() { 
+				done(new Error('Unmatched widget state description should not be resolved.'));
+			}, function(reasons) {
+				var firstReason = reasons[0];
+				if (firstReason.contains(firstKey)
+					&& firstReason.contains(wrongTexts[firstKey])
+					&& firstReason.contains(expectedTexts[firstKey])) {
+					done();
+				} else {
+					done(new Error('Unmatched widget state description was properly rejected, but the reason for rejection was not clear enough.'));
+				}
+			});
 		});
 	});
 });
