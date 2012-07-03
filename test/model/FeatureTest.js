@@ -76,5 +76,13 @@ describe('Feature', function() {
 			result.should.be.a('function');
 			promises.isPromise(result()).should.be.ok;
 		});
+		
+		it('should add widget states descriptions to scenarios', function() {
+			var directCall = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
+			var featureFromScenario = featureWithScenario([ expectedTexts ]);
+			
+			featureFromScenario.should.have.property('steps').with.lengthOf(1);
+			String(featureFromScenario.steps[0]).should.equal(String(directCall));
+		});
 	});
 });
