@@ -95,8 +95,8 @@ var Runner = new Class({
 								this.handleFeatureResult.bind(this, feature)); // leave last arg to pass failure description
 		} catch (error) {
 			growl('Error!\n' + error, { priority: 4 });	//TODO: do not *depend on* growl
-			throw error;
 			driver.quit();
+			throw error;
 		}
 	},
 	
