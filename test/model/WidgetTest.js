@@ -76,10 +76,13 @@ describe('Widget', function() {
 			});
 		});
 	
-		xit('should throw an error if an unreachable element is accessed', function() {
-			(function() {
-				subject.missing.click();	//TODO: can't test this directly, as the exception is raised on a callback from the Selenium server… No clue for the moment.
-			}).should.throw();
+		xit('should fail promises if an unreachable element is accessed', function(done) {
+			subject.missing.getText().then(function() {	//TODO: define the best behavior for misspelled elements access. Currently async throw. Should it change?
+				done(new Error('Resolved instead of rejected!'));
+			}, function(error) {
+				console.error('> error:', error);
+				done();
+			});
 		});
 		
 		it('should bind magically created link methods to clicking', function(done) {

@@ -75,20 +75,16 @@ var Widget = new Class({
 	has: function has(attribute) {
 		var deferred = promises.defer();
 	
-		try {
-			this[attribute].then(function() {
-					logger.info('	-', attribute, 'is present on the page');
-	
-					deferred.resolve(true);
-				}, function() {
-					logger.info('	-', attribute, 'is missing on the page');
-	
-					deferred.resolve(false);				
-				}
-			);
-		} catch (error) {
-			deferred.reject('Error while trying to check presence of element "' + attribute + '": ' + error);
-		}
+		this[attribute].then(function() {
+				logger.info('	-', attribute, 'is present on the page');
+
+				deferred.resolve(true);
+			}, function() {
+				logger.info('	-', attribute, 'is missing on the page');
+
+				deferred.resolve(false);				
+			}
+		);
 		
 		return deferred.promise;
 	}
