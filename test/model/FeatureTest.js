@@ -64,25 +64,27 @@ describe('Feature', function() {
 		});
 	});
 	
-	describe('assertions building', function() {
-		var expectedTexts = {};
-		Object.each(WidgetTest.expectedTexts, function(text, key) {	// we need to namespace all attributes to TestWidget
-			expectedTexts['TestWidget.' + key] = text;
-		});
-		
-		
-		it('should parse a widget state description', function() {
-			var result = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
-			result.should.be.a('function');
-			promises.isPromise(result()).should.be.ok;
-		});
-		
-		it('should add widget states descriptions to scenarios', function() {
-			var directCall = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
-			var featureFromScenario = featureWithScenario([ expectedTexts ]);
+	describe('scenario parsing', function() {
+		describe('widget states descriptions', function() {
+			var expectedTexts = {};
+			Object.each(WidgetTest.expectedTexts, function(text, key) {	// we need to namespace all attributes to TestWidget
+				expectedTexts['TestWidget.' + key] = text;
+			});
 			
-			featureFromScenario.should.have.property('steps').with.lengthOf(1);
-			String(featureFromScenario.steps[0]).should.equal(String(directCall));
+			
+			it('should be made into promises', function() {
+				var result = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
+				result.should.be.a('function');
+				promises.isPromise(result()).should.be.ok;
+			});
+			
+			it('should be parsed within a scenario', function() {
+				var directCall = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
+				var featureFromScenario = featureWithScenario([ expectedTexts ]);
+				
+				featureFromScenario.should.have.property('steps').with.lengthOf(1);
+				String(featureFromScenario.steps[0]).should.equal(String(directCall));
+			});
 		});
 	});
 });
