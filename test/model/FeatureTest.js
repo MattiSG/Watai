@@ -8,17 +8,18 @@ var WidgetTest = require('./WidgetTest');
 */
 describe('Feature', function() {
 	var featureWithScenario = function featureWithScenario(scenario) {
-		return new TestRight.Feature('Test feature', scenario, [ WidgetTest.testWidget ]);
-	}
-
-	var failureReason = 'It’s a trap!';
-	var failingFeatureTest = function() {
-		return featureWithScenario([
-			function() { throw failureReason }
-		]).test();
-	}
+		return new TestRight.Feature('Test feature', scenario, { TestWidget: WidgetTest.testWidget });
+	}	
 	
 	describe('evaluation', function() {
+		var failureReason = 'It’s a trap!';
+		var failingFeatureTest = function() {
+			return featureWithScenario([
+				function() { throw failureReason }
+			]).test();
+		}
+
+	
 		it('of an empty feature should be accepted', function(done) {
 			featureWithScenario([]).test().then(done);
 		});
@@ -60,6 +61,20 @@ describe('Feature', function() {
 					done();
 				}
 			);
+		});
+	});
+	
+	describe('assertions building', function() {
+		var expectedTexts = {};
+		Object.each(WidgetTest.expectedTexts, function(text, key) {	// we need to namespace all attributes to TestWidget
+			expectedTexts['TestWidget.' + key] = text;
+		});
+		
+		
+		it('should parse a widget state description', function() {
+			var result = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
+			result.should.be.a('function');
+			promises.isPromise(result()).should.be.ok;
 		});
 	});
 });
