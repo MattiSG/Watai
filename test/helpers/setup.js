@@ -11,6 +11,12 @@ describe('setup', function() {
 		
 		driver.get(config.supportPageURL).then(function() {
 			done();
+		}, function() {
+			console.error('');
+			console.error('**The Selenium server could not be reached!**');
+			console.error('> Did you start it up?');
+			console.error('  See the troubleshooting guide if you need help  ;)');
+			process.exit(1);
 		});
 	});
 });
