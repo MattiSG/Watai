@@ -80,16 +80,16 @@ var Feature = new Class({
 	*@private
 	*/
 	buildFunctionalPromise: function buildFunctionalPromise(func, params) {
-		return func.apply.bind(func, null, params);	//TODO: handle errors like `func` not being a function
+		return func.apply.bind(func, null, params);
 	},
 	
 	/** Parses a widget state description and creates an assertive closure returning the promise for assertions results upon evaluation.
 	*
-	*@private
 	*@param		{Object}	hooksVals	A hash whose keys match some widgets' attributes, pointing at values that are expected values for those attributes.
 	*@returns	{function}	A parameter-less closure asserting the described state and returning a promise that will be either:
 	*	- rejected if any assertion fails, passing a string parameter that describes the first failed match;
 	*	- resolved if all assertions pass, with no parameter.
+	*@private
 	*/
 	buildAssertionPromise: function buildAssertionPromise(hooksVals) {
 		var widgets = this.widgets;	// making the closure complete for later evaluation

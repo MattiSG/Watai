@@ -1,4 +1,5 @@
-/* Exported to be also used in FeatureTest.
+/** Widget description of elements existing in the test support page resource.
+*@private
 */
 var elements = {
 	id:		{ id: 'toto' },
@@ -8,10 +9,29 @@ var elements = {
 	p3Link:	{ linkText: 'This paragraph is embedded in a link' }
 }
 
+/** Expected values for the texts of the elements described above, as defined in the test support page.
+* Exported for use in other tests.
+*
+*@see	#elements
+*/
+var expectedTexts = {
+	id:		'This paragraph has id toto'
+}
+exports.expectedTexts = expectedTexts;
+
+/** Widget description of elements existing in the “checking” part of the test support page resource.
+* These elements have their content updated according to actions made on the “main” elements described above.
+*@private
+*/
 var checkerElements = {
 	p3Clicked:	{ id: 'clickedLink' }
 }
 
+/** A full widget describing the “main” part of the test support page.
+* Exported for use in other tests.
+*
+*@see	#elements
+*/
 exports.testWidget = subject = new TestRight.Widget('Test widget', {
 	elements: elements,
 	submit: function submit(value) {
@@ -57,7 +77,7 @@ describe('Widget', function() {
 	
 		it('should map elements to hooks', function(done) {
 			subject.id.getText().then(function(text) {
-				text.should.equal('This paragraph has id toto');
+				text.should.equal(expectedTexts.id);
 				done();
 			});
 		});
