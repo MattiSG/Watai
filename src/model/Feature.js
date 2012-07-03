@@ -1,5 +1,7 @@
 var promises = require('q'),
 	assert = require('assert');
+	
+var logger = require('winston').loggers.get('steps');
 
 
 /**@class	A Feature models a sequence of actions to be executed through Widgets.
@@ -36,7 +38,7 @@ var Feature = new Class({
 	initialize: function init(description, scenario, widgets) {
 		this.description = description;
 		
-		this.widgets = widgets;
+		this.widgets = widgets;	//TODO: transform so that they can be referred to with the "Widget" suffix optional?
 		
 		this.steps = this.loadScenario(scenario);
 	},
@@ -61,7 +63,7 @@ var Feature = new Class({
 			 */
 			result.push(	step instanceof Function ?
 							step
-						  : typeof step == 'object' && step.length >= 0 ?	// an Array have a length property, not an Object; as a consequence, `length` is a reserved property for state description hashes
+						  : typeof step == 'object' && step.length >= 0 ?	// an Array has a length property, not an Object; as a consequence, `length` is a reserved property for state description hashes
 						    this.buildFunctionalPromise(result.pop(), step)
 						  : typeof step == 'object' ?
 						    this.buildAssertionPromise(step) // if this is a Hash, it is a description value
@@ -100,6 +102,11 @@ var Feature = new Class({
 
 			Object.each(hooksVals, function(expected, attribute) {
 				var target = Object.getFromPath(widgets, attribute);
+				
+				if (! target) {
+					logger.error('Could not find "' + attribute + '" in available widgets. Are you sure you spelled the property path properly?', { widgets: widgets });
+					throw new Error('Could not find "' + attribute + '" in available widgets');
+				}
 				
 				target.getText().then(function(actual) {
 					if (expected != actual)
