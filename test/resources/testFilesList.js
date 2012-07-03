@@ -3,5 +3,6 @@ module.exports = [
 	'model/HookTest',
 	'model/WidgetTest',
 	'model/FeatureTest',
-	'helpers/teardown'
+	'helpers/teardown',
+	'lib/mootools-additions'
 ]
