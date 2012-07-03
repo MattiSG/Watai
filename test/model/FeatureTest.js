@@ -64,7 +64,44 @@ describe('Feature', function() {
 		});
 	});
 	
-	describe('scenario parsing', function() {
+	describe('scenario parsing of', function() {
+		describe('functions', function() {
+			it('should make functions into promises', function(done) {
+				var called = false;
+				
+				featureWithScenario([ function() {
+					called = true;
+				} ]).test().then(function() {
+					if (called)
+						done();
+					else
+						done(new Error('Promise resolved without actually calling the scenario function'));
+				}, function() {
+					done(new Error('Feature evaluation failed, with ' + called ? '' : 'out'
+									+ ' actually calling the scenario function (but that’s still an error)'));
+				})
+			});
+			
+			it('should bind arrays as arguments to previous functions', function(done) {
+				var calledMarker = { called: false };	// an object rather than a simple flag, to ensure reference passing
+				
+				featureWithScenario([
+					function(arg) {
+						arg.called = true;
+					},
+					[ calledMarker ]	// if this test case works, the function above should set the `called` marker
+				]).test().then(function() {
+					if (calledMarker.called)
+						done();
+					else
+						done(new Error('Promise resolved without actually calling the scenario function'));
+				}, function() {
+					done(new Error('Promise rejected with ' + calledMarker.called ? '' : 'out'
+									+ ' actually calling the scenario function (but that’s still an error)'));
+				});
+			});
+		});
+	
 		describe('widget states descriptions', function() {
 			var expectedTexts = {};
 			Object.each(WidgetTest.expectedTexts, function(text, key) {	// we need to namespace all attributes to TestWidget
