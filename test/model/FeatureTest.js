@@ -142,5 +142,23 @@ describe('Feature', function() {
 				}
 			});
 		});
+		
+		it('that are incorrectly written should throw an error upon creation', function() {
+			(function() {
+				featureWithScenario([
+					{ toto: 'toto'}	// no widget matches this property path. We have to protect users against misspelled paths.
+				]);
+			}).should.throw();
+		});
+		
+		/* We cannot decide in advance whether a given identifier will match in another page or not. The only thing we can check is whether we're trying to describe an unknown widget property.
+		*/
+		it('that are not accessible on the current page but properly written should not throw an error', function() {
+			(function() {
+				featureWithScenario([
+					{ 'TestWidget.missing': 'missing'}
+				]);
+			}).should.not.throw();
+		});
 	});
 });

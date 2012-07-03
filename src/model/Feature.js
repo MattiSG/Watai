@@ -96,6 +96,13 @@ var Feature = new Class({
 	buildAssertionPromise: function buildAssertionPromise(hooksVals) {
 		var widgets = this.widgets;	// making the closure complete for later evaluation
 		
+		Object.each(hooksVals, function(expected, attribute) {
+			if (! Object.hasPropertyPath(widgets, attribute)) {	// unfortunately, we can't cache this, since WebDriverJS matches elements to the current page once and for all. We'll have to ask access on the page on which the assertion will take place.
+				logger.error('Could not find "' + attribute + '" in available widgets. Are you sure you spelled the property path properly?', { widgets: widgets });
+				throw new Error('Could not find "' + attribute + '" in available widgets');
+			}
+		});
+		
 		return function() {
 			var evaluator = promises.defer(),
 				matchesLeft = Object.getLength(hooksVals);
@@ -103,14 +110,9 @@ var Feature = new Class({
 			Object.each(hooksVals, function(expected, attribute) {
 				var target = Object.getFromPath(widgets, attribute);
 				
-				if (! target) {
-					logger.error('Could not find "' + attribute + '" in available widgets. Are you sure you spelled the property path properly?', { widgets: widgets });
-					throw new Error('Could not find "' + attribute + '" in available widgets');
-				}
-				
 				target.getText().then(function(actual) {
 					if (expected != actual)
-						evaluator.reject(attribute + ' was "' + actual + '" instead of "' + expected + '"');	//TODO: shouldn't it throw, so that we leave the external `each` loop immediately?
+						evaluator.reject(attribute + ' was "' + actual + '" instead of "' + expected + '"');
 						
 					if (--matchesLeft == 0)
 						evaluator.resolve();
