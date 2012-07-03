@@ -11,7 +11,7 @@ describe('Feature', function() {
 		return new TestRight.Feature('Test feature', scenario, { TestWidget: WidgetTest.testWidget });
 	}	
 	
-	describe('evaluation', function() {
+	describe('functional scenarios with', function() {
 		var failureReason = 'It’s a trap!';
 		var failingFeatureTest = function() {
 			return featureWithScenario([
@@ -20,11 +20,11 @@ describe('Feature', function() {
 		}
 
 	
-		it('of an empty feature should be accepted', function(done) {
+		it('an empty feature should be accepted', function(done) {
 			featureWithScenario([]).test().then(done);
 		});
 
-		it('of a failing function should be rejected', function(done) {
+		it('a failing function should be rejected', function(done) {
 			failingFeatureTest().then(function() {
 					done(new Error('Resolved instead of rejected!'));
 				}, function() {
@@ -33,7 +33,7 @@ describe('Feature', function() {
 			);
 		});
 		
-		it('of a failing function should be rejected and reasons passed', function(done) {
+		it('a failing function should be rejected and reasons passed', function(done) {
 			failingFeatureTest().then(function() {
 					done(new Error('Resolved instead of rejected!'));
 				}, function(reasons) {
@@ -44,7 +44,7 @@ describe('Feature', function() {
 			);
 		});
 		
-		it('of a failing promise should be rejected and reasons passed', function(done) {
+		it('a failing promise should be rejected and reasons passed', function(done) {
 			featureWithScenario([
 				function() {
 					var deferred = promises.defer();
@@ -62,66 +62,66 @@ describe('Feature', function() {
 				}
 			);
 		});
-	});
-	
-	describe('scenario parsing of', function() {
-		describe('functions', function() {
-			it('should make functions into promises', function(done) {
-				var called = false;
-				
-				featureWithScenario([ function() {
-					called = true;
-				} ]).test().then(function() {
-					if (called)
-						done();
-					else
-						done(new Error('Promise resolved without actually calling the scenario function'));
-				}, function() {
-					done(new Error('Feature evaluation failed, with ' + called ? '' : 'out'
-									+ ' actually calling the scenario function (but that’s still an error)'));
-				})
-			});
+
+		it('pure functions should be made into promises', function(done) {
+			var called = false;
 			
-			it('should bind arrays as arguments to previous functions', function(done) {
-				var calledMarker = { called: false };	// an object rather than a simple flag, to ensure reference passing
-				
-				featureWithScenario([
-					function(arg) {
-						arg.called = true;
-					},
-					[ calledMarker ]	// if this test case works, the function above should set the `called` marker
-				]).test().then(function() {
-					if (calledMarker.called)
-						done();
-					else
-						done(new Error('Promise resolved without actually calling the scenario function'));
-				}, function() {
-					done(new Error('Promise rejected with ' + calledMarker.called ? '' : 'out'
-									+ ' actually calling the scenario function (but that’s still an error)'));
-				});
+			featureWithScenario([ function() {
+				called = true;
+			} ]).test().then(function() {
+				if (called)
+					done();
+				else
+					done(new Error('Promise resolved without actually calling the scenario function'));
+			}, function() {
+				done(new Error('Feature evaluation failed, with ' + called ? '' : 'out'
+								+ ' actually calling the scenario function (but that’s still an error)'));
+			})
+		});
+		
+		it('arrays should be bound as arguments to previous functions', function(done) {
+			var calledMarker = { called: false };	// an object rather than a simple flag, to ensure reference passing
+			
+			featureWithScenario([
+				function(arg) {
+					arg.called = true;
+				},
+				[ calledMarker ]	// if this test case works, the function above should set the `called` marker
+			]).test().then(function() {
+				if (calledMarker.called)
+					done();
+				else
+					done(new Error('Promise resolved without actually calling the scenario function'));
+			}, function() {
+				done(new Error('Promise rejected with ' + calledMarker.called ? '' : 'out'
+								+ ' actually calling the scenario function (but that’s still an error)'));
 			});
 		});
+	});
 	
-		describe('widget states descriptions', function() {
-			var expectedTexts = {};
-			Object.each(WidgetTest.expectedTexts, function(text, key) {	// we need to namespace all attributes to TestWidget
-				expectedTexts['TestWidget.' + key] = text;
-			});
+	describe('scenarios with widget states descriptions', function() {
+		var expectedTexts = {};
+		Object.each(WidgetTest.expectedTexts, function(text, key) {	// we need to namespace all attributes to TestWidget
+			expectedTexts['TestWidget.' + key] = text;
+		});
+		
+		
+		it('should be made into promises', function() {
+			var result = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
+			result.should.be.a('function');
+			promises.isPromise(result()).should.be.ok;
+		});
+		
+		it('should be parsed within a scenario', function() {
+			var directCall = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
+			var featureFromScenario = featureWithScenario([ expectedTexts ]);
 			
+			featureFromScenario.should.have.property('steps').with.lengthOf(1);
+			String(featureFromScenario.steps[0]).should.equal(String(directCall));
+		});
 			
-			it('should be made into promises', function() {
-				var result = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
-				result.should.be.a('function');
-				promises.isPromise(result()).should.be.ok;
-			});
+		xit('that fail should be rejected and reasons passed', function(done) {
 			
-			it('should be parsed within a scenario', function() {
-				var directCall = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
-				var featureFromScenario = featureWithScenario([ expectedTexts ]);
-				
-				featureFromScenario.should.have.property('steps').with.lengthOf(1);
-				String(featureFromScenario.steps[0]).should.equal(String(directCall));
-			});
 		});
 	});
 });
