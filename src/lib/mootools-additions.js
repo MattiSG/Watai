@@ -1,14 +1,17 @@
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-
 /**@namespace	A selection of helper functions that are not worth including as a full-fledged separate library.
 */
+Object = Object;	// yes, this is useless, but I couldn't find a better way to have JSdoc document this properly
+
 Object.extend({
 	/** Tells whether the given property path (a string delimiting nested properties with a dot) is available, without accessing the last property.
 	*@param	source	{Object}	The object in which the given property path should be looked up.
 	*@param	parts	{String}	A path of properties to walk, delimited by dots.
 	*@returns	{Boolean}
+	*@memberOf	Object
 	*/
-	hasPropertyPath: function(source, parts) {
+	hasPropertyPath: function hasPropertyPath(source, parts) {
+		var hasOwnProperty = Object.prototype.hasOwnProperty;
+	
 		if (typeof parts == 'string') parts = parts.split('.');
 		for (var i = 0, l = parts.length; i < l - 1; i++) {
 			if (hasOwnProperty.call(source, parts[i]))
@@ -26,11 +29,12 @@ Object.extend({
 	*@param	source	{Object}	The object in which the given property path should be looked up.
 	*@param	parts	{String}	A path of properties to walk, delimited by dots.
 	*@returns	The pointed property, or `null` if any of the sub-paths is incorrect.
+	*@memberOf	Object
 	*/
-	getFromPath: function(source, parts) {
+	getFromPath: function getFromPath(source, parts) {
 		if (typeof parts == 'string') parts = parts.split('.');
 		for (var i = 0, l = parts.length; i < l; i++) {
-			if (hasOwnProperty.call(source, parts[i]))
+			if (Object.prototype.hasOwnProperty.call(source, parts[i]))
 				source = source[parts[i]];
 			else
 				return null;
