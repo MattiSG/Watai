@@ -29,7 +29,10 @@
 	"dependencies": {
 		"q": "0.8",
 		"mootools": "1.4",
-		"winston": "0.6",
+		"winston": "0.6"
+	},
+	
+	"optionalDependencies": {
 		"growl": "1.5"
 	},
 	

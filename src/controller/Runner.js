@@ -1,5 +1,10 @@
-var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver'),
+var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver');
+var growl;
+try {
 	growl = require('growl');
+} catch (e) {
+	growl = false;
+}
 	
 var logger = require('winston').loggers.get('suites');
 
@@ -94,7 +99,8 @@ var Runner = new Class({
 			feature.test().then(this.handleFeatureResult.bind(this, feature, true),
 								this.handleFeatureResult.bind(this, feature)); // leave last arg to pass failure description
 		} catch (error) {
-			growl('Error!\n' + error, { priority: 4 });	//TODO: do not *depend on* growl
+			if (growl)
+				growl('Error!\n' + error, { priority: 4 });
 			driver.quit();
 			throw error;
 		}
