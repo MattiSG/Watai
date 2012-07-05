@@ -13,9 +13,9 @@
 	"main":		"src/TestRight.js",
 	"bin":		"go",
 	"directories": {
-		"lib":	"./src",
-		"doc":	"./doc",
-		"example":	"./example"
+		"lib": "./src",
+		"doc": "./doc",
+		"example": "./example"
 	},
 	"repository" : {
 		"type" : "git",
@@ -26,18 +26,23 @@
 		"test": "./go test"
 	},
 	
+	"engines": {
+		"node" : "0.6"
+	},
+	"engineStrict": true,
 	"dependencies": {
 		"q": "0.8",
 		"mootools": "1.4",
 		"winston": "0.6"
-	},
-	
+	},	
 	"optionalDependencies": {
 		"growl": "1.5"
 	},
-	
 	"devDependencies": {
 		"should": "0.6",
 		"mocha": "1.2"
-	}
+	},
+	
+	"preferGlobal": true,
+	"private": true
 }
