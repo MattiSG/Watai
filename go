@@ -12,8 +12,8 @@ case "$1" in
 	coverage )	# based on http://tjholowaychuk.com/post/18175682663
 		rm -rf $BUILD_DIR
 		jscoverage $SRC_DIR $BUILD_DIR	# install from https://github.com/visionmedia/node-jscoverage
-		export COVERAGE=true
-		mocha $TEST_DIR --reporter html-cov > $TEST_DIR/coverage.html
+		export npm_config_coverage=true
+		mocha $TEST_DIR --reporter html-cov > $TEST_DIR/coverage.html &&
 		open $TEST_DIR/coverage.html ;;
 	doc )
 		java -Djsdoc.dir=$JSDOC_DIR -jar $JSDOC_DIR/jsrun.jar $JSDOC_DIR/app/run.js -t=$JSDOC_DIR/templates/jsdoc -d=$DOC_DIR/api $SRC_DIR/*
