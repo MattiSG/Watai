@@ -1,7 +1,13 @@
+# OS stuff
 .DS_Store
+
+# logs
+log/*
 chromedriver.log
 npm-debug.log
-log/*
+
+# generated stuff
+node_modules
 build
 test/coverage.html
 doc/api
