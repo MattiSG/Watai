@@ -51,3 +51,7 @@ Once you have both Node 0.6 and a Selenium standalone server, you can consider i
 As long as we’re in early alpha, the package won’t be published on the NPM public registry. You will therefore have to install Watai with the following command:
 
 	npm install -g https://github.com/MattiSG/Watai/tarball/master
+
+Since we’re installing globally (`-g`), you may have to `sudo` that command. If you’d rather not do this to simply have a quick look at that piece of software, then remove the `-g`, but you won’t benefit from the `watai` shortcut.
+
+Hence, if you install locally (without `-g`), replace all instances of the `watai` command by `<path/to/install/folder>/node_modules/go` for all instructions beneath.
