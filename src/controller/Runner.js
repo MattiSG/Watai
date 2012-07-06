@@ -135,7 +135,23 @@ var Runner = new Class({
 		if (this.currentFeature < this.features.length)
 			this.evaluateFeature(this.features[this.currentFeature]);
 		else
-			this.driver.quit();
+			this.finish();
+	},
+	
+	/** Informs the user of the end result and cleans up everything after tests runs.
+	*
+	*@param	{Boolean}	success	Whether all features succeeded or not.
+	*@private
+	*/	
+	finish: function finish(success) {
+		if (growl) {
+			if (this.failed)
+				growl('Test failed  :(', { priority: 4 });
+			else
+				growl('Test succeeded!  :)', { priority: 3 });
+		}
+		
+		this.driver.quit();
 	}
 });
 
