@@ -15,10 +15,10 @@ Benefits
 
 → [Read more about when and how you should use Watai](https://github.com/MattiSG/Watai/wiki/Rationale).
 
-How to use
+Installing
 ----------
 
-### Installing ###
+### Dependencies ###
 
 #### Node & NPM ####
 
@@ -42,3 +42,11 @@ If you’re under OSX and have [Homebrew](http://mxcl.github.com/homebrew/), sim
 Otherwise, [download the JAR](https://code.google.com/p/selenium/downloads/detail?name=selenium-server-standalone-2.24.1.jar) (_server-standalone_, ok?) and start it in the background:
 
 	java -jar path/to/downloaded/selenium-server-standalone.jar &
+
+### Package ###
+
+Once you have both Node 0.6 and a Selenium standalone server, you can consider installing Watai itself.
+
+As long as we’re in early alpha, the package won’t be published on the NPM public registry. You will therefore have to install Watai with the following command:
+
+	npm install -g https://github.com/MattiSG/Watai/tarball/master
