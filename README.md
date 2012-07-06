@@ -46,7 +46,7 @@ Otherwise, [download the JAR](https://code.google.com/p/selenium/downloads/detai
 
 ### Package ###
 
-Once you have both Node 0.6 and a Selenium standalone server, you can consider installing Watai itself.
+Once you have both Node 0.6 and a Selenium standalone server, you can consider installing Watai itself. If you’re under Windows, you will have to log out from your session to have your PATH updated (or replace `npm` beneath with the full `Program Files\…\nodejs\npm` path).
 
 As long as we’re in early alpha, the package won’t be published on the NPM public registry. You will therefore have to install Watai with the following command:
 
@@ -54,4 +54,6 @@ As long as we’re in early alpha, the package won’t be published on the NPM p
 
 Since we’re installing globally (`-g`), you may have to `sudo` that command. If you’d rather not do this to simply have a quick look at that piece of software, then remove the `-g`, but you won’t benefit from the `watai` shortcut.
 
-Hence, if you install locally (without `-g`), replace all instances of the `watai` command by `<path/to/install/folder>/node_modules/go` for all instructions beneath.
+Hence, if you install locally (without `-g`), replace all instances of the `watai` command by `<path/to/install/folder>/node_modules/go` for all instructions.
+
+### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki)! ###
