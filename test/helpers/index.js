@@ -1,11 +1,10 @@
-var pathsUtils = require('path');
 require('mocha');
 require('should');
+var pathsUtils = require('path'),
+	webdriver = require('selenium-webdriverjs');
 	
 
 exports.config = config = require('../config');
-
-var webdriver = require(config.webdriverjsPath);
 
 	
 GLOBAL.driver = new webdriver.Builder()

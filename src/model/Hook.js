@@ -1,4 +1,4 @@
-var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver');
+var webdriver = require('selenium-webdriverjs');
 
 var logger = require('winston').loggers.get('steps');
 

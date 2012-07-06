@@ -1,4 +1,4 @@
-var webdriver = require('/Users/eurogiciel/Documents/Ghost/selenium/build/javascript/webdriver/webdriver');
+var webdriver = require('selenium-webdriverjs');
 var growl;
 try {
 	growl = require('growl');
