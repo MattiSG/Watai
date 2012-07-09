@@ -6,12 +6,15 @@ require('./lib/mootools-additions');
 var winston = require('winston'),
 	pathsUtils = require('path');
 
-
+/** Path to the directory containing all logs.
+*@private
+*/
 var LOG_DIR = 'log';
 
+// create the LOG_DIR directory, since Winston cannot create the folder hierarchy on its own
 var err;
 try {
-	require('fs').mkdirSync(LOG_DIR, '0755');	// Winston cannot create the folder hierarchy on its own
+	require('fs').mkdirSync(LOG_DIR, '0755');
 } catch (e) {
 	err = e;
 } finally {
@@ -32,16 +35,32 @@ try {
 *You are therefore free of choosing your own namespacing pattern.
 */
 var TestRight = {
+	/**@see	Widget
+	*/
 	Widget:		require('./model/Widget'),
+	/**@see	Feature
+	*/
 	Feature:	require('./model/Feature'),
-	Hook:		require('./model/Hook'),	//protected, but exported for easier testing
+	/**@see	Runner
+	*/
 	Runner:		require('./controller/Runner'),
-	SuiteLoader:require('./controller/SuiteLoader')
+	/**@see	SuiteLoader
+	*/
+	SuiteLoader:require('./controller/SuiteLoader'),
+	/**@see	Hook
+	*@private	(protected, exported for easier testing)
+	*/
+	Hook:		require('./model/Hook')
 }
 
 module.exports = TestRight;	// CommonJS export
 
 
+/** Initializes all different Winston loggers.
+*@param	{Error}	err	An optional error thrown when trying to create the `LOG_DIR` directory.
+*@see	https://github.com/flatiron/winston#working-with-multiple-loggers-in-winston
+*@private
+*/
 function initLoggers(err) {
 	if (err && err.code != 'EEXIST') throw err;	// an already-existing log directory is expected and not a problem
 	
