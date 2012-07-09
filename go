@@ -1,9 +1,10 @@
 #!/bin/bash
 
-SRC_DIR="src"
-BUILD_DIR="build"
-TEST_DIR="test"
-DOC_DIR="doc"
+BASEDIR="$(dirname $0)"
+SRC_DIR="$BASEDIR/src"
+BUILD_DIR="$BASEDIR/build"
+TEST_DIR="$BASEDIR/test"
+DOC_DIR="$BASEDIR/doc"
 JSDOC_DIR="/usr/local/jsdoc_toolkit-2.4.0/jsdoc-toolkit"	#TODO: make this more shareable?
 
 case "$1" in
@@ -19,6 +20,5 @@ case "$1" in
 		java -Djsdoc.dir=$JSDOC_DIR -jar $JSDOC_DIR/jsrun.jar $JSDOC_DIR/app/run.js -t=$JSDOC_DIR/templates/jsdoc -d=$DOC_DIR/api $SRC_DIR/*
 		open $DOC_DIR/api/index.html ;;
 	* ) # simply run the tool
-		node src "$*" ;;
+		node $SRC_DIR "$@" ;;
 esac
-
