@@ -24,8 +24,8 @@ main(args);
 * Any number of paths may be given.
 *
 *@param	{Array.<String>}	folders	This **function**, as opposed to the CLI, takes in an array of paths. The CLI takes varargs.
-*
 *@see	SuiteLoader
+*@private
 */
 function main(folders) {
 	var suites = new Array(folders.length);
@@ -40,6 +40,7 @@ function main(folders) {
 }
 
 /** Prints CLI synopsis.
+*@private
 */
 function showHelp() {
 	console.error("Usage: " + process.argv[1] + " path/to/description/folder [another [yetAnother […]]]");
