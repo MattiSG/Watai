@@ -44,6 +44,12 @@ Otherwise, [download the JAR](https://code.google.com/p/selenium/downloads/detai
 
 	java -jar path/to/downloaded/selenium-server-standalone.jar &
 
+#### Optional: ChromeDriver ####
+
+You will have to install some additional software (ChromeDriver) if you want to [test with Chrome](https://github.com/MattiSG/Watai/wiki/Testing-with-Chrome) (or with other browsers).
+
+This is completely optional, and you will be started faster if you do the tutorial with Firefox. The testing itself will be a bit slower, but you may come back to add Chrome later on if you like Watai  :)
+
 ### Package ###
 
 Once you have both Node 0.6 and a Selenium standalone server, you can consider installing Watai itself. If you’re under Windows, you will have to log out from your session to have your PATH updated (or replace `npm` beneath with the full `Program Files\…\nodejs\npm` path).
