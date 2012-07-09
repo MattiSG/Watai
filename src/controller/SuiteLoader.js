@@ -171,7 +171,7 @@ var SuiteLoader = new Class({
 		try {
 			vm.runInContext(fs.readFileSync(dataFile),
 							this.context,
-							VM_LOG_FILE);
+							dataFile);
 		} catch (error) {
 			suitesLogger.error('**Error in file "' + dataFile + '"**', { path : dataFile });
 			throw error;
@@ -199,7 +199,7 @@ var SuiteLoader = new Class({
 							+ fs.readFileSync(widgetFile) + ','
 							+ 'driver);',
 							this.context,
-							VM_LOG_FILE);
+							widgetFile);
 		} catch (error) {
 			suitesLogger.error('**Error in file "' + widgetFile + '"**', { path: widgetFile });
 			throw error;
@@ -226,7 +226,7 @@ var SuiteLoader = new Class({
 							+								 '__widgets__'
 							+ '));',
 							this.context,
-							VM_LOG_FILE);
+							featureFile);
 		} catch (error) {
 			suitesLogger.error('**Error in file "' + featureFile + '"**', { path: featureFile });
 			throw error;

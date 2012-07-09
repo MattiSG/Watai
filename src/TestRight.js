@@ -33,15 +33,6 @@ winston.loggers.add('steps', {
 	}
 });
 
-/** This value stores where individual Runner contexts stack traces should be stored.
-*
-*@see	http://nodejs.org/api/vm.html#vm_vm_runincontext_code_context_filename (filename parameter)
-*
-*@constant
-*@type	{String}
-*/
-var VM_LOG_FILE = 'log/vm.log';
-GLOBAL.VM_LOG_FILE = VM_LOG_FILE;	// Node export
 
 /**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
 *
