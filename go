@@ -1,6 +1,7 @@
 #!/bin/bash
 
 BASEDIR="$(dirname $0)"
+BASEDIR=$BASEDIR/$(dirname $(readlink $0) 2> /dev/null)	# readlink for NPM global install alias; error redirection in case of direct invocation, in which case readlink returns nothing
 SRC_DIR="$BASEDIR/src"
 BUILD_DIR="$BASEDIR/build"
 TEST_DIR="$BASEDIR/test"
