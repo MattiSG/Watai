@@ -9,7 +9,7 @@
 	"bugs":		"https://github.com/MattiSG/Watai/issues",
 	"author":	"Matti Schneider <hi@mattischneider.fr> (http://mattischneider.fr)",
 	
-	"files":	[ "src", "doc", "example", "go" ],
+	"files":	[ "src", "doc", "go" ],
 	"main":		"src/TestRight.js",
 	"bin":		"go",
 	"directories": {
