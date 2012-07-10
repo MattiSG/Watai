@@ -6,21 +6,7 @@ require('./lib/mootools-additions');
 var winston = require('winston'),
 	pathsUtils = require('path');
 
-/** Path to the directory containing all logs.
-*@private
-*/
-var LOG_DIR = 'log';
-
-// create the LOG_DIR directory, since Winston cannot create the folder hierarchy on its own
-var err;
-try {
-	require('fs').mkdirSync(LOG_DIR, '0755');
-} catch (e) {
-	err = e;
-} finally {
-	initLoggers(err);
-}
-
+initLoggers();
 
 /**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
 *
@@ -57,14 +43,10 @@ module.exports = TestRight;	// CommonJS export
 
 
 /** Initializes all different Winston loggers.
-*@param	{Error}	err	An optional error thrown when trying to create the `LOG_DIR` directory.
 *@see	https://github.com/flatiron/winston#working-with-multiple-loggers-in-winston
 *@private
 */
-function initLoggers(err) {
-	if (err && err.code != 'EEXIST') throw err;	// an already-existing log directory is expected and not a problem
-	
-	
+function initLoggers() {
 	/** The `suites` logger logs suites names and feature status.
 	*/
 	winston.loggers.add('suites', {
@@ -73,9 +55,6 @@ function initLoggers(err) {
 				   ? 'error'
 				   : 'silly',
 			colorize: 'true'
-		},
-		file: {
-			filename: pathsUtils.join(LOG_DIR, 'execution.log')
 		}
 	});
 	
@@ -87,9 +66,6 @@ function initLoggers(err) {
 				   ? 'error'
 				   : 'warn',
 			colorize: 'true'
-		},
-		file: {
-			filename: pathsUtils.join(LOG_DIR, 'execution.log')
 		}
 	});
 }
