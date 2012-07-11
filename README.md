@@ -40,9 +40,11 @@ Watai uses Selenium-WebDriver to automate browsers. You will therefore need a Se
 
 If you’re under OSX and have [Homebrew](http://mxcl.github.com/homebrew/), simply `brew install selenium-server-standalone` and start it with the command given at the end of the “Caveats” section.
 
-Otherwise, [download the JAR](https://code.google.com/p/selenium/downloads/detail?name=selenium-server-standalone-2.24.1.jar) (_server-standalone_, ok?) and start it in the background:
+Otherwise, [download the JAR](https://code.google.com/p/selenium/downloads/detail?name=selenium-server-standalone-2.24.1.jar) and start it in the background:
 
-	java -jar path/to/downloaded/selenium-server-standalone.jar &
+	java -jar path/to/downloaded/selenium-server-standalone.jar
+
+You will obviously need Java. If you don’t have it yet (but you probably wouldn’t be reading a developer tool README), [download it now](http://java.com/download).
 
 #### Optional: ChromeDriver ####
 
@@ -54,10 +56,24 @@ This is completely optional, and you will be started faster if you do the tutori
 
 Once you have both Node 0.6 and a Selenium standalone server, you can consider installing Watai itself. If you’re under Windows, you will have to log out from your session to have your PATH updated (or replace `npm` beneath with the full `Program Files\…\nodejs\npm` path).
 
-As long as we’re in early alpha, the package won’t be published on the NPM public registry. You will therefore have to install Watai with the following command:
+As long as we’re in early alpha, the package won’t be published on the NPM public registry. You will therefore have to install Watai with one of the following commands:
+
+#### Global install (easiest) ####
 
 	sudo npm install -g https://github.com/MattiSG/Watai/tarball/master
 
-Since we’re installing globally (`-g`), you will have to `sudo` that command. If you’d rather not do this to simply have a quick look at that piece of software, then remove the `-g`, but you won’t benefit from the `watai` shortcut. In this case, replace all instances of the `watai` command by `<path/to/install/folder>/node_modules/go` for all instructions.
+NPM will automatically create the `watai` alias for you. If you decide you don’t want to use Watai later on, simply `npm uninstall -g` it.
+
+#### Local install ####
+
+	npm install https://github.com/MattiSG/Watai/tarball/master
+	alias watai="$(pwd)/node_modules/watai/go"
+	
+This will create a `node_modules` folder with all dependencies in the current directory. A good way to give Watai a quick look if you’re afraid of `sudo`ing.
+
+#### Under Windows ####
+
+	npm install -g https://github.com/MattiSG/Watai/tarball/master
+	doskey watai=node "%APPDATA%\npm\node_modules\watai\src"
 
 ### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki)! ###
