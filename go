@@ -32,6 +32,8 @@ case "$1" in
 	doc )
 		java -Djsdoc.dir=$JSDOC_DIR -jar $JSDOC_DIR/jsrun.jar $JSDOC_DIR/app/run.js -t=$JSDOC_DIR/templates/jsdoc -d=$DOC_DIR/api $SRC_DIR/*
 		open $DOC_DIR/api/index.html ;;
+	export-example )
+		git archive -9 --output="doc/tutorials/Watai-DuckDuckGo-example.zip" HEAD example/DuckDuckGo/ ;;
 	* ) # simply run the tool
 		node $SRC_DIR "$@" ;;
 esac
