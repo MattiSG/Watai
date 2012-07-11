@@ -1,5 +1,6 @@
 var TR = require('./TestRight');
 
+var logger = require('winston').loggers.get('suites');
 
 // =========================== //
 // =========== CLI =========== //
@@ -9,7 +10,7 @@ var args = process.argv.slice(2); // extract CLI arguments, see http://docs.node
 
 if (args.length == 0) {
 	showHelp();
-	require('process').exit(2);
+	process.exit(2);
 }
 
 main(args);
@@ -43,5 +44,6 @@ function main(folders) {
 *@private
 */
 function showHelp() {
-	console.error("Usage: " + process.argv[1] + " path/to/description/folder [another [yetAnother […]]]");
+	logger.error("Oops, you didn’t provide any test suite to execute!");
+	logger.info("Usage: watai path/to/suite/description/folder [another/suite [yetAnother […]]]");
 }
