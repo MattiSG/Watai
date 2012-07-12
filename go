@@ -7,6 +7,7 @@ BUILD_DIR="$BASEDIR/build"
 TEST_DIR="$BASEDIR/test"
 DOC_DIR="$BASEDIR/doc"
 JSDOC_DIR="/usr/local/jsdoc_toolkit-2.4.0/jsdoc-toolkit"	#TODO: make this more shareable?
+DIST_DIR="$BASEDIR/dist"
 
 
 # Cross-platform Darwin open(1)
@@ -33,7 +34,23 @@ case "$1" in
 		java -Djsdoc.dir=$JSDOC_DIR -jar $JSDOC_DIR/jsrun.jar $JSDOC_DIR/app/run.js -t=$JSDOC_DIR/templates/jsdoc -d=$DOC_DIR/api $SRC_DIR/*
 		open $DOC_DIR/api/index.html ;;
 	export-example )
-		git archive -9 --output="doc/tutorials/Watai-DuckDuckGo-example.zip" HEAD example/DuckDuckGo/ ;;
+		cd $BASEDIR
+		outputFile="doc/tutorials/Watai-DuckDuckGo-example.zip"
+		git archive -9 --output="$outputFile" HEAD example/DuckDuckGo/
+		echo "Created $outputFile"
+		cd - > /dev/null ;;
+	dist )
+		cd $BASEDIR
+		outputFile=dist/watai-$(git describe)-NPMdeps.zip
+		mkdir dist 2> /dev/null
+		git archive -9 --output="$outputFile" $(git describe)
+		echo "Archived repository"
+		echo "Adding dependencies…"
+		npm install -d
+		zip -q -u $outputFile -r node_modules
+		echo "Done."
+		open dist
+		cd - > /dev/null ;;
 	* ) # simply run the tool
 		node $SRC_DIR "$@" ;;
 esac

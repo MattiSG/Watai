@@ -11,3 +11,4 @@ node_modules
 build
 test/coverage.html
 doc/api
+dist
