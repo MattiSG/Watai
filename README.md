@@ -22,17 +22,17 @@ Installing
 
 #### Node & NPM ####
 
-Watai runs as a [Node.js](http://nodejs.org) module, and has dependencies on other modules.
-
-You will therefore need the Node runtime, and NPM to manage dependencies, which [comes with Node](http://npmjs.org/doc/README.html#Super-Easy-Install).
+Watai runs as a [Node.js](http://nodejs.org) module with dependencies on external modules. You will therefore need the Node runtime and package manager (NPM).
 
 _Watai has been tested only with Node 0.6, not yet with 0.8. If you already have Node, you should stick with 0.6 for the moment._
 
-**Download the Node package for your environment:**
+**Download the Node+NPM package for your environment:**
 
 - [Precompiled for OS X](http://nodejs.org/dist/v0.6.18/node-v0.6.18.pkg).
 - [Precompiled for Windows](http://nodejs.org/dist/v0.6.18/node-v0.6.18.msi).
 - Or use a [package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager) to get Node v0.6.
+
+If you’re under Windows and don’t have admin privileges, you might have to define `PATH` as a user environment variable and set it to `<install_drive>:\Program Files\nodejs`.
 
 #### Selenium Server ####
 
@@ -44,27 +44,27 @@ Otherwise, [download the JAR](https://code.google.com/p/selenium/downloads/detai
 
 	java -jar path/to/downloaded/selenium-server-standalone.jar
 
-You will obviously need Java. If you don’t have it yet (but you probably wouldn’t be reading a developer tool README), [download it now](http://java.com/download).
+You will obviously need Java (≥ 1.5). If you don’t have it yet (but you probably wouldn’t be reading a developer tool README), [download it now](http://java.com/download).
 
 #### Optional: ChromeDriver ####
 
-You will have to install some additional software (ChromeDriver) if you want to [test with Chrome](https://github.com/MattiSG/Watai/wiki/Testing-with-Chrome) (or with other browsers).
+If you want to [test with Chrome](https://github.com/MattiSG/Watai/wiki/Testing-with-Chrome) (or with other browsers), you will have to install some additional software.
 
 This is completely optional, and you will be started faster if you do the tutorial with Firefox. The testing itself will be a bit slower, but you may come back to add Chrome later on if you like Watai  :)
 
 ### Package ###
 
-Once you have both Node 0.6 and a Selenium standalone server, you can consider installing Watai itself. If you’re under Windows, you will have to log out from your session to have your PATH updated (or replace `npm` beneath with the full `Program Files\…\nodejs\npm` path).
+Once you have both Node 0.6 and a Selenium standalone server, you can consider installing Watai itself.
 
 As long as we’re in early alpha, the package won’t be published on the NPM public registry. You will therefore have to install Watai with one of the following commands:
 
-#### Global install (easiest) ####
+#### POSIX-compliant OS: global install (easiest) ####
 
 	sudo npm install -g https://github.com/MattiSG/Watai/tarball/master
 
 NPM will automatically create the `watai` alias for you. If you decide you don’t want to use Watai later on, simply `npm uninstall -g` it.
 
-#### Local install ####
+#### POSIX-compliant OS: local install ####
 
 	npm install https://github.com/MattiSG/Watai/tarball/master
 	alias watai="$(pwd)/node_modules/watai/go"
@@ -75,5 +75,9 @@ This will create a `node_modules` folder with all dependencies in the current di
 
 	npm install -g https://github.com/MattiSG/Watai/tarball/master
 	doskey watai=node "%APPDATA%\npm\node_modules\watai\src"
+
+#### From behind a proxy ####
+
+If your proxy configuration prevents you from using `npm install` properly (i.e. you get `ERRTIMEOUT` errors), download the latest _“Watai with NPM dependencies”_ package from the [Downloads](https://github.com/MattiSG/Watai/downloads) tab, and `alias` / `doskey` the name `watai` to `node path/to/downloaded/folder/src` (mark the `/src` at the end!).
 
 ### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki)! ###
