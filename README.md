@@ -84,4 +84,4 @@ This will create a `node_modules` folder with all dependencies in the current di
 
 If your proxy configuration prevents you from using `npm install` properly (i.e. you get `ERRTIMEOUT` errors), download the latest _“Watai with NPM dependencies”_ package from the [Downloads](https://github.com/MattiSG/Watai/downloads) tab, and `alias` / `doskey` the name `watai` to `node path/to/downloaded/folder/src` (mark the `/src` at the end!).
 
-### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki)! ###
+### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki/Introduction)! ###
