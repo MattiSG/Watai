@@ -40,9 +40,13 @@ Watai uses Selenium-WebDriver to automate browsers. You will therefore need a Se
 
 If you’re under OSX and have [Homebrew](http://mxcl.github.com/homebrew/), simply `brew install selenium-server-standalone` and start it with the command given at the end of the “Caveats” section.
 
-Otherwise, [download the JAR](https://code.google.com/p/selenium/downloads/detail?name=selenium-server-standalone-2.24.1.jar) and start it in the background:
+Otherwise, [download the JAR](https://code.google.com/p/selenium/downloads/detail?name=selenium-server-standalone-2.24.1.jar) and start it (preferably in the background):
 
 	java -jar path/to/downloaded/selenium-server-standalone.jar
+
+This will output many `INFO` lines over a few seconds. You know it is done when it says:
+
+	… INFO - Started org.openqa.jetty.jetty.Server@…
 
 You will obviously need Java (≥ 1.5). If you don’t have it yet (but you probably wouldn’t be reading a developer tool README), [download it now](http://java.com/download).
 
