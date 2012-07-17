@@ -31,7 +31,10 @@ case "$1" in
 		mocha $TEST_DIR --reporter html-cov > $TEST_DIR/coverage.html &&
 		open $TEST_DIR/coverage.html ;;
 	doc )
-		java -Djsdoc.dir=$JSDOC_DIR -jar $JSDOC_DIR/jsrun.jar $JSDOC_DIR/app/run.js -t=$JSDOC_DIR/templates/jsdoc -d=$DOC_DIR/api $SRC_DIR/*
+		if [[ $2 = "private" ]]
+		then opts='-p'
+		fi
+		java -Djsdoc.dir=$JSDOC_DIR -jar $JSDOC_DIR/jsrun.jar $JSDOC_DIR/app/run.js -t=$JSDOC_DIR/templates/jsdoc -d=$DOC_DIR/api $opts $SRC_DIR/*
 		open $DOC_DIR/api/index.html ;;
 	export-example )
 		cd $BASEDIR
