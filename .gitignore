@@ -12,3 +12,7 @@ build
 test/coverage.html
 doc/api
 dist
+
+# IDEs
+*.sublime-project
+*.sublime-workspace
