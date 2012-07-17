@@ -4,19 +4,7 @@ var promises = require('q'),
 var logger = require('winston').loggers.get('steps');
 
 
-/**@class	A Feature models a sequence of actions to be executed through Widgets.
-* 
-* A feature description file contains a simple descriptive array listing widget methods to execute and widget state descriptors to assert.
-* More formally, such an array is ordered and its members may be:
-* - a closure;
-* - an object whose keys are some widgets' attributes identifiers (ex: "MyWidget.myAttr"), pointing at a string that contains the expected text content of the HTML element represented by the `myAttr` hook in `MyWidget`.
-*
-* Upon instanciation, a Feature translates this array into an array of promises:
-* - closures are executed directly, either as promises if they are so themselves, or as basic functions;
-* - a widget state descripting hash maps each of its members to an assertion inside a promise, evaluating all of them completely asynchronously.
-* All those promises are then evaluated sequentially upon calling the `test` method of a Feature.
-*/
-var Feature = new Class({
+var Feature = new Class( /** @lends Feature# */ {
 	/** A sequence of promises to be executed in order, constructed after the scenario for this feature.
 	*@private
 	*/
@@ -29,9 +17,20 @@ var Feature = new Class({
 	*/
 	widgets: {},
 	
-	/** 
+	/**@class	A Feature models a sequence of actions to be executed through Widgets.
+	* 
+	* A feature description file contains a simple descriptive array listing widget methods to execute and widget state descriptors to assert.
+	* More formally, such an array is ordered and its members may be:
+	* - a closure;
+	* - an object whose keys are some widgets' attributes identifiers (ex: "MyWidget.myAttr"), pointing at a string that contains the expected text content of the HTML element represented by the `myAttr` hook in `MyWidget`.
 	*
-	*@param	{String}	description	A plaintext description of the feature, advised to be written in a BDD fashion.
+	* Upon instantiation, a Feature translates this array into an array of promises:
+	* - closures are executed directly, either as promises if they are so themselves, or as basic functions;
+	* - a widget state describing hash maps each of its members to an assertion inside a promise, evaluating all of them asynchronously.
+	* All those promises are then evaluated sequentially upon calling the `test` method of a Feature.
+	*
+	*@constructs
+	*@param	{String}	description	A plain text description of the feature, advised to be written in a BDD fashion.
 	*@param	{Array}		scenario	An array that describes states and transitions. See class documentation for formatting.
 	*@param	{Object.<String, Widget>}	widgets	A hash listing all widgets accessible to this Feature, indexed on their names.
 	*/
@@ -57,7 +56,7 @@ var Feature = new Class({
 			
 			/* So, this is going to be a bit hard. Stay with me  ;)
 			 * Scenarios are loaded in a different context, absolutely clean by default (see SuiteLoader).
-			 * Therefore, steps in the scenario are clean of any protoype augmentation.
+			 * Therefore, steps in the scenario are clean of any prototype augmentation.
 			 * MooTools, for example, allows proper type introspection through prototype augmentation. This is not usable here.
 			 * But we still need to do introspection to offer proper heuristics. Tricks to achieve this are below.
 			 */
