@@ -9,16 +9,7 @@ try {
 var logger = require('winston').loggers.get('suites');
 
 
-/**@class Manages a set of features and the driver in which they are run.
-*
-* A `Runner` is mostly set up through a configuration object.
-* Such an object should contain the following items:
-*	- `baseURL`: the URL at which the driver should start;
-*	- `driverCapabilities`: an object that will be passed straight to the WebDriver instance.
-*
-* The chosen implementation for WebDriver is the [official WebDriverJS](https://code.google.com/p/selenium/wiki/WebDriverJs) by the Selenium team. Make sure you use this module and not one of the other implementations, since this code has not been tested with any other.
-*/
-var Runner = new Class({
+var Runner = new Class( /** @lends Runner# */ {
 	/** Whether any test did fail during the current run or not.
 	*@type	{boolean}
 	*@private
@@ -37,7 +28,15 @@ var Runner = new Class({
 	*/
 	currentFeature: 0,
 
-	/** A runner is set up by passing it a configuration object.
+	/**@class	Manages a set of features and the driver in which they are run.
+	*@constructs
+	*
+	* A `Runner` is mostly set up through a configuration object.
+	* Such an object should contain the following items:
+	*	- `baseURL`: the URL at which the driver should start;
+	*	- `driverCapabilities`: an object that will be passed straight to the WebDriver instance.
+	*
+	* The chosen implementation for WebDriver is the [official WebDriverJS](https://code.google.com/p/selenium/wiki/WebDriverJs) by the Selenium team. Make sure you use this module and not one of the other implementations, since this code has not been tested with any other.
 	*
 	*@param	{Object}	config	A configuration object, as defined above.
 	*
