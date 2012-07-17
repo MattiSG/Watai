@@ -11,42 +11,6 @@ var Widget = require('../model/Widget'),
 
 
 var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
-	/** Defines all naming patterns conventions for test description folders.
-	* Used for magical autoload.
-	*
-	*@constant
-	*/
-	paths: {
-		/** Exact name of configuration files to look for in description folders.
-		*/
-		config: 'config.js',
-		/** If a file contains this string, it is considered as a feature description to be loaded.
-		*/
-		featureMarker:	'Feature.js',
-		/** If a file contains this string, it is considered as a widget description to be loaded.
-		*/
-		widgetMarker:	'Widget.js',
-		/** If a file contains this string, it is considered as a data suite to be loaded.
-		*/
-		dataMarker:		'Data.js'
-	},
-	
-	/** Lists all predefined globals in the suite loading context, and how they are referenced in that context.
-	*
-	*@constant
-	*/
-	contextGlobals: {
-		/** A hash containing all loaded widgets, indexed on their name.
-		*/
-		widgetsList:	'__widgets__',
-		/** An array containing all features, in their loading order.
-		*/
-		featuresList:	'__features__',
-		/** The name of the offered logging function.
-		*/
-		logger:			'log'
-	},
-	
 	/** Will be set to the name of the loaded test suite.
 	*@private
 	*/
@@ -93,9 +57,9 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		
 		var config;
 		try {
-			config = require(this.path + this.paths.config);
+			config = require(this.path + SuiteLoader.paths.config);
 		} catch (error) {
-			logger.error('No loadable configuration file (' + this.paths.config + ') in "' + this.path + '"!', {path: this.path });
+			logger.error('No loadable configuration file (' + SuiteLoader.paths.config + ') in "' + this.path + '"!', {path: this.path });
 			throw error;
 		}
 		
@@ -120,10 +84,10 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			driver: this.runner.getDriver()
 		}
 		
-		result[this.contextGlobals.featuresList] = this.features;	// hook to pass instantiated features to this context
-		result[this.contextGlobals.widgetsList] = {};	// stays in the managed context, but necessary for features to have a reference to all widgets, since they are evaluated in _this_ context, not their instanciation one…
+		result[SuiteLoader.contextGlobals.featuresList] = this.features;	// hook to pass instantiated features to this context
+		result[SuiteLoader.contextGlobals.widgetsList] = {};	// stays in the managed context, but necessary for features to have a reference to all widgets, since they are evaluated in _this_ context, not their instanciation one…
 			
-		result[this.contextGlobals.logger] = logger.info; // this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
+		result[SuiteLoader.contextGlobals.logger] = logger.info; // this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
 		
 		return result;
 	},
@@ -145,11 +109,11 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		var featureFiles = [],
 			widgetFiles = [];
 		files.forEach(function(file) {
-			if (file.contains(this.paths.dataMarker))
+			if (file.contains(SuiteLoader.paths.dataMarker))
 				this.loadData(this.path + file);
-			else if (file.contains(this.paths.widgetMarker))
+			else if (file.contains(SuiteLoader.paths.widgetMarker))
 				widgetFiles.push(this.path + file);	// don't load them immediately in order to make referenced data values available first
-			else if (file.contains(this.paths.featureMarker))
+			else if (file.contains(SuiteLoader.paths.featureMarker))
 				featureFiles.push(this.path + file);	// don't load them immediately in order to make referenced widgets available first
 		}, this);
 		
@@ -251,5 +215,42 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		return this.runner;
 	}
 });
+
+/** Defines all naming patterns conventions for test description folders.
+* Used for magical autoload.
+*
+*@constant
+*/
+SuiteLoader.paths = {
+		/** Exact name of configuration files to look for in description folders.
+		*/
+		config:			'config.js',
+		/** If a file contains this string, it is considered as a feature description to be loaded.
+		*/
+		featureMarker:	'Feature.js',
+		/** If a file contains this string, it is considered as a widget description to be loaded.
+		*/
+		widgetMarker:	'Widget.js',
+		/** If a file contains this string, it is considered as a data suite to be loaded.
+		*/
+		dataMarker:		'Data.js'
+}
+
+/** Lists all predefined global variables in the suite loading context, and how they are referenced in that context.
+*
+*@constant
+*/
+SuiteLoader.contextGlobals = {
+	/** A hash containing all loaded widgets, indexed on their name.
+	*/
+	widgetsList:	'__widgets__',
+	/** An array containing all features, in their loading order.
+	*/
+	featuresList:	'__features__',
+	/** The name of the offered logging function.
+	*/
+	logger:			'log'
+}
+
 
 module.exports = SuiteLoader;	// CommonJS export
