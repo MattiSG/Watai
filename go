@@ -6,7 +6,7 @@ SRC_DIR="$BASEDIR/src"
 BUILD_DIR="$BASEDIR/build"
 TEST_DIR="$BASEDIR/test"
 DOC_DIR="$BASEDIR/doc"
-JSDOC_DIR="/usr/local/jsdoc_toolkit-2.4.0/jsdoc-toolkit"	#TODO: make this more shareable?
+JSDOC_DIR="/usr/local/Cellar/jsdoc-toolkit/2.4.0/libexec/jsdoc-toolkit"	#TODO: make this more shareable
 DIST_DIR="$BASEDIR/dist"
 
 
