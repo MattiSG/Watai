@@ -29,7 +29,6 @@ var Runner = new Class( /** @lends Runner# */ {
 	currentFeature: 0,
 
 	/**@class	Manages a set of features and the driver in which they are run.
-	*@constructs
 	*
 	* A `Runner` is mostly set up through a configuration object.
 	* Such an object should contain the following items:
@@ -38,8 +37,8 @@ var Runner = new Class( /** @lends Runner# */ {
 	*
 	* The chosen implementation for WebDriver is the [official WebDriverJS](https://code.google.com/p/selenium/wiki/WebDriverJs) by the Selenium team. Make sure you use this module and not one of the other implementations, since this code has not been tested with any other.
 	*
+	*@constructs
 	*@param	{Object}	config	A configuration object, as defined above.
-	*
 	*@see	WebDriver.Builder#withCapabilities
 	*/
 	initialize: function init(config) {
