@@ -5,16 +5,16 @@ var logger = require('winston').loggers.get('steps');
 var Hook = require('./Hook');
 
 
-/**@class A Widget models a set of controls on a website.
-*/
-var Widget = new Class({
+var Widget = new Class( /** @lends Widget# */ {
 	/** The name of this widget.
 	* Automatically set to the name of its containing file upon parsing.
 	*@type	{String}
 	*/
 	name: '',
 
-	/**
+	/**@class	Models a set of controls on a website.
+	*
+	*@constructs
 	*@param	name	Name of this widget.
 	*@param	values	A hash with the following form:
 	*	`elements`: a hash mapping attribute names to a hook. A hook is a one-pair hash mapping a selector type to an actual selector.
@@ -48,7 +48,7 @@ var Widget = new Class({
 	/** Add magic methods on specially-formatted elements.
 	* _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`.
 	*
-	*@see	Widget#magic
+	*@see	Widget.magic
 	*@private
 	*/
 	addMagic: function addMagic(key) {
@@ -91,13 +91,12 @@ var Widget = new Class({
 });
 
 /** Maps magic element regexps from the action that should be generated.
-* _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`.
+* _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`._
 *
 * Keys are names of the methods that should be added to the element, and values are regexps that trigger the magic.
 * The name of the generated member is the content of the first capturing parentheses match in the regexp.
 *
 *@see	RegExp#exec
-*@static
 *@private
 */
 Widget.magic = {
