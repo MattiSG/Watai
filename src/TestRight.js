@@ -43,6 +43,7 @@ module.exports = TestRight;	// CommonJS export
 
 
 /** Initializes all different Winston loggers.
+*@memberOf	TestRight
 *@see	https://github.com/flatiron/winston#working-with-multiple-loggers-in-winston
 *@private
 */
