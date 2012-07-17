@@ -10,16 +10,7 @@ var Widget = require('../model/Widget'),
 	Runner = require('./Runner');
 
 
-/**@class A SuiteLoader handles all test description files loading and Runner setup.
-* A test description folder should contain a `config.js` file, and any number of feature (`*Feature.js`) and widget (`*Widget.js`) description files.
-*
-* _Since we're currently in high-speed iterative development, hence without formal documentation, see the `example` folder for more information on how to write such files._
-*
-* Features will be loaded in an internally-managed Runner, and all Widgets, Features and datasets will be made available in an internally-managed VM context (i.e. every definition is made in isolation).
-*
-*@see	http://nodejs.org/api/vm.html
-*/
-var SuiteLoader = new Class({
+var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	/** Defines all naming patterns conventions for test description folders.
 	* Used for magical autoload.
 	*
@@ -83,9 +74,17 @@ var SuiteLoader = new Class({
 	*/
 	features: [],
 	
-	/** Creates a new `Runner` based on the given configuration, and initiates Widgets and Features parsing.
+	/**@class A SuiteLoader handles all test description files loading and Runner setup.
+	* A test description folder should contain a `config.js` file, and any number of feature (`*Feature.js`) and widget (`*Widget.js`) description files.
 	*
+	* _Since we're currently in high-speed iterative development, hence without formal documentation, see the `example` folder for more information on how to write such files._
+	*
+	* Features will be loaded in an internally-managed Runner, and all Widgets, Features and datasets will be made available in an internally-managed VM context (i.e. every definition is made in isolation).
+	*
+	*@constructs
 	*@param	path	Path to the folder containing a test description. Trailing slashes will be normalized, don't worry about them  :)
+	*
+	*@see	http://nodejs.org/api/vm.html
 	*/
 	initialize: function init(path) {
 		this.path = pathsUtils.resolve(path) + '/';
@@ -114,14 +113,14 @@ var SuiteLoader = new Class({
 	*/
 	buildContext: function buildContext() {
 		var result = {
-			// used for instanciation
+			// used for instantiation
 			Widget: Widget,
 			Feature: Feature,
-			// making it available for global access like loading URLs, getting title…
+			// making it available for global access like loading URLs, getting title...
 			driver: this.runner.getDriver()
 		}
 		
-		result[this.contextGlobals.featuresList] = this.features;	// hook to pass instanciated features to this context
+		result[this.contextGlobals.featuresList] = this.features;	// hook to pass instantiated features to this context
 		result[this.contextGlobals.widgetsList] = {};	// stays in the managed context, but necessary for features to have a reference to all widgets, since they are evaluated in _this_ context, not their instanciation one…
 			
 		result[this.contextGlobals.logger] = logger.info; // this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
