@@ -34,7 +34,8 @@
 		"q": "0.8",
 		"mootools": "1.4",
 		"winston": "0.6",
-		"selenium-webdriverjs":	"0.0.1-r17314"
+		"selenium-webdriverjs":	"0.0.1-r17314",
+		"mattisg.configloader":	"0.0.2"
 	},	
 	"optionalDependencies": {
 		"growl": "1.5"

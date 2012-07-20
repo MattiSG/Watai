@@ -4,6 +4,7 @@ require('./lib/mootools-additions');
 
 /* Logging is done with [Winston](https://github.com/flatiron/winston). */
 var winston = require('winston'),
+/* http://nodejs.org/api/path.html */
 	pathsUtils = require('path');
 
 initLoggers();
