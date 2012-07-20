@@ -1,7 +1,7 @@
 Watai
 =====
 
-Watai (temporary name) is a **declarative, bottom-up BDD, full-stack web testing** framework.
+Watai (temporary name) stands for Web Application Testing Automation Infrastructure. It is a **declarative, bottom-up BDD, full-stack web testing** framework.
 
 It is both a test runner engine (i.e. it executes tests) and a set of architectural patterns to make you write **maintainable**, **solid** end-to-end (GUI) tests for browsers.
 
@@ -48,13 +48,13 @@ This will output many `INFO` lines over a few seconds. You know it is done when 
 
 	… INFO - Started org.openqa.jetty.jetty.Server@…
 
-You will obviously need Java (≥ 1.5). If you don’t have it yet (but you probably wouldn’t be reading a developer tool README), [download it now](http://java.com/download).
+You will obviously need Java (≥ 1.5). If you don’t have it yet (but you probably wouldn’t be reading this README), [download it now](http://java.com/download).
 
 #### Optional: ChromeDriver ####
 
 If you want to [test with Chrome](https://github.com/MattiSG/Watai/wiki/Testing-with-Chrome) (or with other browsers), you will have to install some additional software.
 
-This is completely optional, and you will be started faster if you do the tutorial with Firefox. The testing itself will be a bit slower, but you may come back to add Chrome later on if you like Watai  :)
+This is completely optional, and you will be operational faster if you do the tutorial with Firefox. The testing itself will be a bit slower, but you may come back to add Chrome later on if you like Watai  :)
 
 ### Package ###
 
@@ -70,9 +70,10 @@ NPM will automatically create the `watai` alias for you. If you decide you don�
 
 #### POSIX-compliant OS: local install ####
 
+	cd choose/your/install/folder
 	npm install https://github.com/MattiSG/Watai/tarball/master
 	alias watai="$(pwd)/node_modules/watai/go"
-	
+
 This will create a `node_modules` folder with all dependencies in the current directory. A good way to give Watai a quick look if you’re afraid of `sudo`ing.
 
 #### Under Windows ####
