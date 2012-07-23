@@ -58,7 +58,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 		var loader = new ConfigLoader({
 			from: this.path,
-			appName: 'watai'
+			appName: 'watai',
+			observer: suitesLogger.silly
 		});
 		
 		var config = loader.load(SuiteLoader.paths.config);
