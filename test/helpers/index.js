@@ -1,14 +1,18 @@
 require('mocha');
 require('should');
 var pathsUtils = require('path'),
-	webdriver = require('selenium-webdriverjs');
-	
+	webdriver = require('selenium-webdriverjs'),
+	ConfigLoader = require('mattisg.configloader');
 
-exports.config = config = require('../config');
+
+exports.config = config = new ConfigLoader({
+	from: __dirname,
+	appName: 'watai'
+}).load('config');
 
 	
 GLOBAL.driver = new webdriver.Builder()
-							 .usingServer(config.connectURL)
+							 .usingServer(config.seleniumServerURL)
 							 .withCapabilities(config.driverCapabilities)
 							 .build();
 
