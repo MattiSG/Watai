@@ -40,7 +40,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	features: [],
 	
 	/**@class A SuiteLoader handles all test description files loading and Runner setup.
-	* A test description folder should contain a `config.js` file, and any number of feature (`*Feature.js`) and widget (`*Widget.js`) description files.
+	* A test description folder should contain a `config` file, and any number of feature (`*Feature.js`) and widget (`*Widget.js`) description files.
 	*
 	* _Since we're currently in high-speed iterative development, hence without formal documentation, see the `example` folder for more information on how to write such files._
 	*
@@ -57,7 +57,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		this.name = pathsUtils.basename(path);
 
 		var loader = new ConfigLoader({
-			from: this.path
+			from: this.path,
+			appName: 'watai'
 		});
 		
 		var config = loader.load(SuiteLoader.paths.config);
@@ -229,7 +230,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 SuiteLoader.paths = {
 	/** Exact name of configuration files to look for in description folders.
 	*/
-	config:			'config.js',
+	config:			'config',
 	/** If a file contains this string, it is considered as a feature description to be loaded.
 	*/
 	featureMarker:	'Feature.js',
