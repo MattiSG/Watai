@@ -1,8 +1,4 @@
-/**@namespace	A selection of helper functions that are not worth including as a full-fledged separate library.
-*/
-Object = Object;	// yes, this is useless, but I couldn't find a better way to have JSdoc document this properly
-
-Object.extend({
+Object.extend( /* @lends Object */ {
 	/** Tells whether the given property path (a string delimiting nested properties with a dot) is available, without accessing the last property.
 	*@param	source	{Object}	The object in which the given property path should be looked up.
 	*@param	parts	{String}	A path of properties to walk, delimited by dots.
