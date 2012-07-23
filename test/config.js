@@ -5,5 +5,9 @@ module.exports = {
 		browserName: 'chrome',
 		javascriptEnabled: true
 	},
+	logLevel: {
+		suites: 'none',
+		steps: 'none'
+	},
 	browserWarmupTimeout: 30 * 1000	//ms
 }
