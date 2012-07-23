@@ -4,10 +4,12 @@ BASEDIR="$(dirname $0)"
 BASEDIR=$BASEDIR/$(dirname $(readlink $0) 2> /dev/null)	# readlink for NPM global install alias; error redirection in case of direct invocation, in which case readlink returns nothing
 SRC_DIR="$BASEDIR/src"
 BUILD_DIR="$BASEDIR/build"
+BIN_DIR="$BASEDIR/node_modules/.bin/"
 TEST_DIR="$BASEDIR/test"
 DOC_DIR="$BASEDIR/doc"
 JSDOC_DIR="/usr/local/Cellar/jsdoc-toolkit/2.4.0/libexec/jsdoc-toolkit"	#TODO: make this more shareable
 DIST_DIR="$BASEDIR/dist"
+JSCOVERAGE="$BASEDIR/node_modules/visionmedia-jscoverage/jscoverage"
 
 
 # Cross-platform Darwin open(1)
@@ -23,12 +25,12 @@ open() {
 
 case "$1" in
 	test )
-		mocha $TEST_DIR ;;
+		$BIN_DIR/mocha $TEST_DIR ;;
 	coverage )	# based on http://tjholowaychuk.com/post/18175682663
 		rm -rf $BUILD_DIR
-		jscoverage $SRC_DIR $BUILD_DIR	# install from https://github.com/visionmedia/node-jscoverage
+		$JSCOVERAGE $SRC_DIR $BUILD_DIR
 		export npm_config_coverage=true
-		mocha $TEST_DIR --reporter html-cov > $TEST_DIR/coverage.html &&
+		$BIN_DIR/mocha $TEST_DIR --reporter html-cov > $TEST_DIR/coverage.html &&
 		open $TEST_DIR/coverage.html ;;
 	doc )
 		if [[ $2 = "private" ]]

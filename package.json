@@ -41,7 +41,8 @@
 	},
 	"devDependencies": {
 		"should": "0.6",
-		"mocha": "1.2"
+		"mocha": "1.2",
+		"visionmedia-jscoverage": "1.0"
 	},
 	
 	"preferGlobal": true,
