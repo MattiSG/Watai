@@ -45,8 +45,8 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.config = config;
 		
 		this.driver = new webdriver.Builder()
-						.usingServer('http://127.0.0.1:4444/wd/hub')	//TODO: extract connect URL and put it in config
-						.withCapabilities(config.driverCapabilities)
+						.usingServer(this.config.seleniumServerURL)
+						.withCapabilities(this.config.driverCapabilities)
 						.build();
 						
 		DRIVER = this.driver;

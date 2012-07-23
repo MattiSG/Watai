@@ -3,7 +3,8 @@ var fs = require('fs'),
 	vm = require('vm');
 	
 var logger = require('winston').loggers.get('steps'),
-	suitesLogger = require('winston').loggers.get('suites');
+	suitesLogger = require('winston').loggers.get('suites'),
+	ConfigLoader = require('mattisg.configloader');
 
 var Widget = require('../model/Widget'),
 	Feature = require('../model/Feature'),
@@ -39,7 +40,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	features: [],
 	
 	/**@class A SuiteLoader handles all test description files loading and Runner setup.
-	* A test description folder should contain a `config.js` file, and any number of feature (`*Feature.js`) and widget (`*Widget.js`) description files.
+	* A test description folder should contain a `config` file, and any number of feature (`*Feature.js`) and widget (`*Widget.js`) description files.
 	*
 	* _Since we're currently in high-speed iterative development, hence without formal documentation, see the `example` folder for more information on how to write such files._
 	*
@@ -51,16 +52,22 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@see	http://nodejs.org/api/vm.html
 	*/
 	initialize: function init(path) {
-		this.path = pathsUtils.resolve(path) + '/';
+		this.path = pathsUtils.resolve(path) + '/';	//TODO: Node 0.8 has path.sep
 		
 		this.name = pathsUtils.basename(path);
+
+		var loader = new ConfigLoader({
+			from: this.path,
+			appName: 'watai',
+			observer: suitesLogger.silly
+		});
 		
-		var config;
-		try {
-			config = require(this.path + SuiteLoader.paths.config);
-		} catch (error) {
-			logger.error('No loadable configuration file (' + SuiteLoader.paths.config + ') in "' + this.path + '"!', {path: this.path });
-			throw error;
+		var config = loader.load(SuiteLoader.paths.config);
+
+		if (! config.baseURL) {
+			var msg = 'No baseURL was found in any "' + SuiteLoader.paths.config + '" file in directories above "' + this.path + '"';
+			logger.error(msg);
+			throw new Error(msg);
 		}
 		
 		this.runner = new Runner(config);
@@ -129,7 +136,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@see	#loadAllFiles
 	*/
 	loadData: function loadData(dataFile) {
-		logger.info('~ loading ' + dataFile);
+		logger.verbose('~ loading ' + dataFile);
 		
 		try {
 			vm.runInContext(fs.readFileSync(dataFile),
@@ -151,7 +158,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@see	#loadAllFiles
 	*/
 	loadWidget: function loadWidget(widgetFile) {
-		logger.info('- loading ' + widgetFile);
+		logger.verbose('- loading ' + widgetFile);
 		
 		var widgetName = pathsUtils.basename(widgetFile, '.js');
 		
@@ -179,7 +186,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@see	#loadAllFiles
 	*/
 	loadFeature: function loadFeature(featureFile) {
-		logger.info('+ loading ' + featureFile);
+		logger.verbose('+ loading ' + featureFile);
 		
 		try {
 			vm.runInContext('var featureContents = ' + fs.readFileSync(featureFile) + ';'
@@ -222,18 +229,18 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 *@constant
 */
 SuiteLoader.paths = {
-		/** Exact name of configuration files to look for in description folders.
-		*/
-		config:			'config.js',
-		/** If a file contains this string, it is considered as a feature description to be loaded.
-		*/
-		featureMarker:	'Feature.js',
-		/** If a file contains this string, it is considered as a widget description to be loaded.
-		*/
-		widgetMarker:	'Widget.js',
-		/** If a file contains this string, it is considered as a data suite to be loaded.
-		*/
-		dataMarker:		'Data.js'
+	/** Exact name of configuration files to look for in description folders.
+	*/
+	config:			'config',
+	/** If a file contains this string, it is considered as a feature description to be loaded.
+	*/
+	featureMarker:	'Feature.js',
+	/** If a file contains this string, it is considered as a widget description to be loaded.
+	*/
+	widgetMarker:	'Widget.js',
+	/** If a file contains this string, it is considered as a data suite to be loaded.
+	*/
+	dataMarker:		'Data.js'
 }
 
 /** Lists all predefined global variables in the suite loading context, and how they are referenced in that context.

@@ -1,6 +1,6 @@
 {
 	"name":	"watai",
-	"version":	"0.1.1-alpha",
+	"version":	"0.1.2-alpha",
 	
 	"description":	"A declarative, bottom-up BDD, full-stack web testing framework. Maintainable integration tests for all browsers.",
 	"keywords":	"test, testing, validation, behavior, behaviour, BDD, TDD, integration, browser, cross-browser",
@@ -34,7 +34,8 @@
 		"q": "0.8",
 		"mootools": "1.4",
 		"winston": "0.6",
-		"selenium-webdriverjs":	"0.0.1-r17314"
+		"selenium-webdriverjs":	"0.0.1-r17314",
+		"mattisg.configloader":	"0.1.2-alpha"
 	},	
 	"optionalDependencies": {
 		"growl": "1.5"

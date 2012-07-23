@@ -4,7 +4,16 @@ require('./lib/mootools-additions');
 
 /* Logging is done with [Winston](https://github.com/flatiron/winston). */
 var winston = require('winston'),
-	pathsUtils = require('path');
+/* http://nodejs.org/api/path.html */
+	pathsUtils = require('path'),
+/* https://github.com/MattiSG/Node-ConfigLoader#readme */
+	ConfigLoader = require('mattisg.configloader');
+
+
+var config = new ConfigLoader({
+	from: pathsUtils.dirname(module.parent.filename),
+	appName: 'watai'
+}).load('config');
 
 initLoggers();
 
@@ -52,9 +61,7 @@ function initLoggers() {
 	*/
 	winston.loggers.add('suites', {
 		console: {
-			level: process.env.npm_config_coverage	// if we're computing test coverage, we can't use standard output at all, since the coverage analysis result is piped through it. The trigger is an env variable. See build automation script.
-				   ? 'error'
-				   : 'silly',
+			level: config.logLevel.suites,
 			colorize: 'true'
 		}
 	});
@@ -63,9 +70,7 @@ function initLoggers() {
 	*/
 	winston.loggers.add('steps', {
 		console: {
-			level: process.env.npm_config_coverage	// if we're computing test coverage, we can't use standard output at all, since the coverage analysis result is piped through it. The trigger is an env variable. See build automation script.
-				   ? 'error'
-				   : 'warn',
+			level: config.logLevel.steps,
 			colorize: 'true'
 		}
 	});
