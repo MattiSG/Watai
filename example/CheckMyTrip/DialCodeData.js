@@ -1,2 +1,2 @@
-dialCodeLookup = 'France'
-dialCodeResult = 'France(FR): 00 33'
+dialCodeLookupCountry = 'France'
+dialCodeExpectedResult = 'France(FR): 00 33'

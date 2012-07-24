@@ -1,0 +1,8 @@
+{
+	"baseURL": "https://checkmytrip.com/",
+	
+	"driverCapabilities": {
+		"browserName": "chrome",
+		"javascriptEnabled": true
+	}
+}

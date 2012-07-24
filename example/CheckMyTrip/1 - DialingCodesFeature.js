@@ -1,9 +1,9 @@
 {
-	description: 'A user should be able to look up ' + dialCodeLookup + '’s dialcode',
+	description: 'A user should be able to look up ' + dialCodeLookupCountry + '’s dialcode',
 	
 	scenario: [
 		TripToolsWidget.open,
-		DialCodeWidget.lookup, dialCodeLookup,
-		{ 'DialCodeWidget.result': dialCodeResult }
+		DialCodeWidget.lookup, dialCodeLookupCountry,
+		{ 'DialCodeWidget.result': dialCodeExpectedResult }
 	]
 }
