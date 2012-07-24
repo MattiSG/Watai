@@ -60,7 +60,7 @@ var Feature = new Class( /** @lends Feature# */ {
 			 * MooTools, for example, allows proper type introspection through prototype augmentation. This is not usable here.
 			 * But we still need to do introspection to offer proper heuristics. Tricks to achieve this are below.
 			 */
-			result.push(	step instanceof Function ?
+			result.push(	typeof step == 'function' ?
 							step
 						  : typeof step == 'object' && step.length >= 0 ?	// an Array has a length property, not an Object; as a consequence, `length` is a reserved property for state description hashes
 						    this.buildFunctionalPromise(result.pop(), step)
