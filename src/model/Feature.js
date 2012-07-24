@@ -93,9 +93,12 @@ var Feature = new Class( /** @lends Feature# */ {
 	*@private
 	*/
 	buildAssertionPromise: function buildAssertionPromise(hooksVals) {
-		var widgets = this.widgets;	// making the closure complete for later evaluation
+		var widgets = this.widgets,	// making the closure complete for later evaluation
+			matchesLeft = 0;	// optimization: we're using the check loop beneath to cache the count of elements to match
 		
 		Object.each(hooksVals, function(expected, attribute) {
+			matchesLeft++;
+
 			if (! Object.hasPropertyPath(widgets, attribute)) {	// unfortunately, we can't cache this, since WebDriverJS matches elements to the current page once and for all. We'll have to ask access on the page on which the assertion will take place.
 				logger.error('Could not find "' + attribute + '" in available widgets. Are you sure you spelled the property path properly?', { widgets: widgets });
 				throw new Error('Could not find "' + attribute + '" in available widgets');
@@ -103,8 +106,7 @@ var Feature = new Class( /** @lends Feature# */ {
 		});
 		
 		return function() {
-			var evaluator = promises.defer(),
-				matchesLeft = Object.getLength(hooksVals);
+			var evaluator = promises.defer();
 
 			Object.each(hooksVals, function(expected, attribute) {
 				var target = Object.getFromPath(widgets, attribute);
