@@ -10,6 +10,7 @@ DOC_DIR="$BASEDIR/doc"
 JSDOC_DIR="/usr/local/Cellar/jsdoc-toolkit/2.4.0/libexec/jsdoc-toolkit"	#TODO: make this more shareable
 DIST_DIR="$BASEDIR/dist"
 JSCOVERAGE="$BASEDIR/node_modules/visionmedia-jscoverage/jscoverage"
+MOCHA_CMD="$BIN_DIR/mocha --timeout 5000 $TEST_DIR" # longer timeout because async tests can be a bit longer than the default 2s
 
 
 # Cross-platform Darwin open(1)
@@ -25,12 +26,12 @@ open() {
 
 case "$1" in
 	test )
-		$BIN_DIR/mocha $TEST_DIR ;;
+		$MOCHA_CMD ;; 
 	coverage )	# based on http://tjholowaychuk.com/post/18175682663
 		rm -rf $BUILD_DIR
 		$JSCOVERAGE $SRC_DIR $BUILD_DIR
 		export npm_config_coverage=true
-		$BIN_DIR/mocha $TEST_DIR --reporter html-cov > $TEST_DIR/coverage.html &&
+		$MOCHA_CMD --reporter html-cov > $TEST_DIR/coverage.html &&
 		open $TEST_DIR/coverage.html ;;
 	doc )
 		if [[ $2 = "private" ]]
