@@ -13,15 +13,28 @@ describe('Feature', function() {
 	
 	describe('functional scenarios with', function() {
 		var failureReason = 'It’s a trap!';
+
 		var failingFeatureTest = function() {
 			return featureWithScenario([
 				function() { throw failureReason }
 			]).test();
 		}
 
+		function makeFailingPromiseWithSuffix(suffix) {
+			return function() {
+				var deferred = promises.defer();
+				deferred.reject(failureReason + suffix);
+				return deferred.promise;
+			}
+		}
+
+		var failingPromise = makeFailingPromiseWithSuffix('');
+
 	
 		it('an empty feature should be accepted', function(done) {
-			featureWithScenario([]).test().then(done);
+			featureWithScenario([]).test().then(done, function() {
+				console.error(arguments);
+			}).end();
 		});
 
 		it('a failing function should be rejected', function(done) {
@@ -30,37 +43,51 @@ describe('Feature', function() {
 				}, function() {
 					done();	// can't pass it directly, Mocha complains about param not being an error…
 				}
-			);
+			).end();
 		});
 		
-		it('a failing function should be rejected and reasons passed', function(done) {
+		it('an error should be rejected and reasons passed', function(done) {
 			failingFeatureTest().then(function() {
 					done(new Error('Resolved instead of rejected!'));
 				}, function(reasons) {
-					reasons.should.have.length(1);
-					reasons[0].should.equal(failureReason);
+					reasons.failures.should.have.length(0);
+					reasons.errors.should.have.length(1);
+					reasons.errors[0].should.equal(failureReason);
 					done();
 				}
-			);
+			).end();
 		});
 		
 		it('a failing promise should be rejected and reasons passed', function(done) {
 			featureWithScenario([
-				function() {
-					var deferred = promises.defer();
-
-					deferred.reject(failureReason);
-					
-					return deferred.promise;
-				}
+				failingPromise
 			]).test().then(function() {
 					done(new Error('Resolved instead of rejected!'));
 				}, function(reasons) {	// second callback is the error callback, that's the one we're testing a call for
-					reasons.should.have.length(1);
-					reasons[0].should.equal(failureReason);
+					reasons.errors.should.have.length(0);
+					reasons.failures.should.have.length(1);
+					reasons.failures[0].should.equal(failureReason);
 					done();
 				}
-			);
+			).end();
+		});
+
+		it('multiple failing promises should be rejected and reasons passed in correct order', function(done) {
+			featureWithScenario([
+				makeFailingPromiseWithSuffix(0),
+				makeFailingPromiseWithSuffix(1),
+				makeFailingPromiseWithSuffix(2)
+			]).test().then(function() {
+					done(new Error('Resolved instead of rejected!'));
+				}, function(reasons) {
+					reasons.failures.should.have.length(3);
+					reasons.failures[0].should.equal(failureReason + '0');
+					reasons.failures[1].should.equal(failureReason + '1');
+					reasons.failures[2].should.equal(failureReason + '2');
+					reasons.errors.should.have.length(0);
+					done();
+				}
+			).end();
 		});
 
 		it('pure functions should be made into promises', function(done) {
@@ -76,7 +103,7 @@ describe('Feature', function() {
 			}, function() {
 				done(new Error('Feature evaluation failed, with ' + called ? '' : 'out'
 								+ ' actually calling the scenario function (but that’s still an error)'));
-			})
+			}).end();
 		});
 		
 		it('arrays should be bound as arguments to previous functions', function(done) {
@@ -95,7 +122,7 @@ describe('Feature', function() {
 			}, function() {
 				done(new Error('Promise rejected with ' + calledMarker.called ? '' : 'out'
 								+ ' actually calling the scenario function (but that’s still an error)'));
-			});
+			}).end();
 		});
 	});
 	
@@ -132,7 +159,7 @@ describe('Feature', function() {
 			]).test().then(function() { 
 				done(new Error('Unmatched widget state description should not be resolved.'));
 			}, function(reasons) {
-				var firstReason = reasons[0];
+				var firstReason = reasons.failures[0];
 				if (firstReason.contains(firstKey)
 					&& firstReason.contains(wrongTexts[firstKey])
 					&& firstReason.contains(expectedTexts[firstKey])) {
@@ -140,7 +167,7 @@ describe('Feature', function() {
 				} else {
 					done(new Error('Unmatched widget state description was properly rejected, but the reason for rejection was not clear enough.'));
 				}
-			});
+			}).end();
 		});
 		
 		it('that are incorrectly written should throw an error upon creation', function() {

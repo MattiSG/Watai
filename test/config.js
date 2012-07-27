@@ -9,5 +9,6 @@ module.exports = {
 		suites: 'none',
 		steps: 'none'
 	},
-	browserWarmupTimeout: 30 * 1000	//ms
+	browserWarmupTimeout: 30 * 1000,	//ms
+	timeout: 1	// implicit wait for elements lookup in seconds, has to be lower than mocha's timeout to test for missing elements rejection
 }
