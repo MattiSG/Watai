@@ -5,7 +5,7 @@
 	},
 	
 	lookup: function lookup(town) {
-		field = town;
-		return field.submit();
+		this.field = town;
+		return this.field.submit();
 	}
 }
