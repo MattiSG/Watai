@@ -1,5 +1,5 @@
 {
-	description: 'A user should be able to look up ' + clockLookupTown + '’s local town',
+	description: 'A user should be able to look up ' + clockLookupTown + '’s local time',
 	
 	scenario: [
 		function() {
@@ -7,7 +7,7 @@
 		},
 		ClockWidget.lookup, clockLookupTown,
 		function() {
-			assert.equal(ClockWidget.result, prev - 1); //TODO: offer assertions
+			assert.equal(ClockWidget.result, prev - 1);
 		}
 	]
 }

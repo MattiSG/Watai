@@ -95,6 +95,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		result[SuiteLoader.contextGlobals.widgetsList] = {};	// stays in the managed context, but necessary for features to have a reference to all widgets, since they are evaluated in _this_ context, not their instanciation one…
 			
 		result[SuiteLoader.contextGlobals.logger] = logger.info; // this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
+
+		result[SuiteLoader.contextGlobals.assert] = require('assert');
 		
 		return result;
 	},
@@ -256,7 +258,10 @@ SuiteLoader.contextGlobals = {
 	featuresList:	'__features__',
 	/** The name of the offered logging function.
 	*/
-	logger:			'log'
+	logger:			'log',
+	/** The name of the offered assertion library.
+	*/
+	assert:			'assert'
 }
 
 
