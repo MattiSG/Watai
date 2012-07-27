@@ -48,8 +48,8 @@ var Runner = new Class( /** @lends Runner# */ {
 						.usingServer(this.config.seleniumServerURL)
 						.withCapabilities(this.config.driverCapabilities)
 						.build();
-						
-		DRIVER = this.driver;
+
+		this.driver.manage().timeouts().implicitlyWait(this.config.timeout * 1000);
 	},
 	
 	/** Adds the given Feature to the list of those that this Runner will evaluate.
