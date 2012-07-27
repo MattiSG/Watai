@@ -97,6 +97,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		result[SuiteLoader.contextGlobals.logger] = logger.info; // this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
 
 		result[SuiteLoader.contextGlobals.assert] = require('assert');
+		result[SuiteLoader.contextGlobals.storage] = Object.create(null);
 		
 		return result;
 	},
@@ -261,7 +262,10 @@ SuiteLoader.contextGlobals = {
 	logger:			'log',
 	/** The name of the offered assertion library.
 	*/
-	assert:			'assert'
+	assert:			'assert',
+	/** The name of the offered storage hash, in which features may store values to compare them over time.
+	*/
+	storage:		'storage'
 }
 
 
