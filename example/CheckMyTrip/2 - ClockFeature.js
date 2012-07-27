@@ -3,11 +3,21 @@
 	
 	scenario: [
 		function() {
-			prev = ClockWidget.result; //TODO: offer a place to store previous values
+			return ClockWidget.result
+							  .then(function(elm) {
+							  	return elm.getText();
+							  }).then(function(text) {
+							  	storage.previousHour = text.split(':')[0];	// get the hour only
+							  });
 		},
 		ClockWidget.lookup, clockLookupTown,
 		function() {
-			assert.equal(ClockWidget.result, prev - 1);
+			return ClockWidget.result
+							  .then(function(elm) {
+							  	return elm.getText();
+							  }).then(function(text) {
+							  	assert.equal(text.split(':')[0], storage.previousHour - 1);
+							  });
 		}
 	]
 }
