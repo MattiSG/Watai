@@ -133,7 +133,9 @@ var Feature = new Class( /** @lends Feature# */ {
 	/** Asynchronously evaluates the scenario given to this feature.
 	*
 	*@returns	{Promise}	A promise that will be either:
-	*	- rejected if any assertion or action fails, passing an array of strings that describe reason(s) for failure(s) (one reason per item in the array);
+	*	- rejected if any assertion or action fails, passing a hash containing two keys:
+	*		• `failures`: an array of strings that describe reason(s) for failure(s) (one reason per item in the array);
+	*		• `errors`: an array of strings that describe errors that arose when trying to evaluate the feature.
 	*	- resolved if all assertions pass, with no parameter.
 	*/
 	test: function evaluate() {
@@ -141,10 +143,13 @@ var Feature = new Class( /** @lends Feature# */ {
 			stepIndex = -1;
 		
 		var evaluateNext,
-			failureReasons = [];
+			failureReasons = {
+				failures: [],	// we differentiate between the two types
+				errors: []
+			};
 		
 		var handleFailure = function handleFailure(message) {
-			failureReasons.push(message);
+			failureReasons.failures.push(message);
 			evaluateNext();
 		}
 		
@@ -152,10 +157,10 @@ var Feature = new Class( /** @lends Feature# */ {
 			stepIndex++;
 
 			if (stepIndex == this.steps.length) {
-				if (failureReasons.length == 0)
-					return deferred.resolve();
-				else
+				if (failureReasons.failures.length || failureReasons.errors.length)
 					return deferred.reject(failureReasons);
+				else
+					return deferred.resolve();
 			}
 			
 			try {
@@ -163,7 +168,8 @@ var Feature = new Class( /** @lends Feature# */ {
 							  evaluateNext,
 							  handleFailure);
 			} catch (error) {
-				handleFailure(error);
+				failureReasons.errors.push(error);
+				evaluateNext();
 			}
 		}).bind(this);
 		

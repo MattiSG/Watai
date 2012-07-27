@@ -112,17 +112,42 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@see	#postFeature
 	*/
 	handleFeatureResult: function handleFeatureResult(feature, message) {
+		var symbol,
+			loggerMethod;
 		if (message === true) {
-			logger.info('✔	' + feature.description);
+			symbol = '✔';
+			loggerMethod = 'info';
 		} else {
-			logger.warn('✘	' + feature.description);
-			logger.debug('	' + message);
+			if (message.errors.length > 0) {
+				symbol = '⚠';
+				loggerMethod = 'error';
+			} else {
+				symbol = '✘';
+				loggerMethod = 'warn';
+			}
+
+			this.showFailureDetails(message);
 			this.failed = true;
 		}
+
+		logger[loggerMethod](symbol + '	' + feature.description);
 		
 		this.postFeature();
 	},
-	
+
+	/** Presents details of a test failure / error to the user.
+	*
+	*@param	{Object.<Array.<String>>}	A hash with two keys containing arrays of strings giving details on failures. One key is `failures` (reasons for test rejection), the other `errors` (reasons for impossibility to evaluate test).
+	*@private
+	*/
+	showFailureDetails: function showFailureDetails(report) {
+		if (report.errors.length > 0)
+			report.errors.forEach(logger.debug);
+		
+		if (report.failures.length > 0)
+			report.failures.forEach(logger.debug);
+	},
+
 	/** Increments the feature index, starts evaluation of the next feature, and quits the driver if all features were evaluated.
 	*
 	*@private
