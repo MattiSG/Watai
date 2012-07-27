@@ -188,4 +188,19 @@ describe('Feature', function() {
 			}).should.not.throw();
 		});
 	});
+	
+	describe('widget access', function() {
+		it('of missing elements', function(done) {
+			featureWithScenario([
+				{ 'TestWidget.missing': 'toto' }
+			]).test().then(function() {
+					done(new Error('Resolved instead of rejected!'));
+				}, function(reasons) {
+					reasons.errors.should.have.length(0);
+					reasons.failures.should.have.length(1);
+					done();
+				}
+			).end();
+		});
+	});
 });
