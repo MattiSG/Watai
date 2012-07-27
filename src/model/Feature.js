@@ -109,15 +109,21 @@ var Feature = new Class( /** @lends Feature# */ {
 			var evaluator = promises.defer();
 
 			Object.each(hooksVals, function(expected, attribute) {
-				var target = Object.getFromPath(widgets, attribute);
-				
-				target.getText().then(function(actual) {
-					if (expected != actual)
-						evaluator.reject(attribute + ' was "' + actual + '" instead of "' + expected + '"');
-						
-					if (--matchesLeft == 0)
-						evaluator.resolve();
-				});
+				Object.getFromPath(widgets, attribute)
+					.then(function(target) {
+						target.getText().then(function(actual) {
+							if (expected != actual)
+								evaluator.reject(attribute + ' was "' + actual + '" instead of "' + expected + '"');
+							
+							if (--matchesLeft == 0)
+								evaluator.resolve();
+						},
+						evaluator.reject.bind(evaluator, 'Could not get text from element "' + attribute + '".'))
+					},
+					function() {
+						evaluator.reject('Element "' + attribute + '" does not exist on the page.'); // direct binding makes webdriverjs throw the reason for rejection again :/
+					}
+				)
 			});
 			
 			return evaluator.promise;
