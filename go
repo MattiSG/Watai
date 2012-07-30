@@ -41,10 +41,13 @@ case "$1" in
 		fi
 		java -Djsdoc.dir=$JSDOC_DIR -jar $JSDOC_DIR/jsrun.jar $JSDOC_DIR/app/run.js -t=$JSDOC_DIR/templates/jsdoc -d=$DOC_DIR/api $opts $SRC_DIR/*
 		open $DOC_DIR/api/index.html ;;
-	export-example )
+	export-examples )
 		cd $BASEDIR
 		outputFile="doc/tutorials/Watai-DuckDuckGo-example.zip"
 		git archive -9 --output="$outputFile" HEAD example/DuckDuckGo/
+		echo "Created $outputFile"
+		outputFile="doc/tutorials/Watai-PDC-example.zip"
+		git archive -9 --output="$outputFile" HEAD example/PDC/
 		echo "Created $outputFile"
 		cd - > /dev/null ;;
 	dist )
