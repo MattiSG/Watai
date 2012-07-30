@@ -10,7 +10,9 @@ DOC_DIR="$BASEDIR/doc"
 JSDOC_DIR="/usr/local/Cellar/jsdoc-toolkit/2.4.0/libexec/jsdoc-toolkit"	#TODO: make this more shareable
 DIST_DIR="$BASEDIR/dist"
 JSCOVERAGE="$BASEDIR/node_modules/visionmedia-jscoverage/jscoverage"
+
 MOCHA_CMD="$BIN_DIR/mocha $TEST_DIR" # longer timeout because async tests can be a bit longer than the default 2s
+DIST_INCLUDE="package.json go src README.md" # list all files / folders to be included when `dist`ing, separated by spaces; this is a copy of npm’s "files", couldn't find an easy way to parse it
 
 
 # Cross-platform Darwin open(1)
@@ -49,11 +51,15 @@ case "$1" in
 		cd $BASEDIR
 		outputFile=dist/watai-$(git describe)-NPMdeps.zip
 		mkdir dist 2> /dev/null
-		git archive -9 --output="$outputFile" $(git describe)
+		git archive -9 --output="$outputFile" $(git describe) $DIST_INCLUDE
 		echo "Archived repository"
-		echo "Adding dependencies…"
-		npm install -d
+		echo "Adding production dependencies…"
+		mv node_modules node_modules_dev
+		npm install --prod
 		zip -q -u $outputFile -r node_modules
+		echo "Restoring dev dependencies…"
+		rm -rf node_modules
+		mv node_modules_dev node_modules
 		echo "Done."
 		open dist
 		cd - > /dev/null ;;
