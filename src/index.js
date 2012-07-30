@@ -13,8 +13,8 @@ if (args.length == 0) {
 		process.exit(0);
 	} else {
 		console.error('**Watai has not been installed properly, please make sure you followed all installation instructions.**');
-		console.error('Main reason: ', evaluation);
-		console.error('See http://github.com/MattiSG/Watai for details');
+		console.error('Main reason: ' + evaluation.message + '.');
+		console.error('See http://github.com/MattiSG/Watai for details.');
 		process.exit(1);
 	}
 } else {

@@ -90,4 +90,10 @@ If your proxy configuration prevents you from using `npm install` properly (i.e.
 
 Mark the `/src` at the end!
 
+### Validation ###
+
+Let’s make sure you’re fully ready to use Watai by typing:
+
+	watai --installed
+
 ### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki/Introduction)! ###
