@@ -45,6 +45,5 @@
     "mocha": "1.2",
     "visionmedia-jscoverage": "1.0"
   },
-  "preferGlobal": true,
-  "private": true
+  "preferGlobal": true
 }
