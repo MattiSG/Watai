@@ -81,7 +81,6 @@ case "$1" in
 			exit 1
 		fi
 		./go test &&
-		./go dist &&
 #		./go export-examples &&	#TODO: update examples only if needed
 		cd "$DOC_DIR" &&
 #		git commit -a -m "[AUTO] Updated examples for publication." &&
@@ -92,7 +91,8 @@ case "$1" in
 		npm version $2 --message "$3"	&& # also updates Git
 		git push &&
 		git push --tags &&
-		npm publish ;;
+		npm publish &&
+		./go dist ;;
 	* ) # simply run the tool
 		node $SRC_DIR "$@" ;;
 esac
