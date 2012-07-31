@@ -80,7 +80,9 @@ case "$1" in
 			echo "Deploying a feature branch is bad practice: what if you can't merge properly?"
 			exit 1
 		fi
-		./go test &&
+		if ! ./go test
+		then exit 1
+		fi
 #		./go export-examples &&	#TODO: update examples only if needed
 		cd "$DOC_DIR" &&
 #		git commit -a -m "[AUTO] Updated examples for publication." &&
