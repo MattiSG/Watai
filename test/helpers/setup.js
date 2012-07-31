@@ -1,6 +1,3 @@
-var config = require('./index').config;
-
-
 describe('setup', function() {
 	it('should define the "driver" global', function() {
 		require('should').exist(driver);
@@ -9,7 +6,7 @@ describe('setup', function() {
 	it('should point the webdriver to the support page', function(done) {
 		this.timeout(config.browserWarmupTimeout);
 		
-		driver.get(config.supportPageURL).then(function() {
+		driver.get(config.baseURL).then(function() {
 			done();
 		}, function() {
 			console.error('');
