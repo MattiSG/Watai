@@ -75,7 +75,9 @@ case "$1" in
 			exit 1
 		fi
 		./go test &&
+		./go dist &&
 		cd $DOC_DIR &&
+		git commit -a -m "[AUTO] Updated examples for publication." &&
 		git tag $2 -m $3 &&
 		git push &&
 		git push --tags &&
