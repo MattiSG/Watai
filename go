@@ -11,7 +11,7 @@ JSDOC_DIR="/usr/local/Cellar/jsdoc-toolkit/2.4.0/libexec/jsdoc-toolkit"	#TODO: m
 DIST_DIR="$BASEDIR/dist"
 JSCOVERAGE="$BASEDIR/node_modules/visionmedia-jscoverage/jscoverage"
 
-MOCHA_CMD="$BIN_DIR/mocha $TEST_DIR" # longer timeout because async tests can be a bit longer than the default 2s
+MOCHA_CMD="$BIN_DIR/mocha $TEST_DIR"
 DIST_INCLUDE="package.json go src README.md" # list all files / folders to be included when `dist`ing, separated by spaces; this is a copy of npm’s "files", couldn't find an easy way to parse it
 
 
@@ -28,7 +28,7 @@ open() {
 
 case "$1" in
 	test )
-		$MOCHA_CMD --reporter spec ;;
+		$MOCHA_CMD $* ;;
 	coverage )	# based on http://tjholowaychuk.com/post/18175682663
 		rm -rf $BUILD_DIR
 		$JSCOVERAGE $SRC_DIR $BUILD_DIR
