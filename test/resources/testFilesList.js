@@ -4,5 +4,6 @@ module.exports = [
 	'model/WidgetTest',
 	'model/FeatureTest',
 	'helpers/teardown',
+	'controller/RunnerTest',
 	'lib/mootools-additions'
 ]
