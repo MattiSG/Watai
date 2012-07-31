@@ -1,3 +1,32 @@
+var helper = require('../helpers/index');
+
+var TestRight = helper.TestRight,
+	subject,
+	my = {};
+
+before(function(done) {
+	helper.openDriverWithin(my)(function() {
+		
+		/** A full widget describing the “main” part of the test support page.
+		* Exported for use in other tests.
+		*
+		*@see	#elements
+		*/
+		exports.testWidget = subject = new TestRight.Widget('Test widget', {
+			elements: elements,
+			submit: function submit(value) {
+				this.field = value;
+				return this.field.submit();
+			}
+		}, my.driver);
+
+		done();
+	});
+});
+
+after(helper.closeDriverWithin(my));
+
+
 /** Widget description of elements existing in the test support page resource.
 *@private
 */
@@ -26,19 +55,6 @@ exports.expectedTexts = expectedTexts;
 var checkerElements = {
 	p3Clicked:	{ id: 'clickedLink' }
 }
-
-/** A full widget describing the “main” part of the test support page.
-* Exported for use in other tests.
-*
-*@see	#elements
-*/
-exports.testWidget = subject = new TestRight.Widget('Test widget', {
-	elements: elements,
-	submit: function submit(value) {
-		this.field = value;
-		return this.field.submit();
-	}
-}, driver);
 
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
@@ -71,9 +87,13 @@ describe('Widget', function() {
 	});
 	
 	describe('element access', function() {
-		var checker = new TestRight.Widget('Events results widget', {
-			elements: checkerElements
-		}, driver);
+		var checker;
+
+		before(function() {
+			checker = new TestRight.Widget('Events results widget', {
+				elements: checkerElements
+			}, my.driver);
+		});
 	
 		it('should map elements to hooks', function(done) {
 			subject.id.getText().then(function(text) {
