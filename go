@@ -34,13 +34,17 @@ case "$1" in
 		$JSCOVERAGE $SRC_DIR $BUILD_DIR
 		export npm_config_coverage=true
 		$MOCHA_CMD --reporter html-cov > $TEST_DIR/coverage.html &&
-		open $TEST_DIR/coverage.html ;;
+		open $TEST_DIR/coverage.html
+		exit 0 ;;
 	doc )
 		if [[ $2 = "private" ]]
 		then opts='-p'
 		fi
-		java -Djsdoc.dir=$JSDOC_DIR -jar $JSDOC_DIR/jsrun.jar $JSDOC_DIR/app/run.js -t=$JSDOC_DIR/templates/jsdoc -d=$DOC_DIR/api $opts $SRC_DIR/*
-		open $DOC_DIR/api/index.html ;;
+		if ! java -Djsdoc.dir=$JSDOC_DIR -jar $JSDOC_DIR/jsrun.jar $JSDOC_DIR/app/run.js -t=$JSDOC_DIR/templates/jsdoc -d=$DOC_DIR/api $opts $SRC_DIR/*
+		then exit 1
+		fi
+		open $DOC_DIR/api/index.html
+		exit 0 ;;
 	export-examples )
 		cd $BASEDIR
 		outputFile="doc/tutorials/Watai-DuckDuckGo-example.zip"
@@ -49,7 +53,8 @@ case "$1" in
 		outputFile="doc/tutorials/Watai-PDC-example.zip"
 		git archive -9 --output="$outputFile" HEAD example/PDC/
 		echo "Created $outputFile"
-		cd - > /dev/null ;;
+		cd - > /dev/null
+		exit 0 ;;
 	dist )
 		cd $BASEDIR
 		outputFile=dist/watai-$(git describe)-NPMdeps.zip
@@ -65,7 +70,8 @@ case "$1" in
 		mv node_modules_dev node_modules
 		echo "Done."
 		open dist
-		cd - > /dev/null ;;
+		cd - > /dev/null
+		exit 0 ;;
 	publish )	# marks this version as the latest, tags, pushes, publishes; params: <version> <message>
 		if ! git branch | grep -q "* master"
 		then
@@ -76,13 +82,14 @@ case "$1" in
 		fi
 		./go test &&
 		./go dist &&
-		cd $DOC_DIR &&
-		git commit -a -m "[AUTO] Updated examples for publication." &&
-		git tag $2 -m $3 &&
+#		./go export-examples &&	#TODO: update examples only if needed
+		cd "$DOC_DIR" &&
+#		git commit -a -m "[AUTO] Updated examples for publication." &&
+		git tag -m "$3" $2 &&
 		git push &&
-		git push --tags &&
-		cd $BASEDIR &&
-		npm version $2 --message $3	&& # also updates Git
+		git push --tags
+		cd - &&
+		npm version $2 --message "$3"	&& # also updates Git
 		git push &&
 		git push --tags &&
 		npm publish ;;
