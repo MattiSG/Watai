@@ -1,6 +1,6 @@
 {
   "name": "watai",
-  "version": "0.2.0-alpha3",
+  "version": "0.2.0-alpha3.1",
   "description": "A declarative, bottom-up BDD, full-stack web testing framework. Maintainable integration tests for all browsers.",
   "keywords": "test, testing, validation, behavior, behaviour, BDD, TDD, integration, browser, cross-browser",
   "homepage": "https://github.com/MattiSG/Watai/",
