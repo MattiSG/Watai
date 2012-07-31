@@ -66,6 +66,26 @@ case "$1" in
 		echo "Done."
 		open dist
 		cd - > /dev/null ;;
+	publish )	# marks this version as the latest, tags, pushes, publishes; params: <version> <message>
+		if ! git branch | grep -q "* master"
+		then
+			echo "Not in master branch! Deployment cancelled."
+			echo "Merge your changes and deploy from master."
+			echo "Deploying a feature branch is bad practice: what if you can't merge properly?"
+			exit 1
+		fi
+		./go test &&
+		./go dist &&
+		cd $DOC_DIR &&
+		git commit -a -m "[AUTO] Updated examples for publication." &&
+		git tag $2 -m $3 &&
+		git push &&
+		git push --tags &&
+		cd $BASEDIR &&
+		npm version $2 --message $3	&& # also updates Git
+		git push &&
+		git push --tags &&
+		npm publish ;;
 	* ) # simply run the tool
 		node $SRC_DIR "$@" ;;
 esac
