@@ -47,6 +47,19 @@ describe('Runner', function() {
 		});
 	});
 
+	describe('events', function() {
+		it('should emit "ready" when ready', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject = new TestRight.Runner(config);
+			subject.isReady().should.not.be.ok;
+			subject.on('ready', function() {
+				subject.isReady().should.be.ok;
+				done();
+			});
+		});
+	});
+
 	after(function(done) {
 		subject.getDriver().quit().then(done, done);
 	});

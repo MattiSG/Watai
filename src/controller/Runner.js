@@ -11,7 +11,13 @@ var logger = require('winston').loggers.get('suites');
 
 var Runner = new Class( /** @lends Runner# */ {
 
-	Binds: [ 'startNextFeature' ],	// methods listed here will be automatically bound to the current instance
+	Extends: require('events').EventEmitter,
+
+	Binds: [	// methods listed here will be automatically bound to the current instance
+		'startNextFeature',
+		'isReady',
+		'onReady'
+	],
 
 	/** Whether any test did fail during the current run or not.
 	*@type	{boolean}
@@ -36,6 +42,12 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	baseURL: '',
+
+	/** Whether the baseURL page has been loaded or not.
+	*@type	{Boolean}
+	*@private
+	*/
+	ready: false,
 
 	/**@class	Manages a set of features and the driver in which they are run.
 	*
@@ -90,7 +102,26 @@ var Runner = new Class( /** @lends Runner# */ {
 
 		result.manage().timeouts().implicitlyWait(config.timeout * 1000);	// implicitly wait for an element to appear, for asynchronous operations
 
+		result.get(this.baseURL).then(this.onReady);
+
 		return result;
+	},
+
+	/** Tells whether the underlying driver of this Runner has loaded the base page or not.
+	* This changes after the `ready` event has been emitted by this Runner.
+	*
+	*@return	{Boolean}	`true` if the page has been loaded, `false` otherwise.
+	*/
+	isReady: function isReady() {
+		return this.ready;
+	},
+
+	/** Emits the "ready" event and updates this runner's status.
+	*@private
+	*/
+	onReady: function onReady() {
+		this.ready = true;
+		this.emit('ready');
 	},
 	
 	/** Adds the given Feature to the list of those that this Runner will evaluate.
@@ -121,7 +152,10 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.failed = false;
 		this.currentFeature = -1;
 
-		this.driver.get(this.baseURL).then(this.startNextFeature);
+		if (this.ready)
+			this.startNextFeature();
+		else
+			this.on('ready', this.startNextFeature);
 
 		return this;
 	},
