@@ -30,16 +30,21 @@ describe('Runner', function() {
 			}).should.throw();
 		});
 
-		it ('should not throw when constructing with proper config', function(done) {
-			this.timeout(config.browserWarmupTime);
-
+		it ('should not throw when constructing with proper config', function() {
 			(function() {
 				subject = new TestRight.Runner(config);
-				subject.getDriver().session_.then(function() {
-					done();
-				}, done);
 			}).should.not.throw();
-		})
+		});
+
+		it('should emit "ready" when ready', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject.isReady().should.not.be.ok;
+			subject.on('ready', function() {
+				subject.isReady().should.be.ok;
+				done();
+			});
+		});
 	});
 
 	describe('driver', function() {
@@ -66,16 +71,7 @@ describe('Runner', function() {
 		});
 	});
 
-	describe('events', function() {
-		it('should emit "ready" when ready', function(done) {
-			this.timeout(config.browserWarmupTime);
-
-			subject = new TestRight.Runner(config);
-			subject.isReady().should.not.be.ok;
-			subject.on('ready', function() {
-				subject.isReady().should.be.ok;
 				done();
-			});
 		});
 	});
 
