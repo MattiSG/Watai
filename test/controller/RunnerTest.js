@@ -1,5 +1,6 @@
 var should = require('should'),
-	TestRight = require('../helpers/subject');
+	TestRight = require('../helpers/subject'),
+	config = require('../helpers/driver').config;
 
 
 var subject;
