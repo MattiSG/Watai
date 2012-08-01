@@ -4,28 +4,7 @@ var TestRight = helper.TestRight,
 	subject,
 	my = {};
 
-before(function(done) {
-	helper.openDriverWithin(my)(function() {
-		
-		/** A full widget describing the “main” part of the test support page.
-		* Exported for use in other tests.
-		*
-		*@see	#elements
-		*/
-		exports.testWidget = subject = new TestRight.Widget('Test widget', {
-			elements: elements,
-			submit: function submit(value) {
-				this.field = value;
-				return this.field.submit();
-			}
-		}, my.driver);
-
-		done();
-	});
-});
-
-after(helper.closeDriverWithin(my));
-
+helper.setDriverIn(my);
 
 /** Widget description of elements existing in the test support page resource.
 *@private
@@ -61,6 +40,21 @@ var checkerElements = {
 * It relies on some external setup, see `test/helpers` and `test/index.js`.
 */
 describe('Widget', function() {
+	before(function() {
+		/** A full widget describing the “main” part of the test support page.
+		* Exported for use in other tests.
+		*
+		*@see	#elements
+		*/
+		exports.testWidget = subject = new TestRight.Widget('Test widget', {
+			elements: elements,
+			submit: function submit(value) {
+				this.field = value;
+				return this.field.submit();
+			}
+		}, my.driver);
+	});
+
 	describe('parsing', function() {
 		it('should add all elements as properties', function() {
 			for (var key in elements)

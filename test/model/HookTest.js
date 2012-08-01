@@ -3,8 +3,7 @@ var helper = require('../helpers/index');
 var TestRight = helper.TestRight,
 	my = {};
 
-before(helper.openDriverWithin(my));
-after(helper.closeDriverWithin(my));
+helper.setDriverIn(my);
 
 /* Exported to be also used in WidgetTest.
 */
