@@ -2,29 +2,10 @@ var helper = require('../helpers/index');
 
 var TestRight = helper.TestRight,
 	subject,
+	elements,
+	expectedTexts,
 	my = helper.getDriverHolder();
 
-
-/** Widget description of elements existing in the test support page resource.
-*@private
-*/
-var elements = {
-	id:		{ id: 'toto' },
-	css:	{ css: '.tutu' },
-	missing:{ id: 'inexistant' },
-	field:	{ css: 'input[name="field"]' },
-	p3Link:	{ linkText: 'This paragraph is embedded in a link' }
-}
-
-/** Expected values for the texts of the elements described above, as defined in the test support page.
-* Exported for use in other tests.
-*
-*@see	#elements
-*/
-var expectedTexts = {
-	id:		'This paragraph has id toto'
-}
-exports.expectedTexts = expectedTexts;
 
 /** Widget description of elements existing in the “checking” part of the test support page resource.
 * These elements have their content updated according to actions made on the “main” elements described above.
@@ -35,23 +16,14 @@ var checkerElements = {
 }
 
 
-/** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
-* It relies on some external setup, see `test/helpers` and `test/index.js`.
+/** This test suite is written with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */
 describe('Widget', function() {
 	before(function() {
-		/** A full widget describing the “main” part of the test support page.
-		* Exported for use in other tests.
-		*
-		*@see	#elements
-		*/
-		exports.testWidget = subject = new TestRight.Widget('Test widget', {
-			elements: elements,
-			submit: function submit(value) {
-				this.field = value;
-				return this.field.submit();
-			}
-		}, my.driver);
+		var testWidget = require('../helpers/testWidget');
+		elements = testWidget.elements;
+		expectedTexts = testWidget.expectedTexts;
+		subject = testWidget.getWidget(my.driver);
 	});
 
 	describe('parsing', function() {

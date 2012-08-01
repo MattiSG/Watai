@@ -1,4 +1,4 @@
-var helper = require('../helpers/index');
+var helper = require('../helpers/');
 
 var TestRight = helper.TestRight,
 	my = helper.getDriverHolder();

@@ -76,10 +76,18 @@ function makeDriver(done) {
 							  .usingServer(config.seleniumServerURL)
 							  .withCapabilities(config.driverCapabilities)
 							  .build();
+
+	result.session_.then(null, function() {
+		console.error('');
+		console.error('**The Selenium server could not be reached!**');
+		console.error('> Did you start it up?');
+		console.error('  See the troubleshooting guide if you need help  ;)');
+		process.exit(1);
+	});
 	
-	result.get(config.baseURL)
-		  .then(function() { done() },	// remove non-error argument
-		  		done);
+	result.get(config.baseURL).then(function() {
+			done();	// remove arguments for compatibility with mocha
+		}, done);
 	
 	return result;
 }
