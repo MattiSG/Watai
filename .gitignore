@@ -8,9 +8,9 @@ npm-debug.log
 
 # generated stuff
 node_modules
-build
-test/coverage.html
+coverage
 doc/api
+doc/coverage.html
 dist
 
 # IDEs

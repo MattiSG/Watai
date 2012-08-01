@@ -3,7 +3,7 @@
 BASEDIR="$(dirname $0)"
 BASEDIR=$BASEDIR/$(dirname $(readlink $0) 2> /dev/null)	# readlink for NPM global install alias; error redirection in case of direct invocation, in which case readlink returns nothing
 SRC_DIR="$BASEDIR/src"
-BUILD_DIR="$BASEDIR/build"
+COVERAGE_DIR="$BASEDIR/coverage"
 BIN_DIR="$BASEDIR/node_modules/.bin/"
 TEST_DIR="$BASEDIR/test"
 DOC_DIR="$BASEDIR/doc"
@@ -31,11 +31,11 @@ case "$1" in
 		shift
 		$MOCHA_CMD $* ;;
 	coverage )	# based on http://tjholowaychuk.com/post/18175682663
-		rm -rf $BUILD_DIR
-		$JSCOVERAGE $SRC_DIR $BUILD_DIR
+		rm -rf $COVERAGE_DIR
+		$JSCOVERAGE $SRC_DIR $COVERAGE_DIR
 		export npm_config_coverage=true
-		$MOCHA_CMD --reporter html-cov > $TEST_DIR/coverage.html &&
-		open $TEST_DIR/coverage.html
+		$MOCHA_CMD $TEST_DIR --reporter html-cov > $DOC_DIR/coverage.html &&
+		open $DOC_DIR/coverage.html
 		exit 0 ;;
 	doc )
 		if [[ $2 = "private" ]]
