@@ -28,6 +28,7 @@ open() {
 
 case "$1" in
 	test )
+		shift
 		$MOCHA_CMD $* ;;
 	coverage )	# based on http://tjholowaychuk.com/post/18175682663
 		rm -rf $BUILD_DIR
