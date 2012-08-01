@@ -54,7 +54,7 @@ function main(folders) {
 */
 function isInstalled() {
 	try {
-		require('./TestRight');
+		require(MAIN_FILE);
 		return true;
 	} catch (e) {
 		return e;

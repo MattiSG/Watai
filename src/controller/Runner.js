@@ -10,6 +10,9 @@ var logger = require('winston').loggers.get('suites');
 
 
 var Runner = new Class( /** @lends Runner# */ {
+
+	Binds: [ 'startNextFeature' ],	// methods listed here will be automatically bound to the current instance
+
 	/** Whether any test did fail during the current run or not.
 	*@type	{boolean}
 	*@private
@@ -28,6 +31,12 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	currentFeature: 0,
 
+	/** The first URL to load when starting the driver.
+	*type	{String}
+	*@private
+	*/
+	baseURL: '',
+
 	/**@class	Manages a set of features and the driver in which they are run.
 	*
 	* A `Runner` is mostly set up through a configuration object.
@@ -35,21 +44,53 @@ var Runner = new Class( /** @lends Runner# */ {
 	*	- `baseURL`: the URL at which the driver should start;
 	*	- `driverCapabilities`: an object that will be passed straight to the WebDriver instance.
 	*
-	* The chosen implementation for WebDriver is the [official WebDriverJS](https://code.google.com/p/selenium/wiki/WebDriverJs) by the Selenium team. Make sure you use this module and not one of the other implementations, since this code has not been tested with any other.
-	*
 	*@constructs
 	*@param	{Object}	config	A configuration object, as defined above.
 	*@see	WebDriver.Builder#withCapabilities
 	*/
 	initialize: function init(config) {
-		this.config = config;
+		if (this.error = this.findConfigError(config))
+			throw this.error;	// `this` scoping is here just to avoid leaking, no usage for it
+
+		this.baseURL = config.baseURL;
 		
-		this.driver = new webdriver.Builder()
-						.usingServer(this.config.seleniumServerURL)
-						.withCapabilities(this.config.driverCapabilities)
+		this.driver = this.buildDriver(config);
+	},
+
+	/** Checks the passed configuration hash for any missing mandatory definitions.
+	*
+	*@param	{Object}	config	The configuration object to check (may not be defined, which will return an error).
+	*@returns	{Error|null}	An error object describing the encountered problem, or `null` if no error was found.
+	*@see	#initialize	For details on the configuration object.
+	*/
+	findConfigError: function findConfigError(config) {
+		if (! config)
+			return new Error('You need to provide a configuration to create a Runner!');
+
+		if (typeof config.seleniumServerURL != 'string')
+			return new Error('The given Selenium server URL ("' + config.seleniumServerURL + '") is unreadable');
+
+		if (typeof config.baseURL != 'string')
+			return new Error('The given base URL ("' + config.baseURL + '") is unreadable');
+
+		return null;
+	},
+
+	/** Constructs a new WebDriver instance based on the given configuration.
+	*
+	*@param	{Object}	config	The configuration object based on which the driver will be built.
+	*@returns	{WebDriver}	The matching WebDriver instance.
+	*@see	#initialize	For details on the configuration object.
+	*/
+	buildDriver: function buildDriver(config) {
+		var result = new webdriver.Builder()
+						.usingServer(config.seleniumServerURL)
+						.withCapabilities(config.driverCapabilities)
 						.build();
 
-		this.driver.manage().timeouts().implicitlyWait(this.config.timeout * 1000);
+		result.manage().timeouts().implicitlyWait(config.timeout * 1000);	// implicitly wait for an element to appear, for asynchronous operations
+
+		return result;
 	},
 	
 	/** Adds the given Feature to the list of those that this Runner will evaluate.
@@ -78,13 +119,10 @@ var Runner = new Class( /** @lends Runner# */ {
 	//TODO: should return a promise for results
 	run: function run() {
 		this.failed = false;
-		this.currentFeature = 0;
+		this.currentFeature = -1;
 
-		var runner = this;
-		this.driver.get(this.config.baseURL).then(function() {
-			runner.evaluateFeature(runner.features[0]);
-		});
-		
+		this.driver.get(this.baseURL).then(this.startNextFeature);
+
 		return this;
 	},
 	
@@ -105,11 +143,11 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 	
 	/** Callback handler upon feature evaluation.
-	* Displays result, errors if there were any, and calls the `postFeature` handler.
+	* Displays result, errors if there were any, and calls the `startNextFeature` handler.
 	*
 	*@private
 	*
-	*@see	#postFeature
+	*@see	#startNextFeature
 	*/
 	handleFeatureResult: function handleFeatureResult(feature, message) {
 		var symbol,
@@ -132,7 +170,7 @@ var Runner = new Class( /** @lends Runner# */ {
 
 		logger[loggerMethod](symbol + '	' + feature.description);
 		
-		this.postFeature();
+		this.startNextFeature();
 	},
 
 	/** Presents details of a test failure / error to the user.
@@ -152,7 +190,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*
 	*@private
 	*/
-	postFeature: function postFeature() {
+	startNextFeature: function startNextFeature() {
 		this.currentFeature++;
 		
 		if (this.currentFeature < this.features.length)

@@ -12,7 +12,7 @@
     "go",
     "README.md"
   ],
-  "main": "src/TestRight.js",
+  "main": "src/index.js",
   "bin": "go",
   "directories": {
     "lib": "./src",
