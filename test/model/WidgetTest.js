@@ -73,7 +73,7 @@ describe('Widget', function() {
 		});
 		
 		it('should say that a missing element is not present', function(done) {
-			this.timeout = 8 * 1000;	// since this raises an error, the Selenium server lags the first time
+			this.timeout(6 * 1000);	// since this raises an error, the Selenium server lags the first time
 			
 			subject.has('missing').then(function(presence) {
 				presence.should.not.be.ok;
@@ -82,10 +82,9 @@ describe('Widget', function() {
 		});
 	
 		xit('should fail promises if an unreachable element is accessed', function(done) {
-			subject.missing.getText().then(function() {	//TODO: define the best behavior for misspelled elements access. Currently async throw. Should it change?
+			subject.missing.getText().then(function() {	//TODO
 				done(new Error('Resolved instead of rejected!'));
 			}, function(error) {
-				console.error('> error:', error);
 				done();
 			});
 		});

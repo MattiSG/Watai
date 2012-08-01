@@ -55,6 +55,8 @@ function setDriverIn(holder) {
 */
 function openDriverWithin(destination) {
 	return function openDriver(done) {
+		this.timeout(config.browserWarmupTimeout);
+		
 		if (! driver) {
 			driver = makeDriver(done);
 			destination.driver = driver;

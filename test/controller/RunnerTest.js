@@ -30,7 +30,7 @@ describe('Runner', function() {
 		});
 
 		it ('should not throw when constructing with proper config', function(done) {
-			//this.timeout(config.browserWarmupTime);	//TODO: can't change the timeout this way when using the custom-require-through-testFilesList way of listing all tests, as mocha won't define this.timeout that way
+			this.timeout(config.browserWarmupTime);
 
 			(function() {
 				subject = new TestRight.Runner(config);
