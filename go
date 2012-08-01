@@ -38,7 +38,6 @@ case "$1" in
 
 			fi
 		done
-		echo $MOCHA_CMD $opts
 		$MOCHA_CMD $opts ;;
 	coverage )	# based on http://tjholowaychuk.com/post/18175682663
 		rm -rf $COVERAGE_DIR
