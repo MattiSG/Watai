@@ -1,5 +1,6 @@
-var webdriver = require('selenium-webdriverjs');
-var growl;
+var webdriver = require('selenium-webdriverjs'),
+	promises = require('q'),
+	growl;
 try {
 	growl = require('growl');
 } catch (e) {
@@ -19,11 +20,12 @@ var Runner = new Class( /** @lends Runner# */ {
 		'onReady'
 	],
 
-	/** Whether any test did fail during the current run or not.
-	*@type	{boolean}
+	/** A hash mapping all failed features to their reasons for rejection.
+	*If empty, the run was successful.
+	*@type	{Object.<Feature, String>}
 	*@private
 	*/
-	failed: false,
+	failures: Object.create(null),
 	
 	/** The list of all features to evaluate with this configuration.
 	*@type	{Array.<Feature>}
@@ -48,6 +50,12 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	ready: false,
+
+	/** The promise controller (deferred object) for results, resolved when all features of this Runner have been evaluated.
+	*@type	{q.deferred}
+	*@private
+	*/
+	deferred: null,
 
 	/**@class	Manages a set of features and the driver in which they are run.
 	*
@@ -145,11 +153,11 @@ var Runner = new Class( /** @lends Runner# */ {
 	
 	/** Starts evaluation of all features added to this Runner.
 	*
-	*@returns	{Runner}	This Runner, for chainability.
+	*@returns	{Promise}	A promise for results, resolved if all features pass (param: this Runner), rejected otherwise (param: hash mapping failed features to their reasons for rejection).
 	*/
-	//TODO: should return a promise for results
 	run: function run() {
-		this.failed = false;
+		this.deferred = promises.defer();
+		this.failures = Object.create(null);
 		this.currentFeature = -1;
 
 		if (this.ready)
@@ -157,7 +165,7 @@ var Runner = new Class( /** @lends Runner# */ {
 		else
 			this.on('ready', this.startNextFeature);
 
-		return this;
+		return this.deferred.promise;
 	},
 	
 	/** Prepares and triggers the evaluation of the given feature.
@@ -171,7 +179,7 @@ var Runner = new Class( /** @lends Runner# */ {
 		} catch (error) {
 			if (growl)
 				growl('Error!\n' + error, { priority: 4 });
-			driver.quit();
+			this.driver.quit();
 			throw error;
 		}
 	},
@@ -197,6 +205,8 @@ var Runner = new Class( /** @lends Runner# */ {
 				symbol = '✘';
 				loggerMethod = 'warn';
 			}
+
+			this.failures[feature] = message;
 
 			this.showFailureDetails(message);
 			this.failed = true;
@@ -240,11 +250,16 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/	
 	finish: function finish(success) {
 		if (growl) {
-			if (this.failed)
+			if (Object.getLength(this.failures) > 0)
 				growl('Test failed  :(', { priority: 4 });
 			else
 				growl('Test succeeded!  :)', { priority: 3 });
 		}
+
+		if (Object.getLength(this.failures) > 0)
+			this.deferred.reject(this.failures);
+		else
+			this.deferred.resolve(this);
 		
 		this.driver.quit();
 	}

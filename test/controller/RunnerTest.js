@@ -1,4 +1,5 @@
 var should = require('should'),
+	promises = require('q'),
 	TestRight = require('../helpers/subject'),
 	config = require('../helpers/driver').config;
 
@@ -44,6 +45,24 @@ describe('Runner', function() {
 	describe('driver', function() {
 		it('should be defined after constructing a Runner', function() {
 			should.exist(subject.getDriver());
+		});
+	});
+
+	describe('run', function() {
+		it('should return a promise', function() {
+			promises.isPromise(subject.run()).should.be.ok;
+		});
+
+		it('should evaluate features', function(done) {
+			var called = false;
+			subject.addFeature(new TestRight.Feature('RunnerTest feature', [
+				function() { called = true }
+			], {}));
+
+			subject.run().then(function() {
+				called.should.be.ok;
+				done();
+			}, done);
 		});
 	});
 
