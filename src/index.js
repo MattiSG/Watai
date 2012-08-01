@@ -2,6 +2,12 @@
 */
 var args = process.argv.slice(2); // extract CLI arguments, see http://docs.nodejitsu.com/articles/command-line/how-to-parse-command-line-arguments
 
+
+/** Absolute path to the main library file.
+*/
+var MAIN_FILE = exports.MAIN_FILE = require('path').join(__dirname, 'TestRight.js');
+
+
 if (args.length == 0) {
 	showHelp();
 	process.exit(2);
@@ -20,11 +26,6 @@ if (args.length == 0) {
 } else {
 	main(args);
 }
-
-
-/** Absolute path to the main library file.
-*/
-var MAIN_FILE = exports.MAIN_FILE = require('path').join(__dirname, 'TestRight.js');
 
 /** The CLI takes paths to test description folders as arguments.
 * Any number of paths may be given.
