@@ -1,5 +1,5 @@
 var should = require('should'),
-	TestRight = require('../helpers/index').TestRight;
+	TestRight = require('../helpers/subject');
 
 
 var subject;

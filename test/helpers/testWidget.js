@@ -1,4 +1,4 @@
-var TestRight = require('../helpers/index').TestRight;
+var TestRight = require('./subject');
 
 
 /** Widget description of elements existing in the test support page resource.

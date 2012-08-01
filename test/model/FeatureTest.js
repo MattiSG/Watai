@@ -1,14 +1,11 @@
 var promises = require('q');
 
-var helper = require('../helpers/');
-
-var TestRight = helper.TestRight,
-	my = helper.getDriverHolder(),
+var TestRight = require('../helpers/subject'),
+	my = require('../helpers/driver').getDriverHolder(),
 	WidgetTest;
 
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
-* It relies on some external setup, see `test/helpers` and `test/index.js`.
 */
 describe('Feature', function() {
 	var featureWithScenario;

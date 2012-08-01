@@ -1,10 +1,8 @@
-var helper = require('../helpers/index');
-
-var TestRight = helper.TestRight,
+var TestRight = require('../helpers/subject'),
+	my = require('../helpers/driver').getDriverHolder(),
 	subject,
 	elements,
-	expectedTexts,
-	my = helper.getDriverHolder();
+	expectedTexts;
 
 
 /** Widget description of elements existing in the “checking” part of the test support page resource.
