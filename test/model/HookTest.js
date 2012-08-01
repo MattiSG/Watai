@@ -1,9 +1,8 @@
 var helper = require('../helpers/index');
 
 var TestRight = helper.TestRight,
-	my = {};
+	my = helper.getDriverHolder();
 
-helper.setDriverIn(my);
 
 /* Exported to be also used in WidgetTest.
 */

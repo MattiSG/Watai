@@ -2,9 +2,8 @@ var helper = require('../helpers/index');
 
 var TestRight = helper.TestRight,
 	subject,
-	my = {};
+	my = helper.getDriverHolder();
 
-helper.setDriverIn(my);
 
 /** Widget description of elements existing in the test support page resource.
 *@private

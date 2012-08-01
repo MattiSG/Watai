@@ -26,11 +26,22 @@ var driver,
 	driverClientsCount = 0;
 	
 
+/** Returns an object with a `driver` key, which will be set before the test suite in which this function is called, and will be quit after the suite if it is the last one of this test run.
+*
+*@return	{Object}	holder	An Object whose `driver` key will be eventually set to a ready-to-use WebDriver instance.
+*/
+exports.getDriverHolder = function getDriverHolder() {
+	var result = Object.create(null);
+	setDriverIn(result);
+	return result;
+}
+
 /** Sets the `driver` key in the `holder` object before the test suite in which this function is called, and will quit the driver after it if it is the last suite of this test run.
 *
 *@param	{Object}	holder	An Object whose `driver` key will be eventually set to a ready-to-use WebDriver instance.
+*@private
 */
-exports.setDriverIn = function setDriverIn(holder) {
+function setDriverIn(holder) {
 	driverClientsCount++;
 	before(openDriverWithin(holder));
 	after(closeDriverWithin(holder));
