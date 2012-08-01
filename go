@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASEDIR="$(dirname $0)"
+BASEDIR="$(cd `dirname $0`; pwd)"
 BASEDIR=$BASEDIR/$(dirname $(readlink $0) 2> /dev/null)	# readlink for NPM global install alias; error redirection in case of direct invocation, in which case readlink returns nothing
 SRC_DIR="$BASEDIR/src"
 COVERAGE_DIR="$BASEDIR/coverage"
@@ -11,7 +11,7 @@ JSDOC_DIR="/usr/local/Cellar/jsdoc-toolkit/2.4.0/libexec/jsdoc-toolkit"	#TODO: m
 DIST_DIR="$BASEDIR/dist"
 JSCOVERAGE="$BASEDIR/node_modules/visionmedia-jscoverage/jscoverage"
 
-MOCHA_CMD="$BIN_DIR/mocha $TEST_DIR"
+MOCHA_CMD="$BIN_DIR/mocha"
 DIST_INCLUDE="package.json go src README.md" # list all files / folders to be included when `dist`ing, separated by spaces; this is a copy of npm’s "files", couldn't find an easy way to parse it
 
 
@@ -29,7 +29,17 @@ open() {
 case "$1" in
 	test )
 		shift
-		$MOCHA_CMD $* ;;
+		opts=""
+		for arg in "$@"
+		do
+			if echo $arg | grep -q '^\-\-'
+			then opts="$arg $opts"
+			else opts="$opts $TEST_DIR/$arg"	# allows for "go test controller" for example, instead of "go test test/controller"
+
+			fi
+		done
+		echo $MOCHA_CMD $opts
+		$MOCHA_CMD $opts ;;
 	coverage )	# based on http://tjholowaychuk.com/post/18175682663
 		rm -rf $COVERAGE_DIR
 		$JSCOVERAGE $SRC_DIR $COVERAGE_DIR
