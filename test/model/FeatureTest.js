@@ -165,11 +165,20 @@ describe('Feature', function() {
 			featureFromScenario.should.have.property('steps').with.lengthOf(1);
 			String(featureFromScenario.steps[0]).should.equal(String(directCall));
 		});
+
+		it('that are empty should pass', function(done) {
+			featureWithScenario([
+				{}
+			]).test().then(done, function(err) {
+				should.fail('Should have passed (reason: "' + err + ')');
+				done();
+			})
+		});
 			
 		it('that fail should be rejected and reasons passed', function(done) {
 			featureWithScenario([
 				wrongTexts
-			]).test().then(function() { 
+			]).test().then(function() {
 				done(new Error('Unmatched widget state description should not be resolved.'));
 			}, function(reasons) {
 				var firstReason = reasons.failures[0];
