@@ -54,24 +54,28 @@ describe('Runner', function() {
 	});
 
 	describe('run', function() {
+		var callCount = 0;
+
 		it('should return a promise', function() {
 			promises.isPromise(subject.run()).should.be.ok;
 		});
 
 		it('should evaluate features', function(done) {
-			var called = false;
 			subject.addFeature(new TestRight.Feature('RunnerTest feature', [
-				function() { called = true }
+				function() { callCount++ }
 			], {}));
 
 			subject.run().then(function() {
-				called.should.be.ok;
+				callCount.should.equal(1);
 				done();
 			}, done);
 		});
-	});
 
+		it('should evaluate features once again if called again', function(done) {
+			subject.run().then(function() {
+				callCount.should.equal(2);
 				done();
+			}, done);
 		});
 	});
 
