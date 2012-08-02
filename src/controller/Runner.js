@@ -20,7 +20,7 @@ var Runner = new Class( /** @lends Runner# */ {
 		'onReady',
 		'start',
 		'killDriver',
-		'markDone'
+		'markUsed'
 	],
 
 	/** A hash mapping all failed features to their reasons for rejection.
@@ -220,10 +220,7 @@ var Runner = new Class( /** @lends Runner# */ {
 			feature.test().then(this.handleFeatureResult.bind(this, feature, true),
 								this.handleFeatureResult.bind(this, feature)); // leave last arg to pass failure description
 		} catch (error) {
-			if (growl)
-				growl('Error!\n' + error, { priority: 4 });
-			this.driver.quit();
-			throw error;
+			this.handleError(error);
 		}
 	},
 	
@@ -290,7 +287,7 @@ var Runner = new Class( /** @lends Runner# */ {
 			reject	= this.deferred.reject.bind(this.deferred, this.failures),
 			fulfill	= resolve,
 			precondition = (this.config.quit != 'always'
-							? this.markDone
+							? this.markUsed
 							: this.killDriver);
 
 		if (Object.getLength(this.failures) == 0) {
@@ -306,7 +303,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	/** Updates inner state so that consequent calls to `run()` know they need to reload the driver.
 	*@private
 	*/
-	markDone: function markDone() {
+	markUsed: function markUsed() {
 		this.ready = false;
 	},
 
@@ -315,9 +312,20 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	cancel: function cancel() {
 		this.removeListener('ready', this.start);
-		this.markDone();
-		this.deferred.reject(new Error('Evaluation was cancelled'));
+		this.handleError(new Error('Evaluation was cancelled'));
 		return this;	//TODO: should return a promise for cancellation, since the current evaluated feature won't be stopped
+	},
+
+	/** Rejects the promise for results, passing it the given error, and quits the driver depending on the current automatic exit settings.
+	*@private
+	*/
+	handleError: function handleError(error) {
+		this.markUsed();
+
+		if (this.config.quit == 'always')
+			this.killDriver();
+
+		this.deferred.reject(error);
 	},
 
 	/** Quits the managed browser.
@@ -328,7 +336,7 @@ var Runner = new Class( /** @lends Runner# */ {
 		var driver = this.driver;
 		this.driver = null;
 
-		this.markDone();
+		this.markUsed();
 
 		if (driver)
 			return driver.quit();
