@@ -40,10 +40,14 @@ describe('Runner', function() {
 			this.timeout(config.browserWarmupTime);
 
 			subject.isReady().should.not.be.ok;
-			subject.on('ready', function() {
+			
+			var handler = function() {
 				subject.isReady().should.be.ok;
 				done();
-			});
+				subject.removeListener('ready', handler);
+			}
+
+			subject.on('ready', handler);
 		});
 	});
 
@@ -51,19 +55,29 @@ describe('Runner', function() {
 		it('should be defined after constructing a Runner', function() {
 			should.exist(subject.getDriver());
 		});
+
+		it('should be idempotent to kill an already killed Runner', function(done) {
+			subject.killDriver().then(function() {
+				var result = subject.killDriver();
+				promises.isPromise(result).should.be.ok;
+				result.then(done, done);
+			}, done);
+		})
 	});
 
 	describe('run', function() {
 		var callCount = 0;
+
+		var feature = new TestRight.Feature('RunnerTest feature', [
+			function() { callCount++ }
+		], {});
 
 		it('should return a promise', function() {
 			promises.isPromise(subject.run()).should.be.ok;
 		});
 
 		it('should evaluate features', function(done) {
-			subject.addFeature(new TestRight.Feature('RunnerTest feature', [
-				function() { callCount++ }
-			], {}));
+			subject.addFeature(feature);
 
 			subject.run().then(function() {
 				callCount.should.equal(1);
@@ -77,9 +91,20 @@ describe('Runner', function() {
 				done();
 			}, done);
 		});
+
+		xit('should run even if called immediately after init', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			(new TestRight.Runner(config)).addFeature(feature)
+										  .run()
+										  .then(function() {
+				callCount.should.equal(3);
+				done();
+			}, done);
+		});
 	});
 
 	after(function(done) {
-		subject.getDriver().quit().then(done, done);
+		subject.killDriver().then(done, done);
 	});
 });

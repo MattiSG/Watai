@@ -39,12 +39,6 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	currentFeature: 0,
 
-	/** The first URL to load when starting the driver.
-	*type	{String}
-	*@private
-	*/
-	baseURL: '',
-
 	/** Whether the baseURL page has been loaded or not.
 	*@type	{Boolean}
 	*@private
@@ -56,6 +50,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	deferred: null,
+
 
 	/**@class	Manages a set of features and the driver in which they are run.
 	*
@@ -72,9 +67,9 @@ var Runner = new Class( /** @lends Runner# */ {
 		if (this.error = this.findConfigError(config))
 			throw this.error;	// `this` scoping is here just to avoid leaking, no usage for it
 
-		this.baseURL = config.baseURL;
+		this.config = config;
 		
-		this.driver = this.buildDriver(config);
+		this.initDriver();
 	},
 
 	/** Checks the passed configuration hash for any missing mandatory definitions.
@@ -96,21 +91,32 @@ var Runner = new Class( /** @lends Runner# */ {
 		return null;
 	},
 
+	/** Initializes the underlying driver of this Runner.
+	*@return	this	For chainability.
+	*@private
+	*/
+	initDriver: function initDriver() {
+		this.ready = false;
+		this.driver = this.buildDriverFrom(this.config);
+		this.driver.get(this.config.baseURL).then(this.onReady);
+
+		return this;
+	},
+
 	/** Constructs a new WebDriver instance based on the given configuration.
 	*
 	*@param	{Object}	config	The configuration object based on which the driver will be built.
-	*@returns	{WebDriver}	The matching WebDriver instance.
+	*@return	{WebDriver}	The matching WebDriver instance.
 	*@see	#initialize	For details on the configuration object.
+	*@private
 	*/
-	buildDriver: function buildDriver(config) {
+	buildDriverFrom: function buildDriverFrom(config) {
 		var result = new webdriver.Builder()
 						.usingServer(config.seleniumServerURL)
 						.withCapabilities(config.driverCapabilities)
 						.build();
 
 		result.manage().timeouts().implicitlyWait(config.timeout * 1000);	// implicitly wait for an element to appear, for asynchronous operations
-
-		result.get(this.baseURL).then(this.onReady);
 
 		return result;
 	},
@@ -159,6 +165,9 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.deferred = promises.defer();
 		this.failures = Object.create(null);
 		this.currentFeature = -1;
+
+		if (! this.driver)
+			this.initDriver();
 
 		if (this.ready)
 			this.startNextFeature();
@@ -256,12 +265,32 @@ var Runner = new Class( /** @lends Runner# */ {
 				growl('Test succeeded!  :)', { priority: 3 });
 		}
 
-		if (Object.getLength(this.failures) > 0)
+		if (Object.getLength(this.failures) > 0) {
 			this.deferred.reject(this.failures);
-		else
+		} else {
 			this.deferred.resolve(this);
-		
-		this.driver.quit();
+
+			if (this.config.quit == 'on success')
+				this.killDriver();
+		}
+
+		if (this.config.quit == 'always')
+			this.killDriver();
+	},
+
+	/** Quits the managed browser.
+	*
+	*@return	{Promise}	A promise resolved once the browser has been properly quit.
+	*/
+	killDriver: function killDriver() {
+		var driver = this.driver;
+		this.driver = null;
+		this.ready = false;
+
+		if (driver)
+			return driver.quit();
+		else
+			return promises.fcall(function() {});	// normalize return type to a promise, so that it can safely be called even if the driver had already been quit
 	}
 });
 
