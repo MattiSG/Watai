@@ -19,7 +19,8 @@ var Runner = new Class( /** @lends Runner# */ {
 		'isReady',
 		'onReady',
 		'start',
-		'killDriver'
+		'killDriver',
+		'markDone'
 	],
 
 	/** A hash mapping all failed features to their reasons for rejection.
@@ -174,12 +175,12 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.deferred = promises.defer();
 		if (this.ready) {
 			this.start();
-		} else {
+		} else {	// we already run before, or we just initialized
 			this.once('ready', this.start);
 
 			if (this.driver)
 				this.loadBaseURL();
-			else
+			else	// the driver has been explicitly killed before running again
 				this.initDriver();
 		}
 		
@@ -288,9 +289,9 @@ var Runner = new Class( /** @lends Runner# */ {
 		var resolve	= this.deferred.resolve.bind(this.deferred, this),
 			reject	= this.deferred.reject.bind(this.deferred, this.failures),
 			fulfill	= resolve,
-			precondition = (this.config.quit == 'always'
-							? this.killDriver
-							: function() {});
+			precondition = (this.config.quit != 'always'
+							? this.markDone
+							: this.killDriver);
 
 		if (Object.getLength(this.failures) == 0) {
 			if (this.config.quit == 'on success')
@@ -302,12 +303,19 @@ var Runner = new Class( /** @lends Runner# */ {
 		promises.when(precondition(), fulfill, reject);
 	},
 
+	/** Updates inner state so that consequent calls to `run()` know they need to reload the driver.
+	*@private
+	*/
+	markDone: function markDone() {
+		this.ready = false;
+	},
+
 	/** Stops the current evaluation.
 	*@return	this	For chainability.
 	*/
 	cancel: function cancel() {
 		this.removeListener('ready', this.start);
-		this.ready = false;
+		this.markDone();
 		this.deferred.reject(new Error('Evaluation was cancelled'));
 		return this;	//TODO: should return a promise for cancellation, since the current evaluated feature won't be stopped
 	},
@@ -319,7 +327,8 @@ var Runner = new Class( /** @lends Runner# */ {
 	killDriver: function killDriver() {
 		var driver = this.driver;
 		this.driver = null;
-		this.ready = false;
+
+		this.markDone();
 
 		if (driver)
 			return driver.quit();

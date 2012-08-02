@@ -40,14 +40,11 @@ describe('Runner', function() {
 			this.timeout(config.browserWarmupTime);
 
 			subject.isReady().should.not.be.ok;
-			
-			var handler = function() {
+
+			subject.once('ready', function() {
 				subject.isReady().should.be.ok;
 				done();
-				subject.removeListener('ready', handler);
-			}
-
-			subject.on('ready', handler);
+			});
 		});
 	});
 
@@ -123,6 +120,44 @@ describe('Runner', function() {
 				var result = subject.killDriver();
 				result.then(done, done);
 			}, done);
-		})
+		});
+
+		it('should not forbid a proper second run', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject.run().then(function() { done() }, done);
+		});
 	});
+
+	describe('automatic quitting', function() {
+		it('should not quit if set to "never"', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject.config.quit = 'never';
+			subject.run().then(function() {
+				should.exist(subject.driver);
+				done();
+			}, done).end();
+		});
+
+		it('should quit on success if set to "on success"', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject.config.quit = 'on success';
+			subject.run().then(function() {
+				should.not.exist(subject.driver);
+				done();
+			}, done).end();
+		});
+
+		it('should quit if set to "always"', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject.config.quit = 'always';
+			subject.run().then(function() {
+				should.not.exist(subject.driver);
+				done();
+			}, done).end();
+		});
+	})
 });
