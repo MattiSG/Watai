@@ -55,11 +55,24 @@ describe('Runner', function() {
 	});
 
 	describe('run', function() {
-		var callCount = 0;
+		var callCount = 0,
+			secondSubject;
 
 		var feature = new TestRight.Feature('RunnerTest feature', [
 			function() { callCount++ }
+		], {}),
+			failingFeature = new TestRight.Feature('RunnerTest failing feature', [
+			function() { throw "It's a trap!" }
 		], {});
+
+		before(function() {
+			secondSubject = new TestRight.Runner(config);
+		});
+
+		after(function() {
+			secondSubject.killDriver();
+		});
+
 
 		it('should return a promise', function() {
 			promises.isPromise(subject.run()).should.be.ok;
@@ -91,15 +104,22 @@ describe('Runner', function() {
 		it('should run even if called immediately after init', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			var runner = new TestRight.Runner(config);
-			runner.addFeature(feature).run().then(function() {
+			secondSubject.addFeature(feature).run().then(function() {
 				if (callCount == 3)
 					done();
 				else	// .should.equal simply does nothing?!
 					done(new Error('Feature has been called ' + callCount + ' times instead of 3'));
-
-				runner.killDriver();
 			}, done);
+		});
+
+		it('with failing features should be rejected', function(done) {
+			secondSubject.addFeature(failingFeature).run().then(function() {
+				done(new Error('Resolved instead of rejected.'))
+			}, function(failures) {
+				should.equal(typeof failures, 'object');
+				should.exist(failures[failingFeature]);
+				done();
+			});
 		});
 	});
 
