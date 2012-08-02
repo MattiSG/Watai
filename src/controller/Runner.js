@@ -18,7 +18,8 @@ var Runner = new Class( /** @lends Runner# */ {
 		'startNextFeature',
 		'isReady',
 		'onReady',
-		'start'
+		'start',
+		'killDriver'
 	],
 
 	/** A hash mapping all failed features to their reasons for rejection.
@@ -284,17 +285,21 @@ var Runner = new Class( /** @lends Runner# */ {
 				growl('Test succeeded!  :)', { priority: 3 });
 		}
 
-		if (Object.getLength(this.failures) > 0) {
-			this.deferred.reject(this.failures);
-		} else {
-			this.deferred.resolve(this);
+		var resolve	= this.deferred.resolve.bind(this.deferred, this),
+			reject	= this.deferred.reject.bind(this.deferred, this.failures),
+			fulfill	= resolve,
+			precondition = (this.config.quit == 'always'
+							? this.killDriver
+							: function() {});
 
+		if (Object.getLength(this.failures) == 0) {
 			if (this.config.quit == 'on success')
-				this.killDriver();
+				precondition = this.killDriver;
+		} else {
+			fulfill = reject;
 		}
 
-		if (this.config.quit == 'always')
-			this.killDriver();
+		promises.when(precondition(), fulfill, reject);
 	},
 
 	/** Stops the current evaluation.

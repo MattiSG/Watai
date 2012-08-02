@@ -94,11 +94,14 @@ describe('Runner', function() {
 		it('should run even if called immediately after init', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			(new TestRight.Runner(config)).addFeature(feature).run().then(function() {
+			var runner = new TestRight.Runner(config);
+			runner.addFeature(feature).run().then(function() {
 				if (callCount == 3)
 					done();
 				else	// .should.equal simply does nothing?!
 					done(new Error('Feature has been called ' + callCount + ' times instead of 3'));
+
+				runner.killDriver();
 			}, done);
 		});
 	});
@@ -106,7 +109,7 @@ describe('Runner', function() {
 	describe('cancellation', function() {
 		it('should reject the evaluation with an error', function(done) {
 			this.timeout(config.browserWarmupTime);
-			
+
 			var rejected = false;
 			subject.run().then(function() { done(new Error('Resolved instead of rejected!')) },
 							   function() { done() });
