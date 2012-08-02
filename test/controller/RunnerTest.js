@@ -55,14 +55,6 @@ describe('Runner', function() {
 		it('should be defined after constructing a Runner', function() {
 			should.exist(subject.getDriver());
 		});
-
-		it('should be idempotent to kill an already killed Runner', function(done) {
-			subject.killDriver().then(function() {
-				var result = subject.killDriver();
-				promises.isPromise(result).should.be.ok;
-				result.then(done, done);
-			}, done);
-		})
 	});
 
 	describe('run', function() {
@@ -74,37 +66,60 @@ describe('Runner', function() {
 
 		it('should return a promise', function() {
 			promises.isPromise(subject.run()).should.be.ok;
+			subject.cancel();
 		});
 
-		it('should evaluate features', function(done) {
+		it('should evaluate features once', function(done) {
+			this.timeout(config.browserWarmupTime);
 			subject.addFeature(feature);
 
 			subject.run().then(function() {
-				callCount.should.equal(1);
-				done();
+				if (callCount == 1)
+					done();
+				else	// .should.equal simply does nothing?!
+					done(new Error('Feature has been called ' + callCount + ' times instead of 1'));
 			}, done);
 		});
 
 		it('should evaluate features once again if called again', function(done) {
+			this.timeout(config.browserWarmupTime);
 			subject.run().then(function() {
-				callCount.should.equal(2);
-				done();
+				if (callCount == 2)
+					done();
+				else	// .should.equal simply does nothing?!
+					done(new Error('Feature has been called ' + callCount + ' times instead of 2'));
 			}, done);
 		});
 
-		xit('should run even if called immediately after init', function(done) {
+		it('should run even if called immediately after init', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			(new TestRight.Runner(config)).addFeature(feature)
-										  .run()
-										  .then(function() {
-				callCount.should.equal(3);
-				done();
+			(new TestRight.Runner(config)).addFeature(feature).run().then(function() {
+				if (callCount == 3)
+					done();
+				else	// .should.equal simply does nothing?!
+					done(new Error('Feature has been called ' + callCount + ' times instead of 3'));
 			}, done);
 		});
 	});
 
-	after(function(done) {
-		subject.killDriver().then(done, done);
+	describe('cancellation', function() {
+		it('should reject the evaluation with an error', function(done) {
+			this.timeout(config.browserWarmupTime);
+			
+			var rejected = false;
+			subject.run().then(function() { done(new Error('Resolved instead of rejected!')) },
+							   function() { done() });
+			subject.cancel();
+		})
+	});
+
+	describe('driver kill', function() {
+		it('should be idempotent when repeated', function(done) {
+			subject.killDriver().then(function() {
+				var result = subject.killDriver();
+				result.then(done, done);
+			}, done);
+		})
 	});
 });

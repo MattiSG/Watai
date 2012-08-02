@@ -17,7 +17,8 @@ var Runner = new Class( /** @lends Runner# */ {
 	Binds: [	// methods listed here will be automatically bound to the current instance
 		'startNextFeature',
 		'isReady',
-		'onReady'
+		'onReady',
+		'start'
 	],
 
 	/** A hash mapping all failed features to their reasons for rejection.
@@ -75,7 +76,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	/** Checks the passed configuration hash for any missing mandatory definitions.
 	*
 	*@param	{Object}	config	The configuration object to check (may not be defined, which will return an error).
-	*@returns	{Error|null}	An error object describing the encountered problem, or `null` if no error was found.
+	*@return	{Error|null}	An error object describing the encountered problem, or `null` if no error was found.
 	*@see	#initialize	For details on the configuration object.
 	*/
 	findConfigError: function findConfigError(config) {
@@ -98,9 +99,15 @@ var Runner = new Class( /** @lends Runner# */ {
 	initDriver: function initDriver() {
 		this.ready = false;
 		this.driver = this.buildDriverFrom(this.config);
-		this.driver.get(this.config.baseURL).then(this.onReady);
-
+		this.loadBaseURL();
 		return this;
+	},
+
+	/** Navigates to the base page for this runner.
+	*@private
+	*/
+	loadBaseURL: function loadBaseURL() {
+		this.driver.get(this.config.baseURL).then(this.onReady);
 	},
 
 	/** Constructs a new WebDriver instance based on the given configuration.
@@ -141,7 +148,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	/** Adds the given Feature to the list of those that this Runner will evaluate.
 	*
 	*@param	{Feature}	feature	A Feature for this Runner to evaluate.
-	*@returns	This Runner, for chaining.
+	*@return	This Runner, for chaining.
 	*/
 	addFeature: function addFeature(feature) {
 		this.features.push(feature);
@@ -151,30 +158,55 @@ var Runner = new Class( /** @lends Runner# */ {
 	
 	/** Returns the WebDriver instance this Runner created for the current run.
 	*
-	*@returns	WebDriver
+	*@return	WebDriver
 	*/
 	getDriver: function getDriver() {
 		return this.driver;
 	},
 	
-	/** Starts evaluation of all features added to this Runner.
+	/** Evaluates all features added to this Runner.
 	*
-	*@returns	{Promise}	A promise for results, resolved if all features pass (param: this Runner), rejected otherwise (param: hash mapping failed features to their reasons for rejection).
+	*@returns	{Promise}	A promise for results, resolved if all features pass (param: this Runner), rejected otherwise (param: hash mapping failed features to their reasons for rejection, or an Error if an error appeared in the runner itself or the evaluation was cancelled).
+	*@see	#addFeature
 	*/
 	run: function run() {
 		this.deferred = promises.defer();
+		if (this.ready) {
+			this.start();
+		} else {
+			this.once('ready', this.start);
+
+			if (this.driver)
+				this.loadBaseURL();
+			else
+				this.initDriver();
+		}
+		
+		return this.deferred.promise;
+	},
+
+	/** Actually starts the evaluation process.
+	*@private
+	*/
+	start: function start() {
 		this.failures = Object.create(null);
 		this.currentFeature = -1;
 
-		if (! this.driver)
-			this.initDriver();
+		this.startNextFeature();
+	},
 
-		if (this.ready)
-			this.startNextFeature();
+	/** Increments the feature index, starts evaluation of the next feature, and quits the driver if all features were evaluated.
+	*
+	*@private
+	*/
+	startNextFeature: function startNextFeature() {
+		this.currentFeature++;
+		
+		if (this.ready
+			&& this.currentFeature < this.features.length)
+			this.evaluateFeature(this.features[this.currentFeature]);
 		else
-			this.on('ready', this.startNextFeature);
-
-		return this.deferred.promise;
+			this.finish();
 	},
 	
 	/** Prepares and triggers the evaluation of the given feature.
@@ -238,25 +270,12 @@ var Runner = new Class( /** @lends Runner# */ {
 		if (report.failures.length > 0)
 			report.failures.forEach(logger.debug);
 	},
-
-	/** Increments the feature index, starts evaluation of the next feature, and quits the driver if all features were evaluated.
-	*
-	*@private
-	*/
-	startNextFeature: function startNextFeature() {
-		this.currentFeature++;
-		
-		if (this.currentFeature < this.features.length)
-			this.evaluateFeature(this.features[this.currentFeature]);
-		else
-			this.finish();
-	},
 	
 	/** Informs the user of the end result and cleans up everything after tests runs.
 	*
 	*@param	{Boolean}	success	Whether all features succeeded or not.
 	*@private
-	*/	
+	*/
 	finish: function finish(success) {
 		if (growl) {
 			if (Object.getLength(this.failures) > 0)
@@ -276,6 +295,16 @@ var Runner = new Class( /** @lends Runner# */ {
 
 		if (this.config.quit == 'always')
 			this.killDriver();
+	},
+
+	/** Stops the current evaluation.
+	*@return	this	For chainability.
+	*/
+	cancel: function cancel() {
+		this.removeListener('ready', this.start);
+		this.ready = false;
+		this.deferred.reject(new Error('Evaluation was cancelled'));
+		return this;	//TODO: should return a promise for cancellation, since the current evaluated feature won't be stopped
 	},
 
 	/** Quits the managed browser.
