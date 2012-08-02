@@ -1,13 +1,5 @@
 var webdriver = require('selenium-webdriverjs'),
-	promises = require('q'),
-	growl;
-try {
-	growl = require('growl');
-} catch (e) {
-	growl = false;
-}
-	
-var logger = require('winston').loggers.get('suites');
+	promises = require('q');
 
 
 var Runner = new Class( /** @lends Runner# */ {
@@ -224,50 +216,26 @@ var Runner = new Class( /** @lends Runner# */ {
 		}
 	},
 	
-	/** Callback handler upon feature evaluation.
-	* Displays result, errors if there were any, and calls the `startNextFeature` handler.
+	/** Callback handler upon feature evaluation. Emits events and calls the `startNextFeature` handler.
 	*
 	*@private
-	*
 	*@see	#startNextFeature
 	*/
 	handleFeatureResult: function handleFeatureResult(feature, message) {
-		var symbol,
-			loggerMethod;
 		if (message === true) {
-			symbol = '✔';
-			loggerMethod = 'info';
+			this.emit('featureSuccess', feature);
 		} else {
 			if (message.errors.length > 0) {
-				symbol = '⚠';
-				loggerMethod = 'error';
+				this.emit('featureError', feature, message.errors);
 			} else {
-				symbol = '✘';
-				loggerMethod = 'warn';
+				this.emit('featureFailure', feature, message.failures);
 			}
 
 			this.failures[feature] = message;
-
-			this.showFailureDetails(message);
 			this.failed = true;
 		}
 
-		logger[loggerMethod](symbol + '	' + feature.description);
-		
 		this.startNextFeature();
-	},
-
-	/** Presents details of a test failure / error to the user.
-	*
-	*@param	{Object.<Array.<String>>}	A hash with two keys containing arrays of strings giving details on failures. One key is `failures` (reasons for test rejection), the other `errors` (reasons for impossibility to evaluate test).
-	*@private
-	*/
-	showFailureDetails: function showFailureDetails(report) {
-		if (report.errors.length > 0)
-			report.errors.forEach(logger.debug);
-		
-		if (report.failures.length > 0)
-			report.failures.forEach(logger.debug);
 	},
 	
 	/** Informs the user of the end result and cleans up everything after tests runs.
@@ -276,28 +244,25 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	finish: function finish(success) {
-		if (growl) {
-			if (Object.getLength(this.failures) > 0)
-				growl('Test failed  :(', { priority: 4 });
-			else
-				growl('Test succeeded!  :)', { priority: 3 });
-		}
-
 		var resolve	= this.deferred.resolve.bind(this.deferred, this),
 			reject	= this.deferred.reject.bind(this.deferred, this.failures),
 			fulfill	= resolve,
+			eventType = 'success',
 			precondition = (this.config.quit != 'always'
 							? this.markUsed
-							: this.killDriver);
+							: this.killDriver),
+			failures = this.failures;	// copy them in case the precondition cleans them up
 
-		if (Object.getLength(this.failures) == 0) {
+		if (Object.getLength(failures) == 0) {
 			if (this.config.quit == 'on success')
 				precondition = this.killDriver;
 		} else {
+			eventType = 'failure';
 			fulfill = reject;
 		}
 
 		promises.when(precondition(), fulfill, reject);
+		this.emit(eventType, failures);
 	},
 
 	/** Updates inner state so that consequent calls to `run()` know they need to reload the driver.

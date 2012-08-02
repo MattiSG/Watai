@@ -56,21 +56,52 @@ describe('Runner', function() {
 
 	describe('run', function() {
 		var callCount = 0,
-			secondSubject;
+			successEmitted = false,
+			featureSuccessSource,
+			subjectWithFailure,
+			passedFailures,
+			emittedFailures,
+			emittedFeatureFailure,
+			passedErrors,
+			emittedFeatureError;
 
 		var feature = new TestRight.Feature('RunnerTest feature', [
 			function() { callCount++ }
 		], {}),
 			failingFeature = new TestRight.Feature('RunnerTest failing feature', [
+			function() {
+				var result = promises.defer();
+				result.reject('This is reason enough for rejection.');
+				return result.promise;
+			}
+		], {}),
+			errorFeature = new TestRight.Feature('RunnerTest failing feature', [
 			function() { throw "It's a trap!" }
 		], {});
 
 		before(function() {
-			secondSubject = new TestRight.Runner(config);
+			subject.on('success', function() {
+				successEmitted = true;
+			});
+
+			subject.on('featureSuccess', function(feature) {
+				featureSuccessSource = feature;
+			});
+
+			subjectWithFailure = new TestRight.Runner(config);
+			subjectWithFailure.once('failure', function(failures) {
+				emittedFailures = failures;
+			});
+			subjectWithFailure.once('featureFailure', function(feature, failures) {
+				emittedFeatureFailure = failures;
+			});
+			subjectWithFailure.once('featureError', function(feature, errors) {
+				emittedFeatureError = errors;
+			});
 		});
 
 		after(function() {
-			secondSubject.killDriver();
+			subjectWithFailure.killDriver();
 		});
 
 
@@ -98,28 +129,66 @@ describe('Runner', function() {
 					done();
 				else	// .should.equal simply does nothing?!
 					done(new Error('Feature has been called ' + callCount + ' times instead of 2'));
-			}, done);
+			}, done).end();
 		});
 
 		it('should run even if called immediately after init', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			secondSubject.addFeature(feature).run().then(function() {
+			subjectWithFailure.addFeature(feature).run().then(function() {
 				if (callCount == 3)
 					done();
 				else	// .should.equal simply does nothing?!
 					done(new Error('Feature has been called ' + callCount + ' times instead of 3'));
-			}, done);
+			}, done).end();
 		});
 
 		it('with failing features should be rejected', function(done) {
-			secondSubject.addFeature(failingFeature).run().then(function() {
+			subjectWithFailure.addFeature(failingFeature).run().then(function() {
 				done(new Error('Resolved instead of rejected.'))
-			}, function(failures) {
-				should.equal(typeof failures, 'object');
-				should.exist(failures[failingFeature]);
+			}, function(report) {
+				should.equal(typeof report, 'object');
+				if (! report[failingFeature])
+					done(new Error('Missing feature.'));
+				if (! report[failingFeature].failures)
+					done(new Error('Missing feature failures details.'));
+				passedFailures = report;
 				done();
-			});
+			}).end();
+		});
+
+		it('with error-prone features should be rejected', function(done) {
+			subjectWithFailure.addFeature(errorFeature).run().then(function() {
+				done(new Error('Resolved instead of rejected.'))
+			}, function(report) {
+				should.equal(typeof report, 'object');
+				if (! report[errorFeature])
+					done(new Error('Missing feature.'));
+				if (! report[errorFeature].errors)
+					done(new Error('Missing feature errors details.'));
+				passedErrors = report;
+				done();
+			}).end();
+		});
+
+		it('should have emitted a "success" event', function() {
+			should.strictEqual(successEmitted, true);
+		});
+
+		it('should have emitted a "featureSuccess" event, passing the source feature', function() {
+			should.strictEqual(featureSuccessSource, feature);
+		});
+
+		it('should have emitted a "failure" event with the same failures as passed on failure', function() {
+			should.equal(emittedFailures, passedFailures);
+		});
+
+		it('should have emitted a "featureFailure" event with the same failure as passed on failure', function() {
+			should.equal(emittedFeatureFailure, emittedFailures[failingFeature].failures);
+		});
+
+		it('should have emitted a "featureError" event with the same error as passed on error', function() {
+			should.equal(emittedFeatureError, passedErrors[errorFeature].errors);
 		});
 	});
 
@@ -135,10 +204,12 @@ describe('Runner', function() {
 	});
 
 	describe('driver kill', function() {
-		it('should be idempotent when repeated', function(done) {
+		it('should be idempotent through repetition', function(done) {
+			this.timeout(config.browserWarmupTime / 2);	// this should be faster than warmup, but can still be longer than the default timeout
+
 			subject.killDriver().then(function() {
 				var result = subject.killDriver();
-				result.then(done, done);
+				result.then(done, done).end();
 			}, done);
 		});
 
