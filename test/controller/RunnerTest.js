@@ -106,6 +106,12 @@ describe('Runner', function() {
 				emitted.run++;
 			});
 
+			emitted.beforeRun = 0;
+
+			subjectWithFailure.on('beforeRun', function() {
+				emitted.beforeRun++;
+			});
+
 			emitted.restart = 0;
 			
 			subjectWithFailure.on('restart', function() {
@@ -208,6 +214,10 @@ describe('Runner', function() {
 
 		it('should have emitted the correct count of "run" events', function() {
 			should.strictEqual(emitted.run, 3);
+		});
+
+		it('should have the same count of "run" and "beforeRun" events', function() {
+			should.strictEqual(emitted.beforeRun, emitted.run);
 		});
 
 		it('should have emitted the correct count of "restart" events', function() {

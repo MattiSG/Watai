@@ -175,6 +175,8 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@see	#addFeature
 	*/
 	run: function run() {
+		this.emit('beforeRun')
+
 		this.deferred = promises.defer();
 		if (this.ready) {
 			this.start();
