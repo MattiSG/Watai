@@ -40,6 +40,12 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	ready: false,
 
+	/** True if the driver is currently waiting for the baseURL page to load.
+	*@type	{Boolean}
+	*@private
+	*/
+	loading: false,
+
 	/** The promise controller (deferred object) for results, resolved when all features of this Runner have been evaluated.
 	*@type	{q.deferred}
 	*@private
@@ -101,6 +107,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	loadBaseURL: function loadBaseURL() {
+		this.loading = true;
 		this.driver.get(this.config.baseURL).then(this.onReady);
 	},
 
@@ -138,6 +145,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	onReady: function onReady() {
+		this.loading = false;
 		this.ready = true;
 		this.emit('ready');
 	},
@@ -173,10 +181,12 @@ var Runner = new Class( /** @lends Runner# */ {
 		} else {	// we already run before, or we just initialized
 			this.once('ready', this.start);
 
-			if (this.driver)
-				this.loadBaseURL();
-			else	// the driver has been explicitly killed before running again
-				this.initDriver();
+			if (! this.loading) {
+				if (this.driver)
+					this.loadBaseURL();
+				else	// the driver has been explicitly killed before running again
+					this.initDriver();
+			}
 		}
 		
 		return this.deferred.promise;
