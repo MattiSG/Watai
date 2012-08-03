@@ -2,10 +2,22 @@
 */
 var args = process.argv.slice(2); // extract CLI arguments, see http://docs.nodejitsu.com/articles/command-line/how-to-parse-command-line-arguments
 
-
 /** Absolute path to the main library file.
+*@type	{string}
 */
 var MAIN_FILE = exports.MAIN_FILE = require('path').join(__dirname, 'TestRight.js');
+
+var logger = require('winston').loggers.get('suites');
+
+/* Try to load long stack traces development module.
+*/
+try {
+	var longjohn = require('longjohn');
+	longjohn.async_trace_limit = 40;
+	logger.silly('Long stack traces loaded');
+} catch (e) {
+	logger.silly('No long stack traces module found');
+}
 
 
 if (args.length == 0) {
@@ -65,8 +77,6 @@ function isInstalled() {
 *@private
 */
 function showHelp() {
-	var logger = require('winston').loggers.get('suites');
-
 	logger.error("Oops, you didn’t provide any test suite to execute!");
 	logger.info("Usage: watai path/to/suite/description/folder [another/suite [yetAnother […]]]");
 }
