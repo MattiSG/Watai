@@ -99,6 +99,18 @@ describe('Runner', function() {
 			subjectWithFailure.once('featureError', function(feature, errors) {
 				emitted.featureError = errors;
 			});
+
+			emitted.run = 0;
+
+			subjectWithFailure.on('run', function() {
+				emitted.run++;
+			});
+
+			emitted.restart = 0;
+			
+			subjectWithFailure.on('restart', function() {
+				emitted.restart++;
+			});
 		});
 
 		after(function() {
@@ -192,6 +204,14 @@ describe('Runner', function() {
 
 		it('should have emitted a "featureError" event with the same error as passed on error', function() {
 			should.equal(emitted.featureError, passed.errors[errorFeature].errors);
+		});
+
+		it('should have emitted the correct count of "run" events', function() {
+			should.strictEqual(emitted.run, 3);
+		});
+
+		it('should have emitted the correct count of "restart" events', function() {
+			should.strictEqual(emitted.restart, 0);
 		});
 	});
 

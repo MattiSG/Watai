@@ -105,6 +105,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 
 	/** Constructs a new WebDriver instance based on the given configuration.
+	* Emits "restart".
 	*
 	*@param	{Object}	config	The configuration object based on which the driver will be built.
 	*@return	{WebDriver}	The matching WebDriver instance.
@@ -112,6 +113,8 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	buildDriverFrom: function buildDriverFrom(config) {
+		this.emit('restart');
+
 		var result = new webdriver.Builder()
 						.usingServer(config.seleniumServerURL)
 						.withCapabilities(config.driverCapabilities)
@@ -180,11 +183,14 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 
 	/** Actually starts the evaluation process.
+	* Emits "run".
 	*@private
 	*/
 	start: function start() {
 		this.failures = Object.create(null);
 		this.currentFeature = -1;
+
+		this.emit('run');
 
 		this.startNextFeature();
 	},
@@ -217,6 +223,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 	
 	/** Callback handler upon feature evaluation. Emits events and calls the `startNextFeature` handler.
+	* Emits "featureSuccess", "featureError", "featureFailure".
 	*
 	*@private
 	*@see	#startNextFeature
@@ -238,7 +245,8 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.startNextFeature();
 	},
 	
-	/** Informs the user of the end result and cleans up everything after tests runs.
+	/** Informs of the end result and cleans up everything after tests runs.
+	* Emits "success", "failure".
 	*
 	*@param	{Boolean}	success	Whether all features succeeded or not.
 	*@private
