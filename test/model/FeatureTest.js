@@ -1,15 +1,22 @@
 var promises = require('q');
 
-var WidgetTest = require('./WidgetTest');
+var TestRight = require('../helpers/subject'),
+	my = require('../helpers/driver').getDriverHolder(),
+	WidgetTest;
 
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
-* It relies on some external setup, see `test/helpers` and `test/index.js`.
 */
 describe('Feature', function() {
-	var featureWithScenario = function featureWithScenario(scenario) {
-		return new TestRight.Feature('Test feature', scenario, { TestWidget: WidgetTest.testWidget });
-	}	
+	var featureWithScenario;
+
+	before(function() {
+		WidgetTest = require('../helpers/testWidget').getWidget(my.driver);
+
+		featureWithScenario = function featureWithScenario(scenario) {
+			return new TestRight.Feature('Test feature', scenario, { TestWidget: WidgetTest });
+		}
+	});
 	
 	describe('functional scenarios with', function() {
 		var failureReason = 'It’s a trap!';
@@ -130,12 +137,15 @@ describe('Feature', function() {
 		var expectedTexts = {},
 			wrongTexts    = {},
 			firstKey;	// the first key of expected texts. Yes, it is used in a test.
-		Object.each(WidgetTest.expectedTexts, function(text, key) {	// we need to namespace all attributes to TestWidget
-			expectedTexts['TestWidget.' + key] = text;
-			wrongTexts['TestWidget.' + key] = text + ' **modified**';
-			
-			if (! firstKey)
-				firstKey = 'TestWidget.' + key;
+
+		before(function() {
+			Object.each(require('../helpers/testWidget').expectedTexts, function(text, key) {	// we need to namespace all attributes to TestWidget
+				expectedTexts['TestWidget.' + key] = text;
+				wrongTexts['TestWidget.' + key] = text + ' **modified**';
+				
+				if (! firstKey)
+					firstKey = 'TestWidget.' + key;
+			});
 		});
 		
 		
@@ -152,11 +162,20 @@ describe('Feature', function() {
 			featureFromScenario.should.have.property('steps').with.lengthOf(1);
 			String(featureFromScenario.steps[0]).should.equal(String(directCall));
 		});
+
+		it('that are empty should pass', function(done) {
+			featureWithScenario([
+				{}
+			]).test().then(done, function(err) {
+				should.fail('Should have passed (reason: "' + err + ')');
+				done();
+			})
+		});
 			
 		it('that fail should be rejected and reasons passed', function(done) {
 			featureWithScenario([
 				wrongTexts
-			]).test().then(function() { 
+			]).test().then(function() {
 				done(new Error('Unmatched widget state description should not be resolved.'));
 			}, function(reasons) {
 				var firstReason = reasons.failures[0];

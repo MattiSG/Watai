@@ -108,7 +108,11 @@ var Feature = new Class( /** @lends Feature# */ {
 		return function() {
 			var evaluator = promises.defer();
 
+			var isEmpty = true;	// yep, we have to treat the special case of {}
+
 			Object.each(hooksVals, function(expected, attribute) {
+				isEmpty = false;
+
 				Object.getFromPath(widgets, attribute)
 					.then(function(target) {
 						target.getText().then(function(actual) {
@@ -125,6 +129,9 @@ var Feature = new Class( /** @lends Feature# */ {
 					}
 				)
 			});
+
+			if (isEmpty)
+				evaluator.resolve();
 			
 			return evaluator.promise;
 		}

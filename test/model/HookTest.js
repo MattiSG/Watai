@@ -1,3 +1,7 @@
+var TestRight = require('../helpers/subject'),
+	my = require('../helpers/driver').getDriverHolder();
+
+
 /* Exported to be also used in WidgetTest.
 */
 exports.checkHook = checkHook = function checkHook(subject, hookName, expectedContent) {
@@ -18,7 +22,6 @@ exports.checkHook = checkHook = function checkHook(subject, hookName, expectedCo
 }
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
-* It relies on some external setup, see `test/helpers` and `test/index.js`.
 */
 describe('Hook', function() {
 	var hooksTarget = {};
@@ -27,7 +30,9 @@ describe('Hook', function() {
 		describe('with ID', function() {
 			var hookName = 'id';
 			
-			TestRight.Hook.addHook(hooksTarget, hookName, { id: 'toto' }, driver);
+			before(function() {
+				TestRight.Hook.addHook(hooksTarget, hookName, { id: 'toto' }, my.driver);
+			});
 			
 			checkHook(hooksTarget, hookName, 'This paragraph has id toto');
 		});
@@ -35,7 +40,9 @@ describe('Hook', function() {
 		describe('with CSS', function() {
 			var hookName = 'css';
 			
-			TestRight.Hook.addHook(hooksTarget, hookName, { css: '.tutu' }, driver);
+			before(function() {
+				TestRight.Hook.addHook(hooksTarget, hookName, { css: '.tutu' }, my.driver);
+			});
 			
 			checkHook(hooksTarget, hookName, 'This paragraph has class tutu');
 		});
@@ -43,7 +50,9 @@ describe('Hook', function() {
 		describe('with Xpath', function() {
 			var hookName = 'xpath';
 			
-			TestRight.Hook.addHook(hooksTarget, hookName, { xpath: '//div[@id="selectors"]/p[3]' }, driver);
+			before(function() {
+				TestRight.Hook.addHook(hooksTarget, hookName, { xpath: '//div[@id="selectors"]/p[3]' }, my.driver);
+			});
 			
 			checkHook(hooksTarget, hookName, 'This paragraph is the third of the selectors div');
 		});
@@ -51,15 +60,17 @@ describe('Hook', function() {
 		describe('with link text', function() {
 			var hookName = 'linkText';
 			
-			TestRight.Hook.addHook(hooksTarget, hookName, { linkText: 'This paragraph is embedded in a link' }, driver);
+			before(function() {
+				TestRight.Hook.addHook(hooksTarget, hookName, { linkText: 'This paragraph is embedded in a link' }, my.driver);
+			});
 			
 			checkHook(hooksTarget, hookName, 'This paragraph is embedded in a link');
 		});
 		
 		it('should work on a field too', function(done) {
 			var target = 'field';
-				
-			TestRight.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, driver);
+			
+			TestRight.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
 			
 			hooksTarget[target].getAttribute('value').then(function(content) {
 				content.should.equal('Default');
@@ -73,7 +84,7 @@ describe('Hook', function() {
 			var target = 'field',
 				newContent = 'new content';
 				
-			TestRight.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, driver);
+			TestRight.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
 			
 			hooksTarget[target] = newContent;
 

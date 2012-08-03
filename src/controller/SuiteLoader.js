@@ -71,6 +71,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		}
 		
 		this.runner = new Runner(config);
+		this.attachViewsTo(this.runner);
 		this.context = vm.createContext(this.buildContext());
 		
 		fs.readdir(this.path, this.loadAllFiles.bind(this));
@@ -129,6 +130,16 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		
 		widgetFiles.forEach(this.loadWidget.bind(this));		
 		featureFiles.forEach(this.loadFeature.bind(this));
+	},
+
+	attachViewsTo: function attachViewsTo(runner) {
+		Object.each(require('../view/RunnerCLI'), function(handler, eventType) {
+			runner.on(eventType, handler);
+		});
+
+		Object.each(require('../view/RunnerGrowl'), function(handler, eventType) {
+			runner.on(eventType, handler);
+		});
 	},
 	
 	/** Loads the given definitions globally into this Loader's managed namespace.
@@ -212,7 +223,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	
 	/** Asks the underlying Runner instance to execute all tests.
 	*
-	*@returns	The executing Runner.
+	*@return	A promise for results.
+	*@see	Runner#run
 	*/
 	run: function run() {
 		var underline = '';
@@ -220,9 +232,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		suitesLogger.info(this.name);
 		suitesLogger.info(underline);
 		
-		this.runner.run();
-		
-		return this.runner;
+		return this.runner.run();
 	}
 });
 

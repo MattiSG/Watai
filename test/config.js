@@ -1,6 +1,6 @@
 module.exports = {
 	seleniumServerURL: 'http://127.0.0.1:4444/wd/hub',
-	supportPageURL: 'file://' + __dirname + '/resources/page.html',
+	baseURL: 'file://' + __dirname + '/resources/page.html',
 	driverCapabilities: {
 		browserName: 'chrome',
 		javascriptEnabled: true
@@ -9,6 +9,7 @@ module.exports = {
 		suites: 'none',
 		steps: 'none'
 	},
+	quit: 'never',
 	browserWarmupTimeout: 30 * 1000,	//ms
 	timeout: 1	// implicit wait for elements lookup in seconds, has to be lower than mocha's timeout to test for missing elements rejection
 }

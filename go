@@ -1,9 +1,9 @@
 #!/bin/bash
 
-BASEDIR="$(dirname $0)"
+BASEDIR="$(cd `dirname $0`; pwd)"
 BASEDIR=$BASEDIR/$(dirname $(readlink $0) 2> /dev/null)	# readlink for NPM global install alias; error redirection in case of direct invocation, in which case readlink returns nothing
 SRC_DIR="$BASEDIR/src"
-BUILD_DIR="$BASEDIR/build"
+COVERAGE_DIR="$BASEDIR/coverage"
 BIN_DIR="$BASEDIR/node_modules/.bin/"
 TEST_DIR="$BASEDIR/test"
 DOC_DIR="$BASEDIR/doc"
@@ -11,7 +11,7 @@ JSDOC_DIR="/usr/local/Cellar/jsdoc-toolkit/2.4.0/libexec/jsdoc-toolkit"	#TODO: m
 DIST_DIR="$BASEDIR/dist"
 JSCOVERAGE="$BASEDIR/node_modules/visionmedia-jscoverage/jscoverage"
 
-MOCHA_CMD="$BIN_DIR/mocha $TEST_DIR" # longer timeout because async tests can be a bit longer than the default 2s
+MOCHA_CMD="$BIN_DIR/mocha"
 DIST_INCLUDE="package.json go src README.md" # list all files / folders to be included when `dist`ing, separated by spaces; this is a copy of npm’s "files", couldn't find an easy way to parse it
 
 
@@ -28,13 +28,23 @@ open() {
 
 case "$1" in
 	test )
-		$MOCHA_CMD --reporter spec ;;
+		shift
+		opts=""
+		for arg in "$@"
+		do
+			if echo $arg | grep -q '^\-\-'
+			then opts="$arg $opts"
+			else opts="$opts $TEST_DIR/$arg"	# allows for "go test controller" for example, instead of "go test test/controller"
+
+			fi
+		done
+		$MOCHA_CMD $opts ;;
 	coverage )	# based on http://tjholowaychuk.com/post/18175682663
-		rm -rf $BUILD_DIR
-		$JSCOVERAGE $SRC_DIR $BUILD_DIR
+		rm -rf $COVERAGE_DIR
+		$JSCOVERAGE $SRC_DIR $COVERAGE_DIR
 		export npm_config_coverage=true
-		$MOCHA_CMD --reporter html-cov > $TEST_DIR/coverage.html &&
-		open $TEST_DIR/coverage.html
+		$MOCHA_CMD $TEST_DIR --reporter html-cov > $DOC_DIR/coverage.html &&
+		open $DOC_DIR/coverage.html
 		exit 0 ;;
 	doc )
 		if [[ $2 = "private" ]]

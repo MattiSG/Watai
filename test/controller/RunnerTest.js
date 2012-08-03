@@ -1,4 +1,5 @@
 var should = require('should'),
+	promises = require('q'),
 	TestRight = require('../helpers/subject'),
 	config = require('../helpers/driver').config;
 
@@ -29,16 +30,22 @@ describe('Runner', function() {
 			}).should.throw();
 		});
 
-		it ('should not throw when constructing with proper config', function(done) {
-			this.timeout(config.browserWarmupTime);
-
+		it ('should not throw when constructing with proper config', function() {
 			(function() {
 				subject = new TestRight.Runner(config);
-				subject.getDriver().session_.then(function() {
-					done();
-				}, done);
 			}).should.not.throw();
-		})
+		});
+
+		it('should emit "ready" when ready', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject.isReady().should.not.be.ok;
+
+			subject.once('ready', function() {
+				subject.isReady().should.be.ok;
+				done();
+			});
+		});
 	});
 
 	describe('driver', function() {
@@ -47,7 +54,234 @@ describe('Runner', function() {
 		});
 	});
 
-	after(function(done) {
-		subject.getDriver().quit().then(done, done);
+
+	var emitted = {},	// observer storage for event-emitted data
+		passed = {},	// observer storage for data passed through promises, to compare with events
+		featureSuccessSource,	// test event source
+		featureEvaluationCount = 0;
+
+	var feature = new TestRight.Feature('RunnerTest feature', [
+		function() { featureEvaluationCount++ }
+	], {});
+
+	var failingFeature = new TestRight.Feature('RunnerTest failing feature', [
+		function() {
+			var result = promises.defer();
+			result.reject('This is reason enough for rejection.');
+			return result.promise;
+		}
+	], {});
+
+	var errorFeature = new TestRight.Feature('RunnerTest failing feature', [
+		function() { throw "It's a trap!" }
+	], {});
+
+	describe('run', function() {
+		var subjectWithFailure;	// a second subject that will have a failing and an error-emitting feature added
+
+
+		before(function() {
+			subject.once('success', function() {
+				emitted.success = true;
+			});
+
+			subject.on('featureSuccess', function(feature) {
+				featureSuccessSource = feature;
+			});
+
+			subjectWithFailure = new TestRight.Runner(config);
+			subjectWithFailure.once('failure', function(failures) {
+				emitted.failures = failures;
+			});
+			subjectWithFailure.once('featureFailure', function(feature, failures) {
+				emitted.featureFailure = failures;
+			});
+			subjectWithFailure.once('featureError', function(feature, errors) {
+				emitted.featureError = errors;
+			});
+
+			emitted.run = 0;
+
+			subjectWithFailure.on('run', function() {
+				emitted.run++;
+			});
+
+			emitted.beforeRun = 0;
+
+			subjectWithFailure.on('beforeRun', function() {
+				emitted.beforeRun++;
+			});
+
+			emitted.restart = 0;
+			
+			subjectWithFailure.on('restart', function() {
+				emitted.restart++;
+			});
+		});
+
+		after(function() {
+			subjectWithFailure.killDriver();
+		});
+
+
+		it('should return a promise', function() {
+			promises.isPromise(subject.run()).should.be.ok;
+			subject.cancel();
+		});
+
+		it('should evaluate features once', function(done) {
+			this.timeout(config.browserWarmupTime);
+			subject.addFeature(feature);
+
+			subject.run().then(function() {
+				if (featureEvaluationCount == 1)
+					done();
+				else	// .should.equal simply does nothing?!
+					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 1'));
+			}, done);
+		});
+
+		it('should evaluate features once again if called again', function(done) {
+			this.timeout(config.browserWarmupTime);
+			subject.run().then(function() {
+				if (featureEvaluationCount == 2)
+					done();
+				else	// .should.equal simply does nothing?!
+					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 2'));
+			}, done).end();
+		});
+
+		it('should run even if called immediately after init', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subjectWithFailure.addFeature(feature).run().then(function() {
+				if (featureEvaluationCount == 3)
+					done();
+				else	// .should.equal simply does nothing?!
+					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 3'));
+			}, done).end();
+		});
+
+		it('with failing features should be rejected', function(done) {
+			subjectWithFailure.addFeature(failingFeature).run().then(function() {
+				done(new Error('Resolved instead of rejected.'))
+			}, function(report) {
+				should.equal(typeof report, 'object');
+				if (! report[failingFeature])
+					done(new Error('Missing feature.'));
+				if (! report[failingFeature].failures)
+					done(new Error('Missing feature failures details.'));
+				passed.failures = report;
+				done();
+			}).end();
+		});
+
+		it('with error-prone features should be rejected', function(done) {
+			subjectWithFailure.addFeature(errorFeature).run().then(function() {
+				done(new Error('Resolved instead of rejected.'))
+			}, function(report) {
+				should.equal(typeof report, 'object');
+				if (! report[errorFeature])
+					done(new Error('Missing feature.'));
+				if (! report[errorFeature].errors)
+					done(new Error('Missing feature errors details.'));
+				passed.errors = report;
+				done();
+			}).end();
+		});
+	});
+
+	describe('events', function() {
+		it('should have emitted a "success" event', function() {
+			should.strictEqual(emitted.success, true);
+		});
+
+		it('should have emitted a "featureSuccess" event, passing the source feature', function() {
+			should.strictEqual(featureSuccessSource, feature);
+		});
+
+		it('should have emitted a "failure" event with the same failures as passed on failure', function() {
+			should.equal(emitted.failures, passed.failures);
+		});
+
+		it('should have emitted a "featureFailure" event with the same failure as passed on failure', function() {
+			should.equal(emitted.featureFailure, emitted.failures[failingFeature].failures);
+		});
+
+		it('should have emitted a "featureError" event with the same error as passed on error', function() {
+			should.equal(emitted.featureError, passed.errors[errorFeature].errors);
+		});
+
+		it('should have emitted the correct count of "run" events', function() {
+			should.strictEqual(emitted.run, 3);
+		});
+
+		it('should have the same count of "run" and "beforeRun" events', function() {
+			should.strictEqual(emitted.beforeRun, emitted.run);
+		});
+
+		it('should have emitted the correct count of "restart" events', function() {
+			should.strictEqual(emitted.restart, 0);
+		});
+	});
+
+	describe('cancellation', function() {
+		it('should reject the evaluation with an error', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			var rejected = false;
+			subject.run().then(function() { done(new Error('Resolved instead of rejected!')) },
+							   function() { done() });
+			subject.cancel();
+		})
+	});
+
+	describe('driver kill', function() {
+		it('should be idempotent through repetition', function(done) {
+			this.timeout(config.browserWarmupTime / 2);	// this should be faster than warmup, but can still be longer than the default timeout
+
+			subject.killDriver().then(function() {
+				var result = subject.killDriver();
+				result.then(done, done).end();
+			}, done);
+		});
+
+		it('should not forbid a proper second run', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject.run().then(function() { done() }, done);
+		});
+	});
+
+	describe('automatic quitting', function() {
+		it('should not quit if set to "never"', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject.config.quit = 'never';
+			subject.run().then(function() {
+				should.exist(subject.driver);
+				done();
+			}, done).end();
+		});
+
+		it('should quit on success if set to "on success"', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject.config.quit = 'on success';
+			subject.run().then(function() {
+				should.not.exist(subject.driver);
+				done();
+			}, done).end();
+		});
+
+		it('should quit if set to "always"', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject.config.quit = 'always';
+			subject.run().then(function() {
+				should.not.exist(subject.driver);
+				done();
+			}, done).end();
+		});
 	});
 });
