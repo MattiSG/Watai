@@ -212,7 +212,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	
 	/** Asks the underlying Runner instance to execute all tests.
 	*
-	*@returns	The executing Runner.
+	*@return	A promise for results.
+	*@see	Runner#run
 	*/
 	run: function run() {
 		var underline = '';
@@ -220,9 +221,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		suitesLogger.info(this.name);
 		suitesLogger.info(underline);
 		
-		this.runner.run();
-		
-		return this.runner;
+		return this.runner.run();
 	}
 });
 
