@@ -6,8 +6,20 @@ var logger = require('winston').loggers.get('suites');
 *@param	{string}	message	The actual content to present to the user.
 *@private
 */
-function log(method, prefix, message) {
-	logger[method](prefix + '	' + message);
+function log(prefix, method, message) {
+	logger[method](prefix + '  ' + message);
+}
+
+exports.beforeRun = function onBeforeRun() {
+	log(' ҉', 'info', 'Connecting to browser…')
+}
+
+exports.ready = function onReady() {
+	log('⦾', 'info', 'Browser ready!')
+}
+
+exports.run = function onRun() {
+	log('۞', 'info', 'Test started.')
 }
 
 /** Presents details of a test success to the user.
