@@ -159,16 +159,19 @@ var Feature = new Class( /** @lends Feature# */ {
 			failureReasons.failures.push(message);
 			evaluateNext();
 		}
+
+		function fulfillPromise(report) {
+			if (report.failures.length || report.errors.length)
+				return deferred.reject(report);
+			else
+				return deferred.resolve();
+		}
 		
-		evaluateNext = (function(value) {
+		evaluateNext = (function() {
 			stepIndex++;
 
-			if (stepIndex == this.steps.length) {
-				if (failureReasons.failures.length || failureReasons.errors.length)
-					return deferred.reject(failureReasons);
-				else
-					return deferred.resolve();
-			}
+			if (stepIndex == this.steps.length)
+				return fulfillPromise(failureReasons);
 			
 			try {
 				promises.when(this.steps[stepIndex](),	// see https://github.com/kriskowal/q#the-middle
