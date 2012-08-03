@@ -54,34 +54,35 @@ describe('Runner', function() {
 		});
 	});
 
-	describe('run', function() {
-		var callCount = 0,
-			successEmitted = false,
-			featureSuccessSource,
-			subjectWithFailure,
-			passedFailures,
-			emittedFailures,
-			emittedFeatureFailure,
-			passedErrors,
-			emittedFeatureError;
 
-		var feature = new TestRight.Feature('RunnerTest feature', [
-			function() { callCount++ }
-		], {}),
-			failingFeature = new TestRight.Feature('RunnerTest failing feature', [
-			function() {
-				var result = promises.defer();
-				result.reject('This is reason enough for rejection.');
-				return result.promise;
-			}
-		], {}),
-			errorFeature = new TestRight.Feature('RunnerTest failing feature', [
-			function() { throw "It's a trap!" }
-		], {});
+	var emitted = {},	// observer storage for event-emitted data
+		passed = {},	// observer storage for data passed through promises, to compare with events
+		featureSuccessSource,	// test event source
+		featureEvaluationCount = 0;
+
+	var feature = new TestRight.Feature('RunnerTest feature', [
+		function() { featureEvaluationCount++ }
+	], {});
+
+	var failingFeature = new TestRight.Feature('RunnerTest failing feature', [
+		function() {
+			var result = promises.defer();
+			result.reject('This is reason enough for rejection.');
+			return result.promise;
+		}
+	], {});
+
+	var errorFeature = new TestRight.Feature('RunnerTest failing feature', [
+		function() { throw "It's a trap!" }
+	], {});
+
+	describe('run', function() {
+		var subjectWithFailure;	// a second subject that will have a failing and an error-emitting feature added
+
 
 		before(function() {
-			subject.on('success', function() {
-				successEmitted = true;
+			subject.once('success', function() {
+				emitted.success = true;
 			});
 
 			subject.on('featureSuccess', function(feature) {
@@ -90,13 +91,13 @@ describe('Runner', function() {
 
 			subjectWithFailure = new TestRight.Runner(config);
 			subjectWithFailure.once('failure', function(failures) {
-				emittedFailures = failures;
+				emitted.failures = failures;
 			});
 			subjectWithFailure.once('featureFailure', function(feature, failures) {
-				emittedFeatureFailure = failures;
+				emitted.featureFailure = failures;
 			});
 			subjectWithFailure.once('featureError', function(feature, errors) {
-				emittedFeatureError = errors;
+				emitted.featureError = errors;
 			});
 		});
 
@@ -115,20 +116,20 @@ describe('Runner', function() {
 			subject.addFeature(feature);
 
 			subject.run().then(function() {
-				if (callCount == 1)
+				if (featureEvaluationCount == 1)
 					done();
 				else	// .should.equal simply does nothing?!
-					done(new Error('Feature has been called ' + callCount + ' times instead of 1'));
+					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 1'));
 			}, done);
 		});
 
 		it('should evaluate features once again if called again', function(done) {
 			this.timeout(config.browserWarmupTime);
 			subject.run().then(function() {
-				if (callCount == 2)
+				if (featureEvaluationCount == 2)
 					done();
 				else	// .should.equal simply does nothing?!
-					done(new Error('Feature has been called ' + callCount + ' times instead of 2'));
+					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 2'));
 			}, done).end();
 		});
 
@@ -136,10 +137,10 @@ describe('Runner', function() {
 			this.timeout(config.browserWarmupTime);
 
 			subjectWithFailure.addFeature(feature).run().then(function() {
-				if (callCount == 3)
+				if (featureEvaluationCount == 3)
 					done();
 				else	// .should.equal simply does nothing?!
-					done(new Error('Feature has been called ' + callCount + ' times instead of 3'));
+					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 3'));
 			}, done).end();
 		});
 
@@ -152,7 +153,7 @@ describe('Runner', function() {
 					done(new Error('Missing feature.'));
 				if (! report[failingFeature].failures)
 					done(new Error('Missing feature failures details.'));
-				passedFailures = report;
+				passed.failures = report;
 				done();
 			}).end();
 		});
@@ -166,13 +167,15 @@ describe('Runner', function() {
 					done(new Error('Missing feature.'));
 				if (! report[errorFeature].errors)
 					done(new Error('Missing feature errors details.'));
-				passedErrors = report;
+				passed.errors = report;
 				done();
 			}).end();
 		});
+	});
 
+	describe('events', function() {
 		it('should have emitted a "success" event', function() {
-			should.strictEqual(successEmitted, true);
+			should.strictEqual(emitted.success, true);
 		});
 
 		it('should have emitted a "featureSuccess" event, passing the source feature', function() {
@@ -180,15 +183,15 @@ describe('Runner', function() {
 		});
 
 		it('should have emitted a "failure" event with the same failures as passed on failure', function() {
-			should.equal(emittedFailures, passedFailures);
+			should.equal(emitted.failures, passed.failures);
 		});
 
 		it('should have emitted a "featureFailure" event with the same failure as passed on failure', function() {
-			should.equal(emittedFeatureFailure, emittedFailures[failingFeature].failures);
+			should.equal(emitted.featureFailure, emitted.failures[failingFeature].failures);
 		});
 
 		it('should have emitted a "featureError" event with the same error as passed on error', function() {
-			should.equal(emittedFeatureError, passedErrors[errorFeature].errors);
+			should.equal(emitted.featureError, passed.errors[errorFeature].errors);
 		});
 	});
 
