@@ -1,21 +1,27 @@
 var logger = require('winston').loggers.get('suites');
 
+/**@namespace A command-line interface that outputs and formats a Runner’s events.
+*/
+var RunnerCLI = {};
+
 process.on('SIGINT', function(){
 	showCursor();
 	console.log('\n');
 	process.exit();
 });
 
-/**
- * Hide the cursor.
- */
+/** Hides the cursor.
+*@private
+*@author	TJ Holowaychuk	(Mocha)
+*/
 function hideCursor(){
 	process.stdout.write('\033[?25l');
 }
 
-/**
- * Show the cursor.
- */
+/** Shows the cursor.
+*@private
+*@author	TJ Holowaychuk	(Mocha)
+*/
 function showCursor(){
 	process.stdout.write('\033[?25h');
 }
@@ -58,9 +64,10 @@ function log(prefix, method, message, messageMethod) {
 }
 
 
-/**
- * Play the given array of strings.
- */
+/** Plays the given array of strings.
+*@private
+*@author	TJ Holowaychuk	(Mocha)
+*/
 
 function play(frames, interval) {
 	var len = frames.length,
@@ -72,41 +79,46 @@ function play(frames, interval) {
 		process.stdout.write('\r' + str);
 	}, interval);
 }
-/**
- * Stop play()ing.
- */
 
+/**Stop play()ing.
+*@private
+*@author	TJ Holowaychuk	(Mocha)
+*/
 function stop() {
 	clearInterval(play.timer);
 }
 
-exports.beforeRun = function onBeforeRun() {
+/** Informs user that the emitting Runner is waiting for the browser.
+*/
+RunnerCLI.beforeRun = function onBeforeRun() {
 	play(makeFrames('waiting for browser…'));
 }
 
-exports.ready = function onReady() {
+/** Informs user that the emitting Runner is ready to start.
+*/
+RunnerCLI.ready = function onReady() {
 	log(' ҉', 'info', 'Browser ready!            ');
 }
 
 /** Presents details of a test start to the user.
 *@param	{Feature}	feature	The feature that is about to start.
 */
-exports.featureStart = function onFeatureStart(feature) {
+RunnerCLI.featureStart = function onFeatureStart(feature) {
 	play(makeFrames(feature.description));
 }
 
 /** Presents details of a test success to the user.
 *@param	{Feature}	feature	The feature whose results are given.
 */
-exports.featureSuccess = function onFeatureSuccess(feature) {
+RunnerCLI.featureSuccess = function onFeatureSuccess(feature) {
 	log('✔', 'info', feature.description);
 }
 
 /** Presents details of a test failure to the user.
 *@param	{Feature}	feature	The feature whose results are given.
-*@param	{Array.<String>}	An array of strings giving details on failures.
+*@param	{Array.<String>}	failures	An array of strings giving details on failures.
 */
-exports.featureFailure = function onFeatureFailure(feature, failures) {
+RunnerCLI.featureFailure = function onFeatureFailure(feature, failures) {
 	log('✘', 'warn', feature.description, 'warn');
 
 	failures.forEach(function(failure) {
@@ -116,9 +128,9 @@ exports.featureFailure = function onFeatureFailure(feature, failures) {
 
 /** Presents details of a test error to the user.
 *@param	{Feature}	feature	The feature whose results are given.
-*@param	{Array.<String>}	An array of strings giving details on errors.
+*@param	{Array.<String>}	errors	An array of strings giving details on errors.
 */
-exports.featureError = function onFeatureError(feature, errors) {
+RunnerCLI.featureError = function onFeatureError(feature, errors) {
 	log('⚠', 'error', feature.description);
 	
 	errors.forEach(function(error) {
@@ -128,3 +140,5 @@ exports.featureError = function onFeatureError(feature, errors) {
 			log('	', 'verbose', error.stack, 'verbose');
 	});
 }
+
+module.exports = RunnerCLI;	// CommonJS export
