@@ -10,5 +10,5 @@ try {
 		growl('Test succeeded!  :)', { priority: 3 });
 	}
 } catch (e) {
-	console.error('Unable to load the "growl" module, will not define any Growl support.');
+	console.warn('Unable to load the "growl" module, will not define any Growl support.');
 }

@@ -50,5 +50,8 @@ exports.featureError = function onFeatureError(feature, errors) {
 	
 	errors.forEach(function(error) {
 		log('	', 'debug', error);
+		
+		if (error.stack)
+			log('		', 'verbose', error.stack)
 	});
 }
