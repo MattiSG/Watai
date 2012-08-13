@@ -9,12 +9,11 @@
 		return this.field.submit();
 	},
 
-	getCurrentHour: function getCurrentHour(callback) {
+	getCurrentHour: function getCurrentHour() {
 		return this.result
 				   .getText()
 				   .then(function(text) {
 				    	var hour = text.split(':')[0];	// get the hour only
-				    	//callback(+ hour);	// cast to Number
 				    	return +hour;
 				   });
 	}
