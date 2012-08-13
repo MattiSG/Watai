@@ -54,7 +54,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	initialize: function init(path) {
 		this.path = pathsUtils.resolve(path) + '/';	//TODO: Node 0.8 has path.sep
 		
-		this.name = pathsUtils.basename(path);
+		this.name = pathsUtils.basename(path, '/');	// remove a possible trailing separator
 
 		var loader = new ConfigLoader({
 			from: this.path,
@@ -227,10 +227,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@see	Runner#run
 	*/
 	run: function run() {
-		var underline = '';
-		this.name.length.times(function() { underline += '-' });	//TODO: remove trailing slashes from printed names
-		suitesLogger.info(this.name);
-		suitesLogger.info(underline);
+		var underline = this.name.replace(/./g, '–');
+		process.stdout.write(underline + '\n' + this.name + '\n' + underline + '\n');	//TODO: use logger?
 		
 		return this.runner.run();
 	}
