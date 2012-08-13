@@ -226,6 +226,8 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	evaluateFeature: function evaluateFeature(feature) {
+		this.emit('featureStart', feature);
+		
 		try {
 			feature.test().then(this.handleFeatureResult.bind(this, feature, true),
 								this.handleFeatureResult.bind(this, feature)); // leave last arg to pass failure description
