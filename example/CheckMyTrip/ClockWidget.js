@@ -6,6 +6,7 @@
 	
 	lookup: function lookup(town) {
 		this.field = town;
+		this.field.sendKeys('\n');
 		return this.field.submit();
 	},
 
