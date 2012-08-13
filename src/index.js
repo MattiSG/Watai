@@ -7,18 +7,6 @@ var args = process.argv.slice(2); // extract CLI arguments, see http://docs.node
 */
 var MAIN_FILE = exports.MAIN_FILE = require('path').join(__dirname, 'TestRight.js');
 
-var logger = require('winston').loggers.get('suites');
-
-/* Try to load long stack traces development module.
-*/
-try {
-	var longjohn = require('longjohn');
-	longjohn.async_trace_limit = 40;
-	logger.silly('Long stack traces loaded');
-} catch (e) {
-	logger.silly('No long stack traces module found');
-}
-
 
 if (args.length == 0) {
 	showHelp();
@@ -38,6 +26,7 @@ if (args.length == 0) {
 } else {
 	main(args);
 }
+
 
 /** The CLI takes paths to test description folders as arguments.
 * Any number of paths may be given.
@@ -77,6 +66,8 @@ function isInstalled() {
 *@private
 */
 function showHelp() {
+	var logger = require('winston');
+
 	logger.error("Oops, you didn’t provide any test suite to execute!");
 	logger.info("Usage: watai path/to/suite/description/folder [another/suite [yetAnother […]]]");
 }

@@ -20,6 +20,18 @@ var config = new ConfigLoader({
 
 initLoggers();
 
+var logger = winston.loggers.get('suites');
+
+/* Try to load long stack traces development module.
+*/
+try {
+	var longjohn = require('longjohn');
+	longjohn.async_trace_limit = 40;
+	logger.silly('Long stack traces loaded');
+} catch (e) {
+	logger.silly('No long stack traces module found');
+}
+
 /**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
 *
 *Example usage:
