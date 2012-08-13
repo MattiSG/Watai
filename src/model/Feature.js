@@ -167,16 +167,20 @@ var Feature = new Class( /** @lends Feature# */ {
 				return deferred.resolve();
 		}
 		
-		evaluateNext = (function() {
+		evaluateNext = (function evalNext() {
 			stepIndex++;
 
 			if (stepIndex == this.steps.length)
 				return fulfillPromise(failureReasons);
 			
 			try {
-				promises.when(this.steps[stepIndex](),	// see https://github.com/kriskowal/q#the-middle
-							  evaluateNext,
-							  handleFailure);
+				var result = this.steps[stepIndex]();
+				// unfortunately, [q.when](https://github.com/kriskowal/q#the-middle) is not compatible with WebDriver's Promises/A implementation, and we need to explicitly call `then` to reject thrown exceptions
+				if (result && typeof result.then == 'function')
+					result.then(evaluateNext, handleFailure);
+				else
+					evaluateNext();
+
 			} catch (error) {
 				failureReasons.errors.push(error);
 				evaluateNext();

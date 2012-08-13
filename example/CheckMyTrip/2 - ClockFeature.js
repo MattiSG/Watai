@@ -3,20 +3,16 @@
 	
 	scenario: [
 		function() {
-			return ClockWidget.result
-							  .then(function(elm) {
-							  	return elm.getText();
-							  }).then(function(text) {
-							  	storage.previousHour = text.split(':')[0];	// get the hour only
+			return ClockWidget.getCurrentHour()
+							  .then(function(hour) {
+							  	storage.previousHour = hour;
 							  });
 		},
 		ClockWidget.lookup, clockLookupTown,
 		function() {
-			return ClockWidget.result
-							  .then(function(elm) {
-							  	return elm.getText();
-							  }).then(function(text) {
-							  	assert.equal(text.split(':')[0], storage.previousHour - 1);
+			return ClockWidget.getCurrentHour()
+							  .then(function(hour) {
+							  	assert.equal(hour, storage.previousHour - 1);
 							  });
 		}
 	]

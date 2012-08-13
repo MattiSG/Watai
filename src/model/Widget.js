@@ -38,7 +38,7 @@ var Widget = new Class( /** @lends Widget# */ {
 			widget[key] = function() {
 				logger.info('	- did ' + key + ' ' + Array.prototype.slice.call(arguments).join(', '));
 				
-				method.apply(widget, arguments);	//TODO: handle elements overloading
+				return method.apply(widget, arguments);	//TODO: handle elements overloading
 			}
 		});
 		
