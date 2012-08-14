@@ -113,16 +113,25 @@ var Feature = new Class( /** @lends Feature# */ {
 			Object.each(hooksVals, function(expected, attribute) {
 				isEmpty = false;
 
-				Object.getFromPath(widgets, attribute)
-					.then(function(target) {
-						target.getText().then(function(actual) {
-							if (expected != actual)
-								evaluator.reject(attribute + ' was "' + actual + '" instead of "' + expected + '"');
-							
-							if (--matchesLeft == 0)
-								evaluator.resolve();
+				function compareTo(actual) {
+					if (expected != actual)
+						evaluator.reject(attribute + ' was "' + actual + '" instead of "' + expected + '"');
+					
+					if (--matchesLeft == 0)
+						evaluator.resolve();
+				}
+
+				Object.getFromPath(widgets, attribute).then(function(target) {
+						target.getText().then(function(text) {
+							if (text) {	//TODO: refactor to use an array of methods to check sequentially
+								compareTo(text);
+							} else {	// it could be that it is an input field and we need to compare the value
+								target.getAttribute('value')
+									  .then(compareTo,
+											evaluator.reject.bind(evaluator, 'Could not get value from element "' + attribute + '".'));
+							}
 						},
-						evaluator.reject.bind(evaluator, 'Could not get text from element "' + attribute + '".'))
+						evaluator.reject.bind(evaluator, 'Could not get text from element "' + attribute + '".'));
 					},
 					function() {
 						evaluator.reject('Element "' + attribute + '" does not exist on the page.'); // direct binding makes webdriverjs throw the reason for rejection again :/

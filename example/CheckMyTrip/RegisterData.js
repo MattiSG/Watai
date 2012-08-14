@@ -1,0 +1,2 @@
+firstName = "Toto"
+lastName = "Tutu"
