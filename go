@@ -25,6 +25,19 @@ open() {
 	fi
 }
 
+docToCodeRatio() {
+	doc=$(egrep '^[	 ]*[/*]' -R src | wc -l)
+	echo "$((doc)) lines of documentation"
+
+	code=$(egrep '^[	 ]*[/*]' -Rv src | wc -l)
+	empty=$(egrep '^[	 ]*$' -R src | wc -l)
+
+	code=$(($code - $empty))
+	echo "$code lines of code"
+
+	echo "Doc to code ratio:" $(echo "scale=3; $doc / $code" | bc)
+}
+
 
 case "$1" in
 	test )
@@ -47,6 +60,7 @@ case "$1" in
 		open $DOC_DIR/coverage.html
 		exit 0 ;;
 	doc )
+		docToCodeRatio
 		if [[ $2 = "private" ]]
 		then opts='-p'
 		fi
