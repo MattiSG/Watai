@@ -1,57 +1,61 @@
-var logger = require('winston').loggers.get('suites');
-
-/** Presents the given information to the user.
-*@param	{string}	method	The winston logger method to call (i.e. "debug", "info", "warn"…).
-*@param	{string}	prefix	A symbol to prepend to the message.
-*@param	{string}	message	The actual content to present to the user.
-*@private
+/**@namespace A command-line interface that outputs and formats a Runner’s events.
 */
-function log(prefix, method, message) {
-	logger[method](prefix + '  ' + message);
+var RunnerCLI = {};
+
+var animator = require('../lib/cli-animator');
+
+/** Informs user that the emitting Runner is waiting for the browser.
+*/
+RunnerCLI.beforeRun = function onBeforeRun() {
+	animator.spin('waiting for browser…');
 }
 
-exports.beforeRun = function onBeforeRun() {
-	log(' ҉', 'info', 'Connecting to browser…')
+/** Informs user that the emitting Runner is ready to start.
+*/
+RunnerCLI.ready = function onReady() {
+	animator.log(' ҉', 'info', 'Browser ready!            ');
 }
 
-exports.ready = function onReady() {
-	log('⦾', 'info', 'Browser ready!')
-}
-
-exports.run = function onRun() {
-	log('۞', 'info', 'Test started.')
+/** Presents details of a test start to the user.
+*@param	{Feature}	feature	The feature that is about to start.
+*/
+RunnerCLI.featureStart = function onFeatureStart(feature) {
+	animator.spin(feature.description);
 }
 
 /** Presents details of a test success to the user.
 *@param	{Feature}	feature	The feature whose results are given.
 */
-exports.featureSuccess = function onFeatureSuccess(feature) {
-	log('✔', 'info', feature.description);
+RunnerCLI.featureSuccess = function onFeatureSuccess(feature) {
+	animator.log('✔', 'info', feature.description);
 }
 
 /** Presents details of a test failure to the user.
 *@param	{Feature}	feature	The feature whose results are given.
-*@param	{Array.<String>}	An array of strings giving details on failures.
+*@param	{Array.<String>}	failures	An array of strings giving details on failures.
 */
-exports.featureFailure = function onFeatureFailure(feature, failures) {
-	log('✘', 'warn', feature.description);
+RunnerCLI.featureFailure = function onFeatureFailure(feature, failures) {
+	animator.log('✘', 'warn', feature.description, 'warn');
 
 	failures.forEach(function(failure) {
-		log('	', 'debug', failure);
+		animator.log('   ↳', 'cyan', failure, 'cyan');
 	});
 }
 
 /** Presents details of a test error to the user.
 *@param	{Feature}	feature	The feature whose results are given.
-*@param	{Array.<String>}	An array of strings giving details on errors.
+*@param	{Array.<String>}	errors	An array of strings giving details on errors.
 */
-exports.featureError = function onFeatureError(feature, errors) {
-	log('⚠', 'error', feature.description);
+RunnerCLI.featureError = function onFeatureError(feature, errors) {
+	animator.log('⚠', 'error', feature.description);
 	
 	errors.forEach(function(error) {
-		log('	', 'debug', error);
+		animator.log('   ↳', 'cyan', error, 'cyan');
 		
 		if (error.stack)
-			log('		', 'verbose', error.stack)
+			animator.log('	', 'verbose', error.stack, 'verbose');
 	});
 }
+
+
+module.exports = RunnerCLI;	// CommonJS export
