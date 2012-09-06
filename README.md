@@ -1,7 +1,7 @@
 Watai
 =====
 
-Watai (temporary name) stands for Web Application Testing Automation Infrastructure. It is a **declarative, bottom-up BDD, full-stack web testing** framework.
+Watai (_Web Application Testing Automation Infrastructure_) is a **declarative, bottom-up BDD, full-stack web testing** framework.
 
 It is both a test runner engine (i.e. it executes tests) and a set of architectural patterns to make you write **maintainable**, **solid** end-to-end (GUI) tests for browsers. It automatically handles asynchronous operations without any work on your side.
 
