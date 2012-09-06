@@ -1,5 +1,3 @@
-var logger = require('winston').loggers.get('suites');
-
 /**@namespace A command-line interface that outputs and formats a Runner’s events.
 */
 var RunnerCLI = {};
@@ -14,7 +12,7 @@ process.on('SIGINT', function(){
 *@private
 *@author	TJ Holowaychuk	(Mocha)
 */
-function hideCursor(){
+function hideCursor() {
 	process.stdout.write('\033[?25l');
 }
 
@@ -22,16 +20,23 @@ function hideCursor(){
 *@private
 *@author	TJ Holowaychuk	(Mocha)
 */
-function showCursor(){
+function showCursor() {
 	process.stdout.write('\033[?25h');
 }
 
-
+/** Creates a coloured line out of the given pieces.
+*@return	String
+*@private
+*/
 function makeLine(prefix, colorCode, message, messageColorCode) {
 	messageColorCode = messageColorCode || 0;
 	return '\r\033[' + colorCode + 'm' + prefix + ' \033[' + messageColorCode + 'm ' + message + '\033[0m';
 }
 
+/** Generates a series of line “frames” to be played with a spinner animation.
+*@return	Array<String>
+*@private
+*/
 function makeFrames(msg) {
 	return [
 		makeLine('◜', 96, msg, 90),
@@ -43,6 +48,10 @@ function makeFrames(msg) {
 	]
 }
 
+/** Maps types to the corresponding ANSI color code.
+*@type	{Object.<String, Number>}
+*@private
+*/
 var typeToColorCode = {
 	'debug'	: 34,
 	'cyan'	: 36,
@@ -53,14 +62,15 @@ var typeToColorCode = {
 }
 
 /** Presents the given information to the user.
-*@param	{string}	method	The winston logger method to call (i.e. "debug", "info", "warn"…).
 *@param	{string}	prefix	A symbol to prepend to the message.
+*@param	{string}	type	The type of information to present (i.e. "debug", "info", "warn"…).
 *@param	{string}	message	The actual content to present to the user.
+*@param	{string?}	messageType	The type of the actual content, for different colouration. 
 *@private
 */
-function log(prefix, method, message, messageMethod) {
+function log(prefix, type, message, messageType) {
 	stop();
-	process.stdout.write(makeLine(prefix, typeToColorCode[method], message + '\n', typeToColorCode[messageMethod]));
+	process.stdout.write(makeLine(prefix, typeToColorCode[type], message + '\n', typeToColorCode[messageType]));
 }
 
 
@@ -70,6 +80,8 @@ function log(prefix, method, message, messageMethod) {
 */
 
 function play(frames, interval) {
+	hideCursor();
+
 	var len = frames.length,
 		interval = interval || 100,
 		i = 0;
@@ -86,6 +98,7 @@ function play(frames, interval) {
 */
 function stop() {
 	clearInterval(play.timer);
+	showCursor();
 }
 
 /** Informs user that the emitting Runner is waiting for the browser.
