@@ -22,9 +22,7 @@ Installing
 
 #### Node & NPM ####
 
-Watai runs as a [Node.js](http://nodejs.org) module with dependencies on external modules. You will therefore need the Node runtime and package manager (NPM).
-
-_Watai has been tested only with Node 0.6, not yet with 0.8. If you already have Node, you should stick with 0.6 for the moment._
+Watai runs as a [Node.js](http://nodejs.org) module with dependencies on external modules. You will therefore need the Node runtime (v0.6+, v0.8+) and package manager (NPM).
 
 **Download the Node+NPM package for your environment:**
 
