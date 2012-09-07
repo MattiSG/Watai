@@ -6,15 +6,6 @@ var Runner = new Class( /** @lends Runner# */ {
 
 	Extends: require('events').EventEmitter,
 
-	Binds: [	// methods listed here will be automatically bound to the current instance
-		'startNextFeature',
-		'isReady',
-		'onReady',
-		'start',
-		'killDriver',
-		'markUsed'
-	],
-
 	/** A hash mapping all failed features to their reasons for rejection.
 	*If empty, the run was successful.
 	*@type	{Object.<Feature, String>}
@@ -108,7 +99,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	loadBaseURL: function loadBaseURL() {
 		this.loading = true;
-		this.driver.get(this.config.baseURL).then(this.onReady);
+		this.driver.get(this.config.baseURL).then(this.onReady.bind(this));
 	},
 
 	/** Constructs a new WebDriver instance based on the given configuration.
@@ -271,13 +262,13 @@ var Runner = new Class( /** @lends Runner# */ {
 			fulfill	= resolve,
 			eventType = 'success',
 			precondition = (this.config.quit != 'always'
-							? this.markUsed
-							: this.killDriver),
+							? this.markUsed.bind(this)
+							: this.killDriver.bind(this)),
 			failures = this.failures;	// copy them in case the precondition cleans them up
 
 		if (Object.getLength(failures) == 0) {
 			if (this.config.quit == 'on success')
-				precondition = this.killDriver;
+				precondition = this.killDriver.bind(this);
 		} else {
 			eventType = 'failure';
 			fulfill = reject;

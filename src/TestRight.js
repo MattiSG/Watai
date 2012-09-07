@@ -2,8 +2,6 @@
 require('mootools');
 /* Object property paths manipulation */
 require('./lib/mootools-additions');
-/* Class.Binds mutator */
-require('./lib/mootools-class-bind');
 
 /* Logging is done with [Winston](https://github.com/flatiron/winston). */
 var winston = require('winston'),
