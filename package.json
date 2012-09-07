@@ -34,11 +34,11 @@
     "q": "0.8",
     "mootools": "1.4",
     "winston": "0.6",
-    "selenium-webdriverjs": "0.0.1-r17314",
+    "selenium-webdriverjs": "0.0.2-r17717",
     "mattisg.configloader": "0.1.2-alpha"
   },
   "optionalDependencies": {
-    "growl": "1.5"
+    "growl": "1.6"
   },
   "devDependencies": {
     "should": "0.6",
