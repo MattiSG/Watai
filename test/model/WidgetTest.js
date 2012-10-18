@@ -2,7 +2,8 @@ var TestRight = require('../helpers/subject'),
 	my = require('../helpers/driver').getDriverHolder(),
 	subject,
 	elements,
-	expectedTexts;
+	expectedTexts,
+	expectedOutputs;
 
 
 /** Widget description of elements existing in the “checking” part of the test support page resource.
@@ -10,7 +11,7 @@ var TestRight = require('../helpers/subject'),
 *@private
 */
 var checkerElements = {
-	p3Clicked:	{ id: 'clickedLink' }
+	p3Clicked:	{ id: 'output' }
 }
 
 
@@ -21,6 +22,7 @@ describe('Widget', function() {
 		var testWidget = require('../helpers/testWidget');
 		elements = testWidget.elements;
 		expectedTexts = testWidget.expectedTexts;
+		expectedOutputs = testWidget.expectedOutputs;
 		subject = testWidget.getWidget(my.driver);
 	});
 
@@ -33,22 +35,22 @@ describe('Widget', function() {
 					subject[key].should.be.a('object');
 				}
 		});
-		
+
 		it('should bind methods properly', function(done) {
 			subject.submit('something');
-			
+
 			subject.field.getAttribute('value').then(function(value) {
 				value.should.equal('Default');	// because the page has been reloaded
 				done();
 			});
 		});
-		
+
 		it('should do some magic on *Link names', function() {
 			subject.should.have.property('p3');
 			subject.p3.should.be.a('function');	// on 'link', this should be a shortcut to clicking the element, not a simple access
 		});
 	});
-	
+
 	describe('element access', function() {
 		var checker;
 
@@ -57,30 +59,30 @@ describe('Widget', function() {
 				elements: checkerElements
 			}, my.driver);
 		});
-	
+
 		it('should map elements to hooks', function(done) {
 			subject.id.getText().then(function(text) {
 				text.should.equal(expectedTexts.id);
 				done();
 			});
 		});
-		
+
 		it('should say that an existing element is present', function(done) {
 			subject.has('id').then(function(presence) {
 				presence.should.be.ok;
 				done();
 			});
 		});
-		
+
 		it('should say that a missing element is not present', function(done) {
 			this.timeout(6 * 1000);	// since this raises an error, the Selenium server lags the first time
-			
+
 			subject.has('missing').then(function(presence) {
 				presence.should.not.be.ok;
 				done();
 			});
 		});
-	
+
 		xit('should fail promises if an unreachable element is accessed', function(done) {
 			subject.missing.getText().then(function() {	//TODO
 				done(new Error('Resolved instead of rejected!'));
@@ -88,11 +90,19 @@ describe('Widget', function() {
 				done();
 			});
 		});
-		
+
 		it('should bind magically created link methods to clicking', function(done) {
 			subject.p3();
 			checker.p3Clicked.getText().then(function(text) {
-				text.should.equal('#link has been clicked');
+				text.should.equal(expectedOutputs.linkClick);
+				done();
+			});
+		});
+
+		it('should be immediate (as much as local performance allows)', function(done) {
+			subject.delayedAction();
+			checker.p3Clicked.getText().then(function(text) {
+				text.should.equal(expectedOutputs.linkClick);
 				done();
 			});
 		});

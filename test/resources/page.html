@@ -1,30 +1,42 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
-		<title>TestRight test support page</title>
+		<title>Watai test support page</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	</head>
 	<body>
-		<h1>TestRight test support page</h1>
+		<h1>Watai test support page</h1>
 		<div id="selectors">
 			<p id="toto">This paragraph has id <code>toto</code></p>
 			<p class="tutu">This paragraph has class <code>tutu</code></p>
 			<p>This paragraph is the third of the <code>selectors</code> div</p>
 			<p><a id="link" href="#">This paragraph is embedded in a link</a></p>
+			<p><a id="delayLink" href="#">Clicking this link will change contents beneath after 500ms</a></p>
+			<p><a id="delayLink2" href="#">Clicking this link will change contents beneath after 500ms</a></p>
 		</div>
-		
+
 		<form id="form" action="#">
 			<input name="field" type="text" value="Default"/>
 			<input type="submit" value="Submit"/>
 		</form>
-		
+
 		<ol id="eventMarkers">
-			<li id="clickedLink">#link has not been clicked yet</li>
+			<li id="output">#link has not been clicked yet</li>
 		</ol>
-		
+
 		<script type="text/javascript">
 			document.getElementById('link').onclick = function() {
-				document.getElementById('clickedLink').innerText = '#link has been clicked';
+				document.getElementById('output').innerText = '#link has been clicked';
+			}
+			document.getElementById('delayLink').onclick = function() {
+				window.setTimeout(function() {
+					document.getElementById('output').innerText = '#delayLink has been clicked';
+				}, 150);
+			}
+			document.getElementById('delayLink2').onclick = function() {
+				window.setTimeout(function() {
+					document.getElementById('output').innerText = '#delayLink2 has been clicked';
+				}, 150);
 			}
 		</script>
 	</body>
