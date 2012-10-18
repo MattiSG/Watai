@@ -216,7 +216,7 @@ describe('Feature', function() {
 		describe('timeout', function() {
 			it('should be allowed without any harm', function(done) {
 				featureWithScenario([
-					WidgetTest.delayedAction,
+					WidgetTest.immediateAction,
 					{ timeout: 0 }
 				]).test().then(done, done);
 			});

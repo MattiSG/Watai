@@ -11,7 +11,7 @@ var TestRight = require('../helpers/subject'),
 *@private
 */
 var checkerElements = {
-	p3Clicked:	{ id: 'output' }
+	immediateActionClicked:	{ id: 'output' }
 }
 
 
@@ -46,8 +46,8 @@ describe('Widget', function() {
 		});
 
 		it('should do some magic on *Link names', function() {
-			subject.should.have.property('p3');
-			subject.p3.should.be.a('function');	// on 'link', this should be a shortcut to clicking the element, not a simple access
+			subject.should.have.property('immediateAction');
+			subject.immediateAction.should.be.a('function');	// on 'link', this should be a shortcut to clicking the element, not a simple access
 		});
 	});
 
@@ -92,17 +92,17 @@ describe('Widget', function() {
 		});
 
 		it('should bind magically created link methods to clicking', function(done) {
-			subject.p3();
-			checker.p3Clicked.getText().then(function(text) {
-				text.should.equal(expectedOutputs.linkClick);
+			subject.immediateAction();
+			checker.immediateActionClicked.getText().then(function(text) {
+				text.should.equal(expectedOutputs.immediateActionLink);
 				done();
 			});
 		});
 
 		it('should be immediate (as much as local performance allows)', function(done) {
 			subject.delayedAction();
-			checker.p3Clicked.getText().then(function(text) {
-				text.should.equal(expectedOutputs.linkClick);
+			checker.immediateActionClicked.getText().then(function(text) {
+				text.should.equal(expectedOutputs.immediateActionLink);
 				done();
 			});
 		});

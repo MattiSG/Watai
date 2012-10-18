@@ -8,7 +8,7 @@ var elements = exports.elements = {
 	css:	{ css: '.tutu' },
 	missing:{ id: 'inexistant' },
 	field:	{ css: 'input[name="field"]' },
-	p3Link:	{ linkText: 'This paragraph is embedded in a link' },
+	immediateActionLink:	{ linkText: 'This paragraph is embedded in a link' },
 	delayedActionLink:	{ id: 'delayLink' },
 	delayedAction2Link:	{ id: 'delayLink2' },
 	output:	{ id: 'output' }
@@ -29,7 +29,7 @@ exports.expectedTexts = {
 *@see	#elements
 */
 exports.expectedOutputs = {
-	linkClick: '#link has been clicked',
+	immediateActionLink: '#link has been clicked',
 	delayedActionLink: '#delayLink has been clicked',
 	delayedAction2Link: '#delayLink2 has been clicked'
 }
