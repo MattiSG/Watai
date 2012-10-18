@@ -116,8 +116,8 @@ var Feature = new Class( /** @lends Feature# */ {
 		var matchesLeft = 0,	// optimization: we're using the check loop beneath to cache the count of elements to match
 			timeout = DEFAULT_MATCH_TIMEOUT;	// per-state timeouts; default to no timeout. This is independent from implicit waits for elements to appear: this timeout is how long we should wait for a match on a preexistent element
 
-		if (hooksVals.timeout) {
-			timeout = hooksVals.timeout * 1000;	// user expresses in seconds, we convert to milliseconds
+		if (hooksVals.hasOwnProperty('timeout')) {
+			timeout = hooksVals.timeout;
 			delete hooksVals.timeout;	// we don't want to iterate over this property!
 		}
 

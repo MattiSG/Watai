@@ -2,6 +2,7 @@ var promises = require('q');
 
 var TestRight = require('../helpers/subject'),
 	my = require('../helpers/driver').getDriverHolder(),
+	expectedOutputs = require('../helpers/testWidget').expectedOutputs,
 	WidgetTest;
 
 
@@ -17,7 +18,8 @@ describe('Feature', function() {
 			return new TestRight.Feature('Test feature', scenario, { TestWidget: WidgetTest });
 		}
 	});
-	
+
+
 	describe('functional scenarios with', function() {
 		var failureReason = 'It’s a trap!';
 
@@ -37,7 +39,7 @@ describe('Feature', function() {
 
 		var failingPromise = makeFailingPromiseWithSuffix('');
 
-	
+
 		it('an empty feature should be accepted', function(done) {
 			featureWithScenario([]).test().then(done, function() {
 				console.error(arguments);
@@ -52,7 +54,7 @@ describe('Feature', function() {
 				}
 			).end();
 		});
-		
+
 		it('an error should be rejected and reasons passed', function(done) {
 			failingFeatureTest().then(function() {
 					done(new Error('Resolved instead of rejected!'));
@@ -64,7 +66,7 @@ describe('Feature', function() {
 				}
 			).end();
 		});
-		
+
 		it('a failing promise should be rejected and reasons passed', function(done) {
 			featureWithScenario([
 				failingPromise
@@ -99,7 +101,7 @@ describe('Feature', function() {
 
 		it('pure functions should be made into promises', function(done) {
 			var called = false;
-			
+
 			featureWithScenario([ function() {
 				called = true;
 			} ]).test().then(function() {
@@ -112,10 +114,10 @@ describe('Feature', function() {
 								+ ' actually calling the scenario function (but that’s still an error)'));
 			}).end();
 		});
-		
+
 		it('arrays should be bound as arguments to previous functions', function(done) {
 			var calledMarker = { called: false };	// an object rather than a simple flag, to ensure reference passing
-			
+
 			featureWithScenario([
 				function(arg) {
 					arg.called = true;
@@ -132,7 +134,8 @@ describe('Feature', function() {
 			}).end();
 		});
 	});
-	
+
+
 	describe('scenarios with widget states descriptions', function() {
 		var expectedTexts = {},
 			wrongTexts    = {},
@@ -142,23 +145,23 @@ describe('Feature', function() {
 			Object.each(require('../helpers/testWidget').expectedTexts, function(text, key) {	// we need to namespace all attributes to TestWidget
 				expectedTexts['TestWidget.' + key] = text;
 				wrongTexts['TestWidget.' + key] = text + ' **modified**';
-				
+
 				if (! firstKey)
 					firstKey = 'TestWidget.' + key;
 			});
 		});
-		
-		
+
+
 		it('should be made into promises', function() {
 			var result = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
 			result.should.be.a('function');
 			promises.isPromise(result()).should.be.ok;
 		});
-		
+
 		it('should be parsed within a scenario', function() {
 			var directCall = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
 			var featureFromScenario = featureWithScenario([ expectedTexts ]);
-			
+
 			featureFromScenario.should.have.property('steps').with.lengthOf(1);
 			String(featureFromScenario.steps[0]).should.equal(String(directCall));
 		});
@@ -171,7 +174,7 @@ describe('Feature', function() {
 				done();
 			})
 		});
-			
+
 		it('that fail should be rejected and reasons passed', function(done) {
 			featureWithScenario([
 				wrongTexts
@@ -188,7 +191,7 @@ describe('Feature', function() {
 				}
 			}).end();
 		});
-		
+
 		it('that are incorrectly written should throw an error upon creation', function() {
 			(function() {
 				featureWithScenario([
@@ -196,7 +199,7 @@ describe('Feature', function() {
 				]);
 			}).should.throw();
 		});
-		
+
 		/* We cannot decide in advance whether a given identifier will match in another page or not. The only thing we can check is whether we're trying to describe an unknown widget property.
 		*/
 		it('that are not accessible on the current page but properly written should not throw an error', function() {
@@ -207,7 +210,20 @@ describe('Feature', function() {
 			}).should.not.throw();
 		});
 	});
-	
+
+
+	describe('state descriptions option', function() {
+		describe('timeout', function() {
+			it('should be allowed without any harm', function(done) {
+				featureWithScenario([
+					WidgetTest.delayedAction,
+					{ timeout: 0 }
+				]).test().then(done, done);
+			});
+		});
+	});
+
+
 	describe('widget access', function() {
 		it('of missing elements', function(done) {
 			featureWithScenario([
