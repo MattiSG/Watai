@@ -11,7 +11,7 @@ var logger = require('winston').loggers.get('steps');
 *@const
 *@private
 */
-var DEFAULT_MATCH_TIMEOUT = 500;
+var DEFAULT_MATCH_TIMEOUT = 0;
 
 /** How long to wait between each try for a match in a state descriptor.
 * Until the match timeout expires, each element that did not match its expected value will be accessed on that interval.
