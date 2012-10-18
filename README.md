@@ -24,11 +24,7 @@ Installing
 
 Watai runs as a [Node.js](http://nodejs.org) module with dependencies on external modules. You will therefore need the Node runtime (v0.6+, v0.8+) and package manager (NPM).
 
-**Download the Node+NPM package for your environment:**
-
-- [Precompiled for OS X](http://nodejs.org/dist/v0.6.18/node-v0.6.18.pkg).
-- [Precompiled for Windows](http://nodejs.org/dist/v0.6.18/node-v0.6.18.msi).
-- Or use a [package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager) to get Node v0.6.
+[Download](http://nodejs.org/download) the Node+NPM package for your environment.
 
 If you’re under Windows and don’t have admin privileges, you might have to define `PATH` as a user environment variable and set it to `<install_drive>:\Program Files\nodejs`.
 
@@ -36,7 +32,11 @@ If you’re under Windows and don’t have admin privileges, you might have to d
 
 Watai uses Selenium-WebDriver to automate browsers. You will therefore need a Selenium _standalone server_ to send commands to the browsers.
 
-If you’re under OSX and have [Homebrew](http://mxcl.github.com/homebrew/), simply `brew install selenium-server-standalone` and start it with the command given at the end of the “Caveats” section.
+If you’re under OSX and have [Homebrew](http://mxcl.github.com/homebrew/):
+
+	brew install selenium-server-standalone
+
+…and start it with the command given at the end of the “Caveats” section.
 
 Otherwise, [download the JAR](https://code.google.com/p/selenium/downloads/detail?name=selenium-server-standalone-2.24.1.jar) and start it (preferably in the background):
 
@@ -56,20 +56,18 @@ This is completely optional, and you will be operational faster if you do the tu
 
 ### Package ###
 
-Once you have both Node 0.6 and a Selenium standalone server, you can consider installing Watai itself.
-
-As long as we’re in early alpha, the package won’t be published on the NPM public registry. You will therefore have to install Watai with one of the following commands:
+Once you have both Node and a Selenium server, you can consider installing Watai itself.
 
 #### POSIX-compliant OS: global install (easiest) ####
 
-	sudo npm install -g https://github.com/MattiSG/Watai/tarball/master
+	sudo npm install -g watai
 
 NPM will automatically create the `watai` alias for you. If you decide you don’t want to use Watai later on, simply `npm uninstall -g` it.
 
 #### POSIX-compliant OS: local install ####
 
 	cd choose/your/install/folder
-	npm install https://github.com/MattiSG/Watai/tarball/master
+	npm install watai
 	alias watai="$(pwd)/node_modules/watai/go"
 
 This will create a `node_modules` folder with all dependencies in the current directory. A good way to give Watai a quick look if you’re afraid of `sudo`ing.
