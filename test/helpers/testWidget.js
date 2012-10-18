@@ -10,7 +10,7 @@ var elements = exports.elements = {
 	field:	{ css: 'input[name="field"]' },
 	immediateActionLink:	{ linkText: 'This paragraph is embedded in a link' },
 	delayedActionLink:	{ id: 'delayLink' },
-	delayedAction2Link:	{ id: 'delayLink2' },
+	otherDelayedActionLink:	{ id: 'delayLink2' },
 	output:	{ id: 'output' }
 }
 
@@ -31,7 +31,7 @@ exports.expectedTexts = {
 exports.expectedOutputs = {
 	immediateActionLink: '#link has been clicked',
 	delayedActionLink: '#delayLink has been clicked',
-	delayedAction2Link: '#delayLink2 has been clicked'
+	otherDelayedActionLink: '#delayLink2 has been clicked'
 }
 
 /** A full widget describing the “main” part of the test support page.

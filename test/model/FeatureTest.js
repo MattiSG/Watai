@@ -5,6 +5,11 @@ var TestRight = require('../helpers/subject'),
 	expectedOutputs = require('../helpers/testWidget').expectedOutputs,
 	WidgetTest;
 
+/** Milliseconds the actions take to delay changing the output on the test page.
+* Set in the test page (`test/resources/page.html`).
+*/
+var DELAYED_ACTIONS_DELAY = 150;
+
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */
@@ -219,6 +224,62 @@ describe('Feature', function() {
 					WidgetTest.immediateAction,
 					{ timeout: 0 }
 				]).test().then(done, done);
+			});
+
+			it('should do immediate evaluation if set to 0', function(done) {
+				featureWithScenario([
+					WidgetTest.immediateAction,	// make sure the content of the output is reset
+					WidgetTest.delayedAction,
+					{
+						timeout: 0,
+						'TestWidget.output': expectedOutputs.immediateAction
+					}
+				]).test().then(function() {
+					done(new Error('Matched while the expected result should have been set later than evaluation.'))
+				}, function() {
+					done();
+				});
+			});
+
+			it('should do delayed evaluation if set to a proper positive value', function(done) {
+				featureWithScenario([
+					WidgetTest.immediateAction,	// make sure the content of the output is reset
+					WidgetTest.delayedAction,
+					{
+						timeout: DELAYED_ACTIONS_DELAY * 2,
+						'TestWidget.output': expectedOutputs.delayedActionLink
+					}
+				]).test().then(done, done);
+			});
+
+			it('should not be longer than needed if set to a positive value', function(done) {
+				this.timeout(DELAYED_ACTIONS_DELAY * 3);
+
+				featureWithScenario([
+					WidgetTest.immediateAction,	// make sure the content of the output is reset
+					WidgetTest.otherDelayedAction,
+					{
+						timeout: DELAYED_ACTIONS_DELAY * 2,
+						'TestWidget.output': expectedOutputs.otherDelayedActionLink
+					}
+				]).test().then(done, done);
+			});
+
+			it('should detect changes and fail earlier than maximum if there was a change', function(done) {
+				this.timeout(DELAYED_ACTIONS_DELAY * 3);
+
+				featureWithScenario([
+					WidgetTest.immediateAction,	// make sure the content of the output is reset
+					WidgetTest.delayedAction,
+					{
+						timeout: DELAYED_ACTIONS_DELAY * 2,
+						'TestWidget.output': expectedOutputs.otherDelayedActionLink
+					}
+				]).test().then(function() {
+					done(new Error('Matched while the expected result should have been set later than evaluation.'))
+				}, function() {
+					done();
+				});
 			});
 		});
 	});
