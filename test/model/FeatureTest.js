@@ -142,13 +142,13 @@ describe('Feature', function() {
 
 
 	describe('scenarios with widget states descriptions', function() {
-		var expectedTexts = {},
+		var expectedContents = {},
 			wrongTexts    = {},
 			firstKey;	// the first key of expected texts. Yes, it is used in a test.
 
 		before(function() {
-			Object.each(require('../helpers/testWidget').expectedTexts, function(text, key) {	// we need to namespace all attributes to TestWidget
-				expectedTexts['TestWidget.' + key] = text;
+			Object.each(require('../helpers/testWidget').expectedContents, function(text, key) {	// we need to namespace all attributes to TestWidget
+				expectedContents['TestWidget.' + key] = text;
 				wrongTexts['TestWidget.' + key] = text + ' **modified**';
 
 				if (! firstKey)
@@ -158,14 +158,14 @@ describe('Feature', function() {
 
 
 		it('should be made into promises', function() {
-			var result = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
+			var result = featureWithScenario([]).buildAssertionPromise(expectedContents);	// weird construct, but that's just whitebox testing, necessarily made on an instance
 			result.should.be.a('function');
 			promises.isPromise(result()).should.be.ok;
 		});
 
 		it('should be parsed within a scenario', function() {
-			var directCall = featureWithScenario([]).buildAssertionPromise(expectedTexts);	// weird construct, but that's just whitebox testing, necessarily made on an instance
-			var featureFromScenario = featureWithScenario([ expectedTexts ]);
+			var directCall = featureWithScenario([]).buildAssertionPromise(expectedContents);	// weird construct, but that's just whitebox testing, necessarily made on an instance
+			var featureFromScenario = featureWithScenario([ expectedContents ]);
 
 			featureFromScenario.should.have.property('steps').with.lengthOf(1);
 			String(featureFromScenario.steps[0]).should.equal(String(directCall));
@@ -189,7 +189,7 @@ describe('Feature', function() {
 				var firstReason = reasons.failures[0];
 				if (firstReason.contains(firstKey)
 					&& firstReason.contains(wrongTexts[firstKey])
-					&& firstReason.contains(expectedTexts[firstKey])) {
+					&& firstReason.contains(expectedContents[firstKey])) {
 					done();
 				} else {
 					done(new Error('Unmatched widget state description was properly rejected, but the reason for rejection was not clear enough.'));

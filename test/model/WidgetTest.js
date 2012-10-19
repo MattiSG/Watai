@@ -2,7 +2,7 @@ var TestRight = require('../helpers/subject'),
 	my = require('../helpers/driver').getDriverHolder(),
 	subject,
 	elements,
-	expectedTexts,
+	expectedContents,
 	expectedOutputs;
 
 
@@ -21,7 +21,7 @@ describe('Widget', function() {
 	before(function() {
 		var testWidget = require('../helpers/testWidget');
 		elements = testWidget.elements;
-		expectedTexts = testWidget.expectedTexts;
+		expectedContents = testWidget.expectedContents;
 		expectedOutputs = testWidget.expectedOutputs;
 		subject = testWidget.getWidget(my.driver);
 	});
@@ -62,7 +62,7 @@ describe('Widget', function() {
 
 		it('should map elements to hooks', function(done) {
 			subject.id.getText().then(function(text) {
-				text.should.equal(expectedTexts.id);
+				text.should.equal(expectedContents.id);
 				done();
 			});
 		});

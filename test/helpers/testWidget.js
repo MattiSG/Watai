@@ -11,7 +11,8 @@ var elements = exports.elements = {
 	immediateActionLink:	{ linkText: 'This paragraph is embedded in a link' },
 	delayedActionLink:	{ id: 'delayLink' },
 	otherDelayedActionLink:	{ id: 'delayLink2' },
-	output:	{ id: 'output' }
+	output:	{ id: 'output' },
+	outputField: { name: 'outputField' }
 }
 
 /** Expected values for the texts of the elements described above, as defined in the test support page.
@@ -19,8 +20,9 @@ var elements = exports.elements = {
 *
 *@see	#elements
 */
-exports.expectedTexts = {
-	id:		'This paragraph has id toto'
+exports.expectedContents = {
+	id:		'This paragraph has id toto',
+	outputField: 'This is a value'
 }
 
 /** Expected values for the results of the elements described above, as defined in the test support page.
