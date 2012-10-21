@@ -10,7 +10,8 @@
     "src",
     "doc",
     "go",
-    "README.md"
+    "README.md",
+    "license.LGPL.txt"
   ],
   "main": "src/index.js",
   "bin": "go",
