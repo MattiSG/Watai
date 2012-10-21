@@ -39,10 +39,18 @@ function preProcessArguments(args) {
 	for (var i = 0; i < args.length; i++) {
 		var optionMatch = args[i].match(/^--([^-].*)/);
 
-		if (optionMatch) {
+		if (! optionMatch) {	// this is not an option
+			result.push(args[i]);	// pass it without doing anything on it
+		} else {
 			var pluginName = optionMatch[1];	// [1] is the value of the first capturing parentheses
+			var plugin;
 
-			var plugin = require(LOAD_OPTIONS_FROM + pluginName);
+			try {
+				plugin = require(LOAD_OPTIONS_FROM + pluginName);
+			} catch (e) {	// no matching plugin to handle this option
+				result.push(args[i]);	// pass it without doing anything on it
+				continue;	// go straight to the next option
+			}
 
 			var params = args.slice(i + 1, i + 1 + plugin.length);	// extract the required arguments from the CLI
 			i += plugin.length;	// update the options pointer: params for this option will be ignored
@@ -51,8 +59,6 @@ function preProcessArguments(args) {
 
 			if (optionResults)
 				result.push.apply(result, optionResults);	// the potential array of values returned by the plugin to the new arguments array
-		} else {	// this is not an option
-			result.push(args[i]);	// pass it without doing anything on it
 		}
 	}
 
