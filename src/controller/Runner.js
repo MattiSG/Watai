@@ -118,7 +118,7 @@ var Runner = new Class( /** @lends Runner# */ {
 						.withCapabilities(config.driverCapabilities)
 						.build();
 
-		result.manage().timeouts().implicitlyWait(config.timeout * 1000);	// implicitly wait for an element to appear, for asynchronous operations
+		result.manage().timeouts().implicitlyWait(config.timeout);	// implicitly wait for an element to appear, for asynchronous operations
 
 		return result;
 	},

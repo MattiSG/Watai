@@ -11,5 +11,5 @@ module.exports = {
 	},
 	quit: 'never',
 	browserWarmupTimeout: 30 * 1000,	//ms
-	timeout: 1	// implicit wait for elements lookup in seconds, has to be lower than mocha's timeout to test for missing elements rejection
+	timeout: 1000	// implicit wait for elements lookup in milliseconds, has to be lower than mocha's timeout to test for missing elements rejection
 }

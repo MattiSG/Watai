@@ -4,6 +4,6 @@
 		"suites": "info",
 		"steps" : "warn"
 	},
-	"timeout": 10,
+	"timeout": 10000,
 	"quit": "always"
 }
