@@ -27,7 +27,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	* Will always offer the `driver` magical variable to give access to the WebDriver instance in user code.
 	*
 	*@type	VM
-	*@see	
+	*@see	http://nodejs.org/api/vm.html
 	*@private
 	*/
 	context: null,
@@ -53,7 +53,6 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*/
 	initialize: function init(path) {
 		this.path = pathsUtils.resolve(path) + '/';	//TODO: Node 0.8 has path.sep
-		
 		this.name = pathsUtils.basename(path, '/');	// remove a possible trailing separator
 
 		var loader = new ConfigLoader({
