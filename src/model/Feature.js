@@ -4,26 +4,6 @@ var promises = require('q'),
 var logger = require('winston').loggers.get('steps');
 
 
-/** How long to wait for a state descriptor to get a match.
-* Expressed in milliseconds.
-*
-*@type	{Number}
-*@const
-*@private
-*/
-var DEFAULT_MATCH_TIMEOUT = 0;
-
-/** How long to wait between each try for a match in a state descriptor.
-* Until the match timeout expires, each element that did not match its expected value will be accessed on that interval.
-* Expressed in milliseconds.
-*
-*@type	{Number}
-*@const
-*@private
-*/
-var MATCH_TRY_DELAY = 100;
-
-
 var Feature = new Class( /** @lends Feature# */ {
 	/** A sequence of promises to be executed in order, constructed after the scenario for this feature.
 	*@private
@@ -114,7 +94,7 @@ var Feature = new Class( /** @lends Feature# */ {
 	*/
 	buildAssertionPromise: function buildAssertionPromise(hooksVals) {
 		var matchesLeft = 0,	// optimization: we're using the check loop beneath to cache the count of elements to match
-			timeout = DEFAULT_MATCH_TIMEOUT;	// per-state timeouts; default to no timeout. This is independent from implicit waits for elements to appear: this timeout is how long we should wait for a match on a preexistent element
+			timeout = Feature.DEFAULT_MATCH_TIMEOUT;	// per-state timeouts. This is independent from implicit waits for elements to appear: this timeout is how long we should wait for a match on a preexistent element
 
 		if (hooksVals.hasOwnProperty('timeout')) {
 			timeout = hooksVals.timeout;
@@ -186,7 +166,7 @@ var Feature = new Class( /** @lends Feature# */ {
 			if (new Date() - firstTryTimestamp >= timeout)	// the timeout expired
 				return callback(false, 'After ' + timeout + ' milliseconds, the value of "' + elementSelector + '" was still "' + actual + '" and not "' + expected + '".')
 
-			evaluate.delay(MATCH_TRY_DELAY);
+			evaluate.delay(Feature.MATCH_TRY_DELAY);
 		}
 
 		Object.getFromPath(this.widgets, elementSelector).then(function(target) {
@@ -263,6 +243,24 @@ var Feature = new Class( /** @lends Feature# */ {
 		return deferred.promise;
 	}
 });
+
+
+/** How long to wait for a state descriptor to get a match.
+* Expressed in milliseconds.
+* This may be changed by external callers, but will be global to all features.
+*
+*@type	{Number}
+*/
+Feature.DEFAULT_MATCH_TIMEOUT = 0;
+
+/** How long to wait between each try for a match in a state descriptor.
+* Until the match timeout expires, each element that did not match its expected value will be accessed on that interval.
+* Expressed in milliseconds.
+* This may be changed by external callers, but will be global to all features.
+*
+*@type	{Number}
+*/
+Feature.MATCH_TRY_DELAY = 100;
 
 
 module.exports = Feature;	// CommonJS export

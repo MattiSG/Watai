@@ -70,6 +70,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			throw new Error(msg);
 		}
 		
+		Feature.DEFAULT_MATCH_TIMEOUT = config.timeout;
+
 		this.runner = new Runner(config);
 		this.attachViewsTo(this.runner);
 		this.context = vm.createContext(this.buildContext());
