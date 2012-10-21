@@ -26,18 +26,20 @@
 		</ol>
 
 		<script type="text/javascript">
+			var DELAYED_ACTIONS_DELAY = 400;
+
 			document.getElementById('link').onclick = function() {
 				document.getElementById('output').innerText = '#link has been clicked';
 			}
 			document.getElementById('delayLink').onclick = function() {
 				window.setTimeout(function() {
 					document.getElementById('output').innerText = '#delayLink has been clicked';
-				}, 150);
+				}, DELAYED_ACTIONS_DELAY);
 			}
 			document.getElementById('delayLink2').onclick = function() {
 				window.setTimeout(function() {
 					document.getElementById('output').innerText = '#delayLink2 has been clicked';
-				}, 150);
+				}, DELAYED_ACTIONS_DELAY);
 			}
 		</script>
 	</body>
