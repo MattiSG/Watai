@@ -1,7 +1,8 @@
 var promises = require('q'),
 	assert = require('assert');
 
-var logger = require('winston').loggers.get('steps');
+var logger = require('winston').loggers.get('steps'),
+	matchers = require('./matchers');
 
 
 var Feature = new Class( /** @lends Feature# */ {
@@ -61,7 +62,7 @@ var Feature = new Class( /** @lends Feature# */ {
 			 * But we still need to do introspection to offer proper heuristics. Tricks to achieve this are below.
 			 */
 			result.push(	typeof step == 'function' ?
-							step
+							step	// TODO: use .length instead of popping
 						  : typeof step == 'object' && step.length >= 0 ?	// an Array has a length property, not an Object; as a consequence, `length` is a reserved property for state description hashes
 						    this.buildFunctionalPromise(result.pop(), step)
 						  : typeof step == 'object' ?
@@ -120,9 +121,9 @@ var Feature = new Class( /** @lends Feature# */ {
 			*@param	{Boolean}	success	Whether the state descriptor assertion got a match or not.
 			*@param	{String}	message	Any additional information the assertion found. Will be passed to the promise.
 			*/
-			var checkStateDescriptionFulfilled = function checkStateDescriptionFulfilled(success, message) {
-				if (! success)	// TODO: add a "evaluateAll" option that would reject only after having collected result for all descriptors, not fail on the first failure
-					evaluator.reject(message);
+			var checkStateDescriptionFulfilled = function checkStateDescriptionFulfilled(error) {
+				if (error)	// TODO: add a "evaluateAll" option that would reject only after having collected result for all descriptors, not fail on the first failure
+					evaluator.reject(error);
 
 				if (--matchesLeft == 0)
 					evaluator.resolve();
@@ -155,37 +156,48 @@ var Feature = new Class( /** @lends Feature# */ {
 
 		function compareTo(actual) {
 			if (actual == expected)
-				return callback(true);
+				return callback();
 
 			if (typeof original == 'undefined')
 				original = actual;	// this is used to wait for a _change_ in the element value rather than for a match.
 
 			if (original != actual)	// there was a value change, but not the one we expected
-				return callback(false, elementSelector + ' changed its value to "' + actual + '" rather than to "' + expected + '".');
+				return callback(elementSelector + ' changed its value to "' + actual + '" rather than to "' + expected + '".');
 
 			if (new Date() - firstTryTimestamp >= timeout)	// the timeout expired
-				return callback(false, 'After ' + timeout + ' milliseconds, the value of "' + elementSelector + '" was still "' + actual + '" and not "' + expected + '".')
+				return callback('After ' + timeout + ' milliseconds, the value of "' + elementSelector + '" was still "' + actual + '" and not "' + expected + '".')
 
 			evaluate.delay(Feature.MATCH_TRY_DELAY);
 		}
 
-		Object.getFromPath(this.widgets, elementSelector).then(function(target) {
-			evaluate = function() {
-				target.getText().then(function(text) {
-						if (text) {	//TODO: refactor to use an array of methods to check sequentially
-							compareTo(text);
-						} else {	// it could be that it is an input field and we need to compare the value
-							target.getAttribute('value')
-								  .then(compareTo,
-										callback.pass([false, 'Could not get value from element "' + elementSelector + '".']));
-						}
-					},
-					callback.pass([false, 'Could not get text from element "' + elementSelector + '".'])
-				);
-			}	// end of `evaluate` definition
+		var activeMatchers = [];
 
-			evaluate();
-		}, callback.pass([false, 'Element "' + elementSelector + '" does not exist on the page.']));
+		if (typeof expected == 'boolean') {
+			activeMatchers.push(new matchers.existence(this.widgets, elementSelector, expected));
+		} else {
+			activeMatchers.push(new matchers.text(this.widgets, elementSelector, expected));
+			activeMatchers.push(new matchers.value(this.widgets, elementSelector, expected));
+		}
+
+		var matchersLeft = activeMatchers.length;
+
+		function handleSuccess() {
+			if (--matchersLeft <= 0)
+				callback();
+		}
+
+		function handleFailure(message) {
+			callback(message)
+		}
+
+		evaluate = function() {
+			activeMatchers.each(function(matcher) {
+				matcher.test()
+					   .then(handleSuccess, handleFailure);
+			});
+		}
+
+		evaluate();
 	},
 
 	/** Asynchronously evaluates the scenario given to this feature.

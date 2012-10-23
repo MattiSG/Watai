@@ -192,7 +192,7 @@ describe('Feature', function() {
 					&& firstReason.contains(expectedContents[firstKey])) {
 					done();
 				} else {
-					done(new Error('Unmatched widget state description was properly rejected, but the reason for rejection was not clear enough.'));
+					done(new Error('Unmatched widget state description was properly rejected, but the reason for rejection was not clear enough (got "' + firstReason + '").'));
 				}
 			}).end();
 		});
@@ -249,7 +249,14 @@ describe('Feature', function() {
 						timeout: DELAYED_ACTIONS_DELAY * 2,
 						'TestWidget.output': expectedOutputs.delayedActionLink
 					}
-				]).test().then(done, done);
+				]).test().then(done, function(report) {
+					var message = "No failure report. See code";
+
+					if (report && report.failures && report.failures[0])
+						message = report.failures[0];
+
+					done(new Error(message));
+				});
 			});
 
 			it('should not be longer than needed if set to a positive value', function(done) {
@@ -262,7 +269,14 @@ describe('Feature', function() {
 						timeout: DELAYED_ACTIONS_DELAY * 2,
 						'TestWidget.output': expectedOutputs.otherDelayedActionLink
 					}
-				]).test().then(done, done);
+				]).test().then(done, function(report) {
+					var message = "No failure report. See code";
+
+					if (report && report.failures && report.failures[0])
+						message = report.failures[0];
+
+					done(new Error(message));
+				});
 			});
 
 			it('should detect changes and fail earlier than maximum if there was a change', function(done) {
