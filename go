@@ -64,7 +64,7 @@ case "$1" in
 		if [[ $2 = "private" ]]
 		then opts='-p'
 		fi
-		if ! java -Djsdoc.dir=$JSDOC_DIR -jar $JSDOC_DIR/jsrun.jar $JSDOC_DIR/app/run.js -t=$JSDOC_DIR/templates/jsdoc -d=$DOC_DIR/api $opts $SRC_DIR/*
+		if ! java -Djsdoc.dir=$JSDOC_DIR -jar $JSDOC_DIR/jsrun.jar $JSDOC_DIR/app/run.js -t=$JSDOC_DIR/templates/jsdoc -d=$DOC_DIR/api $opts $SRC_DIR/*/*
 		then exit 1
 		fi
 		open $DOC_DIR/api/index.html
