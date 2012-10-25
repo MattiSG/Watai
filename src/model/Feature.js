@@ -150,26 +150,6 @@ var Feature = new Class( /** @lends Feature# */ {
 	*@private
 	*/
 	evaluateStateDescriptor: function evaluateStateDescriptor(elementSelector, expected, timeout, callback) {
-		var evaluate,
-			original,	// the first value of the element
-			firstTryTimestamp = new Date();	// to compute the maximal match timeout
-
-		function compareTo(actual) {
-			if (actual == expected)
-				return callback();
-
-			if (typeof original == 'undefined')
-				original = actual;	// this is used to wait for a _change_ in the element value rather than for a match.
-
-			if (original != actual)	// there was a value change, but not the one we expected
-				return callback(elementSelector + ' changed its value to "' + actual + '" rather than to "' + expected + '".');
-
-			if (new Date() - firstTryTimestamp >= timeout)	// the timeout expired
-				return callback('After ' + timeout + ' milliseconds, the value of "' + elementSelector + '" was still "' + actual + '" and not "' + expected + '".')
-
-			evaluate.delay(Feature.MATCH_TRY_DELAY);
-		}
-
 		var activeMatchers = [];
 
 		if (typeof expected == 'boolean') {
@@ -182,22 +162,22 @@ var Feature = new Class( /** @lends Feature# */ {
 		var matchersLeft = activeMatchers.length;
 
 		function handleSuccess() {
-			if (--matchersLeft <= 0)
-				callback();
+			callback();
 		}
 
 		function handleFailure(message) {
-			callback(message)
+			if (--matchersLeft <= 0)
+				callback(message)
 		}
 
-		evaluate = function() {
-			activeMatchers.each(function(matcher) {
-				matcher.test()
-					   .then(handleSuccess, handleFailure);
-			});
-		}
+		activeMatchers.each(function(matcher) {
+			matcher.test(timeout)
+				   .then(handleSuccess, handleFailure)
+				   .end();	// rethrow any exception
+		});
 
-		evaluate();
+		if (activeMatchers.length <= 0)
+			throw new Error('No matcher found for the given value type  :-/  (had to check for "' + expected + '").');
 	},
 
 	/** Asynchronously evaluates the scenario given to this feature.
@@ -264,15 +244,6 @@ var Feature = new Class( /** @lends Feature# */ {
 *@type	{Number}
 */
 Feature.DEFAULT_MATCH_TIMEOUT = 0;
-
-/** How long to wait between each try for a match in a state descriptor.
-* Until the match timeout expires, each element that did not match its expected value will be accessed on that interval.
-* Expressed in milliseconds.
-* This may be changed by external callers, but will be global to all features.
-*
-*@type	{Number}
-*/
-Feature.MATCH_TRY_DELAY = 100;
 
 
 module.exports = Feature;	// CommonJS export

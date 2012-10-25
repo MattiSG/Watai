@@ -3,20 +3,41 @@ var promises = require('q');
 
 var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 
-	/** The widgets in which elements should be looked for.
-	*@type	{Array.<Widget>}
-	*@private
+	/** The type of content this matcher
 	*/
-	widgets: null,
+	type: 'abstract',
+
+	/** Time, in milliseconds, until not having a match is considered a failure.
+	*@type	{Number}
+	*/
+	timeout: 0,
 
 	/** The value this matcher should look for.
 	*@protected
 	*/
 	expected: undefined,
 
-	/** The type of content this matcher
+	/** The widgets in which elements should be looked for.
+	*@type	{Array.<Widget>}
+	*@private
 	*/
-	type: 'abstract',
+	widgets: null,
+
+
+	original: undefined,
+
+	/**
+	*@type	{WD.Element}
+	*/
+	element: null,
+
+	selector: '',
+
+	/** The time at which the evaluation was first requested, to evaluate the timeout.
+	*@type	{Date}
+	*@private
+	*/
+	startTime: null,
 
 
 	/**
@@ -27,8 +48,8 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 	*/
 	initialize: function init(widgets, selector, expected) {
 		this.widgets = widgets;
-		this.expected = expected;
 		this.selector = selector;
+		this.expected = expected;
 
 		this.compare = this.compare.bind(this);
 		this.succeed = this.succeed.bind(this);
@@ -38,14 +59,25 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 	/**
 	*@returns	{Promise}	A promise that will be either resolved if their is a match, or rejected with the actual value passed.
 	*/
-	test: function test() {
+	test: function test(timeout) {
 		this.promise = promises.defer();
+		this.original = undefined;
+		this.startTime = new Date();
+		this.timeout = timeout;
 
+		this.start();
+
+		return this.promise.promise;
+	},
+
+	start: function start() {
 		Object.getFromPath(this.widgets, this.selector)
 			  .then(this.onElementFound.bind(this),	// this wrapping is needed because the promise from `getFromPath` is a WebDriver promise, so we can't add failure handlers only, we need to set all handlers at once through the `then` method
 			  		this.onElementMissing.bind(this));
+	},
 
-		return this.promise.promise;
+	onElementFound: function onElementFound(element) {
+		throw new Error('AbstractMatcher should never be used as an instance! onElementFound() has to be redefined.');
 	},
 
 	/** Handler for missing element. May be redefined.
@@ -62,7 +94,7 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 	*@protected
 	*/
 	compare: function compare(actual) {
-		if (actual === this.expected)
+		if (actual == this.expected)
 			this.succeed();
 		else
 			this.fail(actual);
@@ -82,20 +114,56 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 	*@protected
 	*/
 	fail: function fail(actual) {
-		this.promise.reject(this.formatError(actual));
+		var failureMessage;
+
+		if (typeof this.original == 'undefined')
+			this.original = actual;	// this is used to wait for a _change_ in the element value rather than for a match
+	
+		if (new Date() - this.startTime >= this.timeout)	// the timeout has expired
+			this.failImmediately(actual);
+		else
+			this.start.delay(AbstractMatcher.MATCH_TRY_DELAY, this);
 	},
 
-	formatError: function formatError(actualValue) {
-		var result;
+	failImmediately: function failImmediately(actual) {
+		var failureMessage = (this.timeout > 0 ? 'After ' + this.timeout + ' milliseconds, ' : '');
 
-		if (typeof actualValue == 'undefined')
-			result = 'Could not get "' + type + '" from element "' + this.selector + '"';
-		else
-			result = 'Element "' + this.selector + '" had ' + this.type + ' "' + actualValue + '" instead of "' + this.expected + '"';
+		if (typeof actual == 'undefined') {
+			failureMessage += 'could not determine the '
+							+ this.type
+							+ ' from element '
+							+ this.selector
+							+ '.';
+		} else if (actual != this.original) {
+			failureMessage += this.selector
+							+ ' changed its value to "'
+							+ actual
+							+ '" rather than to "'
+							+ this.expected
+							+ '".';
+		} else {
+			failureMessage += this.selector
+							+ "'s "
+							+ this.type
+							+ ' was'
+							+ (this.timeout > 0 ? ' still "' : ' "')
+							+ actual
+							+ '" instead of "'
+							+ this.expected
+							+ '".';
+		}
 
-		return result;
+		this.promise.reject(failureMessage);
 	}
 });
+
+/** How long to wait between each try for a match.
+* Until the match timeout expires, an element that did not match its expected value will be accessed on that interval.
+* Expressed in milliseconds.
+*
+*@type	{Number}
+*/
+AbstractMatcher.MATCH_TRY_DELAY = 100;
 
 
 module.exports = AbstractMatcher;	// CommonJS export
