@@ -153,10 +153,10 @@ var Feature = new Class( /** @lends Feature# */ {
 		var activeMatchers = [];
 
 		if (typeof expected == 'boolean') {
-			activeMatchers.push(new matchers.existence(this.widgets, elementSelector, expected));
+			activeMatchers.push(new matchers.ExistenceMatcher(this.widgets, elementSelector, expected));
 		} else {
-			activeMatchers.push(new matchers.text(this.widgets, elementSelector, expected));
-			activeMatchers.push(new matchers.value(this.widgets, elementSelector, expected));
+			activeMatchers.push(new matchers.TextMatcher(this.widgets, elementSelector, expected));
+			activeMatchers.push(new matchers.ValueMatcher(this.widgets, elementSelector, expected));
 		}
 
 		var matchersLeft = activeMatchers.length;

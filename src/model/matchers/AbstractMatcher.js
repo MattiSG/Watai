@@ -1,7 +1,14 @@
 var promises = require('q');
 
 
-var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
+/**@class	Abstract class from which all content matchers inherit.
+*
+* A _matcher_ is an object that handles state descriptors, i.e. each key/value pair in a state description object from a Feature’s scenario.
+* Implementing a new matcher, i.e. offering a new content comparison type, is very easy: simply extend this class, taking example on the existing concrete matchers, and redefine at least `onElementFound`, calling `this.succeed`, `this.fail` and/or `this.compare`.
+*
+*@memberOf	matchers
+*/
+var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 
 	/** The type of content this matcher can match an element on.
 	*/
@@ -13,7 +20,6 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 	timeout: 0,
 
 	/** The value this matcher should look for.
-	*@protected
 	*/
 	expected: undefined,
 
@@ -83,14 +89,18 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 			  		this.onElementMissing.bind(this));
 	},
 
+	/** Handler called when the selected element is found. To be redefined by subclasses.
+	*
+	*@param	{WD.Element}	element	The WebDriver element pointed by the selector of this instance.
+	*/
 	onElementFound: function onElementFound(element) {
 		throw new Error('AbstractMatcher should never be used as an instance! onElementFound() has to be redefined.');
 	},
 
-	/** Handler for missing element. May be redefined.
+	/** Handler for missing element. May be redefined by subclasses.
 	* Defaults to failing.
 	*
-	*@protected
+	*@param	{Error}	The error raised by WebDriver.
 	*/
 	onElementMissing: function onElementMissing(error) {
 		this.fail('Element "' + this.selector + '" does not exist on the page.')
@@ -98,7 +108,7 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 
 	/** Compares the given value to the expected value, and fails or succeeds the match automatically.
 	*
-	*@protected
+	*@param	actual	The value that should be compared against this instance's expected value.
 	*/
 	compare: function compare(actual) {
 		if (actual == this.expected)
@@ -108,17 +118,15 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 	},
 
 	/** Marks the match as successful.
-	*
-	*@protected
 	*/
 	succeed: function succeed() {
 		this.promise.resolve();
 	},
 
 	/** Marks the match as failed.
+	* This does not mean it will necessarily end the match: there might be timeout settings that make the matcher try again to access the element.
 	*
 	*@param	actual	The actual content that was found by this matcher.
-	*@protected
 	*/
 	fail: function fail(actual) {
 		var failureMessage;
@@ -132,6 +140,11 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 			this.start.delay(AbstractMatcher.MATCH_TRY_DELAY, this);
 	},
 
+	/** Makes this matcher fail immediately, not trying anymore.
+	*
+	*@param	actual	The content that was found by this matcher. Will be used to construct a user-visible failure description.
+	*@private
+	*/
 	failImmediately: function failImmediately(actual) {
 		var failureMessage = (this.timeout > 0 ? 'After ' + this.timeout + ' milliseconds, ' : '');
 
@@ -170,8 +183,9 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 * Will be overridden by config files.
 *
 *@type	{Number}
-*@see	AbstractMatcher#test
+*@see	matchers.AbstractMatcher#test
 *@see	SuiteLoader#initialize
+*@name	matchers.AbstractMatcher.DEFAULT_TIMEOUT
 */
 AbstractMatcher.DEFAULT_TIMEOUT = 0;
 
@@ -180,6 +194,7 @@ AbstractMatcher.DEFAULT_TIMEOUT = 0;
 * Expressed in milliseconds.
 *
 *@type	{Number}
+*@name	matchers.AbstractMatcher.MATCH_TRY_DELAY
 */
 AbstractMatcher.MATCH_TRY_DELAY = 100;
 

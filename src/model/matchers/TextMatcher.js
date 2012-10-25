@@ -1,8 +1,8 @@
-/**
-*@class
-*@extends	AbstractMatcher
+/**@class	A matcher that tests its element's textual content.
+*@extends	matchers.AbstractMatcher
+*@memberOf	matchers
 */
-var TextMatcher = new Class( /** @lends TextMatcher# */ {
+var TextMatcher = new Class( /** @lends matchers.TextMatcher# */ {
 	Extends: require('./AbstractMatcher'),
 
 	type: 'text',

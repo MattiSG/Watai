@@ -1,12 +1,12 @@
-/**
-*@class
-*@extends	AbstractMatcher
+/**@class	A matcher that tests for its element's existence in the DOM.
+*@extends	matchers.AbstractMatcher
+*@memberOf	matchers
 */
-var ExistenceMatcher = new Class( /** @lends ExistenceMatcher# */ {
+var ExistenceMatcher = new Class( /** @lends matchers.ExistenceMatcher# */ {
 	Extends: require('./AbstractMatcher'),
 
 	type: 'existence',
-
+	
 	onElementFound: function(element) {
 		this.compare(true);
 	},

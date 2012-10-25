@@ -1,8 +1,8 @@
-/**
-*@class
-*@extends	AbstractMatcher
+/**@class	A matcher that tests its element's `value` attribute.
+*@extends	matchers.AbstractMatcher
+*@memberOf	matchers
 */
-var ValueMatcher = new Class( /** @lends ValueMatcher# */ {
+var ValueMatcher = new Class( /** @lends matchers.ValueMatcher# */ {
 	Extends: require('./AbstractMatcher'),
 
 	type: 'value',
