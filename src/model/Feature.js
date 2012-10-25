@@ -132,7 +132,7 @@ var Feature = new Class( /** @lends Feature# */ {
 			Object.each(hooksVals, function(expected, elementSelector) {
 				isEmpty = false;
 
-				this.evaluateStateDescriptor(elementSelector, expected, timeout, checkStateDescriptionFulfilled);
+				this.evaluateStateDescriptor(elementSelector, expected, checkStateDescriptionFulfilled, timeout);
 			}, this);
 
 			if (isEmpty)
@@ -145,11 +145,11 @@ var Feature = new Class( /** @lends Feature# */ {
 	/**
 	*@param	elementSelector	The widget element whose content is to be evaluated.
 	*@param	expected	The expected value for the element content. This is currently a String, but could change when new matchers are added.
-	*@param	{Number}	Maximum time, in milliseconds, after which the lack of match will be considered as a failure.
-	*@param	{Function}	callback	A function to call once the evaluation has ended. Params: {Boolean} was there a match?, {String?} message to justify the result (typically expected/actual comparison)
+	*@param	{Function}	callback	A function to call once the evaluation has ended. Params: {Boolean} was there a match?, {String?} message to justify the result (typically expected/actual comparison).
+	*@param	{Number}	[timeout]	Maximum time, in milliseconds, after which the lack of match will be considered as a failure.
 	*@private
 	*/
-	evaluateStateDescriptor: function evaluateStateDescriptor(elementSelector, expected, timeout, callback) {
+	evaluateStateDescriptor: function evaluateStateDescriptor(elementSelector, expected, callback, timeout) {
 		var activeMatchers = [];
 
 		if (typeof expected == 'boolean') {
