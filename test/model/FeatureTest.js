@@ -300,7 +300,33 @@ describe('Feature', function() {
 
 	describe('matchers', function() {
 		describe('existence matcher', function() {
-			it('should allow `true` in state descriptors', function(done) {
+			it('should pass on `true` in state descriptors on existing elements', function(done) {
+				featureWithScenario([
+					{ 'TestWidget.output': true }
+				]).test().then(done, function(reasons) {
+					var message = "No failure report. See code";
+
+					if (report && report.failures && report.failures[0])
+						message = report.failures[0];
+
+					done(new Error(message));
+				}).end();
+			});
+
+			it('should fail on `false` in state descriptors on existing elements', function(done) {
+				featureWithScenario([
+					{ 'TestWidget.output': false }
+				]).test().then(function() {
+						done(new Error('Resolved instead of rejected!'));
+					}, function(reasons) {
+						reasons.errors.should.have.length(0);
+						reasons.failures.should.have.length(1);
+						done();
+					}
+				).end();
+			});
+
+			it('should fail on `true` in state descriptors on missing elements', function(done) {
 				featureWithScenario([
 					{ 'TestWidget.missing': true }
 				]).test().then(function() {
@@ -313,7 +339,7 @@ describe('Feature', function() {
 				).end();
 			});
 
-			it('should match non-existence with `false` in state descriptors', function(done) {
+			it('should pass on `false` in state descriptors on missing elements', function(done) {
 				featureWithScenario([
 					{ 'TestWidget.missing': false }
 				]).test().then(done, function(reasons) {
@@ -323,8 +349,7 @@ describe('Feature', function() {
 						message = report.failures[0];
 
 					done(new Error(message));
-					}
-				).end();
+				}).end();
 			});
 		});
 	});
