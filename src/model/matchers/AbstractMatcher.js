@@ -167,9 +167,11 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 
 /** How long to wait until the lack of a match is considered as a failure, unless more precision is given at the time of testing.
 * Expressed in milliseconds.
+* Will be overridden by config files.
 *
 *@type	{Number}
 *@see	AbstractMatcher#test
+*@see	SuiteLoader#initialize
 */
 AbstractMatcher.DEFAULT_TIMEOUT = 0;
 
