@@ -95,7 +95,7 @@ var Feature = new Class( /** @lends Feature# */ {
 	*/
 	buildAssertionPromise: function buildAssertionPromise(hooksVals) {
 		var matchesLeft = 0,	// optimization: we're using the check loop beneath to cache the count of elements to match
-			timeout = Feature.DEFAULT_MATCH_TIMEOUT;	// per-state timeouts. This is independent from implicit waits for elements to appear: this timeout is how long we should wait for a match on a preexistent element
+			timeout;	// per-state timeouts. This is independent from implicit waits for elements to appear: this timeout is how long we should wait for a match on a preexistent element
 
 		if (hooksVals.hasOwnProperty('timeout')) {
 			timeout = hooksVals.timeout;
@@ -235,15 +235,6 @@ var Feature = new Class( /** @lends Feature# */ {
 		return deferred.promise;
 	}
 });
-
-
-/** How long to wait for a state descriptor to get a match.
-* Expressed in milliseconds.
-* This may be changed by external callers, but will be global to all features.
-*
-*@type	{Number}
-*/
-Feature.DEFAULT_MATCH_TIMEOUT = 0;
 
 
 module.exports = Feature;	// CommonJS export

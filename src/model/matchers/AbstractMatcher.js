@@ -3,7 +3,7 @@ var promises = require('q');
 
 var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 
-	/** The type of content this matcher
+	/** The type of content this matcher can match an element on.
 	*/
 	type: 'abstract',
 
@@ -23,14 +23,16 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 	*/
 	widgets: null,
 
-
+	/** The first value that was retrieved from the element to match content on.
+	* This allows us to detect changes and fail earlier if there was a change different from the content we're expecting.
+	*@private
+	*/
 	original: undefined,
 
-	/**
-	*@type	{WD.Element}
+	/** A widget element selector, describing the element whose content is to be matched.
+	*@type	{String}
+	*@private
 	*/
-	element: null,
-
 	selector: '',
 
 	/** The time at which the evaluation was first requested, to evaluate the timeout.
@@ -40,11 +42,13 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 	startTime: null,
 
 
-	/**
+	/** Creates a matcher, ready to be evaluated.
+	*
 	*@param	{Array.<Widget>}	The widgets in which elements should be looked for.
 	*@param	{String}	selector	The element selector to look for in this instance's referenced widgets.
 	*@param	expected	Any kind of content this matcher should look for.
 	*@constructs
+	*@see	#test
 	*/
 	initialize: function init(widgets, selector, expected) {
 		this.widgets = widgets;
@@ -56,14 +60,17 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 		this.fail = this.fail.bind(this);
 	},
 
-	/**
+	/** Starts the actual evaluation process.
+	*
+	*@param	{Number}	[timeout]	optional, specifies a timeout, in milliseconds, for this matcher to consider the lack of a match as a failure. Defaults to DEFAULT_TIMEOUT. Set to 0 to disable timeout altogether and give no chance to the pointed element to change asynchronously.
 	*@returns	{Promise}	A promise that will be either resolved if their is a match, or rejected with the actual value passed.
+	*@see	AbstractMatcher.DEFAULT_TIMEOUT
 	*/
 	test: function test(timeout) {
 		this.promise = promises.defer();
 		this.original = undefined;
 		this.startTime = new Date();
-		this.timeout = timeout;
+		this.timeout = (typeof timeout == 'number' ? timeout : AbstractMatcher.DEFAULT_TIMEOUT);
 
 		this.start();
 
@@ -156,6 +163,15 @@ var AbstractMatcher = new Class( /** @lends AbstractMatcher# */ {
 		this.promise.reject(failureMessage);
 	}
 });
+
+
+/** How long to wait until the lack of a match is considered as a failure, unless more precision is given at the time of testing.
+* Expressed in milliseconds.
+*
+*@type	{Number}
+*@see	AbstractMatcher#test
+*/
+AbstractMatcher.DEFAULT_TIMEOUT = 0;
 
 /** How long to wait between each try for a match.
 * Until the match timeout expires, an element that did not match its expected value will be accessed on that interval.
