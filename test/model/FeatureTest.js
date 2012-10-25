@@ -8,7 +8,7 @@ var TestRight = require('../helpers/subject'),
 /** Milliseconds the actions take to delay changing the output on the test page.
 * Set in the test page (`test/resources/page.html`).
 */
-var DELAYED_ACTIONS_DELAY = 400;
+var DELAYED_ACTIONS_DELAY = 500;
 
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
