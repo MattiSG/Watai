@@ -47,6 +47,24 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	*/
 	startTime: null,
 
+	/** The [timeout ID](http://nodejs.org/docs/v0.8.9/api/all.html#all_settimeout_cb_ms) that makes this matcher retry.
+	* Needed to be able to cancel a match request.
+	*
+	*@see	#cancel
+	*@type	{Number}
+	*@private
+	*/
+	retryTimeoutId: -1,	// -1 is no magic value, it just helps with debugging
+
+	/** A cancellation flag, set to true if this matcher was cancelled.
+	* This is needed in case the cancellation occurs after a match was started, and we're waiting for a callback from WebDriver with the element (found or missing, doesn't matter), so that we don't do call anyone back.
+	*
+	*@see	#cancel
+	*@type	{Boolean}
+	*@private
+	*/
+	cancelled: false,
+
 
 	/** Creates a matcher, ready to be evaluated.
 	*
@@ -66,10 +84,10 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 		this.fail = this.fail.bind(this);
 	},
 
-	/** Starts the actual evaluation process.
+	/** Starts the evaluation process, returning a promise for results fulfilled if there is a match, and rejected if not, after at most the given timeout.
 	*
 	*@param	{Number}	[timeout]	optional, specifies a timeout, in milliseconds, for this matcher to consider the lack of a match as a failure. Defaults to DEFAULT_TIMEOUT. Set to 0 to disable timeout altogether and give no chance to the pointed element to change asynchronously.
-	*@returns	{Promise}	A promise that will be either resolved if their is a match, or rejected with the actual value passed.
+	*@returns	{Promise}	A promise that will be either fulfilled if their is a match, or rejected with the actual value passed.
 	*@see	AbstractMatcher.DEFAULT_TIMEOUT
 	*/
 	test: function test(timeout) {
@@ -77,16 +95,30 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 		this.original = undefined;
 		this.startTime = new Date();
 		this.timeout = (typeof timeout == 'number' ? timeout : AbstractMatcher.DEFAULT_TIMEOUT);
+		this.cancelled = false;
+		this.retryTimeoutId = -1;	// -1 is no magic value, it just helps with debugging
 
 		this.start();
 
 		return this.promise.promise;
 	},
 
+	/** Starts an actual match, by trying to obtain the element pointed by this instance's selector.
+	*
+	*@private
+	*/
 	start: function start() {
 		Object.getFromPath(this.widgets, this.selector)
 			  .then(this.onElementFound.bind(this),	// this wrapping is needed because the promise from `getFromPath` is a WebDriver promise, so we can't add failure handlers only, we need to set all handlers at once through the `then` method
 			  		this.onElementMissing.bind(this));
+	},
+
+	/** Immediately cancels the requested match, ignoring any timeouts.
+	* The promise is left untouched, neither fulfilled nor rejected.
+	*/
+	cancel: function cancel() {
+		this.cancelled = true;
+		clearTimeout(this.retryTimeoutId);
 	},
 
 	/** Handler called when the selected element is found. To be redefined by subclasses.
@@ -120,6 +152,9 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	/** Marks the match as successful.
 	*/
 	succeed: function succeed() {
+		if (this.cancelled)
+			return;
+
 		this.promise.resolve();
 	},
 
@@ -129,15 +164,16 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	*@param	actual	The actual content that was found by this matcher.
 	*/
 	fail: function fail(actual) {
-		var failureMessage;
+		if (this.cancelled)
+			return;
 
 		if (typeof this.original == 'undefined')
 			this.original = actual;	// this is used to wait for a _change_ in the element value rather than for a match
-	
+
 		if (new Date() - this.startTime >= this.timeout)	// the timeout has expired
 			this.failImmediately(actual);
 		else
-			this.start.delay(AbstractMatcher.MATCH_TRY_DELAY, this);
+			this.retryTimeoutId = setTimeout(this.start.bind(this), AbstractMatcher.MATCH_TRY_DELAY);
 	},
 
 	/** Makes this matcher fail immediately, not trying anymore.

@@ -161,13 +161,21 @@ var Feature = new Class( /** @lends Feature# */ {
 
 		var matchersLeft = activeMatchers.length;
 
+		function finish(message) {
+			activeMatchers.each(function(matcher) {	// first we need to make sure no failed matcher is going to try again to match even after another ended the evaluation
+				matcher.cancel();
+			});
+
+			callback(message);	// then we actually call the callback
+		}
+
 		function handleSuccess() {
-			callback();
+			finish();
 		}
 
 		function handleFailure(message) {
 			if (--matchersLeft <= 0)
-				callback(message)
+				finish(message)
 		}
 
 		activeMatchers.each(function(matcher) {
