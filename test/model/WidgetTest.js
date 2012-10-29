@@ -11,19 +11,25 @@ var TestRight = require('../helpers/subject'),
 *@private
 */
 var checkerElements = {
-	immediateActionClicked:	{ id: 'output' }
+	output:	{ id: 'output' }
 }
 
 
 /** This test suite is written with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */
 describe('Widget', function() {
+	var checker;
+
 	before(function() {
 		var testWidget = require('../helpers/testWidget');
 		elements = testWidget.elements;
 		expectedContents = testWidget.expectedContents;
 		expectedOutputs = testWidget.expectedOutputs;
 		subject = testWidget.getWidget(my.driver);
+
+		checker = new TestRight.Widget('Events results widget', {
+			elements: checkerElements
+		}, my.driver);
 	});
 
 	describe('parsing', function() {
@@ -51,15 +57,35 @@ describe('Widget', function() {
 		});
 	});
 
-	describe('element access', function() {
-		var checker;
 
-		before(function() {
-			checker = new TestRight.Widget('Events results widget', {
-				elements: checkerElements
-			}, my.driver);
+	describe('magic', function() {
+		it('should bind magically created `link` methods to clicking', function(done) {
+			subject.immediateAction();
+			checker.output.getText().then(function(text) {
+				text.should.equal(expectedOutputs.immediateActionLink);
+				done();
+			});
 		});
 
+		it('should bind magically created `button` methods to clicking', function(done) {
+			subject.press();
+			checker.output.getText().then(function(text) {
+				text.should.equal(expectedOutputs.pressButton);
+				done();
+			});
+		});
+
+		it('should bind magically created `checkbox` methods to clicking', function(done) {
+			subject.toggle();
+			checker.output.getText().then(function(text) {
+				text.should.equal(expectedOutputs.toggleCheckbox);
+				done();
+			});
+		});
+	});
+
+
+	describe('element access', function() {
 		it('should map elements to hooks', function(done) {
 			subject.id.getText().then(function(text) {
 				text.should.equal(expectedContents.id);
@@ -91,17 +117,10 @@ describe('Widget', function() {
 			});
 		});
 
-		it('should bind magically created link methods to clicking', function(done) {
-			subject.immediateAction();
-			checker.immediateActionClicked.getText().then(function(text) {
-				text.should.equal(expectedOutputs.immediateActionLink);
-				done();
-			});
-		});
-
 		it('should be immediate (as much as local performance allows)', function(done) {
+			subject.immediateAction();
 			subject.delayedAction();
-			checker.immediateActionClicked.getText().then(function(text) {
+			checker.output.getText().then(function(text) {
 				text.should.equal(expectedOutputs.immediateActionLink);
 				done();
 			});

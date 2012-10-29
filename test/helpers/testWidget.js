@@ -4,15 +4,17 @@ var TestRight = require('./subject');
 /** Widget description of elements existing in the test support page resource.
 */
 var elements = exports.elements = {
-	id:		{ id: 'toto' },
-	css:	{ css: '.tutu' },
-	missing:{ id: 'inexistant' },
-	field:	{ css: 'input[name="field"]' },
+	id:						{ id: 'toto' },
+	css:					{ css: '.tutu' },
+	missing:				{ id: 'inexistant' },
+	field:					{ css: 'input[name="field"]' },
 	immediateActionLink:	{ linkText: 'This paragraph is embedded in a link' },
-	delayedActionLink:	{ id: 'delayLink' },
+	delayedActionLink:		{ id: 'delayLink' },
 	otherDelayedActionLink:	{ id: 'delayLink2' },
-	output:	{ id: 'output' },
-	outputField: { name: 'outputField' }
+	pressButton:			{ id: 'button' },
+	toggleCheckbox:			{ id: 'box' },
+	output:					{ id: 'output' },
+	outputField:			{ name: 'outputField' }
 }
 
 /** Expected values for the texts of the elements described above, as defined in the test support page.
@@ -31,9 +33,11 @@ exports.expectedContents = {
 *@see	#elements
 */
 exports.expectedOutputs = {
-	immediateActionLink: '#link has been clicked',
-	delayedActionLink: '#delayLink has been clicked',
-	otherDelayedActionLink: '#delayLink2 has been clicked'
+	immediateActionLink:	'#link has been clicked',
+	delayedActionLink:		'#delayLink has been clicked',
+	otherDelayedActionLink:	'#delayLink2 has been clicked',
+	pressButton:			'#button has been pressed',
+	toggleCheckbox:			'#box has been checked'
 }
 
 /** A full widget describing the “main” part of the test support page.

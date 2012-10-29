@@ -13,6 +13,8 @@
 			<p><a id="link" href="#">This paragraph is embedded in a link</a></p>
 			<p><a id="delayLink" href="#">Clicking this link will change contents beneath after 500ms</a></p>
 			<p><a id="delayLink2" href="#">Clicking this link will change contents beneath after 500ms</a></p>
+			<p><button id="button">Clicking this button will change contents beneath immediately</button></p>
+			<p><input type="checkbox" id="box" name="box" /><label for="box">Toggling this checbox will change contents beneath immediately</button></p>
 		</div>
 
 		<form id="form" action="#">
@@ -31,15 +33,25 @@
 			document.getElementById('link').onclick = function() {
 				document.getElementById('output').innerText = '#link has been clicked';
 			}
+
 			document.getElementById('delayLink').onclick = function() {
 				window.setTimeout(function() {
 					document.getElementById('output').innerText = '#delayLink has been clicked';
 				}, DELAYED_ACTIONS_DELAY);
 			}
+
 			document.getElementById('delayLink2').onclick = function() {
 				window.setTimeout(function() {
 					document.getElementById('output').innerText = '#delayLink2 has been clicked';
 				}, DELAYED_ACTIONS_DELAY);
+			}
+
+			document.getElementById('button').onclick = function() {
+				document.getElementById('output').innerText = '#button has been pressed';
+			}
+
+			document.getElementById('box').onclick = function() {
+				document.getElementById('output').innerText = '#box has been checked';
 			}
 		</script>
 	</body>
