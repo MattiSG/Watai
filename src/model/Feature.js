@@ -152,8 +152,10 @@ var Feature = new Class( /** @lends Feature# */ {
 	evaluateStateDescriptor: function evaluateStateDescriptor(elementSelector, expected, callback, timeout) {
 		var activeMatchers = [];
 
-		if (typeof expected == 'boolean') {
+		if (typeof expected == 'boolean') {	// TODO: make matchers responsible for defining which value types they can handle instead of this horrendous switch
 			activeMatchers.push(new matchers.ExistenceMatcher(this.widgets, elementSelector, expected));
+		} else if (expected instanceof RegExp) {
+			activeMatchers.push(new matchers.RegExpTextMatcher(this.widgets, elementSelector, expected));
 		} else {
 			activeMatchers.push(new matchers.TextMatcher(this.widgets, elementSelector, expected));
 			activeMatchers.push(new matchers.ValueMatcher(this.widgets, elementSelector, expected));

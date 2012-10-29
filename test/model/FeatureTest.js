@@ -352,6 +352,61 @@ describe('Feature', function() {
 				}).end();
 			});
 		});
+
+
+		describe('regexp matcher', function() {
+			it('should pass on a regexp', function(done) {
+				featureWithScenario([
+					{ 'TestWidget.id': /This paragraph/ }
+				]).test().then(done, function(report) {
+					var message = "No failure report. See code";
+
+					if (report && report.failures && report.failures[0])
+						message = report.failures[0];
+
+					done(new Error(message));
+				}).end();
+			});
+
+			it('should pass on a regexp in nested nodes', function(done) {
+				featureWithScenario([
+					{ 'TestWidget.id': /(to){2}/ }
+				]).test().then(done, function(report) {
+					var message = "No failure report. See code";
+
+					if (report && report.failures && report.failures[0])
+						message = report.failures[0];
+
+					done(new Error(message));
+				}).end();
+			});
+
+			it('should fail on non-matching regexps', function(done) {
+				featureWithScenario([
+					{ 'TestWidget.id': /(tu){2}/ }
+				]).test().then(function() {
+						done(new Error('Resolved instead of rejected!'));
+					}, function(reasons) {
+						reasons.errors.should.have.length(0);
+						reasons.failures.should.have.length(1);
+						done();
+					}
+				).end();
+			});
+
+			it('should fail on on missing elements', function(done) {
+				featureWithScenario([
+					{ 'TestWidget.missing': /toto/ }
+				]).test().then(function() {
+						done(new Error('Resolved instead of rejected!'));
+					}, function(reasons) {
+						reasons.errors.should.have.length(0);
+						reasons.failures.should.have.length(1);
+						done();
+					}
+				).end();
+			});
+		});
 	});
 
 	describe('widget access', function() {
