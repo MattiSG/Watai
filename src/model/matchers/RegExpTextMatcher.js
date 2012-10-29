@@ -7,7 +7,7 @@ var TextMatcher = new Class( /** @lends matchers.RegExpTextMatcher# */ {
 
 	type: 'regexp',
 
-	onElementFound: function(element) {
+	onElementFound: function onElementFound(element) {
 		element.getText().then(function(text) {
 				if (this.expected.test(text))
 					this.succeed();
@@ -16,6 +16,15 @@ var TextMatcher = new Class( /** @lends matchers.RegExpTextMatcher# */ {
 			}.bind(this),
 			this.fail
 		);
+	},
+
+	formatFailure: function formatFailure(actual) {
+		return this.selector
+				+ '’s textual content was "'
+				+ actual
+				+ '", which did not match the regular expression '
+				+ this.expected
+				+ '.';
 	}
 });
 

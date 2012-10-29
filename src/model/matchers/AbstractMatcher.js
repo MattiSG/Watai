@@ -182,34 +182,42 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	*@private
 	*/
 	failImmediately: function failImmediately(actual) {
-		var failureMessage = (this.timeout > 0 ? 'After ' + this.timeout + ' milliseconds, ' : '');
+		var failureMessagePrefix = (this.timeout > 0 ? 'After ' + this.timeout + ' milliseconds, ' : '');
 
+		this.promise.reject(failureMessagePrefix + this.formatFailure(actual));
+	},
+
+	/** Formats the message displayed to the user in case of a failure.
+	* May be redefined by children classes.
+	* May be prefixed by timeout information when actually shown to the user.
+	*
+	*@param	actual	The actual value that was encountered.
+	*/
+	formatFailure: function formatFailure(actual) {
 		if (typeof actual == 'undefined') {
-			failureMessage += 'could not determine the '
-							+ this.type
-							+ ' from element '
-							+ this.selector
-							+ '.';
+			return 'could not determine the '
+					+ this.type
+					+ ' from element '
+					+ this.selector
+					+ '.';
 		} else if (actual != this.original) {
-			failureMessage += this.selector
-							+ ' changed its value to "'
-							+ actual
-							+ '" rather than to "'
-							+ this.expected
-							+ '".';
+			return this.selector
+					+ ' changed its value to "'
+					+ actual
+					+ '" rather than to "'
+					+ this.expected
+					+ '".';
 		} else {
-			failureMessage += this.selector
-							+ "'s "
-							+ this.type
-							+ ' was'
-							+ (this.timeout > 0 ? ' still "' : ' "')
-							+ actual
-							+ '" instead of "'
-							+ this.expected
-							+ '".';
+			return this.selector
+					+ "'s "
+					+ this.type
+					+ ' was'
+					+ (this.timeout > 0 ? ' still "' : ' "')
+					+ actual
+					+ '" instead of "'
+					+ this.expected
+					+ '".';
 		}
-
-		this.promise.reject(failureMessage);
 	}
 });
 

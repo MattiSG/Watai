@@ -321,6 +321,7 @@ describe('Feature', function() {
 					}, function(reasons) {
 						reasons.errors.should.have.length(0);
 						reasons.failures.should.have.length(1);
+						reasons.failures[0].should.match(/was in the DOM/);
 						done();
 					}
 				).end();
@@ -334,6 +335,7 @@ describe('Feature', function() {
 					}, function(reasons) {
 						reasons.errors.should.have.length(0);
 						reasons.failures.should.have.length(1);
+						reasons.failures[0].should.match(/was not in the DOM/);
 						done();
 					}
 				).end();
@@ -389,6 +391,7 @@ describe('Feature', function() {
 					}, function(reasons) {
 						reasons.errors.should.have.length(0);
 						reasons.failures.should.have.length(1);
+						reasons.failures[0].should.match(/did not match/);
 						done();
 					}
 				).end();
@@ -402,6 +405,7 @@ describe('Feature', function() {
 					}, function(reasons) {
 						reasons.errors.should.have.length(0);
 						reasons.failures.should.have.length(1);
+						reasons.failures[0].should.match(/does not exist/);
 						done();
 					}
 				).end();
