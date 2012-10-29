@@ -23,28 +23,28 @@ var Widget = new Class( /** @lends Widget# */ {
 	*/
 	initialize: function init(name, values, driver) {
 		this.name = name;
-		
-		
+
+
 		var widget = this;
-		
+
 		Object.each(values.elements, function(typeAndSelector, key) {
 			Hook.addHook(widget, key, typeAndSelector, driver);
 			widget.addMagic(key);
 		});
-		
+
 		delete values.elements;
-		
+
 		Object.each(values, function(method, key) {
 			widget[key] = function() {
 				logger.info('	- did ' + key + ' ' + Array.prototype.slice.call(arguments).join(', '));
-				
+
 				return method.apply(widget, arguments);	//TODO: handle elements overloading
 			}
 		});
-		
+
 		this.has = this.has.bind(this);
 	},
-	
+
 	/** Add magic methods on specially-formatted elements.
 	* _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`.
 	*
@@ -53,20 +53,20 @@ var Widget = new Class( /** @lends Widget# */ {
 	*/
 	addMagic: function addMagic(key) {
 		var widget = this;
-		
+
 		Object.each(Widget.magic, function(matcher, method) {
 			var matches = matcher.exec(key);
 			if (matches) {	// `exec` returns `null` if no match was found
 				var basename = matches[1];
-				widget[basename] = function() {
+				widget[basename] = function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
 					logger.info('	- ' + method + 'ed “' + basename + '”');
-					
+
 					return widget[key][method]();
-				}	// no immediate access to avoid calling the getter, which would trigger a Selenium access
+				}
 			}
 		});
 	},
-	
+
 	/** Checks that the given element is found on the page.
 	*
 	*@param	{String}	attribute	The name of the element whose presence is to be checked.
@@ -74,7 +74,7 @@ var Widget = new Class( /** @lends Widget# */ {
 	*/
 	has: function has(attribute) {
 		var deferred = promises.defer();
-	
+
 		this[attribute].then(function() {
 				logger.info('	-', attribute, 'is present on the page');
 
@@ -82,10 +82,10 @@ var Widget = new Class( /** @lends Widget# */ {
 			}, function() {
 				logger.info('	-', attribute, 'is missing on the page');
 
-				deferred.resolve(false);				
+				deferred.resolve(false);
 			}
 		);
-		
+
 		return deferred.promise;
 	}
 });
@@ -100,7 +100,8 @@ var Widget = new Class( /** @lends Widget# */ {
 *@private
 */
 Widget.magic = {
-	click: /(.+)Link$/
+	click:	/(.+)Link$/,
+	button:	/(.+)Button$/
 }
 
 module.exports = Widget;	// CommonJS export
