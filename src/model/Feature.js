@@ -209,7 +209,7 @@ var Feature = new Class( /** @lends Feature# */ {
 			};
 
 		var handleFailure = function handleFailure(message, step) {
-			failureReasons.failures.push(message + ' (at step ' + step + ')');
+			failureReasons.failures.push(message + ' (at step ' + (step + 1) + ')');	// make user-visible indices 1-based
 			evaluateNext();
 		}
 
