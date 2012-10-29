@@ -66,7 +66,7 @@ describe('Feature', function() {
 				}, function(reasons) {
 					reasons.failures.should.have.length(0);
 					reasons.errors.should.have.length(1);
-					reasons.errors[0].should.equal(failureReason);
+					reasons.errors[0].should.match(new RegExp(failureReason));
 					done();
 				}
 			).end();
@@ -80,7 +80,7 @@ describe('Feature', function() {
 				}, function(reasons) {	// second callback is the error callback, that's the one we're testing a call for
 					reasons.errors.should.have.length(0);
 					reasons.failures.should.have.length(1);
-					reasons.failures[0].should.equal(failureReason);
+					reasons.failures[0].should.match(new RegExp(failureReason));
 					done();
 				}
 			).end();
@@ -95,9 +95,9 @@ describe('Feature', function() {
 					done(new Error('Resolved instead of rejected!'));
 				}, function(reasons) {
 					reasons.failures.should.have.length(3);
-					reasons.failures[0].should.equal(failureReason + '0');
-					reasons.failures[1].should.equal(failureReason + '1');
-					reasons.failures[2].should.equal(failureReason + '2');
+					reasons.failures[0].should.match(new RegExp(failureReason + '0'));
+					reasons.failures[1].should.match(new RegExp(failureReason + '1'));
+					reasons.failures[2].should.match(new RegExp(failureReason + '2'));
 					reasons.errors.should.have.length(0);
 					done();
 				}
