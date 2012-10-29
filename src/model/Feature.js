@@ -206,8 +206,8 @@ var Feature = new Class( /** @lends Feature# */ {
 				errors: []
 			};
 
-		var handleFailure = function handleFailure(message) {
-			failureReasons.failures.push(message);
+		var handleFailure = function handleFailure(message, step) {
+			failureReasons.failures.push(message + ' (at step ' + step + ')');
 			evaluateNext();
 		}
 
@@ -227,11 +227,13 @@ var Feature = new Class( /** @lends Feature# */ {
 			try {
 				var result = this.steps[stepIndex]();
 				// unfortunately, [q.when](https://github.com/kriskowal/q#the-middle) is not compatible with WebDriver's Promises/A implementation, and we need to explicitly call `then` to reject thrown exceptions
-				if (result && typeof result.then == 'function')
-					result.then(evaluateNext, handleFailure);
-				else
+				if (result && typeof result.then == 'function') {
+					result.then(evaluateNext, function(message) {
+						handleFailure(message, stepIndex)
+					});
+				} else {
 					evaluateNext();
-
+				}
 			} catch (error) {
 				failureReasons.errors.push(error);
 				evaluateNext();
