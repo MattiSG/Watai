@@ -154,7 +154,7 @@ var Feature = new Class( /** @lends Feature# */ {
 
 		if (typeof expected == 'boolean') {	// TODO: make matchers responsible for defining which value types they can handle instead of this horrendous switch
 			activeMatchers.push(new matchers.ExistenceMatcher(this.widgets, elementSelector, expected));
-		} else if (expected instanceof RegExp) {
+		} else if (expected.constructor && expected.constructor.name === 'RegExp') {	// since elements are loaded in a separate context, the `instanceof` fails, as it compares constructors references
 			activeMatchers.push(new matchers.RegExpTextMatcher(this.widgets, elementSelector, expected));
 		} else {
 			activeMatchers.push(new matchers.TextMatcher(this.widgets, elementSelector, expected));
