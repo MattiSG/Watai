@@ -16,6 +16,8 @@ var config = new ConfigLoader({
 	appName: 'watai'
 }).load('config');
 
+require('./lib/configManager').set(config);
+
 initLoggers();
 
 var logger = winston.loggers.get('suites');
@@ -58,7 +60,10 @@ var TestRight = {
 	/**@see	Hook
 	*@private	(protected, exported for easier testing)
 	*/
-	Hook:		require('./model/Hook')
+	Hook:		require('./model/Hook'),
+	/**@see	configManager
+	*/
+	config:		require('./lib/configManager')
 }
 
 module.exports = TestRight;	// CommonJS export
@@ -78,7 +83,7 @@ function initLoggers() {
 			colorize: 'true'
 		}
 	});
-	
+
 	/** The `steps` logger logs atomic actions on widgets.
 	*/
 	winston.loggers.add('steps', {

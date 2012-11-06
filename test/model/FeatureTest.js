@@ -11,7 +11,7 @@ var TestRight = require('../helpers/subject'),
 var DELAYED_ACTIONS_DELAY	= 500,
 /** Timeout value of the test's config.
 */
-	GLOBAL_TIMEOUT			= 1000;
+	GLOBAL_TIMEOUT			= 1000;	//TODO: get from configManager
 
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
@@ -67,9 +67,9 @@ describe('Feature', function() {
 			failingFeatureTest().then(function() {
 					done(new Error('Resolved instead of rejected!'));
 				}, function(reasons) {
-					reasons.failures.should.have.length(0);
-					reasons.errors.should.have.length(1);
-					reasons.errors[0].should.match(new RegExp(failureReason));
+					reasons.errors.should.have.length(0);
+					reasons.failures.should.have.length(1);
+					reasons.failures[0].should.match(new RegExp(failureReason));
 					done();
 				}
 			).end();
@@ -118,26 +118,26 @@ describe('Feature', function() {
 				else
 					done(new Error('Promise resolved without actually calling the scenario function'));
 			}, function() {
-				done(new Error('Feature evaluation failed, with ' + called ? '' : 'out'
+				done(new Error('Feature evaluation failed, with' + (called ? '' : 'out')
 								+ ' actually calling the scenario function (but that’s still an error)'));
 			}).end();
 		});
 
 		it('arrays should be bound as arguments to previous functions', function(done) {
-			var calledMarker = { called: false };	// an object rather than a simple flag, to ensure reference passing
+			var called = false;
 
 			featureWithScenario([
-				function(arg) {
-					arg.called = true;
+				function(first, second) {
+					called = first && second;
 				},
-				[ calledMarker ]	// if this test case works, the function above should set the `called` marker
+				true, true	// if this test case works, the function above should set the `called` marker
 			]).test().then(function() {
-				if (calledMarker.called)
+				if (called)
 					done();
 				else
 					done(new Error('Promise resolved without actually calling the scenario function'));
-			}, function() {
-				done(new Error('Promise rejected with ' + calledMarker.called ? '' : 'out'
+			}, function(err) {
+				done(new Error('Promise rejected with' + (called ? '' : 'out')
 								+ ' actually calling the scenario function (but that’s still an error)'));
 			}).end();
 		});
@@ -324,8 +324,6 @@ describe('Feature', function() {
 		});
 
 		it('should be fine if made clickable', function(done) {
-			this.timeout(DELAYED_ACTIONS_DELAY * 2);
-
 			featureWithScenario([
 				WidgetTest.hideOverlay,
 				WidgetTest.overlayedAction,

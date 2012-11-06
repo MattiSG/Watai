@@ -1,4 +1,5 @@
-var promises = require('q');
+var promises =	require('q'),
+	config =	require('../../lib/configManager');
 
 
 /**@class	Abstract class from which all content matchers inherit.
@@ -86,15 +87,14 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 
 	/** Starts the evaluation process, returning a promise for results fulfilled if there is a match, and rejected if not, after at most the given timeout.
 	*
-	*@param	{Number}	[timeout]	optional, specifies a timeout, in milliseconds, for this matcher to consider the lack of a match as a failure. Defaults to DEFAULT_TIMEOUT. Set to 0 to disable timeout altogether and give no chance to the pointed element to change asynchronously.
+	*@param	{Number}	[timeout]	optional, specifies a timeout, in milliseconds, for this matcher to consider the lack of a match as a failure. Defaults to the `timeout` config value. Set to 0 to disable timeout altogether and give no chance to the pointed element to change asynchronously.
 	*@returns	{Promise}	A promise that will be either fulfilled if their is a match, or rejected with the actual value passed.
-	*@see	AbstractMatcher.DEFAULT_TIMEOUT
 	*/
 	test: function test(timeout) {
 		this.promise = promises.defer();
 		this.original = undefined;
 		this.startTime = new Date();
-		this.timeout = (typeof timeout == 'number' ? timeout : AbstractMatcher.DEFAULT_TIMEOUT);
+		this.timeout = (typeof timeout == 'number' ? timeout : config.values.timeout);
 		this.cancelled = false;
 		this.retryTimeoutId = -1;	// -1 is no magic value, it just helps with debugging
 
@@ -173,7 +173,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 		if (new Date() - this.startTime >= this.timeout)	// the timeout has expired
 			this.failImmediately(actual);
 		else
-			this.retryTimeoutId = setTimeout(this.start.bind(this), AbstractMatcher.MATCH_TRY_DELAY);
+			this.retryTimeoutId = setTimeout(this.start.bind(this), config.values.matchTriesDelay);
 	},
 
 	/** Makes this matcher fail immediately, not trying anymore.
@@ -220,27 +220,6 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 		}
 	}
 });
-
-
-/** How long to wait until the lack of a match is considered as a failure, unless more precision is given at the time of testing.
-* Expressed in milliseconds.
-* Will be overridden by config files.
-*
-*@type	{Number}
-*@see	matchers.AbstractMatcher#test
-*@see	SuiteLoader#initialize
-*@name	matchers.AbstractMatcher.DEFAULT_TIMEOUT
-*/
-AbstractMatcher.DEFAULT_TIMEOUT = 0;
-
-/** How long to wait between each try for a match.
-* Until the match timeout expires, an element that did not match its expected value will be accessed on that interval.
-* Expressed in milliseconds.
-*
-*@type	{Number}
-*@name	matchers.AbstractMatcher.MATCH_TRY_DELAY
-*/
-AbstractMatcher.MATCH_TRY_DELAY = 100;
 
 
 module.exports = AbstractMatcher;	// CommonJS export

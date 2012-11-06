@@ -2,7 +2,9 @@ var promises = require('q'),
 	assert = require('assert');
 
 var logger = require('winston').loggers.get('steps'),
-	matchers = require('./matchers');
+	matchers = require('./matchers'),
+	steps = require('./steps'),
+	config = require('../lib/configManager');
 
 
 var Feature = new Class( /** @lends Feature# */ {
@@ -53,22 +55,20 @@ var Feature = new Class( /** @lends Feature# */ {
 		var result = [];
 
 		for (var stepIndex = 0; stepIndex < scenario.length; stepIndex++) {
-			var step = scenario[stepIndex]; // takes all values listed in a scenario
+			var sourceStep = scenario[stepIndex], // takes all values listed in a scenario
+				step;	// this is going to be an actual AbstractStep-inheriting instance
 
-			/* So, this is going to be a bit hard. Stay with me  ;)
-			 * Scenarios are loaded in a different context, absolutely clean by default (see SuiteLoader).
-			 * Therefore, steps in the scenario are clean of any prototype augmentation.
-			 * MooTools, for example, allows proper type introspection through prototype augmentation. This is not usable here.
-			 * But we still need to do introspection to offer proper heuristics. Tricks to achieve this are below.
-			 */
-			result.push(	typeof step == 'function' ?
-							step	// TODO: use .length instead of popping
-						  : typeof step == 'object' && step.length >= 0 ?	// an Array has a length property, not an Object; as a consequence, `length` is a reserved property for state description hashes
-						    this.buildFunctionalPromise(result.pop(), step)
-						  : typeof step == 'object' ?
-						    this.buildAssertionPromise(step) // if this is a Hash, it is a description value
-						  : this.buildFunctionalPromise(result.pop(), [ step ])	// default: this is a primitive value, we normalize it by wrapping
-						);
+			if (typeof sourceStep == 'object') {	// if this is a Hash, it is a state description
+				step = this.buildAssertionPromise(sourceStep);
+			} else if (typeof sourceStep == 'function') {
+				var paramsCount = sourceStep.length;	// arity of the function
+
+				var params = scenario.splice(stepIndex + 1, paramsCount);
+
+				step = this.buildFunctionalPromise(sourceStep, params);
+			}
+
+			result.push(step);
 		}
 
 		return result;
@@ -82,7 +82,9 @@ var Feature = new Class( /** @lends Feature# */ {
 	*@private
 	*/
 	buildFunctionalPromise: function buildFunctionalPromise(func, params) {
-		return func.apply.bind(func, null, params);
+		var step = new steps.FunctionalStep(func, params);
+
+		return step.test.bind(step);
 	},
 
 	/** Parses a widget state description and creates an assertive closure returning the promise for assertions results upon evaluation.
