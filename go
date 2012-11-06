@@ -119,6 +119,9 @@ case "$1" in
 		git push --tags &&
 		npm publish &&
 		./go dist ;;
-	* ) # simply run the tool
+	debug )	# run the tool in debug mode
+		shift
+		node debug $SRC_DIR "$@" ;;
+	* )	# simply run the tool
 		node $SRC_DIR "$@" ;;
 esac
