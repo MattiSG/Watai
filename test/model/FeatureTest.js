@@ -187,7 +187,8 @@ describe('Feature', function() {
 				done(new Error('Unmatched widget state description should not be resolved.'));
 			}, function(reasons) {
 				var firstReason = reasons.failures[0];
-				if (firstReason.contains(firstKey)
+				if (firstReason
+					&& firstReason.contains(firstKey)
 					&& firstReason.contains(wrongTexts[firstKey])
 					&& firstReason.contains(expectedContents[firstKey])) {
 					done();
