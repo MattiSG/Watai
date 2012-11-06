@@ -8,7 +8,10 @@ var TestRight = require('../helpers/subject'),
 /** Milliseconds the actions take to delay changing the output on the test page.
 * Set in the test page (`test/resources/page.html`).
 */
-var DELAYED_ACTIONS_DELAY = 500;
+var DELAYED_ACTIONS_DELAY	= 500,
+/** Timeout value of the test's config.
+*/
+	GLOBAL_TIMEOUT			= 1000;
 
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
@@ -295,6 +298,47 @@ describe('Feature', function() {
 				}, function() {
 					done();
 				});
+			});
+		});
+	});
+
+
+	describe('unclickable elements', function() {
+		it('should respect the global timeout', function(done) {
+			var start = new Date();
+
+			featureWithScenario([
+				WidgetTest.overlayedAction,
+				{
+					'TestWidget.output': expectedOutputs.overlayedActionLink
+				}
+			]).test().then(function() {
+				done(new Error('Passed while the overlayed element should not have been clickable!'))
+			}, function() {
+				var waitedMs = new Date() - start;
+				if (waitedMs >= GLOBAL_TIMEOUT)
+					done();
+				else
+					done(new Error('Waited only ' + waitedMs + ' ms instead of at least ' + GLOBAL_TIMEOUT + ' ms.'))
+			});
+		});
+
+		it('should be fine if made clickable', function(done) {
+			this.timeout(DELAYED_ACTIONS_DELAY * 2);
+
+			featureWithScenario([
+				WidgetTest.hideOverlay,
+				WidgetTest.overlayedAction,
+				{
+					'TestWidget.output': expectedOutputs.overlayedActionLink
+				}
+			]).test().then(done, function(report) {
+				var message = "No failure report. See code";
+
+				if (report && report.failures && report.failures[0])
+					message = report.failures[0];
+
+				done(new Error(message));
 			});
 		});
 	});
