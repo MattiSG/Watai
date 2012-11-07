@@ -1,5 +1,6 @@
 var TestRight = require('../helpers/subject'),
 	my = require('../helpers/driver').getDriverHolder(),
+	should = require('should'),
 	subject,
 	elements,
 	expectedContents,
@@ -38,7 +39,7 @@ describe('Widget', function() {
 				if (elements.hasOwnProperty(key)
 					&& key != 'missing') {	// Should.js' property checker accesses the property, which would therefore make the missing element throw because it is unreachable
 					subject.should.have.property(key);
-					subject[key].should.be.a('object');
+					should(typeof subject[key] == 'object');	// prototype of WebDriver internal objects is not augmented
 				}
 		});
 
