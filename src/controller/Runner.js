@@ -12,13 +12,13 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	failures: Object.create(null),
-	
+
 	/** The list of all features to evaluate with this configuration.
 	*@type	{Array.<Feature>}
 	*@private
 	*/
 	features: [],
-	
+
 	/** Index of the currently evaluated feature.
 	*@type	{integer}
 	*@private
@@ -60,7 +60,7 @@ var Runner = new Class( /** @lends Runner# */ {
 			throw this.error;	// `this` scoping is here just to avoid leaking, no usage for it
 
 		this.config = config;
-		
+
 		this.initDriver();
 	},
 
@@ -140,7 +140,7 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.ready = true;
 		this.emit('ready');
 	},
-	
+
 	/** Adds the given Feature to the list of those that this Runner will evaluate.
 	*
 	*@param	{Feature}	feature	A Feature for this Runner to evaluate.
@@ -148,10 +148,10 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	addFeature: function addFeature(feature) {
 		this.features.push(feature);
-		
+
 		return this;
 	},
-	
+
 	/** Returns the WebDriver instance this Runner created for the current run.
 	*
 	*@return	WebDriver
@@ -159,7 +159,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	getDriver: function getDriver() {
 		return this.driver;
 	},
-	
+
 	/** Evaluates all features added to this Runner.
 	*
 	*@returns	{Promise}	A promise for results, resolved if all features pass (param: this Runner), rejected otherwise (param: hash mapping failed features to their reasons for rejection, or an Error if an error appeared in the runner itself or the evaluation was cancelled).
@@ -181,7 +181,7 @@ var Runner = new Class( /** @lends Runner# */ {
 					this.initDriver();
 			}
 		}
-		
+
 		return this.deferred.promise;
 	},
 
@@ -204,21 +204,21 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	startNextFeature: function startNextFeature() {
 		this.currentFeature++;
-		
+
 		if (this.ready
 			&& this.currentFeature < this.features.length)
 			this.evaluateFeature(this.features[this.currentFeature]);
 		else
 			this.finish();
 	},
-	
+
 	/** Prepares and triggers the evaluation of the given feature.
 	*
 	*@private
 	*/
 	evaluateFeature: function evaluateFeature(feature) {
 		this.emit('featureStart', feature);
-		
+
 		try {
 			feature.test().then(this.handleFeatureResult.bind(this, feature, true),
 								this.handleFeatureResult.bind(this, feature)); // leave last arg to pass failure description
@@ -226,7 +226,7 @@ var Runner = new Class( /** @lends Runner# */ {
 			this.handleError(error);
 		}
 	},
-	
+
 	/** Callback handler upon feature evaluation. Emits events and calls the `startNextFeature` handler.
 	* Emits "featureSuccess", "featureError", "featureFailure".
 	*
@@ -249,7 +249,7 @@ var Runner = new Class( /** @lends Runner# */ {
 
 		this.startNextFeature();
 	},
-	
+
 	/** Informs of the end result and cleans up everything after tests runs.
 	* Emits "success", "failure".
 	*

@@ -72,12 +72,9 @@ describe('Runner', function() {
 		}
 	], {});
 
-	var errorFeature = new TestRight.Feature('RunnerTest failing feature', [
-		function() { throw "It's a trap!" }
-	], {});
 
 	describe('run', function() {
-		var subjectWithFailure;	// a second subject that will have a failing and an error-emitting feature added
+		var subjectWithFailure;	// a second subject that will have a failing feature added
 
 
 		before(function() {
@@ -96,9 +93,6 @@ describe('Runner', function() {
 			subjectWithFailure.once('featureFailure', function(feature, failures) {
 				emitted.featureFailure = failures;
 			});
-			subjectWithFailure.once('featureError', function(feature, errors) {
-				emitted.featureError = errors;
-			});
 
 			emitted.run = 0;
 
@@ -113,7 +107,7 @@ describe('Runner', function() {
 			});
 
 			emitted.restart = 0;
-			
+
 			subjectWithFailure.on('restart', function() {
 				emitted.restart++;
 			});
@@ -181,20 +175,6 @@ describe('Runner', function() {
 				done();
 			}).end();
 		});
-
-		it('with error-prone features should be rejected', function(done) {
-			subjectWithFailure.addFeature(errorFeature).run().then(function() {
-				done(new Error('Resolved instead of rejected.'))
-			}, function(report) {
-				should.equal(typeof report, 'object');
-				if (! report[errorFeature])
-					done(new Error('Missing feature.'));
-				if (! report[errorFeature].errors)
-					done(new Error('Missing feature errors details.'));
-				passed.errors = report;
-				done();
-			}).end();
-		});
 	});
 
 	describe('events', function() {
@@ -214,16 +194,12 @@ describe('Runner', function() {
 			should.equal(emitted.featureFailure, emitted.failures[failingFeature].failures);
 		});
 
-		it('should have emitted a "featureError" event with the same error as passed on error', function() {
-			should.equal(emitted.featureError, passed.errors[errorFeature].errors);
-		});
-
 		it('should have emitted the correct count of "featureStart" events', function() {
-			should.strictEqual(emitted.featureStart, 6);
+			should.strictEqual(emitted.featureStart, 3);
 		});
 
 		it('should have emitted the correct count of "run" events', function() {
-			should.strictEqual(emitted.run, 3);
+			should.strictEqual(emitted.run, 2);
 		});
 
 		it('should have the same count of "run" and "beforeRun" events', function() {

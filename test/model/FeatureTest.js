@@ -8,7 +8,10 @@ var TestRight = require('../helpers/subject'),
 /** Milliseconds the actions take to delay changing the output on the test page.
 * Set in the test page (`test/resources/page.html`).
 */
-var DELAYED_ACTIONS_DELAY = 500;
+var DELAYED_ACTIONS_DELAY	= 500,
+/** Timeout value of the test's config.
+*/
+	GLOBAL_TIMEOUT			= 500;	//TODO: get from configManager
 
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
@@ -47,7 +50,7 @@ describe('Feature', function() {
 
 		it('an empty feature should be accepted', function(done) {
 			featureWithScenario([]).test().then(done, function() {
-				console.error(arguments);
+				done(new Error(arguments));
 			}).end();
 		});
 
@@ -64,9 +67,9 @@ describe('Feature', function() {
 			failingFeatureTest().then(function() {
 					done(new Error('Resolved instead of rejected!'));
 				}, function(reasons) {
-					reasons.failures.should.have.length(0);
-					reasons.errors.should.have.length(1);
-					reasons.errors[0].should.match(new RegExp(failureReason));
+					reasons.errors.should.have.length(0);
+					reasons.failures.should.have.length(1);
+					reasons.failures[0].should.match(new RegExp(failureReason));
 					done();
 				}
 			).end();
@@ -94,12 +97,16 @@ describe('Feature', function() {
 			]).test().then(function() {
 					done(new Error('Resolved instead of rejected!'));
 				}, function(reasons) {
-					reasons.failures.should.have.length(3);
-					reasons.failures[0].should.match(new RegExp(failureReason + '0'));
-					reasons.failures[1].should.match(new RegExp(failureReason + '1'));
-					reasons.failures[2].should.match(new RegExp(failureReason + '2'));
-					reasons.errors.should.have.length(0);
-					done();
+					try {
+						reasons.failures.should.have.length(3);
+						reasons.failures[0].should.match(new RegExp(failureReason + '0'));
+						reasons.failures[1].should.match(new RegExp(failureReason + '1'));
+						reasons.failures[2].should.match(new RegExp(failureReason + '2'));
+						reasons.errors.should.have.length(0);
+						done();
+					} catch (err) {
+						done(err);
+					}
 				}
 			).end();
 		});
@@ -115,26 +122,26 @@ describe('Feature', function() {
 				else
 					done(new Error('Promise resolved without actually calling the scenario function'));
 			}, function() {
-				done(new Error('Feature evaluation failed, with ' + called ? '' : 'out'
+				done(new Error('Feature evaluation failed, with' + (called ? '' : 'out')
 								+ ' actually calling the scenario function (but that’s still an error)'));
 			}).end();
 		});
 
-		it('arrays should be bound as arguments to previous functions', function(done) {
-			var calledMarker = { called: false };	// an object rather than a simple flag, to ensure reference passing
+		it('parameters should be bound to previous functions', function(done) {
+			var called = false;
 
 			featureWithScenario([
-				function(arg) {
-					arg.called = true;
+				function(first, second) {
+					called = first + second;
 				},
-				[ calledMarker ]	// if this test case works, the function above should set the `called` marker
+				'to', 'ti'	// if this test case works, the function above should set the `called` marker to the concatenation of these strings
 			]).test().then(function() {
-				if (calledMarker.called)
+				if (called == 'toti')
 					done();
 				else
 					done(new Error('Promise resolved without actually calling the scenario function'));
-			}, function() {
-				done(new Error('Promise rejected with ' + calledMarker.called ? '' : 'out'
+			}, function(err) {
+				done(new Error('Promise rejected with' + (called ? '' : 'out')
 								+ ' actually calling the scenario function (but that’s still an error)'));
 			}).end();
 		});
@@ -187,7 +194,8 @@ describe('Feature', function() {
 				done(new Error('Unmatched widget state description should not be resolved.'));
 			}, function(reasons) {
 				var firstReason = reasons.failures[0];
-				if (firstReason.contains(firstKey)
+				if (firstReason
+					&& firstReason.contains(firstKey)
 					&& firstReason.contains(wrongTexts[firstKey])
 					&& firstReason.contains(expectedContents[firstKey])) {
 					done();
@@ -295,126 +303,85 @@ describe('Feature', function() {
 					done();
 				});
 			});
-		});
-	});
 
-	describe('matchers', function() {
-		describe('existence matcher', function() {
-			it('should pass on `true` in state descriptors on existing elements', function(done) {
+			it('should fail if expected state comes later than timeout', function(done) {
+				this.timeout(DELAYED_ACTIONS_DELAY * 2);
+
 				featureWithScenario([
-					{ 'TestWidget.output': true }
-				]).test().then(done, function(reasons) {
-					var message = "No failure report. See code";
-
-					if (report && report.failures && report.failures[0])
-						message = report.failures[0];
-
-					done(new Error(message));
-				}).end();
-			});
-
-			it('should fail on `false` in state descriptors on existing elements', function(done) {
-				featureWithScenario([
-					{ 'TestWidget.output': false }
-				]).test().then(function() {
-						done(new Error('Resolved instead of rejected!'));
-					}, function(reasons) {
-						reasons.errors.should.have.length(0);
-						reasons.failures.should.have.length(1);
-						reasons.failures[0].should.match(/was in the DOM/);
-						done();
+					WidgetTest.immediateAction,	// make sure the content of the output is reset
+					WidgetTest.otherDelayedAction,
+					{
+						timeout: DELAYED_ACTIONS_DELAY / 10,
+						'TestWidget.output': expectedOutputs.otherDelayedActionLink
 					}
-				).end();
-			});
-
-			it('should fail on `true` in state descriptors on missing elements', function(done) {
-				featureWithScenario([
-					{ 'TestWidget.missing': true }
 				]).test().then(function() {
-						done(new Error('Resolved instead of rejected!'));
-					}, function(reasons) {
-						reasons.errors.should.have.length(0);
-						reasons.failures.should.have.length(1);
-						reasons.failures[0].should.match(/was not in the DOM/);
-						done();
+					done(new Error('Matched while the expected result should have been set later than evaluation.'))
+				}, function(err) {
+					done();
+				});
+			});
+
+			it('should fail if expected state comes later than timeout and timeout is set to 0', function(done) {
+				this.timeout(DELAYED_ACTIONS_DELAY * 2);
+
+				featureWithScenario([
+					WidgetTest.immediateAction,	// make sure the content of the output is reset
+					WidgetTest.otherDelayedAction,
+					{
+						timeout: 0,
+						'TestWidget.output': expectedOutputs.otherDelayedActionLink
 					}
-				).end();
-			});
-
-			it('should pass on `false` in state descriptors on missing elements', function(done) {
-				featureWithScenario([
-					{ 'TestWidget.missing': false }
-				]).test().then(done, function(reasons) {
-					var message = "No failure report. See code";
-
-					if (report && report.failures && report.failures[0])
-						message = report.failures[0];
-
-					done(new Error(message));
-				}).end();
-			});
-		});
-
-
-		describe('regexp matcher', function() {
-			it('should pass on a regexp', function(done) {
-				featureWithScenario([
-					{ 'TestWidget.id': /This paragraph/ }
-				]).test().then(done, function(report) {
-					var message = "No failure report. See code";
-
-					if (report && report.failures && report.failures[0])
-						message = report.failures[0];
-
-					done(new Error(message));
-				}).end();
-			});
-
-			it('should pass on a regexp in nested nodes', function(done) {
-				featureWithScenario([
-					{ 'TestWidget.id': /(to){2}/ }
-				]).test().then(done, function(report) {
-					var message = "No failure report. See code";
-
-					if (report && report.failures && report.failures[0])
-						message = report.failures[0];
-
-					done(new Error(message));
-				}).end();
-			});
-
-			it('should fail on non-matching regexps', function(done) {
-				featureWithScenario([
-					{ 'TestWidget.id': /(tu){2}/ }
 				]).test().then(function() {
-						done(new Error('Resolved instead of rejected!'));
-					}, function(reasons) {
-						reasons.errors.should.have.length(0);
-						reasons.failures.should.have.length(1);
-						reasons.failures[0].should.match(/did not match/);
-						done();
-					}
-				).end();
-			});
-
-			it('should fail on on missing elements', function(done) {
-				featureWithScenario([
-					{ 'TestWidget.missing': /toto/ }
-				]).test().then(function() {
-						done(new Error('Resolved instead of rejected!'));
-					}, function(reasons) {
-						reasons.errors.should.have.length(0);
-						reasons.failures.should.have.length(1);
-						reasons.failures[0].should.match(/does not exist/);
-						done();
-					}
-				).end();
+					done(new Error('Matched while the expected result should have been set later than evaluation.'))
+				}, function() {
+					done();
+				});
 			});
 		});
 	});
 
-	describe('widget access', function() {
-		it('of missing elements', function(done) {
+
+	describe('unclickable elements', function() {
+		it('should respect the global timeout', function(done) {
+			var start = new Date();
+
+			featureWithScenario([
+				WidgetTest.overlayedAction,
+				{
+					'TestWidget.output': expectedOutputs.overlayedActionLink
+				}
+			]).test().then(function() {
+				done(new Error('Passed while the overlayed element should not have been clickable!'))
+			}, function() {
+				var waitedMs = new Date() - start;
+				if (waitedMs >= GLOBAL_TIMEOUT)
+					done();
+				else
+					done(new Error('Waited only ' + waitedMs + ' ms instead of at least ' + GLOBAL_TIMEOUT + ' ms.'))
+			}).end();
+		});
+
+		it('should be fine if made clickable', function(done) {
+			featureWithScenario([
+				WidgetTest.hideOverlay,
+				WidgetTest.overlayedAction,
+				{
+					'TestWidget.output': expectedOutputs.overlayedActionLink
+				}
+			]).test().then(done, function(report) {
+				var message = "No failure report. See code";
+
+				if (report && report.failures && report.failures[0])
+					message = report.failures[0];
+
+				done(new Error(message));
+			}).end();
+		});
+	});
+
+
+	describe('missing elements', function() {
+		it('should fail', function(done) {
 			featureWithScenario([
 				{ 'TestWidget.missing': 'toto' }
 			]).test().then(function() {

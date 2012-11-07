@@ -1,6 +1,7 @@
 var promises = require('q');
 
-var logger = require('winston').loggers.get('steps');
+var logger = require('winston').loggers.get('steps'),
+	wrap = require('../lib/wrap-function');
 
 var Hook = require('./Hook');
 
@@ -35,14 +36,13 @@ var Widget = new Class( /** @lends Widget# */ {
 		delete values.elements;
 
 		Object.each(values, function(method, key) {
-			widget[key] = function() {
-				logger.info('	- did ' + key + ' ' + Array.prototype.slice.call(arguments).join(', '));
-
-				return method.apply(widget, arguments);	//TODO: handle elements overloading
-			}
+			widget[key] = wrap(
+				"this.logger.info('	- did ' + this.action + ' ' + Array.prototype.slice.call(arguments).join(', '));",
+				{ logger: logger, action: key },
+				method,
+				widget
+			);
 		});
-
-		this.has = this.has.bind(this);
 	},
 
 	/** Add magic methods on specially-formatted elements.
@@ -65,28 +65,6 @@ var Widget = new Class( /** @lends Widget# */ {
 				}
 			}
 		});
-	},
-
-	/** Checks that the given element is found on the page.
-	*
-	*@param	{String}	attribute	The name of the element whose presence is to be checked.
-	*@returns	{Promise}	A promise that passes its `then`handler a `boolean`, whether the element was found or not.
-	*/
-	has: function has(attribute) {
-		var deferred = promises.defer();
-
-		this[attribute].then(function() {
-				logger.info('	-', attribute, 'is present on the page');
-
-				deferred.resolve(true);
-			}, function() {
-				logger.info('	-', attribute, 'is missing on the page');
-
-				deferred.resolve(false);
-			}
-		);
-
-		return deferred.promise;
 	}
 });
 

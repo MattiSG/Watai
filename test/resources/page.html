@@ -3,6 +3,21 @@
 	<head>
 		<title>Watai test support page</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<style type="text/css">
+			#overlays, #over {
+				width: 100px;
+				height: 100px;
+				position: relative;
+			}
+
+			#over {
+				background-color: black;
+				opacity: 0.5;
+				position: absolute;
+				top: 0;
+			}
+		</style>
 	</head>
 	<body>
 		<h1>Watai test support page</h1>
@@ -15,6 +30,11 @@
 			<p><a id="delayLink2" href="#">Clicking this link will change contents beneath after 500ms</a></p>
 			<p><button id="button">Clicking this button will change contents beneath immediately</button></p>
 			<p><input type="checkbox" id="box" name="box" /><label for="box">Toggling this checbox will change contents beneath immediately</button></p>
+		</div>
+
+		<div id="overlays">
+			<p id="under">I am under! Can't be touched!</p>
+			<div id="over"><a href="#" id="removeOver">Remove overlay with delay</a></div>
 		</div>
 
 		<form id="form" action="#">
@@ -52,6 +72,16 @@
 
 			document.getElementById('box').onclick = function() {
 				document.getElementById('output').innerText = '#box has been checked';
+			}
+
+			document.getElementById('under').onclick = function() {
+				document.getElementById('output').innerText = '#under has been clicked';
+			}
+
+			document.getElementById('removeOver').onclick = function() {
+				window.setTimeout(function() {
+					document.getElementById('over').style.cssText = 'display: none';
+				}, 10);	// this has to be very short because "not clickable" failures are extremely slow to come back from WebDriver, so if this delay was long we would probably go beyond the delays in the tests
 			}
 		</script>
 	</body>

@@ -13,6 +13,8 @@ var elements = exports.elements = {
 	otherDelayedActionLink:	{ id: 'delayLink2' },
 	pressButton:			{ id: 'button' },
 	toggleCheckbox:			{ id: 'box' },
+	overlayedActionLink:	{ id: 'under' },
+	hideOverlayLink:		{ id: 'removeOver' },
 	output:					{ id: 'output' },
 	outputField:			{ name: 'outputField' }
 }
@@ -37,7 +39,8 @@ exports.expectedOutputs = {
 	delayedActionLink:		'#delayLink has been clicked',
 	otherDelayedActionLink:	'#delayLink2 has been clicked',
 	pressButton:			'#button has been pressed',
-	toggleCheckbox:			'#box has been checked'
+	toggleCheckbox:			'#box has been checked',
+	overlayedActionLink:	'#under has been clicked'
 }
 
 /** A full widget describing the “main” part of the test support page.
