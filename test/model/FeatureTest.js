@@ -127,16 +127,16 @@ describe('Feature', function() {
 			}).end();
 		});
 
-		it('arrays should be bound as arguments to previous functions', function(done) {
+		it('parameters should be bound to previous functions', function(done) {
 			var called = false;
 
 			featureWithScenario([
 				function(first, second) {
-					called = first && second;
+					called = first + second;
 				},
-				true, true	// if this test case works, the function above should set the `called` marker
+				'to', 'ti'	// if this test case works, the function above should set the `called` marker to the concatenation of these strings
 			]).test().then(function() {
-				if (called)
+				if (called == 'toti')
 					done();
 				else
 					done(new Error('Promise resolved without actually calling the scenario function'));
