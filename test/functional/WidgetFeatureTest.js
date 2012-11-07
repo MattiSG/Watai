@@ -64,5 +64,15 @@ describe('Widget usage within Feature', function() {
 				done(new Error(report));
 			});
 		});
+
+		it('should throw if a bad number of parameters is given', function() {
+			(function() {
+				new TestRight.Feature('Test feature', [
+						widget.concatenateTwo,
+						partOne
+					], { TestWidget: widget }
+				);
+			}).should.throw();
+		});
 	});
 });
