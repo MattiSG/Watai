@@ -38,10 +38,14 @@ describe('Matchers', function() {
 			]).test().then(function() {
 					done(new Error('Resolved instead of rejected!'));
 				}, function(reasons) {
-					reasons.errors.should.have.length(0);
-					reasons.failures.should.have.length(1);
-					reasons.failures[0].should.match(/was in the DOM/);
-					done();
+					try {
+						reasons.errors.should.have.length(0);
+						reasons.failures.should.have.length(1);
+						reasons.failures[0].should.match(/was in the DOM/);
+						done();
+					} catch (err) {
+						done(err);
+					}
 				}
 			).end();
 		});
