@@ -1,6 +1,7 @@
 var promises = require('q');
 
-var logger = require('winston').loggers.get('steps');
+var logger = require('winston').loggers.get('steps'),
+	wrap = require('../lib/wrap-function');
 
 var Hook = require('./Hook');
 
@@ -35,11 +36,12 @@ var Widget = new Class( /** @lends Widget# */ {
 		delete values.elements;
 
 		Object.each(values, function(method, key) {
-			widget[key] = function() {
-				logger.info('	- did ' + key + ' ' + Array.prototype.slice.call(arguments).join(', '));
-
-				return method.apply(widget, arguments);	//TODO: handle elements overloading
-			}
+			widget[key] = wrap(
+				"this.logger.info('	- did ' + this.action + ' ' + Array.prototype.slice.call(arguments).join(', '));",
+				{ logger: logger, action: key },
+				method,
+				widget
+			);
 		});
 
 		this.has = this.has.bind(this);
