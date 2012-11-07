@@ -234,7 +234,7 @@ var Feature = new Class( /** @lends Feature# */ {
 				if (result && typeof result.then == 'function') {
 					result.then(evaluateNext, function(message) {
 						handleFailure(message, stepIndex)
-					});
+					}).end();
 				} else {
 					evaluateNext();
 				}

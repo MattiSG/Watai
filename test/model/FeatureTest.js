@@ -50,7 +50,7 @@ describe('Feature', function() {
 
 		it('an empty feature should be accepted', function(done) {
 			featureWithScenario([]).test().then(done, function() {
-				console.error(arguments);
+				done(new Error(arguments));
 			}).end();
 		});
 
@@ -324,7 +324,7 @@ describe('Feature', function() {
 					done();
 				else
 					done(new Error('Waited only ' + waitedMs + ' ms instead of at least ' + GLOBAL_TIMEOUT + ' ms.'))
-			});
+			}).end();
 		});
 
 		it('should be fine if made clickable', function(done) {
@@ -341,7 +341,7 @@ describe('Feature', function() {
 					message = report.failures[0];
 
 				done(new Error(message));
-			});
+			}).end();
 		});
 	});
 
