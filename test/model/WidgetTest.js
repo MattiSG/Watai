@@ -110,14 +110,6 @@ describe('Widget', function() {
 			});
 		});
 
-		xit('should fail promises if an unreachable element is accessed', function(done) {
-			subject.missing.getText().then(function() {	//TODO
-				done(new Error('Resolved instead of rejected!'));
-			}, function(error) {
-				done();
-			});
-		});
-
 		it('should be immediate (as much as local performance allows)', function(done) {
 			subject.immediateAction();
 			subject.delayedAction();
