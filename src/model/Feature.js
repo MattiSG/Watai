@@ -65,7 +65,7 @@ var Feature = new Class( /** @lends Feature# */ {
 
 				var params = scenario.splice(stepIndex + 1, paramsCount);
 
-				step = this.buildFunctionalPromise(sourceStep, params);
+				step = this.buildFunctionalPromise(sourceStep, params, stepIndex);
 			}
 
 			result.push(step);
@@ -78,10 +78,17 @@ var Feature = new Class( /** @lends Feature# */ {
 	*
 	*@param	{Function}	func	The raw function to execute.
 	*@param	{Array}		params	Parameters to bind to this function.
+	*@param	{Number}	[stepIndex]	The step at which this function is parsed. Used for user-level debugging, in case an error is detected in the function.
 	*@returns	{Function}	A bound function, ready for execution as a step.
 	*@private
 	*/
-	buildFunctionalPromise: function buildFunctionalPromise(func, params) {
+	buildFunctionalPromise: function buildFunctionalPromise(func, params, stepIndex) {
+		if (func.length != params.length) {
+			var msg = 'A bad number of parameters has been given to the function ' + func.name + ' at step ' + stepIndex + ' in a feature scenario.';
+			logger.error(msg);
+			throw new Error(msg, { feature: this.description });
+		}
+
 		var step = new steps.FunctionalStep(func, params);
 
 		return step.test.bind(step);
