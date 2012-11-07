@@ -11,7 +11,7 @@ var TestRight = require('../helpers/subject'),
 var DELAYED_ACTIONS_DELAY	= 500,
 /** Timeout value of the test's config.
 */
-	GLOBAL_TIMEOUT			= 1000;	//TODO: get from configManager
+	GLOBAL_TIMEOUT			= 500;	//TODO: get from configManager
 
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
