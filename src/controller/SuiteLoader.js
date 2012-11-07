@@ -63,14 +63,13 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		});
 
 		var config = loader.load(SuiteLoader.paths.config);
+		configManager.set(config);
 
 		if (! config.baseURL) {
 			var msg = 'No baseURL was found in any "' + SuiteLoader.paths.config + '" file in directories above "' + this.path + '"';
 			logger.error(msg);
 			throw new Error(msg);
 		}
-
-		configManager.set(config);
 
 		this.runner = new Runner(config);
 		this.attachViewsTo(this.runner);
@@ -144,12 +143,10 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	},
 
 	attachViewsTo: function attachViewsTo(runner) {
-		Object.each(require('../view/RunnerCLI'), function(handler, eventType) {
-			runner.on(eventType, handler);
-		});
-
-		Object.each(require('../view/RunnerGrowl'), function(handler, eventType) {
-			runner.on(eventType, handler);
+		configManager.values.views.each(function(view) {
+			Object.each(require('../view/Runner' + view), function(handler, eventType) {
+				runner.on(eventType, handler);
+			});
 		});
 	},
 

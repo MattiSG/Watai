@@ -6,5 +6,6 @@
 	},
 	"timeout": 5000,
 	"matchTriesDelay": 100,
-	"quit": "always"
+	"quit": "always",
+	"views": ["CLI", "Growl"]
 }
