@@ -2,8 +2,8 @@ var promises = require('q'),
 	assert = require('assert');
 
 var logger = require('winston').loggers.get('steps'),
-	matchers = require('./matchers'),
-	steps = require('./steps'),
+	matchers = require('./scenario/state'),
+	steps = require('./scenario'),
 	config = require('../lib/configManager');
 
 

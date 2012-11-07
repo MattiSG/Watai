@@ -12,18 +12,18 @@ var logger = require('winston').loggers.get('steps');
 var Hook = function Hook(hook, driver) {
 	this.type = Object.getOwnPropertyNames(hook)[0];
 	this.selector = hook[this.type];
-	
+
 	this.driver = driver;
-	
+
 	/** Returns the element this hook points to in the given driver, as an object with all WebDriver methods.
 	*
 	*@see	http://seleniumhq.org/docs/03_webdriver.html
 	*@private
 	*/
 	this.toSeleniumElement = function toSeleniumElement() {
-		return this.driver.findElement(webdriver.By[this.type](this.selector)); //TODO: cache?
+		return this.driver.findElement(webdriver.By[this.type](this.selector));
 	}
-	
+
 	/** Sends the given sequence of keystrokes to the element pointed by this hook.
 	*
 	*@param	input	A string that will be sent to this element.
@@ -51,12 +51,12 @@ var Hook = function Hook(hook, driver) {
 */
 Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	var hook = new Hook(typeAndSelector, driver);
-	target.__defineGetter__(key, function() {			
+	target.__defineGetter__(key, function() {
 		return hook.toSeleniumElement(hook);
 	});
 	target.__defineSetter__(key, function(input) {
 		logger.info('	- set ' + target.name + '’s ' + key + ' to “' + input + '”');
-		
+
 		hook.handleInput(input);
 	});
 }

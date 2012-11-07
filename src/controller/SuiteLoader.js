@@ -9,8 +9,7 @@ var logger = require('winston').loggers.get('steps'),
 var Widget = require('../model/Widget'),
 	Feature = require('../model/Feature'),
 	Runner = require('./Runner'),
-	configManager = require('../lib/configManager'),
-	AbstractMatcher = require('../model/matchers/AbstractMatcher');	// required to set the default timeout
+	configManager = require('../lib/configManager');
 
 
 var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
@@ -72,8 +71,6 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		}
 
 		configManager.set(config);
-
-		AbstractMatcher.DEFAULT_TIMEOUT = config.timeout;
 
 		this.runner = new Runner(config);
 		this.attachViewsTo(this.runner);

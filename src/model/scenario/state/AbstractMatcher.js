@@ -1,5 +1,5 @@
 var promises =	require('q'),
-	config =	require('../../lib/configManager');
+	config =	require('../../../lib/configManager');
 
 
 /**@class	Abstract class from which all content matchers inherit.
@@ -10,6 +10,8 @@ var promises =	require('q'),
 *@memberOf	matchers
 */
 var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
+
+	//Extends: require('../AbstractStep'),
 
 	/** The type of content this matcher can match an element on.
 	*/
