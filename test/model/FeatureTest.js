@@ -380,8 +380,8 @@ describe('Feature', function() {
 	});
 
 
-	describe('widget access', function() {
-		it('of missing elements', function(done) {
+	describe('missing elements', function() {
+		it('should fail', function(done) {
 			featureWithScenario([
 				{ 'TestWidget.missing': 'toto' }
 			]).test().then(function() {
