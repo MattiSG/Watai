@@ -62,17 +62,17 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			observer: suitesLogger.silly
 		});
 
-		var config = loader.load(SuiteLoader.paths.config);
+		this.config = loader.load(SuiteLoader.paths.config);
 
-		if (! config.baseURL) {
+		if (! this.config.baseURL) {
 			var msg = 'No baseURL was found in any "' + SuiteLoader.paths.config + '" file in directories above "' + this.path + '"';
 			logger.error(msg);
 			throw new Error(msg);
 		}
 
-		AbstractMatcher.DEFAULT_TIMEOUT = config.timeout;
+		AbstractMatcher.DEFAULT_TIMEOUT = this.config.timeout;
 
-		this.runner = new Runner(config);
+		this.runner = new Runner(this.config);
 		this.attachViewsTo(this.runner);
 		this.context = vm.createContext(this.buildContext());
 
@@ -144,12 +144,10 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	},
 
 	attachViewsTo: function attachViewsTo(runner) {
-		Object.each(require('../view/RunnerCLI'), function(handler, eventType) {
-			runner.on(eventType, handler);
-		});
-
-		Object.each(require('../view/RunnerGrowl'), function(handler, eventType) {
-			runner.on(eventType, handler);
+		this.config.views.each(function(view) {
+			Object.each(require('../view/Runner' + view), function(handler, eventType) {
+				runner.on(eventType, handler);
+			});
 		});
 	},
 
