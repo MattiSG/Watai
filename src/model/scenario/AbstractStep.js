@@ -53,9 +53,31 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 		this.cancelled = false;
 		this.retryTimeoutId = -1;	// -1 is no magic value, it just helps with debugging
 
+		this.onBeforeStart();
+
 		this.start();
 
 		return this.promise.promise;
+	},
+
+	/** Called before a series of calls to `start`, right after a caller has asked this step to be `test`ed.
+	* Useful for inheriting classes, if some cleanup or preparation has to be done once before starting an evaluation, taking into account that no guarantee is ever made on the number of times `start` will be called due to timeouts.
+	* To be overridden by inheriting classes.
+	*
+	*@abstract
+	*/
+	onBeforeStart: function onBeforeStart() {
+		// to be defined by inheriting classes
+	},
+
+	/** Called by `fail()`, before either a final fail or a retry.
+	* Useful for inheriting classes, if some cleanup or preparation has to be done before restarting an evaluation, taking into account that no guarantee is ever made on the number of times `start` will be called due to timeouts.
+	* To be overridden by inheriting classes.
+	*
+	*@abstract
+	*/
+	onFailure: function onFailure(report) {
+		// to be defined by inheriting classes
 	},
 
 	/** Concrete work this step has to do.
@@ -94,6 +116,8 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	fail: function fail(report) {
 		if (this.cancelled)
 			return;
+
+		this.onFailure(report);
 
 		if (new Date() - this.startTime >= this.timeout)	// the timeout has expired
 			this.failImmediately(report);
