@@ -81,7 +81,7 @@
 			document.getElementById('removeOver').onclick = function() {
 				window.setTimeout(function() {
 					document.getElementById('over').style.cssText = 'display: none';
-				}, DELAYED_ACTIONS_DELAY);
+				}, 10);	// this has to be very short because "not clickable" failures are extremely slow to come back from WebDriver, so if this delay was long we would probably go beyond the delays in the tests
 			}
 		</script>
 	</body>
