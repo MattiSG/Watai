@@ -94,22 +94,6 @@ describe('Widget', function() {
 			});
 		});
 
-		it('should say that an existing element is present', function(done) {
-			subject.has('id').then(function(presence) {
-				presence.should.be.ok;
-				done();
-			});
-		});
-
-		it('should say that a missing element is not present', function(done) {
-			this.timeout(6 * 1000);	// since this raises an error, the Selenium server lags the first time
-
-			subject.has('missing').then(function(presence) {
-				presence.should.not.be.ok;
-				done();
-			});
-		});
-
 		it('should be immediate (as much as local performance allows)', function(done) {
 			subject.immediateAction();
 			subject.delayedAction();
