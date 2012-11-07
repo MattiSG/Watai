@@ -326,10 +326,10 @@ describe('Feature', function() {
 
 				featureWithScenario([
 					WidgetTest.immediateAction,	// make sure the content of the output is reset
-					WidgetTest.otherDelayedAction,
+					WidgetTest.delayedAction,
 					{
 						timeout: 0,
-						'TestWidget.output': expectedOutputs.otherDelayedActionLink
+						'TestWidget.output': expectedOutputs.delayedActionLink
 					}
 				]).test().then(function() {
 					done(new Error('Matched while the expected result should have been set later than evaluation.'))
