@@ -303,6 +303,40 @@ describe('Feature', function() {
 					done();
 				});
 			});
+
+			it('should fail if expected state comes later than timeout', function(done) {
+				this.timeout(DELAYED_ACTIONS_DELAY * 2);
+
+				featureWithScenario([
+					WidgetTest.immediateAction,	// make sure the content of the output is reset
+					WidgetTest.otherDelayedAction,
+					{
+						timeout: DELAYED_ACTIONS_DELAY / 10,
+						'TestWidget.output': expectedOutputs.otherDelayedActionLink
+					}
+				]).test().then(function() {
+					done(new Error('Matched while the expected result should have been set later than evaluation.'))
+				}, function(err) {
+					done();
+				});
+			});
+
+			it('should fail if expected state comes later than timeout and timeout is set to 0', function(done) {
+				this.timeout(DELAYED_ACTIONS_DELAY * 2);
+
+				featureWithScenario([
+					WidgetTest.immediateAction,	// make sure the content of the output is reset
+					WidgetTest.otherDelayedAction,
+					{
+						timeout: 0,
+						'TestWidget.output': expectedOutputs.otherDelayedActionLink
+					}
+				]).test().then(function() {
+					done(new Error('Matched while the expected result should have been set later than evaluation.'))
+				}, function() {
+					done();
+				});
+			});
 		});
 	});
 
