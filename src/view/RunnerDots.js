@@ -1,5 +1,3 @@
-var XDate = require('xdate');
-
 /**@namespace An outputs in dots formats for Runner’s events.
 */
 var RunnerDots = {};
@@ -16,13 +14,13 @@ var failureCounter = 0,
 /** Informs user that the emitting Runner is waiting for the browser.
 */
 RunnerDots.beforeRun = function onBeforeRun() {
-	startTime = new XDate();
+	startTime = new Date();
 }
 
 /** Informs user that the emitting Runner is ready to start.
 */
 RunnerDots.ready = function onReady() {
-	browserReadyTime = new XDate();
+	browserReadyTime = new Date();
 }
 
 /** Presents details of a test start to the user.
@@ -81,7 +79,7 @@ RunnerDots.featureError = function onFeatureError(feature, errors) {
 /** Presents a summary of the test procedure to the user when some tests failed or have errors.
 */
 RunnerDots.failure = function failure(failures) {
-	endTime = new XDate();
+	endTime = new Date();
 
 	failuresAndErrorsBuffer.forEach(function(failure) {
 		process.stdout.write('\n\n✘ ' + failure);
@@ -93,7 +91,7 @@ RunnerDots.failure = function failure(failures) {
 /** Presents a summary of the test procedure to the user when all tests passed.
 */
 RunnerDots.success = function success() {
-	endTime = new XDate();
+	endTime = new Date();
 
 	process.stdout.write('\n\nFinished in ' + getDurationString(startTime, endTime) + ': ' + getTotalNumberOfTest() + ' examples, 0 failures\n\n');
 }
@@ -122,9 +120,9 @@ var pluralize = function pluralize(count, string) {
 */
 var getDurationString = function getDurationString(start, end) {
 	var results = "",
-			diffHours = Math.floor(start.diffHours(end)),
-			diffMinutes = Math.floor(start.diffMinutes(end)),
-			diffSeconds = Math.floor(start.diffSeconds(end));
+			diffHours = Math.floor((end - start) / 3600 / 1000),
+			diffMinutes = Math.floor((end - start) / 60 / 1000),
+			diffSeconds = Math.floor((end - start) / 1000);
 
 	results += diffHours > 0 ? pluralize(diffHours, 'hour') + ' ' : '';
 	results += diffMinutes > 0 ? pluralize(diffMinutes, 'minute') + ' ' : '';

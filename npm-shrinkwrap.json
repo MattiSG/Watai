@@ -40,9 +40,6 @@
     "mattisg.configloader": {
       "version": "0.1.2-beta"
     },
-    "xdate": {
-      "version": "0.7.0"
-    },
     "growl": {
       "version": "1.6.0"
     }
