@@ -85,7 +85,17 @@ RunnerDots.failure = function failure(failures) {
 		process.stdout.write('\n\n✘ ' + failure);
 	});
 
-	process.stdout.write('\n\nFinished in ' + getDurationString(startTime, endTime) + ': ' + getTotalNumberOfTest() + ' examples, ' + successCounter + ' success, ' + pluralize(failureCounter, 'failure')  + ', ' + pluralize(errorCounter, 'error') + '\n\n');
+	process.stdout.write('\n\nFinished in '
+						 + getDurationString(startTime, endTime)
+						 + ': '
+						 + getTotalNumberOfTest()
+						 + ' features, '
+						 + successCounter
+						 + ' success, '
+						 + pluralize(failureCounter, 'failure')
+						 + ', '
+						 + pluralize(errorCounter, 'error')
+						 + '\n\n');
 }
 
 /** Presents a summary of the test procedure to the user when all tests passed.
