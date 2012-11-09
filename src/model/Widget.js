@@ -1,7 +1,7 @@
 var promises = require('q');
 
 var logger = require('winston').loggers.get('steps'),
-	wrap = require('../lib/wrap-function');
+	setArity = require('../lib/set-arity');
 
 var Hook = require('./Hook');
 
@@ -36,11 +36,12 @@ var Widget = new Class( /** @lends Widget# */ {
 		delete values.elements;
 
 		Object.each(values, function(method, key) {
-			widget[key] = wrap(
-				"this.logger.info('	- did ' + this.action + ' ' + Array.prototype.slice.call(arguments).join(', '));",
-				{ logger: logger, action: key },
-				method,
-				widget
+			widget[key] = setArity(
+				function() {
+					logger.info('	- did ' + this.action + ' ' + Array.prototype.slice.call(arguments).join(', '));
+					method.apply(widget, arguments);
+				},
+				method.length	// ensure arity is properly transmitted, for later arguments parsing. See <http://stackoverflow.com/questions/13271474/override-the-arity-of-a-function#comment-18089771>
 			);
 		});
 	},
