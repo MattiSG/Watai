@@ -21,6 +21,7 @@ RunnerDots.beforeRun = function onBeforeRun() {
 */
 RunnerDots.ready = function onReady() {
 	browserReadyTime = new Date();
+	process.stdout.write('Browser ready!\n');
 }
 
 /** Presents details of a test start to the user.
