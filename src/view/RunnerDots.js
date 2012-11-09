@@ -124,15 +124,17 @@ var pluralize = function pluralize(count, string) {
 }
 
 /** Returns the string duration between two dates
-*@param {Number} start	The start date
-*@returns {String} end	The end date
+* The order of the two dates does not matter, a duration is always positive
+*@param {Number} dateOne	The first date
+*@returns {String} dateTwo	The second date
 *@private
 */
-var getDurationString = function getDurationString(start, end) {
+var getDurationString = function getDurationString(dateOne, dateTwo) {
 	var results = "",
-			diffHours = Math.floor((end - start) / 3600 / 1000),
-			diffMinutes = Math.floor((end - start) / 60 / 1000),
-			diffSeconds = Math.floor((end - start) / 1000);
+			diffTime = Math.abs((dateTwo - dateOne)),
+			diffHours = Math.floor(diffTime / 3600 / 1000),
+			diffMinutes = Math.floor(diffTime / 60 / 1000 % 60),
+			diffSeconds = Math.floor(diffTime / 1000 % 60);
 
 	results += diffHours > 0 ? pluralize(diffHours, 'hour') + ' ' : '';
 	results += diffMinutes > 0 ? pluralize(diffMinutes, 'minute') + ' ' : '';
