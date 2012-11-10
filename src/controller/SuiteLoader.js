@@ -145,7 +145,13 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	attachViewsTo: function attachViewsTo(runner) {
 		configManager.values.views.each(function(view) {
 			Object.each(require('../view/Runner' + view), function(handler, eventType) {
-				runner.on(eventType, handler);
+				runner.on(eventType, function() {
+					try {
+						handler();
+					} catch (err) {	// TODO: investigate why such exceptions are not thrown in the main loop
+						logger.error(err + ' (in view "' + view + '")', { error: err });
+					}
+				});
 			});
 		});
 	},
