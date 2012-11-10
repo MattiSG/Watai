@@ -128,7 +128,7 @@ var getDurationString = function getDurationString(first, second) {
 		hour:	Math.floor(durationSeconds / 3600),
 		minute:	Math.floor(durationSeconds / 60) % 60,
 		second:	Math.floor(durationSeconds) % 60
-	}
+	};	// don't you remove this semicolon
 
 	['hour', 'minute', 'second'].forEach(function(unit) {
 		var value = durations[unit];
