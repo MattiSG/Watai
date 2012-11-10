@@ -1,4 +1,4 @@
-/**@namespace An outputs in dots formats for Runner’s events.
+/**@namespace An output in dots format for Runner events.
 */
 var RunnerDots = {};
 
@@ -57,9 +57,10 @@ RunnerDots.featureError = function onFeatureError(feature, errors) {
 
 	errors.forEach(function(error) {
 		errorsDescription += error + '\n';
-		if (error.stack) {
+
+		if (error.stack)
 			errorsDescription += error.stack + '\n';
-		}
+
 		errorsDescription += '\n\n';
 	});
 
