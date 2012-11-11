@@ -37,11 +37,10 @@ RunnerDots.featureFailure = function onFeatureFailure(feature, failures) {
 	process.stdout.write('F');
 	failureCounter++;
 
-	var failuresDescription = '';
-
-	failures.forEach(function(failure) {
-		failuresDescription += failure + '\n\n\n';
-	});
+	var failuresDescription = '[FAILED] '
+							  + feature.description
+							  + ':\n'
+							  + '\t- ' + failures.join('\n\t- ');
 
 	failuresAndErrorsBuffer.push(failuresDescription);
 }
@@ -53,15 +52,13 @@ RunnerDots.featureError = function onFeatureError(feature, errors) {
 	process.stdout.write('!');
 	errorCounter++;
 
-	var errorsDescription = '';
+	var errorsDescription = '[ERROR] ' + feature.description + ':\n';
 
 	errors.forEach(function(error) {
-		errorsDescription += error + '\n';
+		errorsDescription += '\t- ' + error + '\n';
 
 		if (error.stack)
 			errorsDescription += error.stack + '\n';
-
-		errorsDescription += '\n\n';
 	});
 
 	failuresAndErrorsBuffer.push(errorsDescription);
@@ -71,11 +68,13 @@ RunnerDots.featureError = function onFeatureError(feature, errors) {
 *@private
 */
 var showEndReport = function showEndReport() {
+	process.stdout.write('\n');
+
 	failuresAndErrorsBuffer.forEach(function(failure) {
-		process.stdout.write(failure);
+		process.stdout.write('\n' + failure);
 	});
 
-	process.stdout.write('\n\nFinished in '
+	process.stdout.write('\nFinished in '
 						 + getDurationString(startTime, new Date())
 						 + ': '
 						 + getTotalNumberOfTest()
@@ -85,7 +84,7 @@ var showEndReport = function showEndReport() {
 						 + pluralize(failureCounter, 'failure')
 						 + ', '
 						 + pluralize(errorCounter, 'error')
-						 + '\n\n');
+						 + '\n');
 }
 
 /** Presents a summary of the test procedure to the user.
