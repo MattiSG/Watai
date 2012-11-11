@@ -1,37 +1,28 @@
-/**@namespace An outputs in dots formats for Runner’s events.
+/**@namespace An output in dots format for Runner events.
 */
 var RunnerDots = {};
 
-var failuresAndErrorsBuffer = [];
+var failuresAndErrorsBuffer = [],
+	failureCounter	= 0,
+	successCounter	= 0,
+	errorCounter	= 0,
+	startTime,
+	browserReadyTime;
 
-var failureCounter = 0,
-	 	successCounter = 0,
-		errorCounter 	 = 0,
-		startTime,
-		browserReadyTime,
-		endTime;
-
-/** Informs user that the emitting Runner is waiting for the browser.
+/** Informs the user that the emitting Runner is waiting for the browser.
 */
 RunnerDots.beforeRun = function onBeforeRun() {
 	startTime = new Date();
 }
 
-/** Informs user that the emitting Runner is ready to start.
+/** Informs the user that the emitting Runner is ready to start.
 */
 RunnerDots.ready = function onReady() {
 	browserReadyTime = new Date();
-}
-
-/** Presents details of a test start to the user.
-*@param	{Feature}	feature	The feature that is about to start.
-*/
-RunnerDots.featureStart = function onFeatureStart(feature) {
-
+	process.stdout.write('Browser ready!\n');
 }
 
 /** Presents a brief summary of a test success to the user.
-* Increment the success counter.
 *@param	{Feature}	feature	The feature whose results are given.
 */
 RunnerDots.featureSuccess = function onFeatureSuccess(feature) {
@@ -39,54 +30,53 @@ RunnerDots.featureSuccess = function onFeatureSuccess(feature) {
 	successCounter++;
 }
 
-/** Presents a brief summary of a test failure to the user
-* Increment the failure counter.
+/** Presents a brief summary of a test failure to the user.
+* Stores the detailed failure description in the main buffer.
 */
 RunnerDots.featureFailure = function onFeatureFailure(feature, failures) {
 	process.stdout.write('F');
 	failureCounter++;
 
-	var results = '';
+	var failuresDescription = '';
 
 	failures.forEach(function(failure) {
-		results += failure + '\n';
-		results += '\n\n';
+		failuresDescription += failure + '\n\n\n';
 	});
 
-	failuresAndErrorsBuffer.push(results);
+	failuresAndErrorsBuffer.push(failuresDescription);
 }
 
 /** Presents details of a test error to the user.
-* Increment the error counter.
+* Stores the detailed error description in the main buffer.
 */
 RunnerDots.featureError = function onFeatureError(feature, errors) {
-	process.stdout.write('E');
+	process.stdout.write('!');
 	errorCounter++;
 
-	var results = '';
+	var errorsDescription = '';
 
 	errors.forEach(function(error) {
-		results += failure + '\n';
-		if (error.stack) {
-			results += error.stack + '\n';
-		}
-		results += '\n\n';
+		errorsDescription += error + '\n';
+
+		if (error.stack)
+			errorsDescription += error.stack + '\n';
+
+		errorsDescription += '\n\n';
 	});
 
-	failuresAndErrorsBuffer.push(results);
+	failuresAndErrorsBuffer.push(errorsDescription);
 }
 
-/** Presents a summary of the test procedure to the user when some tests failed or have errors.
+/** Presents a summary of the test procedure to the user.
+*@private
 */
-RunnerDots.failure = function failure(failures) {
-	endTime = new Date();
-
+var showEndReport = function showEndReport() {
 	failuresAndErrorsBuffer.forEach(function(failure) {
-		process.stdout.write('\n\n✘ ' + failure);
+		process.stdout.write(failure);
 	});
 
 	process.stdout.write('\n\nFinished in '
-						 + getDurationString(startTime, endTime)
+						 + getDurationString(startTime, new Date())
 						 + ': '
 						 + getTotalNumberOfTest()
 						 + ' features, '
@@ -98,23 +88,23 @@ RunnerDots.failure = function failure(failures) {
 						 + '\n\n');
 }
 
-/** Presents a summary of the test procedure to the user when all tests passed.
+/** Presents a summary of the test procedure to the user.
 */
-RunnerDots.success = function success() {
-	endTime = new Date();
+RunnerDots.failure = showEndReport;
 
-	process.stdout.write('\n\nFinished in ' + getDurationString(startTime, endTime) + ': ' + getTotalNumberOfTest() + ' examples, 0 failures\n\n');
-}
+/** Presents a summary of the test procedure to the user.
+*/
+RunnerDots.success = showEndReport;
 
-/** Returns the total number of test.
-*@returns {Number} total number of test.
+/**
+*@returns {Number} total number of tests.
 *@private
 */
 var getTotalNumberOfTest = function getTotalNumberOfTest() {
 	return successCounter + errorCounter + failureCounter;
 }
 
-/** Returns the string pluralized according to the count.
+/** Displays an amount, postfixed with an 's' if needed.
 *@param {Number} count	The number used to pluralize the string.
 *@returns {String} string	The string to pluralize based on the count.
 *@private
@@ -123,21 +113,31 @@ var pluralize = function pluralize(count, string) {
 	return count + ' ' + string + (count == 1 ? '' : 's');
 }
 
-/** Returns the string duration between two dates
-*@param {Number} start	The start date
-*@returns {String} end	The end date
+
+/** Computes the duration between two dates.
+* The order of the two dates does not matter, a duration is always positive
+*@param {Date} first	The first date.
+*@param {Date} second	The other date.
+*@returns {String} A human-readable duration string, of the form "h hours m minutes s seconds".
 *@private
 */
-var getDurationString = function getDurationString(start, end) {
-	var results = "",
-			diffHours = Math.floor((end - start) / 3600 / 1000),
-			diffMinutes = Math.floor((end - start) / 60 / 1000),
-			diffSeconds = Math.floor((end - start) / 1000);
+var getDurationString = function getDurationString(first, second) {
+	var result = '',
+		durationSeconds = Math.abs(second - first) / 1000;
 
-	results += diffHours > 0 ? pluralize(diffHours, 'hour') + ' ' : '';
-	results += diffMinutes > 0 ? pluralize(diffMinutes, 'minute') + ' ' : '';
-	results += diffSeconds > 0 ? pluralize(diffSeconds, 'second') + ' ' : '';
-	return results.substring(0, results.length - 1); // Remove the last space
+	var durations = {
+		hour:	Math.floor(durationSeconds / 3600),
+		minute:	Math.floor(durationSeconds / 60) % 60,
+		second:	Math.floor(durationSeconds) % 60
+	};	// don't you remove this semicolon
+
+	['hour', 'minute', 'second'].forEach(function(unit) {
+		var value = durations[unit];
+		if (value > 0)
+			result += pluralize(value, unit) + ' ';
+	});
+
+	return result.trim();
 }
 
 module.exports = RunnerDots;	// CommonJS export
