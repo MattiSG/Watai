@@ -1,19 +1,43 @@
 Watai
 =====
 
-Watai (_Web Application Testing Automation Infrastructure_) is a **declarative, bottom-up BDD, full-stack web testing** framework.
+Watai _(Web Application Testing Automation Infrastructure)_ is a **declarative, bottom-up BDD, full-stack web testing** framework.
 
-It is both a test runner engine (i.e. it executes tests) and a set of architectural patterns to make you write **maintainable**, **solid** end-to-end (GUI) tests for browsers. It automatically handles asynchronous operations without any work on your side.
+It is both a test runner engine (i.e. it executes tests) and a set of architectural patterns to make you write **maintainable**, **solid** end-to-end (GUI) tests. It automatically handles asynchronous operations without any work on your side.
+
+The tests you write will automate navigation on your webapp through actual browsers, just like an actual user would.
 
 ➥ Read more about [what is Watai](https://github.com/MattiSG/Watai/wiki/Definition).
 
 Benefits
 --------
 
-1. Creating a safety net to catch regressions.
-2. Defining expected behavior and automatically checking its cross-browser consistency.
+1. Creating a safety net to catch regressions in your webapp.
+2. Checking cross-browser consistency automatically.
+3. Defining expected behavior and testing it at user level, not in isolation as in unit tests.
 
 ➥ Read more about [when and how you should use Watai](https://github.com/MattiSG/Watai/wiki/Rationale).
+
+Status
+------
+
+### Watai is currently alpha-level software ###
+
+This means that its stability and feature set can not be guaranteed. It is constantly improving, and a high level of quality control is applied to its development. But mistakes can always happen.
+
+We are currently using Watai in a live project, and at least two other teams do so. It works well on its core feature set, but errors are not really developer-friendly at the moment, so you could get blocked on some specificities of your app.
+
+You are highly encouraged to try out Watai and see if it fits your needs. Getting started and writing your first test should take you around 15 minutes, and the results should get you quite excited  :)
+
+If anything goes wrong, please open an issue, and I'll do my best to get you out of trouble!
+
+### Versioning ###
+
+[SemVer](http://semver.org/) is followed to convey the state of the software through version numbers.
+
+You can rely on the fact that the syntax you write your tests in won't change until a minor version number (the `y` in `x.y.z`) is updated.
+
+Versions considered stable are tagged with a version number and **not** suffixed with `-alpha`. They are good fallbacks if anything goes wrong after an update.
 
 Installing
 ----------
@@ -88,7 +112,10 @@ Let’s make sure you’re fully ready to use Watai by typing:
 
 ### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki/Introduction)! ###
 
-### License ###
+- - - - - - -
+
+License
+-------
 
 The code for this software is distributed under an LGPL license. That means you may use it to test any type of software, be it free or proprietary. But if you make any changes to the test engine itself (i.e. this library), you have to share them back with the community. Sounds fair?  :)
 
