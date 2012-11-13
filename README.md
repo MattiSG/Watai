@@ -18,15 +18,15 @@ Benefits
 Installing
 ----------
 
+This installation guide assumes a POSIX-compliant OS, such as Mac OS X or Linux. If you're under Windows, see the [Windows installation guide](https://github.com/MattiSG/Watai/wiki/Windows-installation).
+
 ### Dependencies ###
 
 #### Node & NPM ####
 
-Watai runs as a [Node.js](http://nodejs.org) module with dependencies on external modules. You will therefore need the Node runtime (v0.6+, v0.8+) and package manager (NPM).
+Watai runs as a [Node.js](http://nodejs.org) module. You will therefore need the Node runtime (v0.6+, v0.8+) and package manager (NPM).
 
-[Download](http://nodejs.org/download) the Node+NPM package for your environment.
-
-If you’re under Windows and don’t have admin privileges, you might have to define `PATH` as a user environment variable and set it to `<install_drive>:\Program Files\nodejs`.
+[Download](http://nodejs.org/download) the Node+NPM package for your environment if you don't already have it.
 
 #### Selenium Server ####
 
@@ -38,7 +38,7 @@ If you’re under OSX and have [Homebrew](http://mxcl.github.com/homebrew/):
 
 …and start it with the command given at the end of the “Caveats” section.
 
-Otherwise, [download the JAR](https://code.google.com/p/selenium/downloads/detail?name=selenium-server-standalone-2.24.1.jar) and start it (preferably in the background):
+Otherwise, [download the latest JAR](https://code.google.com/p/selenium/downloads/list?can=3&q=selenium-server-standalone) and start it (preferably in the background):
 
 	java -jar path/to/downloaded/selenium-server-standalone.jar
 
@@ -58,13 +58,13 @@ This is completely optional, and you will be operational faster if you do the tu
 
 Once you have both Node and a Selenium server, you can consider installing Watai itself.
 
-#### POSIX-compliant OS: global install (easiest) ####
+#### Global install (easiest) ####
 
 	sudo npm install -g watai
 
 NPM will automatically create the `watai` alias for you. If you decide you don’t want to use Watai later on, simply `npm uninstall -g` it.
 
-#### POSIX-compliant OS: local install ####
+#### Local install ####
 
 	cd choose/your/install/folder
 	npm install watai
@@ -72,17 +72,11 @@ NPM will automatically create the `watai` alias for you. If you decide you don�
 
 This will create a `node_modules` folder with all dependencies in the current directory. A good way to give Watai a quick look if you’re afraid of `sudo`ing.
 
-#### Under Windows ####
-
-	npm install -g https://github.com/MattiSG/Watai/tarball/master
-	doskey watai=node "%APPDATA%\npm\node_modules\watai\src" $*
-
 #### From behind a proxy ####
 
 If your proxy configuration prevents you from using `npm install` properly (i.e. you get `ERRTIMEOUT` errors), download the latest Watai **with NPM dependencies** package from the [Downloads](https://github.com/MattiSG/Watai/downloads) tab, unzip it and:
 
-	alias watai='node path/to/unzipped/folder/src'	# Unices
-	doskey watai=node path\to\unzipped\folder\src $*	# Windows
+	alias watai='node path/to/unzipped/folder/src'
 
 Mark the `/src` at the end!
 
