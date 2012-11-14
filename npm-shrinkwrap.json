@@ -34,7 +34,7 @@
         }
       }
     },
-    "selenium-webdriverjs": {
+    "nicolasdupont.selenium-webdriverjs": {
       "version": "0.1.0-r17990"
     },
     "mattisg.configloader": {

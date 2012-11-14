@@ -1,7 +1,7 @@
 require('mocha');
 require('should');
 var pathsUtils = require('path'),
-	webdriver = require('selenium-webdriverjs'),
+	webdriver = require('nicolasdupont.selenium-webdriverjs'),
 	ConfigLoader = require('mattisg.configloader');
 
 /** Loaded configuration for the test runs.

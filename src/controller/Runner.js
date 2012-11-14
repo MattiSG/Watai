@@ -1,4 +1,4 @@
-var webdriver = require('selenium-webdriverjs'),
+var webdriver = require('nicolasdupont.selenium-webdriverjs'),
 	promises = require('q');
 
 
