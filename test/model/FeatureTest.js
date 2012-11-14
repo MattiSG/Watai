@@ -231,7 +231,7 @@ describe('Feature', function() {
 				featureWithScenario([
 					null
 				]);
-			}).should.throw(/Step 1/);
+			}).should.throw(/at step 1/);
 		});
 
 		it('with explicit undefined should throw', function() {
@@ -239,7 +239,7 @@ describe('Feature', function() {
 				featureWithScenario([
 					undefined
 				]);
-			}).should.throw(/Step 1/);
+			}).should.throw(/at step 1/);
 		});
 
 		it('with undefined reference should throw', function() {
@@ -249,7 +249,23 @@ describe('Feature', function() {
 				featureWithScenario([
 					a
 				]);
-			}).should.throw(/Step 1/);
+			}).should.throw(/at step 1/);
+		});
+
+		it('with a bad number of parameters given to a function should throw', function() {
+			(function() {
+				featureWithScenario([
+					function(a) {}	// this function expects a parameter
+				]);
+			}).should.throw(/at step 1/);
+		});
+
+		it('with a bad number of parameters given to a named function should throw and name the offender', function() {
+			(function() {
+				featureWithScenario([
+					function thatFails(a) {}	// this function expects a parameter
+				]);
+			}).should.throw(/thatFails/);
 		});
 	});
 

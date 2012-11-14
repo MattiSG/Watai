@@ -72,7 +72,7 @@ var Feature = new Class( /** @lends Feature# */ {
 			}
 
 			if (! step)
-				throw new ReferenceError('Step ' + (stepIndex + 1) + ' of feature "' + this.description + '" is illegal!')	// protect from null / undefined elements. TODO: should it warn the user?
+				this.notifySyntaxError('step value ("' + sourceStep + '") is illegal!', stepIndex);
 			
 			result.push(step);
 		}
@@ -90,14 +90,30 @@ var Feature = new Class( /** @lends Feature# */ {
 	*/
 	buildFunctionalPromise: function buildFunctionalPromise(func, params, stepIndex) {
 		if (func.length != params.length) {
-			var msg = 'A bad number of parameters has been given to the function ' + func.name + ' at step ' + stepIndex + ' in a feature scenario.';
-			logger.error(msg);
-			throw new Error(msg, { feature: this.description });
+			var msg = 'A bad number of parameters has been given to the function';
+			if (func.name)
+				msg += ' "' + func.name + '"';
+
+			this.notifySyntaxError(msg, stepIndex)
 		}
 
 		var step = new steps.FunctionalStep(func, params);
 
 		return step.test.bind(step);
+	},
+
+	/** Notifies the user that there was a syntax error in the feature description file.
+	*
+	*@param	{String}	message	A description of the syntax error that was detected
+	*@param	{Number}	[stepIndex]	The scenario step (0-based) at which the syntax error was detected. If not defined, the syntax error will be described as global to the feature file.
+	*/
+	notifySyntaxError: function notifySyntaxError(message, stepIndex) {
+		throw new SyntaxError('Feature "' + this.description + '"'
+							  + (typeof stepIndex != 'undefined'	// we can't simply test for falsiness, since the stepIndex could be 0
+							  	? ', at step ' + (stepIndex + 1)
+							  	: '')
+							  + (message ?	': ' : '')
+							  +  message);
 	},
 
 	/** Parses a widget state description and creates an assertive closure returning the promise for assertions results upon evaluation.
