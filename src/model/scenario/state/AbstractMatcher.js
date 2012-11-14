@@ -22,10 +22,10 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	expected: undefined,
 
 	/** The widgets in which elements should be looked for.
-	*@type	{Array.<Widget>}
+	*@type	{Object.<String,Widget>}
 	*@private
 	*/
-	widgets: null,
+	widgets: [],
 
 	/** The first value that was retrieved from the element to match content on.
 	* This allows us to detect changes and fail earlier if there was a change different from the content we're expecting.
@@ -42,20 +42,31 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 
 	/** Creates a matcher, ready to be evaluated.
 	*
-	*@param	{Array.<Widget>}	The widgets in which elements should be looked for.
-	*@param	{String}	selector	The element selector to look for in this instance's referenced widgets.
 	*@param	expected	Any kind of content this matcher should look for.
+	*@param	{String}	selector	The element selector to look for in this instance's referenced widgets.
+	*@param	{Array.<Widget>}	[widgets]	The widgets in which elements should be looked for.
 	*@constructs
 	*@see	#test
+	*@see	#addWidgets
 	*/
-	initialize: function init(widgets, selector, expected) {
-		this.widgets = widgets;
+	initialize: function init(expected, selector, widgets) {
+		this.addWidgets(widgets);
 		this.selector = selector;
 		this.expected = expected;
 
 		this.compare = this.compare.bind(this);
 		this.succeed = this.succeed.bind(this);
 		this.fail = this.fail.bind(this);
+	},
+
+	/** Adds the given widgets to the ones that are available to this matcher to seek elements in.
+	*
+	*@param	{Object.<String,Widget>}	widgets	The widgets in which elements should be looked for.
+	*@returns	this	For chaining.
+	*/
+	addWidgets: function addWidgets(widgets) {
+		Object.append(this.widgets, widgets);
+		return this;
 	},
 
 	/** Initializes the original value this matcher will encounter.
