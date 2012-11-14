@@ -225,6 +225,35 @@ describe('Feature', function() {
 	});
 
 
+	describe('badly-formatted scenarios', function() {
+		it('with null should throw', function() {
+			(function() {
+				featureWithScenario([
+					null
+				]);
+			}).should.throw(/Step 1/);
+		});
+
+		it('with explicit undefined should throw', function() {
+			(function() {
+				featureWithScenario([
+					undefined
+				]);
+			}).should.throw(/Step 1/);
+		});
+
+		it('with undefined reference should throw', function() {
+			var a;
+
+			(function() {
+				featureWithScenario([
+					a
+				]);
+			}).should.throw(/Step 1/);
+		});
+	});
+
+
 	describe('state descriptions option', function() {
 		describe('timeout', function() {
 			it('should be allowed without any harm', function(done) {

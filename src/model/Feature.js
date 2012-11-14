@@ -58,7 +58,10 @@ var Feature = new Class( /** @lends Feature# */ {
 			var sourceStep = scenario[stepIndex], // takes all values listed in a scenario
 				step;	// this is going to be an actual AbstractStep-inheriting instance
 
-			if (typeof sourceStep == 'object') {	// if this is a Hash, it is a state description
+			if (! sourceStep) {
+				// do nothing, but make sure step is not defined, and that we eliminated any risk of using an illegal sourceStep
+				// for example, typeof null == 'object', so checking sourceStep in all cases would be repetitive
+			} else if (typeof sourceStep == 'object') {	// if this is a Hash, it is a state description
 				step = this.buildAssertionPromise(sourceStep);
 			} else if (typeof sourceStep == 'function') {
 				var paramsCount = sourceStep.length;	// arity of the function
@@ -68,6 +71,9 @@ var Feature = new Class( /** @lends Feature# */ {
 				step = this.buildFunctionalPromise(sourceStep, params, stepIndex);
 			}
 
+			if (! step)
+				throw new ReferenceError('Step ' + (stepIndex + 1) + ' of feature "' + this.description + '" is illegal!')	// protect from null / undefined elements. TODO: should it warn the user?
+			
 			result.push(step);
 		}
 
