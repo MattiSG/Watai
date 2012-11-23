@@ -1,0 +1,86 @@
+TestRight = require('../helpers/subject')
+my = require('../helpers/driver').getDriverHolder()
+should = require('should')
+subject
+elements
+expectedContents
+expectedOutputs
+
+
+/** Widget description of elements existing in the “checking” part of the test support page resource.
+* These elements have their content updated according to actions made on the “main” elements described above.
+*@private
+*/
+checkerElements = {
+	output:	{ id: 'output' }
+}
+
+
+/** This test suite is written with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
+*/
+describe 'Widget', ->
+	checker = null
+
+	before ->
+		testWidget = require('../helpers/testWidget')
+		elements = testWidget.elements;
+		expectedContents = testWidget.expectedContents;
+		expectedOutputs = testWidget.expectedOutputs;
+		subject = testWidget.getWidget(my.driver)
+
+		checker = new TestRight.Widget('Events results widget', {
+			elements: checkerElements
+		}, my.driver)
+
+	describe 'parsing', ->
+		it 'should add all elements as properties', ->
+			for key in elements
+				if (elements.hasOwnProperty(key) && key != 'missing') {	// Should.js' property checker accesses the property, which would therefore make the missing element throw because it is unreachable
+					subject.should.have.property(key)
+					should(typeof subject[key] == 'object')	// prototype of WebDriver internal objects is not augmented
+				}
+
+		it 'should bind methods properly', (done) ->
+			subject.submit('something')()
+
+			subject.field.getAttribute('value').then (value) ->
+				value.should.equal('Default')	// because the page has been reloaded
+				done()
+
+
+	describe 'magic', ->
+		it 'should do some magic on *Link names', ->
+			subject.should.have.property('immediateAction')
+			subject.immediateAction.should.be.a('function')	// on 'link', this should be a shortcut to clicking the element, not a simple access
+
+		it 'should bind magically created `link` methods to clicking', (done) ->
+			subject.immediateAction()()
+			checker.output.getText().then (text) ->
+				text.should.equal(expectedOutputs.immediateActionLink)
+				done()
+
+		it 'should bind magically created `button` methods to clicking', (done) ->
+			subject.press()()
+			checker.output.getText().then (text) ->
+				text.should.equal(expectedOutputs.pressButton)
+				done()
+
+		it 'should bind magically created `checkbox` methods to clicking', (done) ->
+			subject.toggle()()
+			checker.output.getText().then (text) ->
+				text.should.equal(expectedOutputs.toggleCheckbox)
+				done()
+
+
+	describe 'element access', ->
+		it 'should map elements to hooks', (done) ->
+			subject.id.getText().then (text) ->
+				text.should.equal(expectedContents.id)
+				done()
+
+		it 'should be immediate (as much as local performance allows)', (done) ->
+			subject.immediateAction()()
+			subject.delayedAction()()
+			checker.output.getText().then (text) ->
+				text.should.equal(expectedOutputs.immediateActionLink)
+				done()
