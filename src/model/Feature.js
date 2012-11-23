@@ -8,6 +8,9 @@ var logger = require('winston').loggers.get('steps'),
 
 
 var Feature = new Class( /** @lends Feature# */ {
+
+	Extends: Evaluable,
+
 	/** A sequence of promises to be executed in order, constructed after the scenario for this feature.
 	*@private
 	*/
@@ -37,8 +40,8 @@ var Feature = new Class( /** @lends Feature# */ {
 	*@param	{Array}		scenario	An array that describes states and transitions. See class documentation for formatting.
 	*@param	{Object.<String, Widget>}	widgets	A hash listing all widgets accessible to this Feature, indexed on their names.
 	*/
-	initialize: function init(description, scenario, widgets) {
-		this.description = description;
+	initialize: function init(name, scenario, widgets) {
+		this.name = name;
 
 		this.widgets = widgets;	//TODO: transform so that they can be referred to with the "Widget" suffix optional?
 
@@ -108,7 +111,7 @@ var Feature = new Class( /** @lends Feature# */ {
 	*@param	{Number}	[stepIndex]	The scenario step (0-based) at which the syntax error was detected. If not defined, the syntax error will be described as global to the feature file.
 	*/
 	notifySyntaxError: function notifySyntaxError(message, stepIndex) {
-		throw new SyntaxError('Feature "' + this.description + '"'
+		throw new SyntaxError('Feature "' + this.name + '"'
 							  + (typeof stepIndex != 'undefined'	// we can't simply test for falsiness, since the stepIndex could be 0
 							  	? ', at step ' + (stepIndex + 1)
 							  	: '')

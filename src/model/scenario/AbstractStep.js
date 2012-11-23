@@ -11,16 +11,12 @@ var promises =	require('q'),
 */
 var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
+	Extends: Evaluable,
+
 	/** Time, in milliseconds, before the lack of validation is considered an actual failure.
 	*@type	{Number}
 	*/
 	timeout: 0,
-
-	/** The time at which the evaluation was first requested, to evaluate the timeout.
-	*@type	{Date}
-	*@private
-	*/
-	startTime: null,
 
 	/** The [timeout ID](http://nodejs.org/docs/latest/api/all.html#all_settimeout_cb_ms) that makes this matcher retry.
 	* Needed to be able to cancel a match request.
@@ -31,33 +27,15 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*/
 	retryTimeoutId: -1,	// -1 is no magic value, it just helps with debugging
 
-	/** A cancellation flag, set to true if this matcher was cancelled.
-	* This is needed in case the cancellation occurs after a match was started, and we're waiting for a callback from WebDriver with the element (found or missing, doesn't matter), so that we don't do call anyone back.
-	*
-	*@see	#cancel
-	*@type	{Boolean}
-	*@private
-	*/
-	cancelled: false,
-
 
 	/** Starts the evaluation process, returning a promise that will be resolved after at most the given timeout.
 	*
 	*@param	{Number}	[timeout]	optional, specifies a timeout, in milliseconds, for this step to consider the lack of validation as a failure. Defaults to the `timeout` config value. Set to 0 to try only once.
 	*@returns	{Promise}	A promise that will be either fulfilled with no value passed, or rejected with an explicative message passed.
 	*/
-	test: function test(timeout) {
-		this.promise = promises.defer();
-		this.startTime = new Date();
-		this.timeout = (typeof timeout == 'number' ? timeout : config.values.timeout);
-		this.cancelled = false;
+	before: function before() {
+		this.timeout = config.values.timeout;	//TODO: get timeout
 		this.retryTimeoutId = -1;	// -1 is no magic value, it just helps with debugging
-
-		this.onBeforeStart();
-
-		this.start();
-
-		return this.promise.promise;
 	},
 
 	/** Called before a series of calls to `start`, right after a caller has asked this step to be `test`ed.
@@ -66,7 +44,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*
 	*@abstract
 	*/
-	onBeforeStart: function onBeforeStart() {
+	beforeEach: function beforeEach() {
 		// to be defined by inheriting classes
 	},
 
@@ -76,7 +54,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*
 	*@abstract
 	*/
-	onFailure: function onFailure(report) {
+	afterEach: function afterEach(report) {
 		// to be defined by inheriting classes
 	},
 
@@ -86,25 +64,17 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*@abstract
 	*/
 	start: function start() {
-		throw new Error('A concrete step should define its own start method!')
+		this.beforeEach();	//TODO: find a way to have the actual start call wrapped around beforeEach and afterEach
+		throw new Error('A concrete step should define its own start method!');
+		this.afterEach();
 	},
 
 	/** Immediately cancels the requested match, ignoring any timeouts.
 	* The promise is left untouched, neither fulfilled nor rejected.
 	*/
 	cancel: function cancel() {
-		this.cancelled = true;
+		this.cancelled = true;	//TODO: call parent
 		clearTimeout(this.retryTimeoutId);
-	},
-
-	/** Fulfill the promise.
-	* To be called by inheriting classes.
-	*/
-	succeed: function succeed() {
-		if (this.cancelled)
-			return;
-
-		this.promise.resolve();
 	},
 
 	/** Reject the promise.
@@ -134,17 +104,6 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 		var failureMessagePrefix = (this.timeout > 0 ? 'After ' + this.timeout + ' milliseconds, ' : '');
 
 		this.promise.reject(failureMessagePrefix + this.formatFailure(report));
-	},
-
-	/** Formats the message displayed to the user in case of a failure.
-	* To be redefined by children classes, defaults to return the passed parameter.
-	* May be prefixed by timeout information when actually shown to the user.
-	*
-	*@param	report	Information to justify the failure passed to the `fail` method.
-	*@see	#fail
-	*/
-	formatFailure: function formatFailure(report) {
-		return report || 'there was a failure, but no information was given about it  :-/';
 	}
 });
 
