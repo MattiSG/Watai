@@ -63,6 +63,8 @@ var Feature = new Class( /** @lends Feature# */ {
 				// for example, typeof null == 'object', so checking sourceStep in all cases would be repetitive
 			} else if (typeof sourceStep == 'object') {	// if this is a Hash, it is a state description
 				step = this.buildAssertionPromise(sourceStep);
+			} else if (typeof sourceStep == 'string') {
+				step = new MessageStep(sourceStep);
 			} else if (typeof sourceStep == 'function') {
 				var paramsCount = sourceStep.length;	// arity of the function
 

@@ -4,7 +4,8 @@
 * You can access them through this hash.
 */
 var steps = {
-	FunctionalStep:	require('./FunctionalStep')
+	FunctionalStep:	require('./FunctionalStep'),
+	MessageStep:	require('./MessageStep')
 }
 
 module.exports = steps;
