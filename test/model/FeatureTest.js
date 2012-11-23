@@ -274,15 +274,15 @@ describe('Feature', function() {
 		describe('timeout', function() {
 			it('should be allowed without any harm', function(done) {
 				featureWithScenario([
-					WidgetTest.immediateAction,
+					WidgetTest.immediateAction(),
 					{ timeout: 0 }
 				]).test().then(done, done);
 			});
 
 			it('should do immediate evaluation if set to 0', function(done) {
 				featureWithScenario([
-					WidgetTest.immediateAction,	// make sure the content of the output is reset
-					WidgetTest.delayedAction,
+					WidgetTest.immediateAction(),	// make sure the content of the output is reset
+					WidgetTest.delayedAction(),
 					{
 						timeout: 0,
 						'TestWidget.output': expectedOutputs.immediateAction
@@ -296,8 +296,8 @@ describe('Feature', function() {
 
 			it('should do delayed evaluation if set to a proper positive value', function(done) {
 				featureWithScenario([
-					WidgetTest.immediateAction,	// make sure the content of the output is reset
-					WidgetTest.delayedAction,
+					WidgetTest.immediateAction(),	// make sure the content of the output is reset
+					WidgetTest.delayedAction(),
 					{
 						timeout: DELAYED_ACTIONS_DELAY * 2,
 						'TestWidget.output': expectedOutputs.delayedActionLink
@@ -316,8 +316,8 @@ describe('Feature', function() {
 				this.timeout(DELAYED_ACTIONS_DELAY * 3);
 
 				featureWithScenario([
-					WidgetTest.immediateAction,	// make sure the content of the output is reset
-					WidgetTest.otherDelayedAction,
+					WidgetTest.immediateAction(),	// make sure the content of the output is reset
+					WidgetTest.otherDelayedAction(),
 					{
 						timeout: DELAYED_ACTIONS_DELAY * 2,
 						'TestWidget.output': expectedOutputs.otherDelayedActionLink
@@ -336,8 +336,8 @@ describe('Feature', function() {
 				this.timeout(DELAYED_ACTIONS_DELAY * 3);
 
 				featureWithScenario([
-					WidgetTest.immediateAction,	// make sure the content of the output is reset
-					WidgetTest.delayedAction,
+					WidgetTest.immediateAction(),	// make sure the content of the output is reset
+					WidgetTest.delayedAction(),
 					{
 						timeout: DELAYED_ACTIONS_DELAY * 2,
 						'TestWidget.output': expectedOutputs.otherDelayedActionLink
@@ -353,8 +353,8 @@ describe('Feature', function() {
 				this.timeout(DELAYED_ACTIONS_DELAY * 2);
 
 				featureWithScenario([
-					WidgetTest.immediateAction,	// make sure the content of the output is reset
-					WidgetTest.otherDelayedAction,
+					WidgetTest.immediateAction(),	// make sure the content of the output is reset
+					WidgetTest.otherDelayedAction(),
 					{
 						timeout: DELAYED_ACTIONS_DELAY / 10,
 						'TestWidget.output': expectedOutputs.otherDelayedActionLink
@@ -370,8 +370,8 @@ describe('Feature', function() {
 				this.timeout(DELAYED_ACTIONS_DELAY * 2);
 
 				featureWithScenario([
-					WidgetTest.immediateAction,	// make sure the content of the output is reset
-					WidgetTest.delayedAction,
+					WidgetTest.immediateAction(),	// make sure the content of the output is reset
+					WidgetTest.delayedAction(),
 					{
 						timeout: 0,
 						'TestWidget.output': expectedOutputs.delayedActionLink
@@ -391,7 +391,7 @@ describe('Feature', function() {
 			var start = new Date();
 
 			featureWithScenario([
-				WidgetTest.overlayedAction,
+				WidgetTest.overlayedAction(),
 				{
 					'TestWidget.output': expectedOutputs.overlayedActionLink
 				}
@@ -409,7 +409,7 @@ describe('Feature', function() {
 		it('should be fine if made clickable', function(done) {
 			featureWithScenario([
 				WidgetTest.hideOverlay,
-				WidgetTest.overlayedAction,
+				WidgetTest.overlayedAction(),
 				{
 					'TestWidget.output': expectedOutputs.overlayedActionLink
 				}

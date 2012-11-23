@@ -44,24 +44,24 @@ describe('Widget', function() {
 		});
 
 		it('should bind methods properly', function(done) {
-			subject.submit('something');
+			subject.submit('something')();
 
 			subject.field.getAttribute('value').then(function(value) {
 				value.should.equal('Default');	// because the page has been reloaded
 				done();
 			});
 		});
-
-		it('should do some magic on *Link names', function() {
-			subject.should.have.property('immediateAction');
-			subject.immediateAction.should.be.a('function');	// on 'link', this should be a shortcut to clicking the element, not a simple access
-		});
 	});
 
 
 	describe('magic', function() {
+		it('should do some magic on *Link names', function() {
+			subject.should.have.property('immediateAction');
+			subject.immediateAction.should.be.a('function');	// on 'link', this should be a shortcut to clicking the element, not a simple access
+		});
+
 		it('should bind magically created `link` methods to clicking', function(done) {
-			subject.immediateAction();
+			subject.immediateAction()();
 			checker.output.getText().then(function(text) {
 				text.should.equal(expectedOutputs.immediateActionLink);
 				done();
@@ -69,7 +69,7 @@ describe('Widget', function() {
 		});
 
 		it('should bind magically created `button` methods to clicking', function(done) {
-			subject.press();
+			subject.press()();
 			checker.output.getText().then(function(text) {
 				text.should.equal(expectedOutputs.pressButton);
 				done();
@@ -77,7 +77,7 @@ describe('Widget', function() {
 		});
 
 		it('should bind magically created `checkbox` methods to clicking', function(done) {
-			subject.toggle();
+			subject.toggle()();
 			checker.output.getText().then(function(text) {
 				text.should.equal(expectedOutputs.toggleCheckbox);
 				done();
@@ -95,8 +95,8 @@ describe('Widget', function() {
 		});
 
 		it('should be immediate (as much as local performance allows)', function(done) {
-			subject.immediateAction();
-			subject.delayedAction();
+			subject.immediateAction()();
+			subject.delayedAction()();
 			checker.output.getText().then(function(text) {
 				text.should.equal(expectedOutputs.immediateActionLink);
 				done();
