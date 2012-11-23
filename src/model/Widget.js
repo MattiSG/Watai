@@ -16,7 +16,7 @@ var Widget = new Class( /** @lends Widget# */ {
 	/**@class	Models a set of controls on a website.
 	*
 	*@constructs
-	*@param	name	Name of this widget.
+	*@param	name	User-visible name of this widget.
 	*@param	values	A hash with the following form:
 	*	`elements`: a hash mapping attribute names to a hook. A hook is a one-pair hash mapping a selector type to an actual selector.
 	*	a series of methods definitions, i.e. `name: function name(…) { … }`, that will be made available
@@ -33,7 +33,7 @@ var Widget = new Class( /** @lends Widget# */ {
 			widget.addMagic(key);
 		});
 
-		delete values.elements;
+		delete values.elements;	// this key is magic, we don't want to iterate over it, as other keys are user-defined actions
 
 		Object.each(values, function(method, key) {
 			widget[key] = setArity(

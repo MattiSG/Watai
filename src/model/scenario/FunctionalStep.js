@@ -1,6 +1,3 @@
-var promises = require('q');
-
-
 var FunctionalStep = new Class({
 	Extends: require('./AbstractStep'),
 
