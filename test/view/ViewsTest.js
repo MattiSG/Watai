@@ -14,7 +14,8 @@ var views = [
 		'featureFailure',
 		'featureError',
 		'failure',
-		'success'
+		'success',
+		'error'
 	];
 
 

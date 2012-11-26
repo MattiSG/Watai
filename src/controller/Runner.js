@@ -118,6 +118,11 @@ var Runner = new Class( /** @lends Runner# */ {
 						.withCapabilities(config.driverCapabilities)
 						.build();
 
+		result.session_.then(null, function() {
+			this.emit('error', 'The Selenium server could not be reached!', 'Did you start it up? See the troubleshooting guide if you need help: github.com/MattiSG/Watai/wiki/Troubleshooting');
+			process.exit(1);	// TODO: don't exit this way, use `cancel` once it has been implemented
+		}.bind(this));
+
 		result.manage().timeouts().implicitlyWait(config.timeout);	// implicitly wait for an element to appear, for asynchronous operations
 
 		return result;

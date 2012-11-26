@@ -64,6 +64,15 @@ RunnerDots.featureError = function onFeatureError(feature, errors) {
 	failuresAndErrorsBuffer.push(errorsDescription);
 }
 
+/** Presents details of a runner error to the user.
+*@param	{String|Error}	error	Details on the given error.
+*@param	{String}	[help]	Instructions that may help the user out of the problem.
+*/
+RunnerDots.error = function onError(error, help) {
+	process.stdout.write(error + '\n');	// TODO: once we're sure no errors kill the process, remove immediate output
+	failuresAndErrorsBuffer.push(error);
+}
+
 /** Presents a summary of the test procedure to the user.
 *@private
 */

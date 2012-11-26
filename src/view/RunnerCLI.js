@@ -13,7 +13,7 @@ RunnerCLI.beforeRun = function onBeforeRun() {
 /** Informs user that the emitting Runner is ready to start.
 */
 RunnerCLI.ready = function onReady() {
-	animator.log(' ҉', 'info', 'Browser ready!            ');
+	animator.log(' ҉', 'info', 'Browser ready!            ', 'default');
 }
 
 /** Presents details of a test start to the user.
@@ -27,7 +27,7 @@ RunnerCLI.featureStart = function onFeatureStart(feature) {
 *@param	{Feature}	feature	The feature whose results are given.
 */
 RunnerCLI.featureSuccess = function onFeatureSuccess(feature) {
-	animator.log('✔', 'info', feature.description);
+	animator.log('✔', 'info', feature.description, 'default');
 }
 
 /** Presents details of a test failure to the user.
@@ -35,10 +35,10 @@ RunnerCLI.featureSuccess = function onFeatureSuccess(feature) {
 *@param	{Array.<String>}	failures	An array of strings giving details on failures.
 */
 RunnerCLI.featureFailure = function onFeatureFailure(feature, failures) {
-	animator.log('✘', 'warn', feature.description, 'warn');
+	animator.log('✘', 'fail', feature.description);
 
 	failures.forEach(function(failure) {
-		animator.log('   ↳', 'cyan', failure, 'cyan');
+		animator.log('   ↳', 'cyan', failure);
 	});
 }
 
@@ -50,11 +50,20 @@ RunnerCLI.featureError = function onFeatureError(feature, errors) {
 	animator.log('⚠', 'error', feature.description);
 	
 	errors.forEach(function(error) {
-		animator.log('   ↳', 'cyan', error, 'cyan');
+		animator.log('   ↳', 'cyan', error);
 		
 		if (error.stack)
-			animator.log('	', 'verbose', error.stack, 'verbose');
+			animator.log('	', 'verbose', error.stack);
 	});
+}
+
+/** Presents details of a runner error to the user.
+*@param	{String|Error}	error	Details on the given error.
+*@param	{String}	[help]	Instructions that may help the user out of the problem.
+*/
+RunnerCLI.error = function onError(error, help) {
+	animator.log('⚠', 'fail', error);
+	animator.log('   ↳', 'debug', help);
 }
 
 

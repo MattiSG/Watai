@@ -1,4 +1,3 @@
-require('mocha');
 require('should');
 var pathsUtils = require('path'),
 	webdriver = require('selenium-webdriverjs'),
@@ -80,17 +79,12 @@ function makeDriver(done) {
 							  .build();
 
 	result.session_.then(null, function() {
-		console.error('');
-		console.error('**The Selenium server could not be reached!**');
-		console.error('> Did you start it up?');
-		console.error('  See the troubleshooting guide if you need help  ;)');
-		process.exit(1);
+		throw new Error('The Selenium server could not be reached!\n> Did you start it up?\nSee the troubleshooting guide if you need help: github.com/MattiSG/Watai/wiki/Troubleshooting')
 	});
-	
-	result.get(config.baseURL).then(function() {
-			done();	// remove arguments for compatibility with mocha
-		}, done);
-	
+
+	result.get(config.baseURL)
+		  .then(function() { done() }, done);	// remove arguments for compatibility with mocha
+
 	return result;
 }
 

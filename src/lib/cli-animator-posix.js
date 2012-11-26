@@ -44,7 +44,7 @@ CLIanimator.spin = function spin(message) {
 *@private
 */
 function makeLine(prefix, colorCode, message, messageColorCode) {
-	messageColorCode = messageColorCode || 0;
+	messageColorCode = messageColorCode || colorCode;
 	return '\r\033[' + colorCode + 'm' + prefix + ' \033[' + messageColorCode + 'm ' + message + '\033[0m';
 }
 
@@ -72,8 +72,9 @@ var typeToColorCode = {
 	'cyan'	: 36,
 	'info'	: 32,
 	'error'	: 35,
-	'warn'	: 31,
-	'yellow': 33
+	'fail'	: 31,
+	'warn'	: 33,
+	'default': 0
 }
 
 /** Plays the given array of strings.
