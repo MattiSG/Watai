@@ -2,13 +2,15 @@
 *@extends	matchers.AbstractMatcher
 *@memberOf	matchers
 */
-var ExistenceMatcher = new Class( /** @lends matchers.ExistenceMatcher# */ {
+var VisibilityMatcher = new Class( /** @lends matchers.VisibilityMatcher# */ {
 	Extends: require('./AbstractMatcher'),
 
 	type: 'existence',
 
 	onElementFound: function(element) {
-		this.compare(true);
+		element.isDisplayed()
+				.then(this.compare,
+					  this.fail);
 	},
 
 	onElementMissing: function() {
@@ -19,13 +21,13 @@ var ExistenceMatcher = new Class( /** @lends matchers.ExistenceMatcher# */ {
 		if (actual) {
 			return 'element '
 					+ this.selector
-					+ ' was in the DOM while it should not have.';
+					+ ' was visible on the page while it should not have.';
 		} else {
 			return 'element '
 					+ this.selector
-					+ ' was not in the DOM while it should have.';
+					+ ' was not visible on the page while it should have.';
 		}
 	}
 });
 
-module.exports = ExistenceMatcher;	// CommonJS export
+module.exports = VisibilityMatcher;	// CommonJS export

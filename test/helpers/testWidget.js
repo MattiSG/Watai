@@ -7,6 +7,7 @@ var elements = exports.elements = {
 	id:						{ id: 'toto' },
 	css:					{ css: '.tutu' },
 	missing:				{ id: 'inexistant' },
+	hidden:					{ id: 'hidden' },
 	field:					{ css: 'input[name="field"]' },
 	immediateActionLink:	{ linkText: 'This paragraph is embedded in a link' },
 	delayedActionLink:		{ id: 'delayLink' },

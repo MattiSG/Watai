@@ -18,7 +18,7 @@ describe('Matchers', function() {
 	});
 
 
-	describe('existence', function() {
+	describe('visibility', function() {
 		it('should pass on `true` in state descriptors on existing elements', function(done) {
 			featureWithScenario([
 				{ 'TestWidget.output': true }
@@ -41,7 +41,7 @@ describe('Matchers', function() {
 					try {
 						reasons.errors.should.have.length(0);
 						reasons.failures.should.have.length(1);
-						reasons.failures[0].should.match(/was in the DOM/);
+						reasons.failures[0].should.match(/was visible/);
 						done();
 					} catch (err) {
 						done(err);
@@ -58,7 +58,7 @@ describe('Matchers', function() {
 				}, function(reasons) {
 					reasons.errors.should.have.length(0);
 					reasons.failures.should.have.length(1);
-					reasons.failures[0].should.match(/was not in the DOM/);
+					reasons.failures[0].should.match(/was not visible/);
 					done();
 				}
 			).end();
@@ -67,6 +67,33 @@ describe('Matchers', function() {
 		it('should pass on `false` in state descriptors on missing elements', function(done) {
 			featureWithScenario([
 				{ 'TestWidget.missing': false }
+			]).test().then(done, function(reasons) {
+				var message = "No failure report. See code";
+
+				if (report && report.failures && report.failures[0])
+					message = report.failures[0];
+
+				done(new Error(message));
+			}).end();
+		});
+
+		it('should fail on `true` in state descriptors on hidden elements', function(done) {
+			featureWithScenario([
+				{ 'TestWidget.hidden': true }
+			]).test().then(function() {
+					done(new Error('Resolved instead of rejected!'));
+				}, function(reasons) {
+					reasons.errors.should.have.length(0);
+					reasons.failures.should.have.length(1);
+					reasons.failures[0].should.match(/was not visible/);
+					done();
+				}
+			).end();
+		});
+
+		it('should pass on `false` in state descriptors on hidden elements', function(done) {
+			featureWithScenario([
+				{ 'TestWidget.hidden': false }
 			]).test().then(done, function(reasons) {
 				var message = "No failure report. See code";
 
