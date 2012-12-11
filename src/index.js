@@ -85,7 +85,6 @@ function main(folders) {
 	});
 	
 	var suitePromises = suites.map(function(suite) {
-		debugger;
 		return suite.run();
 	});
 
