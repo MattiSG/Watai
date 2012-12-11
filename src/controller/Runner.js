@@ -257,14 +257,15 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	finish: function finish(success) {
-		var resolve	= this.deferred.resolve.bind(this.deferred, this),
-			reject	= this.deferred.reject.bind(this.deferred, this.failures),
-			fulfill	= resolve,
-			eventType = 'success',
-			precondition = (this.config.quit != 'always'
-							? this.markUsed.bind(this)
-							: this.killDriver.bind(this)),
-			failures = this.failures;	// copy them in case the precondition cleans them up
+		var resolve	=		this.deferred.resolve.bind(this.deferred, this),
+			reject	=		this.deferred.reject.bind(this.deferred, this.failures),
+			fulfill	=		resolve,
+			eventType =		'success',
+			precondition =	(this.config.quit != 'always'
+							? this.markUsed
+							: this.killDriver
+							).bind(this),
+			failures =		this.failures;	// copy them in case the precondition cleans them up
 
 		if (Object.getLength(failures) == 0) {
 			if (this.config.quit == 'on success')
