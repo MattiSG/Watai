@@ -29,8 +29,7 @@ describe('Widget usage within Feature', function() {
 
 		it('should bind one parameter', function(done) {
 			var feature = new TestRight.Feature('Test feature', [
-					widget.setMarker,
-					partOne
+					widget.setMarker(partOne)
 				], { TestWidget: widget }
 			);
 
@@ -48,8 +47,7 @@ describe('Widget usage within Feature', function() {
 
 		it('should bind two parameters', function(done) {
 			var feature = new TestRight.Feature('Test feature', [
-					widget.concatenateTwo,
-					partOne, partTwo
+					widget.concatenateTwo(partOne, partTwo)
 				], { TestWidget: widget }
 			);
 
@@ -63,16 +61,6 @@ describe('Widget usage within Feature', function() {
 			}, function(report) {
 				done(new Error(report));
 			});
-		});
-
-		it('should throw if a bad number of parameters is given', function() {
-			(function() {
-				new TestRight.Feature('Test feature', [
-						widget.concatenateTwo,
-						partOne
-					], { TestWidget: widget }
-				);
-			}).should.throw();
 		});
 	});
 });

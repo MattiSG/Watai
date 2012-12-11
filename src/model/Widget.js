@@ -1,7 +1,6 @@
 var promises = require('q');
 
-var logger = require('winston').loggers.get('steps'),
-	setArity = require('../lib/set-arity');
+var logger = require('winston').loggers.get('steps');
 
 var Hook = require('./Hook');
 
@@ -25,7 +24,6 @@ var Widget = new Class( /** @lends Widget# */ {
 	initialize: function init(name, values, driver) {
 		this.name = name;
 
-
 		var widget = this;
 
 		Object.each(values.elements, function(typeAndSelector, key) {
@@ -36,13 +34,19 @@ var Widget = new Class( /** @lends Widget# */ {
 		delete values.elements;	// this key is magic, we don't want to iterate over it, as other keys are user-defined actions
 
 		Object.each(values, function(method, key) {
-			widget[key] = setArity(
-				function() {
-					logger.info('	- did ' + this.action + ' ' + Array.prototype.slice.call(arguments).join(', '));
-					method.apply(widget, arguments);
-				},
-				method.length	// ensure arity is properly transmitted, for later arguments parsing. See <http://stackoverflow.com/questions/13271474/override-the-arity-of-a-function#comment-18089771>
-			);
+			widget[key] = function() {
+				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
+				return function() {
+					logger.info('	- did ' + key
+								+ (args.length > 0
+								   ? ' ' + args.join(', ')
+								   : '')
+								+ ' (within '
+								+ widget.name
+								+ ')');
+					method.apply(widget, args);
+				}
+			}
 		});
 	},
 
@@ -59,10 +63,12 @@ var Widget = new Class( /** @lends Widget# */ {
 			var matches = matcher.exec(key);
 			if (matches) {	// `exec` returns `null` if no match was found
 				var basename = matches[1];
-				widget[basename] = function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
-					logger.info('	- ' + method + 'ed “' + basename + '”');
+				widget[basename] = function() {	// wrapping to allow immediate calls in scenario steps	//TODO: rather return an object with methods, and leave preparation for scenarios to the Widget constructor
+					return function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
+						logger.info('	- ' + method + 'ed “' + basename + '”');
 
-					return widget[key][method]();
+						return widget[key][method]();
+					}
 				}
 			}
 		});

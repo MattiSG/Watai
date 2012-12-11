@@ -126,25 +126,6 @@ describe('Feature', function() {
 								+ ' actually calling the scenario function (but that’s still an error)'));
 			}).end();
 		});
-
-		it('parameters should be bound to previous functions', function(done) {
-			var called = false;
-
-			featureWithScenario([
-				function(first, second) {
-					called = first + second;
-				},
-				'to', 'ti'	// if this test case works, the function above should set the `called` marker to the concatenation of these strings
-			]).test().then(function() {
-				if (called == 'toti')
-					done();
-				else
-					done(new Error('Promise resolved without actually calling the scenario function'));
-			}, function(err) {
-				done(new Error('Promise rejected with' + (called ? '' : 'out')
-								+ ' actually calling the scenario function (but that’s still an error)'));
-			}).end();
-		});
 	});
 
 
@@ -250,22 +231,6 @@ describe('Feature', function() {
 					a
 				]);
 			}).should.throw(/at step 1/);
-		});
-
-		it('with a bad number of parameters given to a function should throw', function() {
-			(function() {
-				featureWithScenario([
-					function(a) {}	// this function expects a parameter
-				]);
-			}).should.throw(/at step 1/);
-		});
-
-		it('with a bad number of parameters given to a named function should throw and name the offender', function() {
-			(function() {
-				featureWithScenario([
-					function thatFails(a) {}	// this function expects a parameter
-				]);
-			}).should.throw(/thatFails/);
 		});
 	});
 
@@ -408,7 +373,7 @@ describe('Feature', function() {
 
 		it('should be fine if made clickable', function(done) {
 			featureWithScenario([
-				WidgetTest.hideOverlay,
+				WidgetTest.hideOverlay(),
 				WidgetTest.overlayedAction(),
 				{
 					'TestWidget.output': expectedOutputs.overlayedActionLink

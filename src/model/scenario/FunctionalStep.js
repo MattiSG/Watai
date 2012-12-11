@@ -3,10 +3,9 @@ var FunctionalStep = new Class({
 
 	/**
 	*@param	{Function}	action	A function, promise-returning or not, to be executed. If it throws, or returns a rejected promise, this step will fail. Otherwise, it will succeed.
-	*@param	{Array}	params	Parameters to pass to the action.
 	*/
-	initialize: function init(action, params) {
-		this.action = action.apply.bind(action, null, params);
+	initialize: function init(action) {
+		this.action = action;
 	},
 
 	start: function start() {
