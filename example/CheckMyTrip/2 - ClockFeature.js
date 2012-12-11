@@ -8,7 +8,7 @@
 							  	storage.previousHour = hour;
 							  });
 		},
-		ClockWidget.lookup, clockLookupTown,
+		ClockWidget.lookup(clockLookupTown),
 		function() {
 			return ClockWidget.getCurrentHour()
 							  .then(function(hour) {
