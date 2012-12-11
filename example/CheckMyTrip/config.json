@@ -5,7 +5,7 @@
 		"browserName": "chrome",
 		"javascriptEnabled": true
 	},
-	"views": [ "Dots"],
 
-	"quit": "on success"
+	"views": [ "Dots" ],
+	"quit": "always"
 }
