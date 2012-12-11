@@ -12,6 +12,12 @@ DIST_DIR="$BASEDIR/dist"
 JSCOVERAGE="$BASEDIR/node_modules/visionmedia-jscoverage/jscoverage"
 
 MOCHA_CMD="$BIN_DIR/mocha"
+
+# Not all tests are run each time, as some are long and little prone to failure.
+DEFAULT_TEST_DIRS="test/model test/controller test/functional test/lib"
+# Used when running exhaustive tests.
+ADDITIONAL_DIRS="test/main"
+
 DIST_INCLUDE="package.json go src README.md" # list all files / folders to be included when `dist`ing, separated by spaces; this is a copy of npm’s "files", couldn't find an easy way to parse it
 
 
@@ -42,21 +48,34 @@ docToCodeRatio() {
 case "$1" in
 	test )
 		shift
+
 		opts=""
+		dirs=""
+
+		if [[ $1 = "--exhaustive" ]]
+		then shift
+			 dirs="$DEFAULT_TEST_DIRS $ADDITIONAL_DIRS"
+		fi
+		
 		for arg in "$@"
 		do
 			if echo $arg | grep -q '^\-\-'
 			then opts="$arg $opts"
-			else opts="$opts $TEST_DIR/$arg"	# allows for "go test controller" for example, instead of "go test test/controller"
+			else dirs="$dirs $TEST_DIR/$arg"	# allows for "go test controller" for example, instead of "go test test/controller"
 
 			fi
 		done
-		$MOCHA_CMD $opts ;;
+
+		if [[ -z $dirs ]]
+		then dirs="$DEFAULT_TEST_DIRS"
+		fi
+
+		$MOCHA_CMD --bail $opts $dirs ;;
 	coverage )	# based on http://tjholowaychuk.com/post/18175682663
 		rm -rf $COVERAGE_DIR
 		$JSCOVERAGE $SRC_DIR $COVERAGE_DIR
 		export npm_config_coverage=true
-		$MOCHA_CMD $TEST_DIR --reporter html-cov > $DOC_DIR/coverage.html &&
+		$MOCHA_CMD $DEFAULT_TEST_DIRS $ADDITIONAL_DIRS --reporter html-cov > $DOC_DIR/coverage.html &&
 		open $DOC_DIR/coverage.html
 		exit 0 ;;
 	doc )
