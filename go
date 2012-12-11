@@ -116,6 +116,8 @@ case "$1" in
 		mv node_modules node_modules_dev
 		npm install --prod
 		zip -q -u $outputFile -r node_modules
+		echo "Updating shrinwrap…"
+		npm shrinkwrap
 		echo "Restoring dev dependencies…"
 		rm -rf node_modules
 		mv node_modules_dev node_modules
