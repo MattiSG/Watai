@@ -4,7 +4,7 @@
 * You can access them through this hash.
 */
 var matchers = {
-	ExistenceMatcher:	require('./ExistenceMatcher'),
+	VisibilityMatcher:	require('./VisibilityMatcher'),
 	TextMatcher:		require('./TextMatcher'),
 	ValueMatcher:		require('./ValueMatcher'),
 	RegExpTextMatcher:	require('./RegExpTextMatcher')
@@ -19,7 +19,7 @@ matchers.allFor = function allMatchersFor(expected) {
 	var result = [];
 
 	if (typeof expected == 'boolean') {	// TODO: make matchers responsible for defining which value types they can handle instead of this horrendous switch
-		result.push(matchers.ExistenceMatcher);
+		result.push(matchers.VisibilityMatcher);
 	} else if (expected.constructor && expected.constructor.name === 'RegExp') {	// since elements are loaded in a separate context, the `instanceof` fails, as it compares constructors references
 		result.push(matchers.RegExpTextMatcher);
 	} else {
