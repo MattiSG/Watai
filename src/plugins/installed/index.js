@@ -26,7 +26,7 @@ function tellUserInstallationStatus() {
 		console.error('**Watai has not been installed properly, please make sure you followed all installation instructions.**');
 		console.error('Main reason: ' + evaluation.message + '.');
 		console.error('See http://github.com/MattiSG/Watai for details.');
-		process.exit(1);
+		process.exit(3);
 	}
 }
 

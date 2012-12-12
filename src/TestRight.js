@@ -26,7 +26,7 @@ var logger = winston.loggers.get('suites');
 */
 try {
 	var longjohn = require('longjohn');
-	longjohn.async_trace_limit = 40;
+	longjohn.async_trace_limit = config.debug.asyncTraces;
 	logger.silly('Long stack traces loaded');
 } catch (e) {
 	logger.silly('No long stack traces module found');

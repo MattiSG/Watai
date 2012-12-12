@@ -237,7 +237,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 	/** Asks the underlying Runner instance to execute all tests.
 	*
-	*@return	A promise for results.
+	*@return	{Promise}	A promise for results.
 	*@see	Runner#run
 	*/
 	run: function run() {

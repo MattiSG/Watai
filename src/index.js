@@ -1,3 +1,6 @@
+var promises = require('q');
+
+
 /* Here is the main CLI entry point.
 */
 var args = process.argv.slice(2); // extract CLI arguments, see http://docs.nodejitsu.com/articles/command-line/how-to-parse-command-line-arguments
@@ -16,8 +19,12 @@ var LOAD_OPTIONS_FROM = './plugins/';
 
 
 if (args.length == 0) {
-	showHelp();
-	process.exit(2);
+	var logger = require('winston'),
+		showHelpAndExit = require(LOAD_OPTIONS_FROM + 'help');
+
+	logger.error("Oops, you didn’t provide any test suite to execute!");
+	
+	showHelpAndExit(2);
 }
 
 args = preProcessArguments(args);
@@ -42,8 +49,8 @@ function preProcessArguments(args) {
 		if (! optionMatch) {	// this is not an option
 			result.push(args[i]);	// pass it without doing anything on it
 		} else {
-			var pluginName = optionMatch[1];	// [1] is the value of the first capturing parentheses
-			var plugin;
+			var pluginName = optionMatch[1],	// [1] is the value of the first capturing parentheses
+				plugin;
 
 			try {
 				plugin = require(LOAD_OPTIONS_FROM + pluginName);
@@ -75,23 +82,32 @@ function preProcessArguments(args) {
 function main(folders) {
 	var TR = require(MAIN_FILE);
 
-	var suites = new Array(folders.length);
+	var suites = [];
 	
 	folders.forEach(function(descriptionPath) {
 		suites.push(new TR.SuiteLoader(descriptionPath));
 	});
 	
-	suites.forEach(function(suite) {
-		suite.run();
+	var suitePromises = suites.map(function(suite) {
+		return suite.run();
 	});
+
+	promises.allResolved(suitePromises)
+			.then(exit, function(error) {	// rejecting those promises is an interal Q.js error
+				process.stderr.write(error);
+				process.exit(3);
+			});
 }
 
-/** Prints CLI synopsis.
-*@private
+/** Exits the process with the proper status code.
+*
+*@param	{Array.<Promise>}	The array of suite runs promises, all resolved.
 */
-function showHelp() {
-	var logger = require('winston');
+function exit(promises) {
+	promises.forEach(function(promise) {
+		if (! promise.isFulfilled())
+			process.exit(1);
+	});
 
-	logger.error("Oops, you didn’t provide any test suite to execute!");
-	logger.info("Usage: watai path/to/suite/description/folder [another/suite [yetAnother […]]]");
+	process.exit(0);
 }
