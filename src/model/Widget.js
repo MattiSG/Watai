@@ -62,10 +62,12 @@ var Widget = new Class( /** @lends Widget# */ {
 		Object.each(Widget.magic, function(matcher, method) {
 			var matches = matcher.exec(key);
 			if (matches) {	// `exec` returns `null` if no match was found
-				var basename = matches[1];
+				var basename = matches[1],
+					type = matches[2];	// for example "Link", "Button"…
+
 				widget[basename] = function() {	// wrapping to allow immediate calls in scenario steps	//TODO: rather return an object with methods, and leave preparation for scenarios to the Widget constructor
 					return function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
-						logger.info('	- ' + method + 'ed “' + basename + '”');
+						logger.info('	- ' + method + 'ed ' + basename + ' ' + type.toLowerCase());
 
 						return widget[key][method]();
 					}
