@@ -60,19 +60,26 @@ var Feature = new Class( /** @lends Feature# */ {
 
 			logger.silly('Loading step ' + stepIndex + ' (source type: ' + typeof sourceStep + ', full source: ' + sourceStep + ')…');
 
-			if (! sourceStep) {
-				// do nothing, but make sure step is not defined, and that we eliminated any risk of using an illegal sourceStep
-				// for example, typeof null == 'object', so checking sourceStep in all cases would be repetitive
-			} else if (typeof sourceStep == 'object') {	// if this is a Hash, it is a state description
-				step = this.buildAssertionPromise(sourceStep);
-			} else if (typeof sourceStep == 'function') {
-				step = this.buildFunctionalPromise(sourceStep, stepIndex);
-			} else if (typeof sourceStep == 'string') {
-				logger.debug('Oops, encoutered "' + sourceStep + '" as a free step in a feature scenario! Maybe your test is still using pre-0.4 syntax?  :)'
+			switch (typeof sourceStep) {
+				case 'function':
+					step = this.buildFunctionalPromise(sourceStep, stepIndex);
+					break;
+				case 'object':	// if this is a Hash, it is a state description
+					if (! sourceStep)	// yep, typeof null == 'object'  :)
+						break;	// do nothing, but make sure step is not defined, and that we eliminated any risk of using an illegal sourceStep
+
+					step = this.buildAssertionPromise(sourceStep);
+					break;
+				case 'string':
+				case 'number':
+					logger.debug('Oops, encoutered "' + sourceStep + '" as a free step in a feature scenario!'	// TODO: remove this hint after v0.4
+							 + '\n'
+							 + 'Maybe your test is still using pre-0.4 syntax?  :)'
 							 + '\n'
 							 + 'Since v0.4, action parameters are passed directly as a function call.'
 							 + '\n'
 							 + 'For more details, see the Features syntax reference: https://github.com/MattiSG/Watai/wiki/Features');
+					break;
 			}
 
 			if (! step)
