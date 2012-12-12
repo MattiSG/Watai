@@ -56,7 +56,7 @@ var Feature = new Class( /** @lends Feature# */ {
 
 		for (var stepIndex = 0; stepIndex < scenario.length; stepIndex++) {
 			var sourceStep = scenario[stepIndex], // takes all values listed in a scenario
-				step;	// this is going to be an actual AbstractStep-inheriting instance
+				step = null;	// this is going to be an actual AbstractStep-inheriting instance
 
 			if (! sourceStep) {
 				// do nothing, but make sure step is not defined, and that we eliminated any risk of using an illegal sourceStep
