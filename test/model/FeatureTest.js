@@ -207,30 +207,37 @@ describe('Feature', function() {
 
 
 	describe('badly-formatted scenarios', function() {
-		it('with null should throw', function() {
+		function scenarioShouldThrowWith(responsibleStep) {
 			(function() {
 				featureWithScenario([
-					null
+					responsibleStep
 				]);
 			}).should.throw(/at step 1/);
+		}
+
+		it('with null should throw', function() {
+			scenarioShouldThrowWith(null);
 		});
 
 		it('with explicit undefined should throw', function() {
-			(function() {
-				featureWithScenario([
-					undefined
-				]);
-			}).should.throw(/at step 1/);
+			scenarioShouldThrowWith(undefined);
 		});
 
 		it('with undefined reference should throw', function() {
 			var a;
+			scenarioShouldThrowWith(a);
+		});
 
-			(function() {
-				featureWithScenario([
-					a
-				]);
-			}).should.throw(/at step 1/);
+		it('with a free string should throw', function() {
+			scenarioShouldThrowWith('string');
+		});
+
+		it('with a free number should throw', function() {
+			scenarioShouldThrowWith(12);
+		});
+
+		it('with a free 0 should throw', function() {
+			scenarioShouldThrowWith(0);
 		});
 	});
 
