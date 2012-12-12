@@ -1,4 +1,5 @@
-var webdriver = require('selenium-webdriverjs');
+var webdriver = require('selenium-webdriverjs'),
+	promises = require('q');
 
 var logger = require('winston').loggers.get('steps');
 
@@ -27,13 +28,22 @@ var Hook = function Hook(hook, driver) {
 	/** Sends the given sequence of keystrokes to the element pointed by this hook.
 	*
 	*@param	input	A string that will be sent to this element.
+	*@returns	{Promise}	A promise, resolved when keystrokes have been received, rejected in case of a failure.
 	*@see	http://seleniumhq.org/docs/03_webdriver.html#sendKeys
 	*@private
 	*/
 	this.handleInput = function handleInput(input) {
-		var elm = this.toSeleniumElement();
-		elm.clear();
-		elm.sendKeys(input);
+		var deferred = promises.defer(),
+			reject = function() { deferred.reject() };	// it seems WebDriver's promises pass weird arguments that prevent the rejector from being used directly
+
+		this.toSeleniumElement().then(function(elm) {
+			elm.clear().then(function() {
+				elm.sendKeys(input).then(deferred.resolve,
+										 reject);
+			}, reject);
+		}, reject)
+
+		return deferred.promise;
 	}
 }
 
@@ -51,14 +61,22 @@ var Hook = function Hook(hook, driver) {
 */
 Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	var hook = new Hook(typeAndSelector, driver);
+
 	target.__defineGetter__(key, function() {
 		return hook.toSeleniumElement(hook);
 	});
-	target.__defineSetter__(key, function(input) {
+
+	var inputHandler = function(input) {
 		logger.info('	- set ' + target.name + '’s ' + key + ' to “' + input + '”');
 
-		hook.handleInput(input);
-	});
+		return hook.handleInput(input);
+	}
+
+	target.__defineSetter__(key, inputHandler);	// legacy support; works when setting inputs without any need to wait (for example, fails on animated elements)
+
+	target['set' + key.capitalize()] = function(input) {
+		return inputHandler.bind(null, input);	// use this setter when needing setters with timeouts
+	}
 }
 
 module.exports = Hook;	// CommonJS export

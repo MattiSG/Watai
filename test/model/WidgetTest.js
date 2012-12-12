@@ -46,7 +46,7 @@ describe('Widget', function() {
 		it('should bind methods properly', function(done) {
 			subject.submit('something')();
 
-			subject.field.getAttribute('value').then(function(value) {
+			subject.inputField.getAttribute('value').then(function(value) {
 				value.should.equal('Default');	// because the page has been reloaded
 				done();
 			});
@@ -81,6 +81,36 @@ describe('Widget', function() {
 			checker.output.getText().then(function(text) {
 				text.should.equal(expectedOutputs.toggleCheckbox);
 				done();
+			});
+		});
+
+
+		describe('setters', function() {
+			var EXPECTED = 'set method test';
+
+			it('should be added for all field-type elements', function() {
+				subject.setInputField.should.be.a('function');
+			});
+
+			it('should be partial applicators for actually sending keys', function() {
+				subject.setInputField(EXPECTED).should.be.a('function');
+			});
+
+			it('should return a promise when calling partial applicator', function() {
+				var typer = subject.setInputField(EXPECTED);
+
+				typer().then.should.be.a('function');
+			});
+
+			it('should actually send keys when calling partial applicator', function(done) {
+				var typer = subject.setInputField(EXPECTED);
+
+				typer().then(function() {
+					subject.inputField.getAttribute('value').then(function(text) {
+						text.should.equal(EXPECTED);
+						done();
+					});
+				});
 			});
 		});
 	});

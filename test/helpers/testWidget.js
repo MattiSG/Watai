@@ -8,7 +8,7 @@ var elements = exports.elements = {
 	css:					{ css: '.tutu' },
 	missing:				{ id: 'inexistant' },
 	hidden:					{ id: 'hidden' },
-	field:					{ css: 'input[name="field"]' },
+	inputField:				{ css: 'input[name="field"]' },
 	immediateActionLink:	{ linkText: 'This paragraph is embedded in a link' },
 	delayedActionLink:		{ id: 'delayLink' },
 	otherDelayedActionLink:	{ id: 'delayLink2' },
@@ -54,8 +54,8 @@ exports.getWidget = function(driver) {
 	return new TestRight.Widget('Test widget', {
 		elements: elements,
 		submit: function submit(value) {
-			this.field = value;
-			return this.field.submit();
+			this.inputField = value;
+			return this.inputField.submit();
 		}
 	}, driver);
 }
