@@ -8,6 +8,7 @@ var elements = exports.elements = {
 	css:					{ css: '.tutu' },
 	missing:				{ id: 'inexistant' },
 	hidden:					{ id: 'hidden' },
+	regexpTestField:		{ css: 'input[name="regexpTestField"]' },
 	inputField:				{ css: 'input[name="field"]' },
 	immediateActionLink:	{ linkText: 'This paragraph is embedded in a link' },
 	delayedActionLink:		{ id: 'delayLink' },

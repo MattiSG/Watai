@@ -114,15 +114,26 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 		this.fail('Element "' + this.selector + '" does not exist on the page.')
 	},
 
-	/** Compares the given value to the expected value, and fails or succeeds the match automatically.
+	/** Compares the given value to the expected value, using the `match` method, and fails or succeeds the match automatically.
 	*
 	*@param	actual	The value that should be compared against this instance's expected value.
+	*@see	#match
 	*/
 	compare: function compare(actual) {
-		if (actual == this.expected)
+		if (this.match(actual, this.expected))
 			this.succeed();
 		else
 			this.fail(actual);
+	},
+
+	/** Compares the equality of the two given values.
+	* To be modified by inheriting classes. Defaults to testing loose equality with `==`.
+	*
+	*@param	actual	The value that should be compared against the expected value.
+	*@param	expected	The value to compare against.
+	*/
+	match: function match(actual, expected) {
+		return actual == expected;
 	},
 
 	/** Formats the message displayed to the user in case of a failure.

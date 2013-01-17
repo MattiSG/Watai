@@ -4,12 +4,9 @@
 */
 var ValueMatcher = new Class( /** @lends matchers.ValueMatcher# */ {
 	Extends: require('./AbstractMatcher'),
+	Implements: require('./pieces/AttributeExtractor'),
 
-	type: 'value',
-
-	onElementFound: function(element) {
-		element.getAttribute('value').then(this.compare, this.fail);
-	}
+	type: 'value'
 });
 
 module.exports = ValueMatcher;	// CommonJS export

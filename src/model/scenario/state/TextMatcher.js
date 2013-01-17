@@ -4,12 +4,9 @@
 */
 var TextMatcher = new Class( /** @lends matchers.TextMatcher# */ {
 	Extends: require('./AbstractMatcher'),
+	Implements: require('./pieces/TextExtractor'),
 
-	type: 'text',
-
-	onElementFound: function(element) {
-		element.getText().then(this.compare, this.fail);
-	}
+	type: 'text'
 });
 
 module.exports = TextMatcher;	// CommonJS export

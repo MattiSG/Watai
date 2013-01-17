@@ -1,12 +1,14 @@
-/**@class	A matcher that tests its element's textual content against a regular expression.
+/**@class	A matcher that tests its element's value attribute against a regular expression.
 *@extends	matchers.AbstractMatcher
 *@memberOf	matchers
 */
-var RegExpTextMatcher = new Class( /** @lends matchers.RegExpTextMatcher# */ {
+var RegExpValueMatcher = new Class( /** @lends matchers.RegExpValueMatcher# */ {
 	Extends: require('./AbstractMatcher'),
-	Implements: require('./pieces/TextExtractor'),
+	Implements: require('./pieces/AttributeExtractor'),
 
-	type: 'text-regexp',
+	attribute: 'value',
+
+	type: 'value-regexp',
 
 	/**
 	*@param	{String}	actual
@@ -18,7 +20,7 @@ var RegExpTextMatcher = new Class( /** @lends matchers.RegExpTextMatcher# */ {
 
 	formatFailure: function formatFailure(actual) {
 		return this.selector
-				+ '’s textual content was "'
+				+ '’s value was "'
 				+ actual
 				+ '", which did not match the regular expression '
 				+ this.expected
@@ -26,4 +28,4 @@ var RegExpTextMatcher = new Class( /** @lends matchers.RegExpTextMatcher# */ {
 	}
 });
 
-module.exports = RegExpTextMatcher;	// CommonJS export
+module.exports = RegExpValueMatcher;	// CommonJS export
