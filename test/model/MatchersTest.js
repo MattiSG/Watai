@@ -204,4 +204,46 @@ describe('Matchers', function() {
 			).end();
 		});
 	});
+
+	describe('function', function() {
+		it('should pass on a function returning `true`', function(done) {
+			featureWithScenario([
+				{ 'TestWidget.toggleCheckbox': function() { return true } }
+			]).test().then(function() { done() }, done).end();
+		});
+
+		it('should fail on a function returning `false`', function(done) {
+			featureWithScenario([
+				{ 'TestWidget.toggleCheckbox': function() { return false } }
+			]).test().then(function() {
+				done(new Error('Should have failed!'))
+			}, function() {
+				done()
+			}).end();
+		});
+
+		it('should pass on a function returning a promise', function(done) {
+			featureWithScenario([
+				{ 'TestWidget.toggleCheckbox': function(elm) {
+					return elm.getAttribute('checked').then(function() {	// this is just a way to obtain a promise
+						return true;
+					});
+				} }
+			]).test().then(function() { done() }, done).end();
+		});
+
+		it('should fail on a function returning a throwing promise', function(done) {
+			featureWithScenario([
+				{ 'TestWidget.toggleCheckbox': function(elm) {
+					return elm.getAttribute('checked').then(function() {	// this is just a way to obtain a promise
+						throw 'This should make it fail';
+					});
+				} }
+			]).test().then(function() {
+				done(new Error('Should have failed!'))
+			}, function() {
+				done()
+			}).end();
+		});
+	});
 });

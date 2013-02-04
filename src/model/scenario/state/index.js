@@ -8,7 +8,8 @@ var matchers = {
 	TextMatcher:		require('./TextMatcher'),
 	ValueMatcher:		require('./ValueMatcher'),
 	RegExpTextMatcher:	require('./RegExpTextMatcher'),
-	RegExpValueMatcher:	require('./RegExpValueMatcher')
+	RegExpValueMatcher:	require('./RegExpValueMatcher'),
+	FunctionMatcher:	require('./FunctionMatcher')
 }
 
 /** Returns an array of all matcher classes that are able to test for the given expected value.
@@ -21,6 +22,8 @@ matchers.allFor = function allMatchersFor(expected) {
 
 	if (typeof expected == 'boolean') {	// TODO: make matchers responsible for defining which value types they can handle instead of this horrendous switch
 		result.push(matchers.VisibilityMatcher);
+	} else if (typeof expected == 'function') {
+		result.push(matchers.FunctionMatcher);
 	} else if (expected.constructor && expected.constructor.name === 'RegExp') {	// since elements are loaded in a separate context, the `instanceof` fails, as it compares constructors references
 		result.push(matchers.RegExpValueMatcher);
 		result.push(matchers.RegExpTextMatcher);
