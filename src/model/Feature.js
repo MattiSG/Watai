@@ -8,6 +8,9 @@ var logger = require('winston').loggers.get('steps'),
 
 
 var Feature = new Class( /** @lends Feature# */ {
+
+	Extends: require('events').EventEmitter,
+
 	/** A sequence of promises to be executed in order, constructed after the scenario for this feature.
 	*@private
 	*/
@@ -115,8 +118,10 @@ var Feature = new Class( /** @lends Feature# */ {
 							  + (typeof stepIndex != 'undefined'	// we can't simply test for falsiness, since the stepIndex could be 0
 							  	? ', at step ' + (stepIndex + 1)
 							  	: '')
-							  + (message ?	': ' : '')
-							  +  message);
+							  + (message
+							  	? ': ' + message
+							  	: '')
+							 );
 	},
 
 	/** Parses a widget state description and creates an assertive closure returning the promise for assertions results upon evaluation.
@@ -184,7 +189,8 @@ var Feature = new Class( /** @lends Feature# */ {
 	*@private
 	*/
 	evaluateStateDescriptor: function evaluateStateDescriptor(elementSelector, expected, callback, timeout) {
-		var activeMatchers = [];
+		var activeMatchers = [],
+			feature = this;
 
 		matchers.allFor(expected).each(function(matcherClass) {
 			activeMatchers.push(new matcherClass(expected, elementSelector, this.widgets));
@@ -201,10 +207,14 @@ var Feature = new Class( /** @lends Feature# */ {
 		}
 
 		function handleSuccess() {
+			feature.emit('matchSuccess', elementSelector, expected);
+
 			finish();
 		}
 
 		function handleFailure(message) {
+			feature.emit('matchFailure', elementSelector, expected);
+
 			if (--matchersLeft <= 0)
 				finish(message)
 		}

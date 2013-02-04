@@ -20,6 +20,14 @@ RunnerCLI.ready = function onReady() {
 *@param	{Feature}	feature	The feature that is about to start.
 */
 RunnerCLI.featureStart = function onFeatureStart(feature) {
+	feature.on('matchSuccess', function(elementSelector, expected) {
+		animator.log('   ☑', 'info', 'matched "' + elementSelector + '" to ' + expected);
+	});
+
+	feature.on('matchFailure', function(elementSelector, expected) {
+		animator.log('   ☒', 'warn', 'could not match "' + elementSelector + '" to ' + expected);
+	});
+
 	animator.spin(feature.description);
 }
 
@@ -48,10 +56,10 @@ RunnerCLI.featureFailure = function onFeatureFailure(feature, failures) {
 */
 RunnerCLI.featureError = function onFeatureError(feature, errors) {
 	animator.log('⚠', 'error', feature.description);
-	
+
 	errors.forEach(function(error) {
 		animator.log('   ↳', 'cyan', error, 'cyan');
-		
+
 		if (error.stack)
 			animator.log('	', 'verbose', error.stack, 'verbose');
 	});
