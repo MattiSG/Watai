@@ -55,8 +55,19 @@ case "$1" in
 		if [[ $1 = "--exhaustive" ]]
 		then shift
 			 dirs="$DEFAULT_TEST_DIRS $ADDITIONAL_DIRS"
+
+			 echo '****************'
+			 echo 'Testing examples'
+			 echo '****************'
+			 if ./go 'example/DuckDuckGo' && ./go 'example/DuckDuckGo - advanced matchers' && ./go 'example/PDC'
+			 then
+			 	echo 'All examples pass'
+			 else
+			 	echo 'Some examples fail, cancelling tests'
+			 	exit 1
+			 fi
 		fi
-		
+
 		for arg in "$@"
 		do
 			if echo $arg | grep -q '^\-\-'
