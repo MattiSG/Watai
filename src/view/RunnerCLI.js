@@ -48,13 +48,17 @@ RunnerCLI.featureFailure = function onFeatureFailure(feature, failures) {
 */
 RunnerCLI.featureError = function onFeatureError(feature, errors) {
 	animator.log('⚠', 'error', feature.description);
-	
+
 	errors.forEach(function(error) {
 		animator.log('   ↳', 'cyan', error, 'cyan');
-		
+
 		if (error.stack)
 			animator.log('	', 'verbose', error.stack, 'verbose');
 	});
+}
+
+RunnerCLI.failure = RunnerCLI.success = function redrawCursor() {
+	animator.showCursor();
 }
 
 
