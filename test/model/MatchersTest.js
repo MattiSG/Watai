@@ -216,9 +216,9 @@ describe('Matchers', function() {
 			featureWithScenario([
 				{ 'TestWidget.toggleCheckbox': function() { return false } }
 			]).test().then(function() {
-				done(new Error('Should have failed!'))
+				done(new Error('Should have failed!'));
 			}, function() {
-				done()
+				done();
 			}).end();
 		});
 
@@ -226,23 +226,28 @@ describe('Matchers', function() {
 			featureWithScenario([
 				{ 'TestWidget.toggleCheckbox': function(elm) {
 					return elm.getAttribute('checked').then(function() {	// this is just a way to obtain a promise
-						return true;
+						// do nothing
 					});
 				} }
 			]).test().then(function() { done() }, done).end();
 		});
 
 		it('should fail on a function returning a throwing promise', function(done) {
+			var expectedMessage = 'This should make it fail';
+
 			featureWithScenario([
 				{ 'TestWidget.toggleCheckbox': function(elm) {
 					return elm.getAttribute('checked').then(function() {	// this is just a way to obtain a promise
-						throw 'This should make it fail';
+						throw expectedMessage;
 					});
 				} }
 			]).test().then(function() {
-				done(new Error('Should have failed!'))
-			}, function() {
-				done()
+				done(new Error('Should have failed!'));
+			}, function(reasons) {
+				reasons.errors.should.have.length(0);
+				reasons.failures.should.have.length(1);
+				reasons.failures[0].should.match(new RegExp(expectedMessage));
+				done();
 			}).end();
 		});
 	});

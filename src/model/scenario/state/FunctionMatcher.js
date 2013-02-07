@@ -25,9 +25,8 @@ var FunctionMatcher = new Class( /** @lends matchers.FunctionMatcher# */ {
 
 	formatFailure: function formatFailure(actual) {
 		return this.selector
-				+ ' did not pass the given function '
-				+ this.expected
-				+ '.';
+				+ ' had its testing function fail, saying "' + actual + '":\n'
+				+ this.expected;
 	}
 });
 
