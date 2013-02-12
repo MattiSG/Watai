@@ -13,7 +13,7 @@ RunnerCLI.beforeRun = function onBeforeRun() {
 /** Informs user that the emitting Runner is ready to start.
 */
 RunnerCLI.ready = function onReady() {
-	animator.log(' ҉', 'info', 'Browser ready!            ');
+	animator.log('҉  ┍', 'info', 'Browser ready!            ');
 }
 
 /** Presents details of a test start to the user.
@@ -21,11 +21,18 @@ RunnerCLI.ready = function onReady() {
 */
 RunnerCLI.featureStart = function onFeatureStart(feature) {
 	feature.on('matchSuccess', function(elementSelector, expected) {
-		animator.log('   ☑', 'info', 'matched "' + elementSelector + '" to ' + expected);
+		animator.log('   ┝☑', 'info', 'matched "' + elementSelector + '" to ' + expected);
+		animator.spin(feature.description);
 	});
 
 	feature.on('matchFailure', function(elementSelector, expected) {
-		animator.log('   ☒', 'warn', 'could not match "' + elementSelector + '" to ' + expected);
+		animator.log('   ┝☒', 'warn', 'could not match "' + elementSelector + '" to ' + expected);
+		animator.spin(feature.description);
+	});
+
+	feature.on('stepFailure', function(failure, stepIndex) {
+		animator.log('   ┝', 'cyan', 'step ' + stepIndex + ':\n' + failure, 'cyan');
+		animator.spin(feature.description);
 	});
 
 	animator.spin(feature.description);
@@ -35,7 +42,7 @@ RunnerCLI.featureStart = function onFeatureStart(feature) {
 *@param	{Feature}	feature	The feature whose results are given.
 */
 RunnerCLI.featureSuccess = function onFeatureSuccess(feature) {
-	animator.log('✔', 'info', feature.description);
+	animator.log('✔  ┕', 'info', feature.description);
 }
 
 /** Presents details of a test failure to the user.
@@ -43,11 +50,7 @@ RunnerCLI.featureSuccess = function onFeatureSuccess(feature) {
 *@param	{Array.<String>}	failures	An array of strings giving details on failures.
 */
 RunnerCLI.featureFailure = function onFeatureFailure(feature, failures) {
-	animator.log('✘', 'warn', feature.description, 'warn');
-
-	failures.forEach(function(failure) {
-		animator.log('   ↳', 'cyan', failure, 'cyan');
-	});
+	animator.log('✘  ┕', 'warn', feature.description, 'warn');
 }
 
 /** Presents details of a test error to the user.

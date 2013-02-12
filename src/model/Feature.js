@@ -227,7 +227,7 @@ var Feature = new Class( /** @lends Feature# */ {
 		});
 
 		if (activeMatchers.length <= 0)
-			throw new Error('No matcher found for the given value type  :-/  (had to check for "' + expected + '").');
+			throw new TypeError('No matcher found for the given value type  :-/  (had to check for "' + expected + '").');
 	},
 
 	/** Asynchronously evaluates the scenario given to this feature.
@@ -249,9 +249,17 @@ var Feature = new Class( /** @lends Feature# */ {
 			};
 
 		var handleFailure = function handleFailure(message, step) {
-			failureReasons.failures.push(message + ' (at step ' + (step + 1) + ')');	// make user-visible indices 1-based
+			this.emit('stepFailure', message, step + 1);	// make user-visible indices 1-based
+
+			failureReasons.failures.push(message + ' (at step ' + (step + 1) + ')');	// TODO: deprecate? Are events enough?
 			evaluateNext();
-		}
+		}.bind(this);
+
+		var handleSuccess = function handleSuccess(step) {
+			this.emit('stepSuccess', step + 1);	// make user-visible indices 1-based
+
+			evaluateNext();
+		}.bind(this);
 
 		function fulfillPromise(report) {
 			if (report.failures.length || report.errors.length)
@@ -270,15 +278,15 @@ var Feature = new Class( /** @lends Feature# */ {
 				var result = this.steps[stepIndex]();
 				// unfortunately, [q.when](https://github.com/kriskowal/q#the-middle) is not compatible with WebDriver's Promises/A implementation, and we need to explicitly call `then` to reject thrown exceptions
 				if (result && typeof result.then == 'function') {
-					result.then(evaluateNext, function(message) {
+					result.then(handleSuccess.pass(stepIndex), function(message) {
 						handleFailure(message, stepIndex)
 					}).end();
 				} else {
-					evaluateNext();
+					handleSuccess(stepIndex);
 				}
 			} catch (error) {
 				failureReasons.errors.push(error);
-				evaluateNext();
+				handleFailure(error);
 			}
 		}).bind(this);
 
