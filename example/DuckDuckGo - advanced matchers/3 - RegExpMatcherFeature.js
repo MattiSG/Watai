@@ -1,5 +1,5 @@
 {
-	description: 'Match the Zero Click Info box appear with RegExps',
+	description: 'Match the Zero Click Info box header with RegExps',
 
 	scenario: [
 		{

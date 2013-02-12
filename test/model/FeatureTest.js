@@ -131,7 +131,7 @@ describe('Feature', function() {
 
 	describe('scenarios with widget states descriptions', function() {
 		var expectedContents = {},
-			wrongTexts    = {},
+			wrongTexts = {},
 			firstKey;	// the first key of expected texts. Yes, it is used in a test.
 
 		before(function() {
@@ -186,12 +186,22 @@ describe('Feature', function() {
 			}).end();
 		});
 
-		it('that are incorrectly written should throw an error upon creation', function() {
-			(function() {
-				featureWithScenario([
-					{ toto: 'toto'}	// no widget matches this property path. We have to protect users against misspelled paths.
-				]);
-			}).should.throw();
+		describe('incorrectly written', function() {
+			it('with a non-existing property path should throw', function() {
+				(function() {
+					featureWithScenario([
+						{ toto: 'toto'}	// no widget matches this property path. We have to protect users against misspelled paths.
+					]);
+				}).should.throw(/Could not find/);
+			});
+
+			it('with a magically-added property path should throw', function() {
+				(function() {
+					featureWithScenario([
+						{ 'TestWidget.delayedAction': 'toto'}	// The actual element is `delayedActionLink`. `delayedAction` is an action shortcut, but may not be used as a property.
+					]);
+				}).should.throw(/not an element/);
+			});
 		});
 
 		/* We cannot decide in advance whether a given identifier will match in another page or not. The only thing we can check is whether we're trying to describe an unknown widget property.
