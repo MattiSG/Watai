@@ -192,7 +192,7 @@ describe('Feature', function() {
 					featureWithScenario([
 						{ toto: 'toto'}	// no widget matches this property path. We have to protect users against misspelled paths.
 					]);
-				}).should.throw();
+				}).should.throw(/Could not find/);
 			});
 
 			it('with a magically-added property path should throw', function() {
@@ -200,7 +200,7 @@ describe('Feature', function() {
 					featureWithScenario([
 						{ 'TestWidget.delayedAction': 'toto'}	// The actual element is `delayedActionLink`. `delayedAction` is an action shortcut, but may not be used as a property.
 					]);
-				}).should.throw();
+				}).should.throw(/not an element/);
 			});
 		});
 

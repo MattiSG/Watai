@@ -138,11 +138,12 @@ var Feature = new Class( /** @lends Feature# */ {
 
 		Object.each(hooksVals, function(expected, attribute) {
 			matchesLeft++;
+			// unfortunately, we can't cache elements, since WebDriverJS matches elements to the current page once and for all. We'll have to ask access on the page on which the assertion will take place.
+			if (! Object.hasPropertyPath(this.widgets, attribute))	// the user referenced a non-existing element
+				throw new ReferenceError('Could not find "' + attribute + '" in available widgets. Are you sure you spelled the property path properly?');
 
-			if (! Object.hasPropertyPath(this.widgets, attribute)) {	// unfortunately, we can't cache this, since WebDriverJS matches elements to the current page once and for all. We'll have to ask access on the page on which the assertion will take place.
-				logger.error('Could not find "' + attribute + '" in available widgets. Are you sure you spelled the property path properly?', { widgets: this.widgets });
-				throw new Error('Could not find "' + attribute + '" in available widgets');
-			}
+			if (! Object.hasGetter(this.widgets, attribute))	// the user referenced a magically-added attribute, not an element
+				throw new ReferenceError('"' + attribute + '" is a shortcut, not an element. It can not be used in an assertion description. You should target a key referenced in the `elements` hash of the "' + attribute.split('.')[0] + '" widget.');
 		}, this);
 
 		return (function() {
