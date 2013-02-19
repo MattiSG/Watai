@@ -11,10 +11,10 @@ process.on('SIGINT', function() {
 });
 
 /** Presents the given information to the user.
-*@param	{string}	prefix	A symbol to prepend to the message.
-*@param	{string}	type	The type of information to present (i.e. "debug", "info", "warn"…).
-*@param	{string}	message	The actual content to present to the user.
-*@param	{string?}	messageType	The type of the actual content, for different colouration. 
+*@param	{String}	prefix			A symbol to prepend to the message.
+*@param	{String}	type			The type of information to present (i.e. "debug", "info", "warn"…).
+*@param	{String}	message			The actual content to present to the user.
+*@param	{String}	[messageType]	The type of the actual content, for different colouration.
 */
 CLIanimator.log = function log(prefix, type, message, messageType) {
 	stop();
