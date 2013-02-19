@@ -13,49 +13,48 @@ RunnerCLI.beforeRun = function onBeforeRun() {
 /** Informs user that the emitting Runner is ready to start.
 */
 RunnerCLI.ready = function onReady() {
-	animator.log('҉  ┍', 'info', 'Browser ready!            ');
+	animator.log(' ҉', 'info', 'Browser ready!            ');
 }
 
 /** Presents details of a test start to the user.
+* Listens to step failure events.
 *@param	{Feature}	feature	The feature that is about to start.
 */
 RunnerCLI.featureStart = function onFeatureStart(feature) {
-	feature.on('matchSuccess', function(elementSelector, expected) {
-		animator.log('   ┝☑', 'info', 'matched "' + elementSelector + '" to ' + expected);
-		animator.spin(feature.description);
-	});
+	animator.spin(feature.description);
 
-	feature.on('matchFailure', function(elementSelector, expected) {
-		animator.log('   ┝☒', 'warn', 'could not match "' + elementSelector + '" to ' + expected);
-		animator.spin(feature.description);
-	});
-
-	feature.on('stepSuccess', function(stepIndex) {
-		animator.log('   ┝', 'info', 'step ' + stepIndex + ' passed');
-		animator.spin(feature.description);
-	});
+	var loggedFailure = false;
 
 	feature.on('stepFailure', function(failure, stepIndex) {
-		animator.log('   ┝', 'cyan', 'step ' + stepIndex + ':\n' + failure, 'cyan');
+		if (! loggedFailure)
+			logFeatureFailure(feature);
+
+		loggedFailure = true;
+		animator.log('   ↳', 'cyan', 'at step ' + stepIndex + ': ' + failure, 'cyan');
 		animator.spin(feature.description);
 	});
-
-	animator.spin(feature.description);
 }
 
 /** Presents details of a test success to the user.
 *@param	{Feature}	feature	The feature whose results are given.
 */
 RunnerCLI.featureSuccess = function onFeatureSuccess(feature) {
-	animator.log('✔  ┕', 'info', feature.description);
+	animator.log('✔', 'info', feature.description);
 }
 
 /** Presents details of a test failure to the user.
 *@param	{Feature}	feature	The feature whose results are given.
-*@param	{Array.<String>}	failures	An array of strings giving details on failures.
+*/
+function logFeatureFailure(feature) {
+	animator.log('✘', 'warn', feature.description, 'warn');
+}
+
+/** Clears the feature spinner.
+* Does not log anything, as individual feature failures have been logged as they came.
+*@param	{Feature}	feature	The feature whose results are given.
 */
 RunnerCLI.featureFailure = function onFeatureFailure(feature, failures) {
-	animator.log('✘  ┕', 'warn', feature.description, 'warn');
+	animator.clear();
 }
 
 /** Presents details of a test error to the user.

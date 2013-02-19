@@ -286,7 +286,7 @@ var Feature = new Class( /** @lends Feature# */ {
 				}
 			} catch (error) {
 				failureReasons.errors.push(error);
-				handleFailure(error);
+				handleFailure(error);	// TODO: this should differentiate between failures and errors, especially regarding raised events
 			}
 		}).bind(this);
 
