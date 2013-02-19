@@ -21,6 +21,12 @@ CLIanimator.log = function log(prefix, type, message, messageType) {
 	process.stdout.write(makeLine(prefix, typeToColorCode[type], message + '\n', typeToColorCode[messageType]));
 }
 
+/** Erases the current line.
+*/
+CLIanimator.clear = function clear() {
+	process.stdout.write('\r');
+}
+
 /** Hides the cursor.
 */
 CLIanimator.hideCursor = function hideCursor() {

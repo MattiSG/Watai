@@ -16,6 +16,12 @@ WindowsCLI.log = function log(prefix, type, message, messageType) {
 	logger[method](prefix + '  ' + message);
 }
 
+/** Erases the current line.
+*/
+CLIanimator.clear = function clear() {
+	process.stdout.write('\r');
+}
+
 /** Hides the cursor.
 * Does nothing on Windows.
 */
