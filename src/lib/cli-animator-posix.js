@@ -42,6 +42,7 @@ CLIanimator.showCursor = function showCursor() {
 /** Does a spinner animation with the given message.
 */
 CLIanimator.spin = function spin(message) {
+	stop();
 	play(makeFrames(message));
 }
 
