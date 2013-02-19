@@ -30,6 +30,11 @@ RunnerCLI.featureStart = function onFeatureStart(feature) {
 		animator.spin(feature.description);
 	});
 
+	feature.on('stepSuccess', function(stepIndex) {
+		animator.log('   ┝', 'info', 'step ' + stepIndex + ' passed');
+		animator.spin(feature.description);
+	});
+
 	feature.on('stepFailure', function(failure, stepIndex) {
 		animator.log('   ┝', 'cyan', 'step ' + stepIndex + ':\n' + failure, 'cyan');
 		animator.spin(feature.description);
