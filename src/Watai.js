@@ -4,23 +4,20 @@ require('mootools');
 require('./lib/mootools-additions');
 
 /* Logging is done with [Winston](https://github.com/flatiron/winston). */
-var winston = require('winston'),
-/* http://nodejs.org/api/path.html */
-	pathsUtils = require('path'),
-/* https://github.com/MattiSG/Node-ConfigLoader#readme */
-	ConfigLoader = require('mattisg.configloader');
+var winston			= require('winston'),
+	/* http://nodejs.org/api/path.html */
+	pathsUtils		= require('path'),
+	/* https://github.com/MattiSG/Node-ConfigLoader#readme */
+	ConfigLoader	= require('mattisg.configloader'),
+	ConfigManager	= require('./lib/configManager');
 
 
 var config = new ConfigLoader({
-	from: pathsUtils.dirname(module.parent.filename),
-	appName: 'watai'
+	from	: pathsUtils.dirname(module.parent.filename),
+	appName	: 'watai'
 }).load('config');
 
-require('./lib/configManager').set(config);
-
-Object.each(config.log, function(setup, name) {
-	winston.loggers.add(name, setup);
-});
+ConfigManager.set(config);
 
 var logger = winston.loggers.get('init');
 
@@ -65,7 +62,7 @@ var Watai = {
 	Hook:			require('./model/Hook'),
 	/**@see	ViewsManager
 	*/
-	ViewsManager: 	require('./view/ViewsManager'),
+	ViewsManager:	require('./view/ViewsManager'),
 	/**@see	configManager
 	*/
 	config:			require('./lib/configManager')
