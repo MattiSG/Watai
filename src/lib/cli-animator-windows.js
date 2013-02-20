@@ -3,7 +3,7 @@
 */
 var WindowsCLI = {};
 
-var logger = require('winston').loggers.get('suites');
+var logger = require('winston');
 
 
 /** Presents the given information to the user.

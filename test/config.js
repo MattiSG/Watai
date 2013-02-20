@@ -5,10 +5,6 @@ module.exports = {
 		browserName: 'chrome',
 		javascriptEnabled: true
 	},
-	logLevel: {
-		suites: 'none',
-		steps: 'none'
-	},
 	quit: 'never',
 	browserWarmupTimeout: 30 * 1000,	//ms
 	timeout: 500	// implicit wait for elements lookup in milliseconds, has to be lower than mocha's timeout to test for missing elements rejection

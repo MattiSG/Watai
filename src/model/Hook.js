@@ -1,8 +1,6 @@
 var webdriver = require('selenium-webdriverjs'),
 	promises = require('q');
 
-var logger = require('winston').loggers.get('steps');
-
 
 /**@class	A Hook allows one to target a specific element on a web page.
 * It is a wrapper around both a selector and its type (css, xpath, id…).
@@ -51,10 +49,10 @@ var Hook = function Hook(hook, driver) {
 * The getter dynamically retrieves the Selenium element pointed at by the given selector description.
 * The setter will pass the value to the `Hook.handleInput` method.
 *
-*@param	target	The Object to which the getter and setter will be added.
-*@param	key	The name of the property to add to the target object.
+*@param	target			The Object to which the getter and setter will be added.
+*@param	key				The name of the property to add to the target object.
 *@param	typeAndSelector	A hook descriptor, as defined in the Hook constructor.
-*@param	driver	The WebDriver instance in which the described elements are to be sought.
+*@param	driver			The WebDriver instance in which the described elements are to be sought.
 *
 *@see	Hook
 *@see	Hook#handleInput
@@ -63,20 +61,18 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	var hook = new Hook(typeAndSelector, driver);
 
 	target.__defineGetter__(key, function() {
+		target.emit('access', key);
 		return hook.toSeleniumElement(hook);
 	});
 
-	var inputHandler = function(input) {
-		logger.info('	- set ' + target.name + '’s ' + key + ' to “' + input + '”');
-
-		return hook.handleInput(input);
+	var inputHandler = function handleInputAndEmit(input) {
+		target.emit('action', key, 'write', [ input ]);
+		hook.handleInput(input);
 	}
 
 	target.__defineSetter__(key, inputHandler);	// legacy support; works when setting inputs without any need to wait (for example, fails on animated elements)
 
-	target['set' + key.capitalize()] = function(input) {
-		return inputHandler.bind(null, input);	// use this setter when needing setters with timeouts
-	}
+	target['set' + key.capitalize()] = inputHandler;	// use this setter when needing setters with timeouts
 }
 
 module.exports = Hook;	// CommonJS export

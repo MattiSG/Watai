@@ -2,8 +2,7 @@ var fs			= require('fs'),
 	vm			= require('vm'),
 	pathsUtils	= require('path');
 
-var logger			= require('winston').loggers.get('steps'),
-	suitesLogger	= require('winston').loggers.get('suites'),
+var logger			= require('winston').loggers.get('load'),
 	ConfigLoader	= require('mattisg.configloader');
 
 var Widget			= require('../model/Widget'),
@@ -60,7 +59,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		var loader = new ConfigLoader({
 			from: this.path,
 			appName: 'watai',
-			observer: suitesLogger.silly
+			observer: logger.silly
 		});
 
 		var config = loader.load(SuiteLoader.paths.config);
@@ -97,7 +96,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		result[SuiteLoader.contextGlobals.featuresList] = this.features;	// hook to pass instantiated features to this context
 		result[SuiteLoader.contextGlobals.widgetsList] = {};	// stays in the managed context, but necessary for features to have a reference to all widgets, since they are evaluated in _this_ context, not their instanciation one…
 
-		result[SuiteLoader.contextGlobals.logger] = logger.info; // this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
+		result[SuiteLoader.contextGlobals.log] = logger.info;	// this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
 
 		result[SuiteLoader.contextGlobals.assert] = require('assert');
 		result[SuiteLoader.contextGlobals.storage] = Object.create(null);
@@ -115,7 +114,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*/
 	loadAllFiles: function loadAllFiles(err, files) {
 		if (err) {
-			suitesLogger.error('Error while trying to load description files in "' + this.path + '"!', { path: this.path });
+			logger.error('Error while trying to load description files in "' + this.path + '"!', { path: this.path });
 			throw err;
 		}
 
@@ -164,7 +163,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 							this.context,
 							dataFile);
 		} catch (error) {
-			suitesLogger.error('**Error in file "' + dataFile + '"**', { path : dataFile });
+			logger.error('**Error in file "' + dataFile + '"**', { path : dataFile });	// TODO: is it really useful to add this info?
 			throw error;
 		}
 
@@ -192,7 +191,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 							this.context,
 							widgetFile);
 		} catch (error) {
-			suitesLogger.error('**Error in file "' + widgetFile + '"**', { path: widgetFile });
+			logger.error('**Error in file "' + widgetFile + '"**', { path: widgetFile });	// TODO: is it really useful to add this info?
 			throw error;
 		}
 
@@ -219,7 +218,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 							this.context,
 							featureFile);
 		} catch (error) {
-			suitesLogger.error('**Error in file "' + featureFile + '"**', { path: featureFile });
+			logger.error('**Error in file "' + featureFile + '"**', { path: featureFile });	// TODO: is it really useful to add this info?
 			throw error;
 		}
 
@@ -274,7 +273,7 @@ SuiteLoader.contextGlobals = {
 	featuresList:	'__features__',
 	/** The name of the offered logging function.
 	*/
-	logger:			'log',
+	log:			'log',
 	/** The name of the offered assertion library.
 	*/
 	assert:			'assert',

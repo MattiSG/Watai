@@ -18,9 +18,11 @@ var config = new ConfigLoader({
 
 require('./lib/configManager').set(config);
 
-initLoggers();
+Object.each(config.log, function(setup, name) {
+	winston.loggers.add(name, setup);
+});
 
-var logger = winston.loggers.get('suites');
+var logger = winston.loggers.get('init');
 
 /* Try to load long stack traces development module.
 */
@@ -29,7 +31,7 @@ try {
 	longjohn.async_trace_limit = config.debug.asyncTraces;
 	logger.silly('Long stack traces loaded');
 } catch (e) {
-	logger.silly('No long stack traces module found');
+	logger.warn('No long stack traces module found');
 }
 
 /**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
@@ -70,29 +72,3 @@ var Watai = {
 }
 
 module.exports = Watai;	// CommonJS export
-
-
-/** Initializes all different Winston loggers.
-*@memberOf	Watai
-*@see	https://github.com/flatiron/winston#working-with-multiple-loggers-in-winston
-*@private
-*/
-function initLoggers() {
-	/** The `suites` logger logs suites names and feature status.
-	*/
-	winston.loggers.add('suites', {
-		console: {
-			level: config.logLevel.suites,
-			colorize: 'true'
-		}
-	});
-
-	/** The `steps` logger logs atomic actions on widgets.
-	*/
-	winston.loggers.add('steps', {
-		console: {
-			level: config.logLevel.steps,
-			colorize: 'true'
-		}
-	});
-}

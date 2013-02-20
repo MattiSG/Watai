@@ -1,13 +1,24 @@
 {
-	"seleniumServerURL": "http://127.0.0.1:4444/wd/hub",
-	"logLevel": {
-		"suites": "info",
-		"steps" : "warn"
+	"timeout"			: 5000,
+	"quit"				: "always",
+	"views"				: ["CLI", "Growl"],
+
+	"log": {
+		"init": {
+			"console": {
+				"level"		: "error",
+				"colorize"	: true
+			}
+		},
+		"load": {
+			"console": {
+				"level"		: "warn",
+				"colorize"	: true
+			}
+		}
 	},
-	"timeout": 5000,
-	"matchTriesDelay": 100,
-	"quit": "always",
-	"views": ["CLI", "Growl"],
+	"matchTriesDelay"	: 100,
+	"seleniumServerURL"	: "http://127.0.0.1:4444/wd/hub",
 	"debug": {
 		"asyncTraces": 40
 	}

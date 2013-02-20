@@ -1,14 +1,16 @@
 var promises = require('q');
 
-var logger = require('winston').loggers.get('steps');
-
 var Hook = require('./Hook');
 
 
 var Widget = new Class( /** @lends Widget# */ {
+
+	Extends: require('events').EventEmitter,
+
 	/** The name of this widget.
 	* Automatically set to the name of its containing file upon parsing.
 	*@type	{String}
+	*@private
 	*/
 	name: '',
 
@@ -36,15 +38,10 @@ var Widget = new Class( /** @lends Widget# */ {
 		Object.each(values, function(method, key) {
 			widget[key] = function() {
 				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
+
 				return function() {
-					logger.info('	- did ' + key
-								+ (args.length > 0
-								   ? ' ' + args.join(', ')
-								   : '')
-								+ ' (within '
-								+ widget.name
-								+ ')');
-					method.apply(widget, args);
+					widget.emit('action', key, method, args);
+					return method.apply(widget, args);
 				}
 			}
 		});
@@ -53,6 +50,7 @@ var Widget = new Class( /** @lends Widget# */ {
 	/** Add magic methods on specially-formatted elements.
 	* _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`.
 	*
+	*@param	{String}	key	The key that should be considered for adding magic elements.
 	*@see	Widget.magic
 	*@private
 	*/
@@ -61,16 +59,19 @@ var Widget = new Class( /** @lends Widget# */ {
 
 		Object.each(Widget.magic, function(matcher, method) {
 			var matches = matcher.exec(key);
-			if (matches) {	// `exec` returns `null` if no match was found
-				var basename = matches[1],
-					type = matches[2];	// for example "Link", "Button"…
 
-				widget[basename] = function() {	// wrapping to allow immediate calls in scenario steps	//TODO: rather return an object with methods, and leave preparation for scenarios to the Widget constructor
-					return function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
-						logger.info('	- ' + method + 'ed ' + basename + ' ' + type.toLowerCase());
+			if (! matches)	// no match, hence no magic to add
+				return;
 
-						return widget[key][method]();
-					}
+			var basename = matches[1],
+				type = matches[2];	// for example "Link", "Button"…
+
+			widget[basename] = function() {	// wrapping to allow immediate calls in scenario steps	//TODO: rather return an object with methods, and leave preparation for scenarios to the Widget constructor
+				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
+
+				return function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
+					widget.emit('action', key, method, args);
+					return widget[key][method].apply(widget[key], args);
 				}
 			}
 		});
