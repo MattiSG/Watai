@@ -1,35 +1,39 @@
-var promises = require('q');
+var Watai			= require('./Watai'),
+	/** Path to the directory containing option-callable scripts.
+	*@type	{String}
+	*@see	#preProcessArguments
+	*@private
+	*/
+	OPTIONS_HANDLERS_DIR = './plugins/';
+	showHelpAndExit	= require(OPTIONS_HANDLERS_DIR + 'help'),
+	logger			= require('winston');
 
-
-/* Here is the main CLI entry point.
+/*
+* Here is the main CLI entry point.
 */
-var args = process.argv.slice(2); // extract CLI arguments, see http://docs.nodejitsu.com/articles/command-line/how-to-parse-command-line-arguments
 
-/** Absolute path to the main library file.
-*@type	{String}
-*/
-var MAIN_FILE = exports.MAIN_FILE = require('path').join(__dirname, 'Watai.js');
-
-/** Path to the directory containing option-callable scripts.
-*@type	{String}
-*@see	#preProcessArguments
-*@private
-*/
-var LOAD_OPTIONS_FROM = './plugins/';
-
+args = preProcessArguments(process.argv);
 
 if (args.length == 0) {
-	var logger = require('winston'),
-		showHelpAndExit = require(LOAD_OPTIONS_FROM + 'help');
-
-	logger.error("Oops, you didn’t provide any test suite to execute!");
-
+	logger.error('Oops, you didn’t provide any test suite to execute!');
 	showHelpAndExit(2);
 }
 
-args = preProcessArguments(args);
+if (args.length > 1) {
+	logger.error('Too many arguments! (' + args + ')');
+	showHelpAndExit(2);
+}
 
-main(args);
+
+var path	= args[0],
+	suite	= new Watai.SuiteLoader(path);
+
+suite.run().then(function() {
+	process.exit(0);
+}, function(error) {
+	process.stderr.write(error);
+	process.exit(1);
+});
 
 
 /** Loads plugins based on any passed options.
@@ -41,6 +45,8 @@ main(args);
 *@private
 */
 function preProcessArguments(args) {
+	args = args.slice(2);	// extract CLI arguments, see http://docs.nodejitsu.com/articles/command-line/how-to-parse-command-line-arguments
+
 	var result = [];
 
 	for (var i = 0; i < args.length; i++) {
@@ -53,7 +59,7 @@ function preProcessArguments(args) {
 				plugin;
 
 			try {
-				plugin = require(LOAD_OPTIONS_FROM + pluginName);
+				plugin = require(OPTIONS_HANDLERS_DIR + pluginName);
 			} catch (e) {	// no matching plugin to handle this option
 				result.push(args[i]);	// pass it without doing anything on it
 				continue;	// go straight to the next option
@@ -70,44 +76,4 @@ function preProcessArguments(args) {
 	}
 
 	return result;
-}
-
-/** The CLI takes paths to test description folders as arguments.
-* Any number of paths may be given.
-*
-*@param	{Array.<String>}	folders	This **function**, as opposed to the CLI, takes in an array of paths. The CLI takes varargs.
-*@see	SuiteLoader
-*@private
-*/
-function main(folders) {
-	var TR = require(MAIN_FILE);
-
-	var suites = [];
-
-	folders.forEach(function(descriptionPath) {
-		suites.push(new TR.SuiteLoader(descriptionPath));
-	});
-
-	var suitePromises = suites.map(function(suite) {
-		return suite.run();
-	});
-
-	promises.allResolved(suitePromises)
-			.then(exit, function(error) {	// rejecting those promises is an interal Q.js error
-				process.stderr.write(error);
-				process.exit(3);
-			});
-}
-
-/** Exits the process with the proper status code.
-*
-*@param	{Array.<Promise>}	The array of suite runs promises, all resolved.
-*/
-function exit(promises) {
-	promises.forEach(function(promise) {
-		if (! promise.isFulfilled())
-			process.exit(1);
-	});
-
-	process.exit(0);
 }
