@@ -27,6 +27,8 @@ if (args.length == 0) {
 	showHelpAndExit(2);
 }
 
+var Watai = require(MAIN_FILE);
+
 args = preProcessArguments(args);
 
 main(args);
@@ -80,12 +82,10 @@ function preProcessArguments(args) {
 *@private
 */
 function main(folders) {
-	var TR = require(MAIN_FILE);
-
 	var suites = [];
 
 	folders.forEach(function(descriptionPath) {
-		suites.push(new TR.SuiteLoader(descriptionPath));
+		suites.push(new Watai.SuiteLoader(descriptionPath));
 	});
 
 	var suitePromises = suites.map(function(suite) {
