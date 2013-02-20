@@ -67,12 +67,15 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 
 	var inputHandler = function handleInputAndEmit(input) {
 		target.emit('action', key, 'write', [ input ]);
-		hook.handleInput(input);
+
+		return hook.handleInput(input);
 	}
 
 	target.__defineSetter__(key, inputHandler);	// legacy support; works when setting inputs without any need to wait (for example, fails on animated elements)
 
-	target['set' + key.capitalize()] = inputHandler;	// use this setter when needing setters with timeouts
+	target['set' + key.capitalize()] = function(input) {	// wrapping to allow call-like syntax in scenarios
+		return inputHandler.bind(null, input);	// use this setter when needing setters with timeouts
+	}
 }
 
 module.exports = Hook;	// CommonJS export
