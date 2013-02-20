@@ -12,6 +12,8 @@ var winston			= require('winston'),
 	ConfigManager	= require('./lib/configManager');
 
 
+ConfigManager.set(require('./config'));
+
 var config = new ConfigLoader({
 	from	: pathsUtils.dirname(module.parent.filename),
 	appName	: 'watai'

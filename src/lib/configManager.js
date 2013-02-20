@@ -1,4 +1,4 @@
-var config	= require('../config.json'),
+var config	= Object.create(null),
 /* Logging is done with [Winston](https://github.com/flatiron/winston). */
 	winston	= require('winston');
 
