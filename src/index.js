@@ -15,12 +15,12 @@ var MAIN_FILE = exports.MAIN_FILE = require('path').join(__dirname, 'Watai.js');
 *@see	#preProcessArguments
 *@private
 */
-var LOAD_OPTIONS_FROM = './plugins/';
+var OPTIONS_HANDLERS_DIR = './plugins/';
 
 
 if (args.length == 0) {
 	var logger = require('winston'),
-		showHelpAndExit = require(LOAD_OPTIONS_FROM + 'help');
+		showHelpAndExit = require(OPTIONS_HANDLERS_DIR + 'help');
 
 	logger.error("Oops, you didn’t provide any test suite to execute!");
 
@@ -55,7 +55,7 @@ function preProcessArguments(args) {
 				plugin;
 
 			try {
-				plugin = require(LOAD_OPTIONS_FROM + pluginName);
+				plugin = require(OPTIONS_HANDLERS_DIR + pluginName);
 			} catch (e) {	// no matching plugin to handle this option
 				result.push(args[i]);	// pass it without doing anything on it
 				continue;	// go straight to the next option
