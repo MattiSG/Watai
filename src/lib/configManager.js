@@ -16,6 +16,14 @@ exports.set = function setConfig(newConf) {
 	}
 }
 
-exports.__defineGetter__('values', function() {
+exports.__defineGetter__('values', function getConfig() {
 	return config;
 });
+
+/** Since winston does not allow modifying loggers on the fly, to ensure logger references are not stale and always reflect the current config state, always access loggers through this method and not `winston.loggers` accessor.
+*
+*@returns	{Winston.Logger}
+*/
+exports.getLogger = function getLogger(name) {
+	return winston.loggers.get(name);
+}

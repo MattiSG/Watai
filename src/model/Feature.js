@@ -1,10 +1,9 @@
 var promises = require('q'),
 	assert = require('assert');
 
-var logger = require('winston').loggers.get('load'),
-	matchers = require('./scenario/state'),
+var matchers = require('./scenario/state'),
 	steps = require('./scenario'),
-	config = require('../lib/configManager');
+	ConfigManager = require('../lib/configManager');
 
 
 var Feature = new Class( /** @lends Feature# */ {
@@ -61,7 +60,7 @@ var Feature = new Class( /** @lends Feature# */ {
 			var sourceStep = scenario[stepIndex], // takes all values listed in a scenario
 				step = null;	// this is going to be an actual AbstractStep-inheriting instance
 
-			logger.silly('Loading step ' + stepIndex + ' (source type: ' + typeof sourceStep + ', full source: ' + sourceStep + ')…');
+			ConfigManager.getLogger('load').silly('Loading step ' + stepIndex + ' (source type: ' + typeof sourceStep + ', full source: ' + sourceStep + ')…');
 
 			switch (typeof sourceStep) {
 				case 'function':
@@ -75,7 +74,7 @@ var Feature = new Class( /** @lends Feature# */ {
 					break;
 				case 'string':
 				case 'number':
-					logger.debug('Oops, encoutered "' + sourceStep + '" as a free step in a feature scenario!'	// TODO: remove this hint after v0.4
+					ConfigManager.getLogger('load').debug('Oops, encoutered "' + sourceStep + '" as a free step in a feature scenario!'	// TODO: remove this hint after v0.4
 							 + '\n'
 							 + 'Maybe your test is still using pre-0.4 syntax?  :)'
 							 + '\n'
@@ -88,7 +87,7 @@ var Feature = new Class( /** @lends Feature# */ {
 			if (! step)
 				this.notifySyntaxError('step value ("' + sourceStep + '") is illegal!', stepIndex);
 
-			logger.silly('Loaded step ' + stepIndex + ' as ' + step);
+			ConfigManager.getLogger('load').silly('Loaded step ' + stepIndex + ' as ' + step);
 
 			result.push(step);
 		}
