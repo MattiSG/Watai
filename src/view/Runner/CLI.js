@@ -2,7 +2,7 @@
 */
 var RunnerCLI = {};
 
-var animator = require('../lib/cli-animator');
+var animator = require('../../../src/lib/cli-animator');
 
 /** Informs user that the emitting Runner is waiting for the browser.
 */

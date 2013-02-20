@@ -14,7 +14,7 @@ JSCOVERAGE="$BASEDIR/node_modules/visionmedia-jscoverage/jscoverage"
 MOCHA_CMD="$BIN_DIR/mocha"
 
 # Not all tests are run each time, as some are long and little prone to failure.
-DEFAULT_TEST_DIRS="test/model test/controller test/functional test/lib"
+DEFAULT_TEST_DIRS="test/model test/controller test/functional test/lib test/view"
 # Used when running exhaustive tests.
 ADDITIONAL_DIRS="test/main"
 

@@ -1,15 +1,16 @@
-var fs = require('fs'),
-	pathsUtils = require('path'),
-	vm = require('vm');
+var fs			= require('fs'),
+	vm			= require('vm'),
+	pathsUtils	= require('path');
 
-var logger = require('winston').loggers.get('steps'),
-	suitesLogger = require('winston').loggers.get('suites'),
-	ConfigLoader = require('mattisg.configloader');
+var logger			= require('winston').loggers.get('steps'),
+	suitesLogger	= require('winston').loggers.get('suites'),
+	ConfigLoader	= require('mattisg.configloader');
 
-var Widget = require('../model/Widget'),
-	Feature = require('../model/Feature'),
-	Runner = require('./Runner'),
-	configManager = require('../lib/configManager');
+var Widget			= require('../model/Widget'),
+	Feature			= require('../model/Feature'),
+	Runner			= require('./Runner'),
+	ViewsManager	= require('../view/ViewsManager'),
+	configManager	= require('../lib/configManager');
 
 
 var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
@@ -144,15 +145,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 	attachViewsTo: function attachViewsTo(runner) {
 		configManager.values.views.each(function(view) {
-			Object.each(require('../view/Runner' + view), function(handler, eventType, viewObject) {
-				runner.on(eventType, function() {
-					try {
-						handler.apply(viewObject, arguments);
-					} catch (err) {	// TODO: investigate why such exceptions are not thrown in the main loop
-						logger.error(err + ' (in view "' + view + '")', { error: err });
-					}
-				});
-			});
+			ViewsManager.attach('Runner/' + view, runner);
 		});
 	},
 

@@ -47,23 +47,26 @@ try {
 var TestRight = {
 	/**@see	Widget
 	*/
-	Widget:		require('./model/Widget'),
+	Widget:			require('./model/Widget'),
 	/**@see	Feature
 	*/
-	Feature:	require('./model/Feature'),
+	Feature:		require('./model/Feature'),
 	/**@see	Runner
 	*/
-	Runner:		require('./controller/Runner'),
+	Runner:			require('./controller/Runner'),
 	/**@see	SuiteLoader
 	*/
-	SuiteLoader:require('./controller/SuiteLoader'),
+	SuiteLoader:	require('./controller/SuiteLoader'),
 	/**@see	Hook
 	*@private	(protected, exported for easier testing)
 	*/
-	Hook:		require('./model/Hook'),
+	Hook:			require('./model/Hook'),
+	/**@see	ViewsManager
+	*/
+	ViewsManager: 	require('./view/ViewsManager'),
 	/**@see	configManager
 	*/
-	config:		require('./lib/configManager')
+	config:			require('./lib/configManager')
 }
 
 module.exports = TestRight;	// CommonJS export
