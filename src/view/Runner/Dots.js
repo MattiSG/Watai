@@ -11,15 +11,16 @@ var failuresAndErrorsBuffer = [],
 
 /** Informs the user that the emitting Runner is waiting for the browser.
 */
-RunnerDots.beforeRun = function onBeforeRun() {
+RunnerDots.beforeRun = function onBeforeRun(runner) {
+	process.stdout.write(runner + '\n');
 	startTime = new Date();
 }
 
 /** Informs the user that the emitting Runner is ready to start.
 */
-RunnerDots.ready = function onReady() {
+RunnerDots.ready = function onReady(runner) {
 	browserReadyTime = new Date();
-	process.stdout.write('Browser ready!\n');
+	process.stdout.write('Browser ready\n');
 }
 
 /** Presents a brief summary of a test success to the user.

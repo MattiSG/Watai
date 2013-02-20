@@ -6,14 +6,14 @@ var animator = require('../../../src/lib/cli-animator');
 
 /** Informs user that the emitting Runner is waiting for the browser.
 */
-RunnerCLI.beforeRun = function onBeforeRun() {
-	animator.spin('waiting for browser…');
+RunnerCLI.beforeRun = function onBeforeRun(runner) {
+	animator.spin(runner + ' (waiting for browser…)');
 }
 
 /** Informs user that the emitting Runner is ready to start.
 */
-RunnerCLI.ready = function onReady() {
-	animator.log(' ҉', 'info', 'Browser ready!            ');
+RunnerCLI.ready = function onReady(runner) {
+	animator.log('⨁', 'info', runner + '                       ');
 }
 
 /** Presents details of a test start to the user.

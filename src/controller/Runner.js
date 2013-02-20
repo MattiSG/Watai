@@ -47,17 +47,21 @@ var Runner = new Class( /** @lends Runner# */ {
 	/**@class	Manages a set of features and the driver in which they are run.
 	*
 	* A `Runner` is mostly set up through a configuration object.
-	* Such an object should contain the following items:
+	* Such an object MUST contain the following items:
 	*	- `baseURL`: the URL at which the driver should start;
-	*	- `driverCapabilities`: an object that will be passed straight to the WebDriver instance.
+	* It SHOULD contain:
+	*	- `driverCapabilities`: an object that will be passed straight to the WebDriver instance, that describes the browser on which the tests should be run.
+	* It MAY contain:
+	*	- `name`: the name of the suite. Defaults to the name of the containing folder.
 	*
 	*@constructs
 	*@param	{Object}	config	A configuration object, as defined above.
 	*@see	WebDriver.Builder#withCapabilities
 	*/
 	initialize: function init(config) {
-		if (this.error = this.findConfigError(config))
-			throw this.error;	// `this` scoping is here just to avoid leaking, no usage for it
+		var error = this.findConfigError(config);
+		if (error)
+			throw error;
 
 		this.config = config;
 
@@ -138,7 +142,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	onReady: function onReady() {
 		this.loading = false;
 		this.ready = true;
-		this.emit('ready');
+		this.emit('ready', this);
 	},
 
 	/** Adds the given Feature to the list of those that this Runner will evaluate.
@@ -166,7 +170,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@see	#addFeature
 	*/
 	run: function run() {
-		this.emit('beforeRun')
+		this.emit('beforeRun', this);
 
 		this.deferred = promises.defer();
 		if (this.ready) {
@@ -193,7 +197,7 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.failures = Object.create(null);
 		this.currentFeature = -1;
 
-		this.emit('run');
+		this.emit('run', this);
 
 		this.startNextFeature();
 	},
@@ -321,6 +325,10 @@ var Runner = new Class( /** @lends Runner# */ {
 			return driver.quit();
 		else
 			return promises.fcall(function() {});	// normalize return type to a promise, so that it can safely be called even if the driver had already been quit
+	},
+
+	toString: function toString() {
+		return this.config.name;
 	}
 });
 

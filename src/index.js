@@ -28,7 +28,9 @@ if (args.length > 1) {
 var path	= args[0],
 	suite	= new Watai.SuiteLoader(path);
 
-suite.run().then(function() {
+suite.getRunner()
+	 .run()
+	 .then(function() {
 	process.exit(0);
 }, function(error) {
 	process.stderr.write(error);

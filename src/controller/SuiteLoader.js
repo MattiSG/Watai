@@ -12,10 +12,10 @@ var Widget			= require('../model/Widget'),
 
 
 var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
-	/** Will be set to the name of the loaded test suite.
+	/** The configuration for this test suite.
 	*@private
 	*/
-	name: '',
+	config: {},
 
 	/** Runner that will be fed all features found in the loaded suite.
 	*@type	Runner
@@ -53,7 +53,6 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*/
 	initialize: function init(path) {
 		this.path = pathsUtils.resolve(path) + '/';	//TODO: Node 0.8 has path.sep
-		this.name = pathsUtils.basename(path, '/');	// remove a possible trailing separator
 
 		var config = new ConfigLoader({
 			from: this.path,
@@ -63,17 +62,26 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 		ConfigManager.set(config);
 
+		this.config = ConfigManager.values;
+
 		if (! config.baseURL) {
 			var msg = 'No baseURL was found in any "' + SuiteLoader.paths.config + '" file in directories above "' + this.path + '"';
 			ConfigManager.getLogger('load').error(msg);
 			throw new Error(msg);
 		}
 
-		this.runner = new Runner(config);
+		if (! config.name)
+			this.config.name = pathsUtils.basename(path, '/');	// remove a possible trailing separator
+	},
+
+	getRunner: function getRunner() {
+		this.runner = new Runner(this.config);
 		this.attachViewsTo(this.runner);
 		this.context = vm.createContext(this.buildContext());
 
 		fs.readdir(this.path, this.loadAllFiles.bind(this));
+
+		return this.runner;
 	},
 
 	/** Generates the list of variables that will be offered globally to Widgets, Features and Data elements.
@@ -223,18 +231,6 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		this.runner.addFeature(this.features.pop());
 
 		return this;
-	},
-
-	/** Asks the underlying Runner instance to execute all tests.
-	*
-	*@return	{Promise}	A promise for results.
-	*@see	Runner#run
-	*/
-	run: function run() {
-		var underline = this.name.replace(/./g, '–');
-		process.stdout.write(underline + '\n' + this.name + '\n' + underline + '\n');	// TODO: replace this by emitting an event in Runner
-
-		return this.runner.run();
 	}
 });
 
