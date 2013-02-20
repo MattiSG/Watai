@@ -25,7 +25,8 @@ exports.checkHook = checkHook = function checkHook(subject, hookName, expectedCo
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */
 describe('Hook', function() {
-	var hooksTarget = {};
+	var hooksTarget = new (require('events').EventEmitter)();
+
 
 	describe('selector', function() {
 		describe('with ID', function() {
