@@ -11,14 +11,20 @@ process.on('SIGINT', function() {
 });
 
 /** Presents the given information to the user.
-*@param	{string}	prefix	A symbol to prepend to the message.
-*@param	{string}	type	The type of information to present (i.e. "debug", "info", "warn"…).
-*@param	{string}	message	The actual content to present to the user.
-*@param	{string?}	messageType	The type of the actual content, for different colouration. 
+*@param	{String}	prefix			A symbol to prepend to the message.
+*@param	{String}	type			The type of information to present (i.e. "debug", "info", "warn"…).
+*@param	{String}	message			The actual content to present to the user.
+*@param	{String}	[messageType]	The type of the actual content, for different colouration.
 */
 CLIanimator.log = function log(prefix, type, message, messageType) {
 	stop();
 	process.stdout.write(makeLine(prefix, typeToColorCode[type], message + '\n', typeToColorCode[messageType]));
+}
+
+/** Erases the current line.
+*/
+CLIanimator.clear = function clear() {
+	process.stdout.write('\r');
 }
 
 /** Hides the cursor.
@@ -36,6 +42,7 @@ CLIanimator.showCursor = function showCursor() {
 /** Does a spinner animation with the given message.
 */
 CLIanimator.spin = function spin(message) {
+	stop();
 	play(makeFrames(message));
 }
 

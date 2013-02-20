@@ -7,28 +7,36 @@ var logger = require('winston').loggers.get('suites');
 
 
 /** Presents the given information to the user.
-*@param	{string}	prefix	A symbol to prepend to the message.
-*@param	{string}	type	The type of information to present (i.e. "debug", "info", "warn"…).
-*@param	{string}	message	The actual content to present to the user.
-*@param	{string?}	messageType	The type of the actual content, for different colouration. 
+*@param	{String}	prefix			A symbol to prepend to the message.
+*@param	{String}	type			The type of information to present (i.e. "debug", "info", "warn"…).
+*@param	{String}	message			The actual content to present to the user.
+*@param	{String}	[messageType]	The type of the actual content, for different colouration.
 */
 WindowsCLI.log = function log(prefix, type, message, messageType) {
 	logger[method](prefix + '  ' + message);
 }
 
+/** Erases the current line.
+*/
+CLIanimator.clear = function clear() {
+	process.stdout.write('\r');
+}
+
 /** Hides the cursor.
+* Does nothing on Windows.
 */
 WindowsCLI.hideCursor = function hideCursor() {
 	// do nothing on Windows
 }
 
 /** Shows the cursor.
+* Does nothing on Windows.
 */
 WindowsCLI.showCursor = function showCursor() {
 	// do nothing on Windows
 }
 
-/** Does a spinner animation with the given message.
+/** Logs the given message.
 */
 WindowsCLI.spin = function spin(message) {
 	logger.verbose(message);

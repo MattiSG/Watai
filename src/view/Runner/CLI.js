@@ -2,7 +2,7 @@
 */
 var RunnerCLI = {};
 
-var animator = require('../lib/cli-animator');
+var animator = require('../../../src/lib/cli-animator');
 
 /** Informs user that the emitting Runner is waiting for the browser.
 */
@@ -17,10 +17,22 @@ RunnerCLI.ready = function onReady() {
 }
 
 /** Presents details of a test start to the user.
+* Listens to step failure events.
 *@param	{Feature}	feature	The feature that is about to start.
 */
 RunnerCLI.featureStart = function onFeatureStart(feature) {
 	animator.spin(feature.description);
+
+	var loggedFailure = false;
+
+	feature.on('stepFailure', function(failure, stepIndex) {
+		if (! loggedFailure)
+			logFeatureFailure(feature);
+
+		loggedFailure = true;
+		animator.log('   ↳', 'cyan', 'at step ' + stepIndex + ': ' + failure, 'cyan');
+		animator.spin(feature.description);
+	});
 }
 
 /** Presents details of a test success to the user.
@@ -32,14 +44,17 @@ RunnerCLI.featureSuccess = function onFeatureSuccess(feature) {
 
 /** Presents details of a test failure to the user.
 *@param	{Feature}	feature	The feature whose results are given.
-*@param	{Array.<String>}	failures	An array of strings giving details on failures.
+*/
+function logFeatureFailure(feature) {
+	animator.log('✘', 'warn', feature.description, 'warn');
+}
+
+/** Clears the feature spinner.
+* Does not log anything, as individual feature failures have been logged as they came.
+*@param	{Feature}	feature	The feature whose results are given.
 */
 RunnerCLI.featureFailure = function onFeatureFailure(feature, failures) {
-	animator.log('✘', 'warn', feature.description, 'warn');
-
-	failures.forEach(function(failure) {
-		animator.log('   ↳', 'cyan', failure, 'cyan');
-	});
+	animator.clear();
 }
 
 /** Presents details of a test error to the user.

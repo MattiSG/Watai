@@ -1,11 +1,11 @@
 {
 	"baseURL": "https://checkmytrip.com/",
-	
+
 	"driverCapabilities": {
 		"browserName": "chrome",
 		"javascriptEnabled": true
 	},
 
-	"views": [ "Dots" ],
+	"views": [ "Dots", "Instafail" ],
 	"quit": "always"
 }
