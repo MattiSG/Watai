@@ -9,8 +9,10 @@ function showHelp(exitCode) {
 		"       watai --installed",
 	].join('\n'));
 
-	if (typeof exitCode == 'number')
-		process.exit(exitCode);
+	if (typeof exitCode === false)
+		return;
+
+	process.exit(exitCode || 0);
 }
 
 

@@ -3,9 +3,8 @@
 *@private
 */
 function isInstalled() {
-	var index = require('../../');
 	try {
-		require(index.MAIN_FILE);
+		require('../../');
 		return true;
 	} catch (e) {
 		return e;
