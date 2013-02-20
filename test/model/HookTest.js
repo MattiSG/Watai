@@ -1,4 +1,4 @@
-var TestRight = require('../helpers/subject'),
+var Watai = require('../helpers/subject'),
 	my = require('../helpers/driver').getDriverHolder(),
 	should = require('should');
 
@@ -32,7 +32,7 @@ describe('Hook', function() {
 			var hookName = 'id';
 
 			before(function() {
-				TestRight.Hook.addHook(hooksTarget, hookName, { id: 'toto' }, my.driver);
+				Watai.Hook.addHook(hooksTarget, hookName, { id: 'toto' }, my.driver);
 			});
 
 			checkHook(hooksTarget, hookName, 'This paragraph has id toto');
@@ -42,7 +42,7 @@ describe('Hook', function() {
 			var hookName = 'css';
 
 			before(function() {
-				TestRight.Hook.addHook(hooksTarget, hookName, { css: '.tutu' }, my.driver);
+				Watai.Hook.addHook(hooksTarget, hookName, { css: '.tutu' }, my.driver);
 			});
 
 			checkHook(hooksTarget, hookName, 'This paragraph has class tutu');
@@ -52,7 +52,7 @@ describe('Hook', function() {
 			var hookName = 'xpath';
 
 			before(function() {
-				TestRight.Hook.addHook(hooksTarget, hookName, { xpath: '//div[@id="selectors"]/p[3]' }, my.driver);
+				Watai.Hook.addHook(hooksTarget, hookName, { xpath: '//div[@id="selectors"]/p[3]' }, my.driver);
 			});
 
 			checkHook(hooksTarget, hookName, 'This paragraph is the third of the selectors div');
@@ -62,7 +62,7 @@ describe('Hook', function() {
 			var hookName = 'linkText';
 
 			before(function() {
-				TestRight.Hook.addHook(hooksTarget, hookName, { linkText: 'This paragraph is embedded in a link' }, my.driver);
+				Watai.Hook.addHook(hooksTarget, hookName, { linkText: 'This paragraph is embedded in a link' }, my.driver);
 			});
 
 			checkHook(hooksTarget, hookName, 'This paragraph is embedded in a link');
@@ -71,7 +71,7 @@ describe('Hook', function() {
 		it('should work on a field too', function(done) {
 			var target = 'field';
 
-			TestRight.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
+			Watai.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
 
 			hooksTarget[target].getAttribute('value').then(function(content) {
 				content.should.equal('Default');
@@ -85,7 +85,7 @@ describe('Hook', function() {
 			var target = 'field',
 				newContent = 'new content';
 
-			TestRight.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
+			Watai.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
 
 			hooksTarget[target] = newContent;
 

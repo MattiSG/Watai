@@ -1,4 +1,4 @@
-var TestRight = require('../helpers/subject'),
+var Watai = require('../helpers/subject'),
 	my = require('../helpers/driver').getDriverHolder(),
 	expectedOutputs = require('../helpers/testWidget').expectedOutputs,
 	TestWidget;
@@ -13,7 +13,7 @@ describe('Matchers', function() {
 		TestWidget = require('../helpers/testWidget').getWidget(my.driver);
 
 		featureWithScenario = function featureWithScenario(scenario) {
-			return new TestRight.Feature('Test feature', scenario, { TestWidget: TestWidget });
+			return new Watai.Feature('Test feature', scenario, { TestWidget: TestWidget });
 		}
 	});
 

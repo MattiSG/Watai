@@ -35,16 +35,16 @@ try {
 /**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
 *
 *Example usage:
-*	var TestRight = require('TestRight');
-*	var myWidget = new TestRight.Widget(…);
+*	var Watai = require('Watai');
+*	var myWidget = new Watai.Widget(…);
 *
 *…which you could also decide to write this way:
-*	var TR = require('TestRight');
+*	var TR = require('Watai');
 *	var myWidget = new TR.Widget(…);
 *
 *You are therefore free of choosing your own namespacing pattern.
 */
-var TestRight = {
+var Watai = {
 	/**@see	Widget
 	*/
 	Widget:			require('./model/Widget'),
@@ -69,11 +69,11 @@ var TestRight = {
 	config:			require('./lib/configManager')
 }
 
-module.exports = TestRight;	// CommonJS export
+module.exports = Watai;	// CommonJS export
 
 
 /** Initializes all different Winston loggers.
-*@memberOf	TestRight
+*@memberOf	Watai
 *@see	https://github.com/flatiron/winston#working-with-multiple-loggers-in-winston
 *@private
 */

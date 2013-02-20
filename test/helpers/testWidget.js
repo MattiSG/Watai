@@ -1,4 +1,4 @@
-var TestRight = require('./subject');
+var Watai = require('./subject');
 
 
 /** Widget description of elements existing in the test support page resource.
@@ -52,7 +52,7 @@ exports.expectedOutputs = {
 *@see	#elements
 */
 exports.getWidget = function(driver) {
-	return new TestRight.Widget('Test widget', {
+	return new Watai.Widget('Test widget', {
 		elements: elements,
 		submit: function submit(value) {
 			this.inputField = value;

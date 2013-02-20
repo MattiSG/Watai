@@ -8,7 +8,7 @@ var args = process.argv.slice(2); // extract CLI arguments, see http://docs.node
 /** Absolute path to the main library file.
 *@type	{String}
 */
-var MAIN_FILE = exports.MAIN_FILE = require('path').join(__dirname, 'TestRight.js');
+var MAIN_FILE = exports.MAIN_FILE = require('path').join(__dirname, 'Watai.js');
 
 /** Path to the directory containing option-callable scripts.
 *@type	{String}
@@ -23,7 +23,7 @@ if (args.length == 0) {
 		showHelpAndExit = require(LOAD_OPTIONS_FROM + 'help');
 
 	logger.error("Oops, you didn’t provide any test suite to execute!");
-	
+
 	showHelpAndExit(2);
 }
 
@@ -83,11 +83,11 @@ function main(folders) {
 	var TR = require(MAIN_FILE);
 
 	var suites = [];
-	
+
 	folders.forEach(function(descriptionPath) {
 		suites.push(new TR.SuiteLoader(descriptionPath));
 	});
-	
+
 	var suitePromises = suites.map(function(suite) {
 		return suite.run();
 	});

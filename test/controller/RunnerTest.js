@@ -1,6 +1,6 @@
 var should = require('should'),
 	promises = require('q'),
-	TestRight = require('../helpers/subject'),
+	Watai = require('../helpers/subject'),
 	config = require('../helpers/driver').config;
 
 
@@ -10,13 +10,13 @@ describe('Runner', function() {
 	describe('constructor', function() {
 		it('should refuse to construct a runner with no config', function() {
 			(function() {
-				new TestRight.Runner();
+				new Watai.Runner();
 			}).should.throw();
 		});
 
 		it('should refuse to construct a runner with no base URL', function() {
 			(function() {
-				new TestRight.Runner({
+				new Watai.Runner({
 					seleniumServerURL: 'http://example.com'
 				});
 			}).should.throw();
@@ -24,7 +24,7 @@ describe('Runner', function() {
 
 		it('should refuse to construct a runner with no Selenium Server URL', function() {
 			(function() {
-				new TestRight.Runner({
+				new Watai.Runner({
 					baseURL: 'http://example.com'
 				});
 			}).should.throw();
@@ -32,7 +32,7 @@ describe('Runner', function() {
 
 		it ('should not throw when constructing with proper config', function() {
 			(function() {
-				subject = new TestRight.Runner(config);
+				subject = new Watai.Runner(config);
 			}).should.not.throw();
 		});
 
@@ -60,11 +60,11 @@ describe('Runner', function() {
 		featureSuccessSource,	// test event source
 		featureEvaluationCount = 0;
 
-	var feature = new TestRight.Feature('RunnerTest feature', [
+	var feature = new Watai.Feature('RunnerTest feature', [
 		function() { featureEvaluationCount++ }
 	], {});
 
-	var failingFeature = new TestRight.Feature('RunnerTest failing feature', [
+	var failingFeature = new Watai.Feature('RunnerTest failing feature', [
 		function() {
 			var result = promises.defer();
 			result.reject('This is reason enough for rejection.');
@@ -86,7 +86,7 @@ describe('Runner', function() {
 				featureSuccessSource = feature;
 			});
 
-			subjectWithFailure = new TestRight.Runner(config);
+			subjectWithFailure = new Watai.Runner(config);
 			subjectWithFailure.once('failure', function(failures) {
 				emitted.failures = failures;
 			});

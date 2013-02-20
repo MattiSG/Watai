@@ -1,4 +1,4 @@
-var TestRight = require('../helpers/subject'),
+var Watai = require('../helpers/subject'),
 	my = require('../helpers/driver').getDriverHolder(),
 	should = require('should'),
 	subject,
@@ -28,7 +28,7 @@ describe('Widget', function() {
 		expectedOutputs = testWidget.expectedOutputs;
 		subject = testWidget.getWidget(my.driver);
 
-		checker = new TestRight.Widget('Events results widget', {
+		checker = new Watai.Widget('Events results widget', {
 			elements: checkerElements
 		}, my.driver);
 	});

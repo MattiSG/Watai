@@ -1,6 +1,6 @@
 var promises = require('q');
 
-var TestRight = require('../helpers/subject'),
+var Watai = require('../helpers/subject'),
 	my = require('../helpers/driver').getDriverHolder(),
 	expectedOutputs = require('../helpers/testWidget').expectedOutputs,
 	WidgetTest;
@@ -23,7 +23,7 @@ describe('Feature', function() {
 		WidgetTest = require('../helpers/testWidget').getWidget(my.driver);
 
 		featureWithScenario = function featureWithScenario(scenario) {
-			return new TestRight.Feature('Test feature', scenario, { TestWidget: WidgetTest });
+			return new Watai.Feature('Test feature', scenario, { TestWidget: WidgetTest });
 		}
 	});
 

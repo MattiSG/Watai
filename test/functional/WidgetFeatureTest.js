@@ -1,4 +1,4 @@
-var TestRight = require('../helpers/subject'),
+var Watai = require('../helpers/subject'),
 	my = require('../helpers/driver').getDriverHolder(),
 	testWidget = require('../helpers/testWidget'),
 	should = require('should');
@@ -15,7 +15,7 @@ describe('Widget usage within Feature', function() {
 			partTwo = 'two';
 
 		before(function() {
-			widget = new TestRight.Widget('Test widget 2', {
+			widget = new Watai.Widget('Test widget 2', {
 				elements: testWidget.elements,
 				setMarker: function setMarker(one) {
 					calledMarker = one;
@@ -28,7 +28,7 @@ describe('Widget usage within Feature', function() {
 
 
 		it('should bind one parameter', function(done) {
-			var feature = new TestRight.Feature('Test feature', [
+			var feature = new Watai.Feature('Test feature', [
 					widget.setMarker(partOne)
 				], { TestWidget: widget }
 			);
@@ -46,7 +46,7 @@ describe('Widget usage within Feature', function() {
 		});
 
 		it('should bind two parameters', function(done) {
-			var feature = new TestRight.Feature('Test feature', [
+			var feature = new Watai.Feature('Test feature', [
 					widget.concatenateTwo(partOne, partTwo)
 				], { TestWidget: widget }
 			);
