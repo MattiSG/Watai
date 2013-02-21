@@ -1,10 +1,10 @@
-var Watai			= require('./Watai'),
+var Watai = require('./Watai'),
 	/** Path to the directory containing option-callable scripts.
 	*@type	{String}
 	*@see	#preProcessArguments
 	*@private
 	*/
-	OPTIONS_HANDLERS_DIR = './plugins/';
+	OPTIONS_HANDLERS_DIR = './plugins/',
 	showHelpAndExit	= require(OPTIONS_HANDLERS_DIR + 'help'),
 	logger			= require('winston');
 
@@ -25,17 +25,16 @@ if (args.length > 1) {
 }
 
 
-var path	= args[0],
-	suite	= new Watai.SuiteLoader(path);
+var suitePath	= args[0],
+	suite		= new Watai.SuiteLoader(suitePath);
 
 suite.getRunner()
 	 .run()
 	 .then(function() {
-	process.exit(0);
-}, function(error) {
-	process.stderr.write(error);
-	process.exit(1);
-});
+		process.exit(0);
+	}, function(report) {
+		process.exit(1);
+	}).end();
 
 
 /** Loads plugins based on any passed options.
