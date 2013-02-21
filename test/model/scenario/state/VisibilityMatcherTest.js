@@ -50,7 +50,7 @@ describe('VisibilityMatcher', function() {
 		new VisibilityMatcher(false, 'TestWidget.missing', { TestWidget: TestWidget })
 			.test().then(function() {
 				done();
-			}, function(reasons) {
+			}, function(reason) {
 				done(new Error(reason || 'No failure message passed.'));
 			}
 		).end();
@@ -71,7 +71,7 @@ describe('VisibilityMatcher', function() {
 		new VisibilityMatcher(false, 'TestWidget.hidden', { TestWidget: TestWidget })
 			.test().then(function() {
 				done();
-			}, function(reasons) {
+			}, function(reason) {
 				done(new Error(reason || 'No failure message passed.'));
 			}
 		).end();

@@ -13,7 +13,7 @@ describe('RegExpTextMatcher', function() {
 		new RegExpTextMatcher(/This paragraph/, 'TestWidget.id', { TestWidget: TestWidget })
 			.test().then(function() {
 				done();
-			}, function(reasons) {
+			}, function(reason) {
 				done(new Error(reason || 'No failure message passed.'));
 			}
 		).end();
@@ -23,7 +23,7 @@ describe('RegExpTextMatcher', function() {
 		new RegExpTextMatcher(/(to){2}/, 'TestWidget.id', { TestWidget: TestWidget })
 			.test().then(function() {
 				done();
-			}, function(reasons) {
+			}, function(reason) {
 				done(new Error(reason || 'No failure message passed.'));
 			}
 		).end();

@@ -13,7 +13,7 @@ describe('RegExpValueMatcher', function() {
 		new RegExpValueMatcher(/defau/i, 'TestWidget.regexpTestField', { TestWidget: TestWidget })
 			.test().then(function() {
 				done();
-			}, function(reasons) {
+			}, function(reason) {
 				done(new Error(reason || 'No failure message passed.'));
 			}
 		).end();

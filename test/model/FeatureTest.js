@@ -5,13 +5,9 @@ var Watai = require('../helpers/subject'),
 	expectedOutputs = require('../helpers/testWidget').expectedOutputs,
 	WidgetTest;
 
-/** Milliseconds the actions take to delay changing the output on the test page.
-* Set in the test page (`test/resources/page.html`).
-*/
-var DELAYED_ACTIONS_DELAY	= 500,
 /** Timeout value of the test's config.
 */
-	GLOBAL_TIMEOUT			= 500;	//TODO: get from configManager
+var GLOBAL_TIMEOUT = 500;	//TODO: get from configManager
 
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
