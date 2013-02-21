@@ -1,6 +1,7 @@
 var EventEmitter = require('events').EventEmitter;
 
-var Watai = require('../helpers/subject');
+var Watai		= require('../helpers/subject'),
+	stdoutSpy	= require('../helpers/StdoutSpy');
 
 
 /** A simple Feature stub, to have proper parameters to pass to events.
@@ -28,22 +29,6 @@ var views = [
 		failure			: [],
 		success			: []
 	};
-
-/** Will be set to `true` whenever `process.stdout.write` is called.
-*/
-var printed = false,
-/** Set to `true` to silence calls to `process.stdout.write`.
-*/
-	suspend = false;
-
-// since we're testing views, we have to test whether `process.stdout.write` is called
-process.stdout.write = (function(write) {
-	return function(buf, encoding, fd) {
-		if (! suspend)
-			write.call(process.stdout, buf, encoding, fd);
-		printed = true;
-	};
-}(process.stdout.write));
 
 
 
@@ -75,8 +60,8 @@ describe('Views', function() {
 
 			Object.each(events, function(params, eventName) {
 				before(function() {
-					printed = false;
-					suspend = true;
+					stdoutSpy.mute();
+					stdoutSpy.reset();
 				});
 
 				it('should listen to ' + eventName, function() {
@@ -84,11 +69,11 @@ describe('Views', function() {
 					emitter.emit.apply(emitter, params);
 					params.shift();	// leave the array as it was, for the next tests
 
-					printed.should.be.true;
+					stdoutSpy.called().should.be.true;
 				});
 
 				after(function() {
-					suspend = false;
+					stdoutSpy.unmute();
 				});
 			});
 		});
