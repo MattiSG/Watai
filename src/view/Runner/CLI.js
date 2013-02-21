@@ -73,6 +73,7 @@ RunnerCLI.featureError = function onFeatureError(feature, errors) {
 }
 
 RunnerCLI.failure = RunnerCLI.success = function redrawCursor() {
+	animator.clear();
 	animator.showCursor();
 }
 
