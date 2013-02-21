@@ -12,14 +12,20 @@ var FunctionMatcher = new Class( /** @lends matchers.FunctionMatcher# */ {
 	},
 
 	compare: function compare(element) {
-		var evaluationResult = this.expected(element);
+		var evaluationResult;
+
+		try {
+			evaluationResult = this.expected(element);
+		} catch (err) {
+			this.fail(err);
+		}
 
 		if (! evaluationResult) {
 			this.fail();
 		} else if (typeof evaluationResult.then == 'function') {	// the user-provided function returned a promise
 			evaluationResult.then(this.succeed, this.fail);
 		} else {
-			this.succeed();
+			this.succeed(evaluationResult);
 		}
 	},
 
