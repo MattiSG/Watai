@@ -11,6 +11,8 @@ var promises =	require('q'),
 */
 var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
+	Extends: require('events').EventEmitter,
+
 	/** Time, in milliseconds, before the lack of validation is considered an actual failure.
 	*@type	{Number}
 	*/
@@ -54,6 +56,8 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 		this.retryTimeoutId = -1;	// -1 is no magic value, it just helps with debugging
 
 		this.onBeforeStart();
+
+		this.emit('start', this);
 
 		this.start();
 
@@ -99,12 +103,14 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 	/** Fulfill the promise.
 	* To be called by inheriting classes.
+	*
+	*@param	[data]	If passed, will be passed as the second parameter of the promise resolution, the first one being this step.
 	*/
-	succeed: function succeed() {
+	succeed: function succeed(data) {
 		if (this.cancelled)
 			return;
 
-		this.promise.resolve();
+		this.promise.resolve(this, data);
 	},
 
 	/** Reject the promise.
@@ -133,7 +139,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	failImmediately: function failImmediately(report) {
 		var failureMessagePrefix = (this.timeout > 0 ? 'After ' + this.timeout + ' milliseconds, ' : '');
 
-		this.promise.reject(failureMessagePrefix + this.formatFailure(report));
+		this.promise.reject(this, failureMessagePrefix + this.formatFailure(report));
 	},
 
 	/** Formats the message displayed to the user in case of a failure.
