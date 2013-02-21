@@ -44,7 +44,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	*
 	*@param	expected	Any kind of content this matcher should look for.
 	*@param	{String}	selector	The element selector to look for in this instance's referenced widgets.
-	*@param	{Array.<Widget>}	[widgets]	The widgets in which elements should be looked for.
+	*@param	{Object.<String,Widget>}	[widgets]	The widgets in which elements should be looked for.
 	*@constructs
 	*@see	#test
 	*@see	#addWidgets
