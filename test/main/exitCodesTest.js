@@ -11,6 +11,15 @@ describe('Exit code', function() {
 		});
 	});
 
+	it('should be 2 when passed too many arguments', function(done) {
+		var subject = spawn('./go', [ 'test/resources/FailingSuite', 'test/resources/FailingSuite' ]);
+
+		subject.on('exit', function(code) {
+			code.should.equal(2);
+			done();
+		});
+	});
+
 	[ 'help', 'installed', 'version' ].forEach(function(option) {
 		it('should be 0 when called with --' + option, function(done) {
 			var subject = spawn('./go', [ '--' + option ]);
