@@ -1,8 +1,7 @@
 var promises = require('q'),
 	assert = require('assert');
 
-var matchers = require('./scenario/state'),
-	steps = require('./scenario'),
+var steps = require('./scenario'),
 	ConfigManager = require('../lib/configManager');
 
 
@@ -95,18 +94,6 @@ var Feature = new Class( /** @lends Feature# */ {
 		return result;
 	},
 
-	/** Normalizes an operational closure (i.e. a function that modifies a widget's state) to a format compatible with scenario steps execution.
-	*
-	*@param	{Function}	func	A prepared function (i.e. that only has to be called) to execute.
-	*@param	{Number}	[stepIndex]	The step at which this function is parsed. Used for user-level debugging, in case an error is detected in the function.
-	*@returns	{Function}	A bound function, ready for execution as a step.
-	*@private
-	*/
-	buildFunctionalPromise: function buildFunctionalPromise(func, stepIndex) {
-		var step = new steps.FunctionalStep(func);
-		return step.test.bind(step);
-	},
-
 	/** Notifies the user that there was a syntax error in the feature description file.
 	*
 	*@param	{String}	message	A description of the syntax error that was detected
@@ -123,6 +110,18 @@ var Feature = new Class( /** @lends Feature# */ {
 							 );
 	},
 
+	/** Normalizes an operational closure (i.e. a function that modifies a widget's state) to a format compatible with scenario steps execution.
+	*
+	*@param	{Function}	func	A prepared function (i.e. that only has to be called) to execute.
+	*@param	{Number}	[stepIndex]	The step at which this function is parsed. Used for user-level debugging, in case an error is detected in the function.
+	*@returns	{Function}	A bound function, ready for execution as a step.
+	*@private
+	*/
+	buildFunctionalPromise: function buildFunctionalPromise(func, stepIndex) {
+		var step = new steps.FunctionalStep(func);
+		return step.test.bind(step);
+	},
+
 	/** Parses a widget state description and creates an assertive closure returning the promise for assertions results upon evaluation.
 	*
 	*@param		{Object}	hooksVals	A hash whose keys match some widgets' attributes, pointing at values that are expected values for those attributes.
@@ -132,101 +131,8 @@ var Feature = new Class( /** @lends Feature# */ {
 	*@private
 	*/
 	buildAssertionPromise: function buildAssertionPromise(hooksVals) {
-		var matchesLeft = 0,	// optimization: we're using the check loop beneath to cache the count of elements to match
-			timeout;	// per-state timeouts. This is independent from implicit waits for elements to appear: this timeout is how long we should wait for a match on a preexistent element
-
-		if (hooksVals.hasOwnProperty('timeout')) {
-			timeout = hooksVals.timeout;
-			delete hooksVals.timeout;	// we don't want to iterate over this property!
-		}
-
-		Object.each(hooksVals, function(expected, attribute) {
-			matchesLeft++;
-			// unfortunately, we can't cache elements, since WebDriverJS matches elements to the current page once and for all. We'll have to ask access on the page on which the assertion will take place.
-			if (! Object.hasPropertyPath(this.widgets, attribute))	// the user referenced a non-existing element
-				throw new ReferenceError('Could not find "' + attribute + '" in available widgets. Are you sure you spelled the property path properly?');
-
-			if (! Object.hasGetter(this.widgets, attribute))	// the user referenced a magically-added attribute, not an element
-				throw new ReferenceError('"' + attribute + '" is a shortcut, not an element. It can not be used in an assertion description. You should target a key referenced in the `elements` hash of the "' + attribute.split('.')[0] + '" widget.');
-		}, this);
-
-		return (function() {
-			var evaluator = promises.defer();
-
-			var isEmpty = true;	// yep, we have to treat the special case of {}
-
-			/** Callback called after each state descriptor evaluation.
-			* Controls the promise fulfilment.
-			*@param	{Boolean}	success	Whether the state descriptor assertion got a match or not.
-			*@param	{String}	message	Any additional information the assertion found. Will be passed to the promise.
-			*/
-			var checkStateDescriptionFulfilled = function checkStateDescriptionFulfilled(error) {
-				if (error)	// TODO: add a "evaluateAll" option that would reject only after having collected result for all descriptors, not fail on the first failure
-					evaluator.reject(error);
-
-				if (--matchesLeft == 0)
-					evaluator.resolve();
-			}
-
-			Object.each(hooksVals, function(expected, elementSelector) {
-				isEmpty = false;
-
-				this.evaluateStateDescriptor(elementSelector, expected, checkStateDescriptionFulfilled, timeout);
-			}, this);
-
-			if (isEmpty)
-				evaluator.resolve();
-
-			return evaluator.promise;
-		}).bind(this);
-	},
-
-	/**
-	*@param	elementSelector	The widget element whose content is to be evaluated.
-	*@param	expected	The expected value for the element content. This is currently a String, but could change when new matchers are added.
-	*@param	{Function}	callback	A function to call once the evaluation has ended. Params: {Boolean} was there a match?, {String?} message to justify the result (typically expected/actual comparison).
-	*@param	{Number}	[timeout]	Maximum time, in milliseconds, after which the lack of match will be considered as a failure.
-	*@private
-	*/
-	evaluateStateDescriptor: function evaluateStateDescriptor(elementSelector, expected, callback, timeout) {
-		var activeMatchers = [],
-			feature = this;
-
-		matchers.allFor(expected).each(function(matcherClass) {
-			activeMatchers.push(new matcherClass(expected, elementSelector, this.widgets));
-		}, this);
-
-		var matchersLeft = activeMatchers.length;
-
-		function finish(message) {
-			activeMatchers.each(function(matcher) {	// first we need to make sure no failed matcher is going to try again to match even after another ended the evaluation
-				matcher.cancel();
-			});
-
-			callback(message);	// then we actually call the callback
-		}
-
-		function handleSuccess() {
-			feature.emit('matchSuccess', elementSelector, expected);
-
-			finish();
-		}
-
-		function handleFailure(message) {
-			feature.emit('matchFailure', elementSelector, expected);
-
-			if (--matchersLeft <= 0)
-				finish(message)
-		}
-
-		activeMatchers.each(function(matcher) {
-			matcher.test(timeout)
-				   .then(handleSuccess, handleFailure)
-				   .end();	// rethrow any exception
-		});
-
-		if (activeMatchers.length <= 0)
-			throw new TypeError('No matcher found for the given value type  :-/  (had to check for "' + expected + '").');
+		var step = new steps.StateStep(func, this.widgets);
+		return step.test.bind(step);
 	},
 
 	/** Asynchronously evaluates the scenario given to this feature.
@@ -242,54 +148,39 @@ var Feature = new Class( /** @lends Feature# */ {
 			stepIndex = -1;
 
 		var evaluateNext,
-			failureReasons = {
-				failures: [],	// we differentiate between the two types
-				errors: []
-			};
-
-		var handleFailure = function handleFailure(message, step) {
-			this.emit('stepFailure', message, step + 1);	// make user-visible indices 1-based
-
-			failureReasons.failures.push(message + ' (at step ' + (step + 1) + ')');	// TODO: deprecate? Are events enough?
-			evaluateNext();
-		}.bind(this);
-
-		var handleSuccess = function handleSuccess(step) {
-			this.emit('stepSuccess', step + 1);	// make user-visible indices 1-based
-
-			evaluateNext();
-		}.bind(this);
-
-		function fulfillPromise(report) {
-			if (report.failures.length || report.errors.length)
-				return deferred.reject(report);
-			else
-				return deferred.resolve();
-		}
+			failed = false;
 
 		evaluateNext = (function evalNext() {
 			stepIndex++;
 
 			if (stepIndex == this.steps.length)
-				return fulfillPromise(failureReasons);
+				return deferred[failed ? 'reject' : 'resolve'](this);
+
+			var step = this.steps[stepIndex];
+
+			this.emit('step', step, stepIndex);
 
 			try {
-				var result = this.steps[stepIndex]();
+				var result = step();
 				// unfortunately, [q.when](https://github.com/kriskowal/q#the-middle) is not compatible with WebDriver's Promises/A implementation, and we need to explicitly call `then` to reject thrown exceptions
 				if (result && typeof result.then == 'function') {
-					result.then(handleSuccess.pass(stepIndex), function(message) {
-						handleFailure(message, stepIndex)
+					result.then(evaluateNext, function(message) {
+						failed = true;
+						process.nextTick(evaluateNext);
 					}).end();
 				} else {
-					handleSuccess(stepIndex);
+					process.nextTick(evaluateNext);
 				}
 			} catch (error) {
-				failureReasons.errors.push(error);
-				handleFailure(error);	// TODO: this should differentiate between failures and errors, especially regarding raised events
+				failed = true;
+				this.emit('error', this, error);
+				process.nextTick(evaluateNext);
 			}
 		}).bind(this);
 
-		evaluateNext();	//TODO: make async
+		this.emit('start', this);
+
+		process.nextTick(evaluateNext);	// all other steps will be aync, decrease discrepancies and give control back ASAP
 
 		return deferred.promise;
 	}
