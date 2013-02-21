@@ -1,16 +1,10 @@
-/** Presents the user with a message telling if this software passes a quick smoke test, and gives the main reason if not.
+/** Presents the user with the current installed version.
 * Exits the running process afterwards.
 */
 function tellUserCurrentVersion() {
 	var packageDescription = require('../../../package.json');
 
-	console.log(packageDescription.name
-				+ ' version '
-				+ packageDescription.version
-				+ '\n'
-				+ 'Get more information at <'
-				+ packageDescription.homepage
-				+ '>');
+	console.log(packageDescription.version);
 
 	process.exit(0);
 }
