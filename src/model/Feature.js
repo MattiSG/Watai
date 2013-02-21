@@ -63,13 +63,13 @@ var Feature = new Class( /** @lends Feature# */ {
 
 			switch (typeof sourceStep) {
 				case 'function':
-					step = this.buildFunctionalPromise(sourceStep, stepIndex);
+					step = new steps.FunctionalStep(sourceStep);
 					break;
 				case 'object':	// if this is a Hash, it is a state description
 					if (! sourceStep)	// yep, typeof null == 'object'  :)
 						break;	// do nothing, but make sure step is not defined, and that we eliminated any risk of using an illegal sourceStep
 
-					step = this.buildAssertionPromise(sourceStep);
+					step = new steps.StateStep(sourceStep, this.widgets);
 					break;
 				case 'string':
 				case 'number':
@@ -110,31 +110,6 @@ var Feature = new Class( /** @lends Feature# */ {
 							 );
 	},
 
-	/** Normalizes an operational closure (i.e. a function that modifies a widget's state) to a format compatible with scenario steps execution.
-	*
-	*@param	{Function}	func	A prepared function (i.e. that only has to be called) to execute.
-	*@param	{Number}	[stepIndex]	The step at which this function is parsed. Used for user-level debugging, in case an error is detected in the function.
-	*@returns	{Function}	A bound function, ready for execution as a step.
-	*@private
-	*/
-	buildFunctionalPromise: function buildFunctionalPromise(func, stepIndex) {
-		var step = new steps.FunctionalStep(func);
-		return step.test.bind(step);
-	},
-
-	/** Parses a widget state description and creates an assertive closure returning the promise for assertions results upon evaluation.
-	*
-	*@param		{Object}	hooksVals	A hash whose keys match some widgets' attributes, pointing at values that are expected values for those attributes.
-	*@returns	{function}	A parameter-less closure asserting the described state and returning a promise that will be either:
-	*	- rejected if any assertion fails, passing a string parameter that describes the first failed match;
-	*	- resolved if all assertions pass, with no parameter.
-	*@private
-	*/
-	buildAssertionPromise: function buildAssertionPromise(hooksVals) {
-		var step = new steps.StateStep(func, this.widgets);
-		return step.test.bind(step);
-	},
-
 	/** Asynchronously evaluates the scenario given to this feature.
 	*
 	*@returns	{Promise}	A promise that will be either:
@@ -143,7 +118,7 @@ var Feature = new Class( /** @lends Feature# */ {
 	*		• `errors`: an array of strings that describe errors that arose when trying to evaluate the feature.
 	*	- resolved if all assertions pass, with no parameter.
 	*/
-	test: function evaluate() {
+	test: function test() {
 		var deferred = promises.defer(),
 			stepIndex = -1;
 

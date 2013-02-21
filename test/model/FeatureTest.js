@@ -49,69 +49,44 @@ describe('Feature', function() {
 
 
 		it('an empty feature should be accepted', function(done) {
-			featureWithScenario([]).test().then(done, function() {
-				done(new Error(arguments));
+			featureWithScenario([]).test().then(function() {
+				done();
+			}, function(err) {
+				done(new Error(err));
 			}).end();
 		});
 
 		it('a failing function should be rejected', function(done) {
 			failingFeatureTest().then(function() {
-					done(new Error('Resolved instead of rejected!'));
-				}, function() {
-					done();	// can't pass it directly, Mocha complains about param not being an error…
-				}
-			).end();
+				done(new Error('Resolved instead of rejected!'));
+			}, function() {
+				done();	// can't pass it directly, Mocha complains about param not being an error
+			}).end();
 		});
 
-		it('an error should be rejected and reasons passed', function(done) {
-			failingFeatureTest().then(function() {
-					done(new Error('Resolved instead of rejected!'));
-				}, function(reasons) {
-					reasons.errors.should.have.length(0);
-					reasons.failures.should.have.length(1);
-					reasons.failures[0].should.match(new RegExp(failureReason));
-					done();
-				}
-			).end();
-		});
-
-		it('a failing promise should be rejected and reasons passed', function(done) {
+		it('a failing promise should be rejected', function(done) {
 			featureWithScenario([
 				failingPromise
 			]).test().then(function() {
-					done(new Error('Resolved instead of rejected!'));
-				}, function(reasons) {	// second callback is the error callback, that's the one we're testing a call for
-					reasons.errors.should.have.length(0);
-					reasons.failures.should.have.length(1);
-					reasons.failures[0].should.match(new RegExp(failureReason));
-					done();
-				}
-			).end();
+				done(new Error('Resolved instead of rejected!'));
+			}, function() {
+				done();
+			}).end();
 		});
 
-		it('multiple failing promises should be rejected and reasons passed in correct order', function(done) {
+		it('multiple failing promises should be rejected', function(done) {
 			featureWithScenario([
 				makeFailingPromiseWithSuffix(0),
 				makeFailingPromiseWithSuffix(1),
 				makeFailingPromiseWithSuffix(2)
 			]).test().then(function() {
-					done(new Error('Resolved instead of rejected!'));
-				}, function(reasons) {
-					try {
-						reasons.failures.should.have.length(3);
-						reasons.failures[0].should.match(new RegExp(failureReason + '0'));
-						reasons.failures[1].should.match(new RegExp(failureReason + '1'));
-						reasons.failures[2].should.match(new RegExp(failureReason + '2'));
-						reasons.errors.should.have.length(0);
-						done();
-					} catch (err) {
-						done(err);
-					}
-				}
-			).end();
+				done(new Error('Resolved instead of rejected!'));
+			}, function() {
+				done();
+			}).end();
 		});
 
-		it('pure functions should be made into promises', function(done) {
+		it('a function should be called', function(done) {
 			var called = false;
 
 			featureWithScenario([ function() {
@@ -125,93 +100,6 @@ describe('Feature', function() {
 				done(new Error('Feature evaluation failed, with' + (called ? '' : 'out')
 								+ ' actually calling the scenario function (but that’s still an error)'));
 			}).end();
-		});
-	});
-
-
-	describe('scenarios with widget states descriptions', function() {
-		var expectedContents = {},
-			wrongTexts = {},
-			firstKey;	// the first key of expected texts. Yes, it is used in a test.
-
-		before(function() {
-			Object.each(require('../helpers/testWidget').expectedContents, function(text, key) {	// we need to namespace all attributes to TestWidget
-				expectedContents['TestWidget.' + key] = text;
-				wrongTexts['TestWidget.' + key] = text + ' **modified**';
-
-				if (! firstKey)
-					firstKey = 'TestWidget.' + key;
-			});
-		});
-
-
-		it('should be made into promises', function() {
-			var result = featureWithScenario([]).buildAssertionPromise(expectedContents);	// weird construct, but that's just whitebox testing, necessarily made on an instance
-			result.should.be.a('function');
-			promises.isPromise(result()).should.be.ok;
-		});
-
-		it('should be parsed within a scenario', function() {
-			var directCall = featureWithScenario([]).buildAssertionPromise(expectedContents);	// weird construct, but that's just whitebox testing, necessarily made on an instance
-			var featureFromScenario = featureWithScenario([ expectedContents ]);
-
-			featureFromScenario.should.have.property('steps').with.lengthOf(1);
-			String(featureFromScenario.steps[0]).should.equal(String(directCall));
-		});
-
-		it('that are empty should pass', function(done) {
-			featureWithScenario([
-				{}
-			]).test().then(done, function(err) {
-				should.fail('Should have passed (reason: "' + err + ')');
-				done();
-			})
-		});
-
-		it('that fail should be rejected and reasons passed', function(done) {
-			featureWithScenario([
-				wrongTexts
-			]).test().then(function() {
-				done(new Error('Unmatched widget state description should not be resolved.'));
-			}, function(reasons) {
-				var firstReason = reasons.failures[0];
-				if (firstReason
-					&& firstReason.contains(firstKey)
-					&& firstReason.contains(wrongTexts[firstKey])
-					&& firstReason.contains(expectedContents[firstKey])) {
-					done();
-				} else {
-					done(new Error('Unmatched widget state description was properly rejected, but the reason for rejection was not clear enough (got "' + firstReason + '").'));
-				}
-			}).end();
-		});
-
-		describe('incorrectly written', function() {
-			it('with a non-existing property path should throw', function() {
-				(function() {
-					featureWithScenario([
-						{ toto: 'toto'}	// no widget matches this property path. We have to protect users against misspelled paths.
-					]);
-				}).should.throw(/Could not find/);
-			});
-
-			it('with a magically-added property path should throw', function() {
-				(function() {
-					featureWithScenario([
-						{ 'TestWidget.delayedAction': 'toto'}	// The actual element is `delayedActionLink`. `delayedAction` is an action shortcut, but may not be used as a property.
-					]);
-				}).should.throw(/not an element/);
-			});
-		});
-
-		/* We cannot decide in advance whether a given identifier will match in another page or not. The only thing we can check is whether we're trying to describe an unknown widget property.
-		*/
-		it('that are not accessible on the current page but properly written should not throw an error', function() {
-			(function() {
-				featureWithScenario([
-					{ 'TestWidget.missing': 'missing'}
-				]);
-			}).should.not.throw();
 		});
 	});
 
@@ -252,122 +140,6 @@ describe('Feature', function() {
 	});
 
 
-	describe('state descriptions option', function() {
-		describe('timeout', function() {
-			it('should be allowed without any harm', function(done) {
-				featureWithScenario([
-					WidgetTest.immediateAction(),
-					{ timeout: 0 }
-				]).test().then(done, done);
-			});
-
-			it('should do immediate evaluation if set to 0', function(done) {
-				featureWithScenario([
-					WidgetTest.immediateAction(),	// make sure the content of the output is reset
-					WidgetTest.delayedAction(),
-					{
-						timeout: 0,
-						'TestWidget.output': expectedOutputs.immediateAction
-					}
-				]).test().then(function() {
-					done(new Error('Matched while the expected result should have been set later than evaluation.'))
-				}, function() {
-					done();
-				});
-			});
-
-			it('should do delayed evaluation if set to a proper positive value', function(done) {
-				featureWithScenario([
-					WidgetTest.immediateAction(),	// make sure the content of the output is reset
-					WidgetTest.delayedAction(),
-					{
-						timeout: DELAYED_ACTIONS_DELAY * 2,
-						'TestWidget.output': expectedOutputs.delayedActionLink
-					}
-				]).test().then(done, function(report) {
-					var message = "No failure report. See code";
-
-					if (report && report.failures && report.failures[0])
-						message = report.failures[0];
-
-					done(new Error(message));
-				});
-			});
-
-			it('should not be longer than needed if set to a positive value', function(done) {
-				this.timeout(DELAYED_ACTIONS_DELAY * 3);
-
-				featureWithScenario([
-					WidgetTest.immediateAction(),	// make sure the content of the output is reset
-					WidgetTest.otherDelayedAction(),
-					{
-						timeout: DELAYED_ACTIONS_DELAY * 2,
-						'TestWidget.output': expectedOutputs.otherDelayedActionLink
-					}
-				]).test().then(done, function(report) {
-					var message = "No failure report. See code";
-
-					if (report && report.failures && report.failures[0])
-						message = report.failures[0];
-
-					done(new Error(message));
-				});
-			});
-
-			it('should detect changes and fail earlier than maximum if there was a change', function(done) {
-				this.timeout(DELAYED_ACTIONS_DELAY * 3);
-
-				featureWithScenario([
-					WidgetTest.immediateAction(),	// make sure the content of the output is reset
-					WidgetTest.delayedAction(),
-					{
-						timeout: DELAYED_ACTIONS_DELAY * 2,
-						'TestWidget.output': expectedOutputs.otherDelayedActionLink
-					}
-				]).test().then(function() {
-					done(new Error('Matched while the expected result should have been set later than evaluation.'))
-				}, function() {
-					done();
-				});
-			});
-
-			it('should fail if expected state comes later than timeout', function(done) {
-				this.timeout(DELAYED_ACTIONS_DELAY * 2);
-
-				featureWithScenario([
-					WidgetTest.immediateAction(),	// make sure the content of the output is reset
-					WidgetTest.otherDelayedAction(),
-					{
-						timeout: DELAYED_ACTIONS_DELAY / 10,
-						'TestWidget.output': expectedOutputs.otherDelayedActionLink
-					}
-				]).test().then(function() {
-					done(new Error('Matched while the expected result should have been set later than evaluation.'))
-				}, function(err) {
-					done();
-				});
-			});
-
-			it('should fail if expected state comes later than timeout and timeout is set to 0', function(done) {
-				this.timeout(DELAYED_ACTIONS_DELAY * 2);
-
-				featureWithScenario([
-					WidgetTest.immediateAction(),	// make sure the content of the output is reset
-					WidgetTest.delayedAction(),
-					{
-						timeout: 0,
-						'TestWidget.output': expectedOutputs.delayedActionLink
-					}
-				]).test().then(function() {
-					done(new Error('Matched while the expected result should have been set later than evaluation.'))
-				}, function() {
-					done();
-				});
-			});
-		});
-	});
-
-
 	describe('unclickable elements', function() {
 		it('should respect the global timeout', function(done) {
 			var start = new Date();
@@ -395,8 +167,8 @@ describe('Feature', function() {
 				{
 					'TestWidget.output': expectedOutputs.overlayedActionLink
 				}
-			]).test().then(done, function(report) {
-				var message = "No failure report. See code";
+			]).test().then(function() { done() }, function(report) {
+				var message = 'No failure report. See code';
 
 				if (report && report.failures && report.failures[0])
 					message = report.failures[0];
@@ -407,18 +179,62 @@ describe('Feature', function() {
 	});
 
 
-	describe('missing elements', function() {
-		it('should fail', function(done) {
-			featureWithScenario([
-				{ 'TestWidget.missing': 'toto' }
-			]).test().then(function() {
-					done(new Error('Resolved instead of rejected!'));
-				}, function(reasons) {
-					reasons.errors.should.have.length(0);
-					reasons.failures.should.have.length(1);
+	describe('events', function() {
+		var subject;
+
+		function expectFired(eventName, expectedParam) {
+			var hasExpectedParam = arguments.length > 1;	// allow for falsy values to be expected params
+
+			return function(done) {
+				subject.on(eventName, function(param) {
+					if (hasExpectedParam)
+						param.should.equal(expectedParam);
 					done();
-				}
-			).end();
+				});
+
+				subject.test();
+			}
+		}
+
+		function expectNotFired(eventName) {
+			return function(done) {
+				subject.on(eventName, function() {
+					done(new Error('Fired while it should not have'));
+				});
+
+				subject.test();
+
+				setTimeout(done, 40);
+			}
+		}
+
+		describe('of a feature with a failing step', function() {
+			beforeEach(function() {
+				subject = featureWithScenario([
+					function() { throw 'Boom!' }
+				]);
+			});
+
+			[ 'start', 'step' ].forEach(function(type) {
+				it('should fire a "' + type + '" event', expectFired(type));
+			});
+
+			// [ 'step:start', 'step:end', 'step:failure' ].forEach(function(type) {
+			// 	it('should fire a "' + type + '" event and pass the 0-based step index', expectFired(type, 0));
+			// });
+
+			// [ 'match:start', 'match:end', 'match:failure' ].forEach(function(type) {
+			// 	it('should NOT fire any "' + type + '" event', expectNotFired(type));
+			// });
+		});
+
+		describe('of a feature with an empty scenario', function() {
+			beforeEach(function() {
+				subject = featureWithScenario([ ]);
+			});
+
+			it('should fire a "start" event', expectFired('start'));
+			it('should NOT fire any "step" event', expectNotFired('step'));
 		});
 	});
 });

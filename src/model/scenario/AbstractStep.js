@@ -139,7 +139,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	failImmediately: function failImmediately(report) {
 		var failureMessagePrefix = (this.timeout > 0 ? 'After ' + this.timeout + ' milliseconds, ' : '');
 
-		this.promise.reject(this, failureMessagePrefix + this.formatFailure(report));
+		this.promise.reject(failureMessagePrefix + this.formatFailure(report));
 	},
 
 	/** Formats the message displayed to the user in case of a failure.
