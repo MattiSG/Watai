@@ -1,4 +1,5 @@
-var StateStep = require('../../../src/model/scenario/StateStep');	// TODO: add this to coverage
+var Watai = require('../../helpers/subject'),
+	StateStep = Watai.steps.StateStep;
 
 
 describe('StateStep', function() {

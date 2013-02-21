@@ -65,7 +65,9 @@ var Watai = {
 	ViewsManager:	require('./view/ViewsManager'),
 	/**@see	configManager
 	*/
-	config:			require('./lib/configManager')
+	config:			require('./lib/configManager'),
+	steps:			require('./model/scenario'),
+	matchers:		require('./model/scenario/state')
 }
 
 module.exports = Watai;	// CommonJS export
