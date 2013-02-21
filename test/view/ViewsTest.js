@@ -22,10 +22,6 @@ var views = [
 	events = {
 		beforeRun		: [],
 		ready			: [],
-		featureStart	: [ feature ],
-		featureSuccess	: [ feature ],
-		featureFailure	: [ feature, [ 'failure' ] ],
-		featureError	: [ feature, [ 'error'   ] ],
 		failure			: [],
 		success			: []
 	};

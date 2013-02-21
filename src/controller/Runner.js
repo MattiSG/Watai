@@ -221,11 +221,11 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	evaluateFeature: function evaluateFeature(feature) {
-		this.emit('featureStart', feature);
+		this.emit('feature', feature);
 
 		try {
-			feature.test().then(this.handleFeatureResult.bind(this, feature, true),
-								this.handleFeatureResult.bind(this, feature)); // leave last arg to pass failure description
+			feature.test().then(this.startNextFeature.bind(this),
+								this.handleFeatureFailure.bind(this, feature)); // leave last arg to pass failure description
 		} catch (error) {
 			this.handleError(error);
 		}
@@ -237,19 +237,9 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*@see	#startNextFeature
 	*/
-	handleFeatureResult: function handleFeatureResult(feature, message) {
-		if (message === true) {
-			this.emit('featureSuccess', feature);
-		} else {
-			if (message.errors.length > 0) {
-				this.emit('featureError', feature, message.errors);
-			} else {
-				this.emit('featureFailure', feature, message.failures);
-			}
-
-			this.failures[feature] = message;
-			this.failed = true;
-		}
+	handleFeatureFailure: function handleFeatureFailure(feature, message) {
+		this.failures[feature] = message;
+		this.failed = true;
 
 		this.startNextFeature();
 	},

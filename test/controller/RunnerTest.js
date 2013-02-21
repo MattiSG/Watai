@@ -57,7 +57,6 @@ describe('Runner', function() {
 
 	var emitted = {},	// observer storage for event-emitted data
 		passed = {},	// observer storage for data passed through promises, to compare with events
-		featureSuccessSource,	// test event source
 		featureEvaluationCount = 0;
 
 	var feature = new Watai.Feature('RunnerTest feature', [
@@ -82,16 +81,9 @@ describe('Runner', function() {
 				emitted.success = true;
 			});
 
-			subject.on('featureSuccess', function(feature) {
-				featureSuccessSource = feature;
-			});
-
 			subjectWithFailure = new Watai.Runner(config);
 			subjectWithFailure.once('failure', function(failures) {
 				emitted.failures = failures;
-			});
-			subjectWithFailure.once('featureFailure', function(feature, failures) {
-				emitted.featureFailure = failures;
 			});
 
 			emitted.run = 0;
@@ -112,10 +104,10 @@ describe('Runner', function() {
 				emitted.restart++;
 			});
 
-			emitted.featureStart = 0;
+			emitted.feature = 0;
 
-			subjectWithFailure.on('featureStart', function() {
-				emitted.featureStart++;
+			subjectWithFailure.on('feature', function() {
+				emitted.feature++;
 			});
 		});
 
@@ -182,20 +174,12 @@ describe('Runner', function() {
 			should.strictEqual(emitted.success, true);
 		});
 
-		it('should have emitted a "featureSuccess" event, passing the source feature', function() {
-			should.strictEqual(featureSuccessSource, feature);
-		});
-
 		it('should have emitted a "failure" event with the same failures as passed on failure', function() {
 			should.equal(emitted.failures, passed.failures);
 		});
 
-		it('should have emitted a "featureFailure" event with the same failure as passed on failure', function() {
-			should.equal(emitted.featureFailure, emitted.failures[failingFeature].failures);
-		});
-
-		it('should have emitted the correct count of "featureStart" events', function() {
-			should.strictEqual(emitted.featureStart, 3);
+		it('should have emitted the correct count of "feature" events', function() {
+			should.strictEqual(emitted.feature, 3);
 		});
 
 		it('should have emitted the correct count of "run" events', function() {
