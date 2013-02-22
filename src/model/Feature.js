@@ -9,17 +9,36 @@ var Feature = new Class( /** @lends Feature# */ {
 
 	Extends: require('events').EventEmitter,
 
-	/** A sequence of promises to be executed in order, constructed after the scenario for this feature.
+	/** Constructed after the scenario for this feature.
+	*
+	*@type	{Array.<Step>}
 	*@private
 	*/
 	steps: [],
 
+	/** The steps that failed.
+	*
+	*@type	{Array.<Step>}
+	*@private
+	*/
+	failedSteps: [],
+
 	/** A hash with all widgets accessible to this Feature, indexed on their names.
+	*
 	*@type	{Object.<String, Widget>}
 	*@see	Widget
 	*@private
 	*/
 	widgets: {},
+
+	/** The user-provided feature name.
+	*
+	*@type	{String}
+	*@private
+	*/
+	description: '',
+
+	promise: null,
 
 	/**@class	A Feature models a sequence of actions to be executed through Widgets.
 	*
@@ -113,44 +132,32 @@ var Feature = new Class( /** @lends Feature# */ {
 	/** Asynchronously evaluates the scenario given to this feature.
 	*
 	*@returns	{Promise}	A promise that will be either:
-	*	- rejected if any assertion or action fails, passing a hash containing two keys:
-	*		• `failures`: an array of strings that describe reason(s) for failure(s) (one reason per item in the array);
-	*		• `errors`: an array of strings that describe errors that arose when trying to evaluate the feature.
-	*	- resolved if all assertions pass, with no parameter.
+	*	- rejected if any assertion or action fails, passing an array of strings that describe reason(s) for failure(s) (one reason per item in the array).
+	*	- resolved if all assertions pass, with this feature as a parameter.
 	*/
 	test: function test() {
 		var deferred = promises.defer(),
-			stepIndex = -1;
-
-		var evaluateNext,
-			failed = false;
+			stepIndex = -1,
+			evaluateNext;
 
 		evaluateNext = (function evalNext() {
 			stepIndex++;
 
-			if (stepIndex == this.steps.length)
-				return deferred[failed ? 'reject' : 'resolve'](this);
+			if (stepIndex == this.steps.length) {
+				if (this.failedSteps.length)
+					return deferred.reject(this.failedSteps);
+
+				return deferred.resolve(this);
+			}
 
 			var step = this.steps[stepIndex];
 
 			this.emit('step', step, stepIndex);
 
-			try {
-				var result = step();
-				// unfortunately, [q.when](https://github.com/kriskowal/q#the-middle) is not compatible with WebDriver's Promises/A implementation, and we need to explicitly call `then` to reject thrown exceptions
-				if (result && typeof result.then == 'function') {
-					result.then(evaluateNext, function(message) {
-						failed = true;
-						process.nextTick(evaluateNext);
-					}).end();
-				} else {
-					process.nextTick(evaluateNext);
-				}
-			} catch (error) {
-				failed = true;
-				this.emit('error', this, error);
-				process.nextTick(evaluateNext);
-			}
+			step.test()
+				.fail(this.failedSteps.push.bind(this.failedSteps))
+				.fin(process.nextTick.bind(process, evaluateNext))
+				.end();
 		}).bind(this);
 
 		this.emit('start', this);
@@ -158,6 +165,10 @@ var Feature = new Class( /** @lends Feature# */ {
 		process.nextTick(evaluateNext);	// all other steps will be aync, decrease discrepancies and give control back ASAP
 
 		return deferred.promise;
+	},
+
+	toString: function toString() {
+		return this.description;
 	}
 });
 

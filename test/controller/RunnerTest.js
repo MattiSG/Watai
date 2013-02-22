@@ -154,15 +154,15 @@ describe('Runner', function() {
 			}, done).end();
 		});
 
-		xit('with failing features should be rejected', function(done) {
+		it('with failing features should be rejected', function(done) {
 			subjectWithFailure.addFeature(failingFeature).run().then(function() {
 				done(new Error('Resolved instead of rejected.'))
 			}, function(report) {
 				should.equal(typeof report, 'object');
 				if (! report[failingFeature])
-					done(new Error('Missing feature.'));
-				if (! report[failingFeature].failures)
-					done(new Error('Missing feature failures details.'));
+					return done(new Error('Missing feature.'));
+				if (! report[failingFeature].length)
+					return done(new Error('Missing feature failures details.'));
 				passed.failures = report;
 				done();
 			}).end();
