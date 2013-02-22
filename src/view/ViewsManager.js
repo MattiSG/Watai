@@ -5,7 +5,7 @@ var ViewsManager = {
 	*@param	{String}		viewName	The identifier of the view, as a path from this manager to the declaration file.
 	*@param	{EventEmitter}	emitter		A source of events that will be listened to by the given view.
 	*@returns	emitter	for easy assignment
-	*@throws	ReferenceError	If the given view does not exist.
+	*@throws	ReferenceError	If the given view or event emitter does not exist.
 	*/
 	attach: function attach(viewName, emitter) {
 		var viewObject;
@@ -20,6 +20,10 @@ var ViewsManager = {
 				'Are you sure you did not misspell it?',
 				'If not, then it might be that the config file you are using does not match the executed Watai version.'
 			].join('\n'));
+		}
+
+		if (! (emitter && emitter.on)) {
+			throw new ReferenceError('The given object is not a valid event emitter.');
 		}
 
 		Object.each(viewObject, function(handler, eventType) {

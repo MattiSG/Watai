@@ -1,6 +1,6 @@
 var animator = require('../../../src/lib/cli-animator');
 
-var ViewsManager = require('../ViewsManager');
+var FeatureCLIView = require('../Feature/CLI');
 
 
 /**@namespace A command-line interface that outputs and formats a Runner’s events.
@@ -25,7 +25,7 @@ RunnerCLI.ready = function onReady(runner) {
 *@param	{Feature}	feature	The feature that is about to start.
 */
 RunnerCLI.feature = function onFeature(feature) {
-	ViewsManager.attach('Feature/CLI', feature);
+	new FeatureCLIView(feature);
 }
 
 /** Resets the shell prompt.

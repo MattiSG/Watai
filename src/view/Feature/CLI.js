@@ -3,66 +3,59 @@ var animator = require('../../../src/lib/cli-animator');
 var ViewsManager = require('../ViewsManager');
 
 
-/**@namespace A command-line interface that outputs and formats a Feature’s events.
-*/
-var FeatureCLI = {};
+var FeatureCLI = new Class(/** @lends FeatureCLI# */{
+	/**
+	*@type	{Feature}
+	*/
+	feature: null,
 
+	/** A command-line interface that outputs and formats a Feature’s events.
+	*
+	*@constructs
+	*/
+	initialize: function init(feature) {
+		this.feature = feature;
 
-/** Presents details of a test start to the user.
-* Attaches to resolution handlers.
-*
-*@param	{Feature}	feature	The feature that is about to start.
-*/
-FeatureCLI.start = function onStart(feature) {
-	animator.spin(feature.description);
+		this.feature.on('start', this.onStart.bind(this));
+	},
 
-	feature.then(onSuccess, onFailure).fin(onEnd);
-}
+	/** Presents details of a test start to the user.
+	* Attaches to resolution handlers.
+	*
+	*@param	{Feature}	feature	The feature that is about to start.
+	*/
+	onStart: function onStart() {
+		animator.spin(this.feature.description);
 
-/** Attaches CLI Step view to the started step.
-*
-*@param	{Step}	step	The step that is about to start.
-*/
-FeatureCLI.step = function onStep(step) {
-	ViewsManager.attach('Step/CLI', step);
-}
+		this.feature.promise.then(
+			this.showSuccess.bind(this),
+			this.showFailure.bind(this)
+		).fin(this.showEnd.bind(this));
+	},
 
-/** Presents details of a test success to the user.
-*
-*@param	{Feature}	feature	The feature whose results are given.
-*/
-function onSuccess(feature) {
-	animator.log('✔', 'info', feature.description);
-}
+	/** Presents details of a test success to the user.
+	*
+	*@param	{Feature}	feature	The feature whose results are given.
+	*/
+	showSuccess: function showSuccess() {
+		animator.log('✔', 'info', this.feature.description);
+	},
 
-/** Presents details of a test failure to the user.
-*
-*@param	{Feature}	feature	The feature whose results are given.
-*/
-function onFailure(feature) {
-	animator.log('✘', 'warn', feature.description, 'warn');
-}
+	/** Presents details of a test failure to the user.
+	*
+	*@param	{Feature}	feature	The feature whose results are given.
+	*/
+	showFailure: function showFailure() {
+		animator.log('✘', 'warn', this.feature.description, 'warn');
+	},
 
-/** Clears the feature spinner.
-*
-*@param	{Feature}	feature	The feature whose results are given.
-*/
-function onEnd(feature) {
-	animator.clear();
-}
-
-/** Presents details of a test error to the user.
-*
-*@param	{Feature}	feature	The feature whose results are given.
-*@param	{Error}		error	The error that was encountered.
-*/
-FeatureCLI.error = function onError(feature, error) {
-	animator.log('⚠', 'error', feature.description);
-	animator.log('   ↳', 'cyan', error.description, 'cyan');
-
-	if (error.stack)
-		animator.log('      ', 'verbose', error.stack, 'verbose');
-}
-
+	/** Clears the feature spinner.
+	*
+	*@param	{Feature}	feature	The feature whose results are given.
+	*/
+	showEnd: function showEnd() {
+		animator.clear();
+	}
+});
 
 module.exports = FeatureCLI;	// CommonJS export

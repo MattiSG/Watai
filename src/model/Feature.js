@@ -158,13 +158,16 @@ var Feature = new Class( /** @lends Feature# */ {
 				.fail(this.failedSteps.push.bind(this.failedSteps))
 				.fin(process.nextTick.bind(process, evaluateNext))
 				.end();
+
 		}).bind(this);
+
+		this.promise = deferred.promise;
 
 		this.emit('start', this);
 
 		process.nextTick(evaluateNext);	// all other steps will be aync, decrease discrepancies and give control back ASAP
 
-		return deferred.promise;
+		return this.promise;
 	},
 
 	toString: function toString() {
