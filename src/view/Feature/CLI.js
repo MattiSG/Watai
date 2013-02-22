@@ -19,13 +19,13 @@ var FeatureCLI = new Class(/** @lends FeatureCLI# */{
 	/** Presents details of a test success to the user.
 	*/
 	showSuccess: function showSuccess() {
-		this.animator.log('✔', 'info', this.feature.description);
+		this.animator.log('✔', 'info', this.model.description);
 	},
 
 	/** Presents details of a test failure to the user.
 	*/
 	showFailure: function showFailure() {
-		this.animator.log('✘', 'warn', this.feature.description, 'warn');
+		this.animator.log('✘', 'warn', this.model.description, 'warn');
 	},
 
 	/** Clears the feature spinner.

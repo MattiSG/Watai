@@ -34,9 +34,8 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 	/** Attaches all events defined in the this class' `events` hash.
 	*/
 	attach: function attach() {
-		Object.each(this.events, function(handler, name) {
-			this.model.on(name, handler.bind(this));
-		}, this);
+		for (var key in this.events)
+			this.model.on(key, this.events[key].bind(this));
 	},
 
 	/** Presents details of a test start to the user.
