@@ -12,8 +12,18 @@ var FeatureCLI = new Class(/** @lends FeatureCLI# */{
 
 	events: {
 		start: function() {
-			this.animator.spin(this.model.description);
+			this.showStart();
+		},
+		step: function(step) {
+			showStart = this.showStart.bind(this);
+			step.on('start', function() {
+				step.promise.fail(showStart);
+			});
 		}
+	},
+
+	showStart: function showStart() {
+		this.animator.spin(this.model.description);
 	},
 
 	/** Presents details of a test success to the user.
