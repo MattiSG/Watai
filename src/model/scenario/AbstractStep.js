@@ -1,5 +1,5 @@
-var promises =	require('q'),
-	config =	require('../../lib/configManager');
+var promises		= require('q'),
+	ConfigManager	= require('../../lib/configManager');
 
 
 /**@class	Abstract class that represents a feature step.
@@ -14,9 +14,10 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	Extends: require('events').EventEmitter,
 
 	/** Time, in milliseconds, before the lack of validation is considered an actual failure.
+	* Defaults to the configuration value.
 	*@type	{Number}
 	*/
-	timeout: 0,
+	timeout: null,
 
 	/** The time at which the evaluation was first requested, to evaluate the timeout.
 	*@type	{Date}
@@ -45,15 +46,20 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 	/** Starts the evaluation process, returning a promise that will be resolved after at most the given timeout.
 	*
-	*@param	{Number}	[timeout]	optional, specifies a timeout, in milliseconds, for this step to consider the lack of validation as a failure. Defaults to the `timeout` config value. Set to 0 to try only once.
+	*@param	{Number}	[timeout]	optional, specifies a timeout, in milliseconds, for this step to consider the lack of validation as a failure. Defaults to the `timeout` ConfigManager value. Set to 0 to try only once.
 	*@returns	{Promise}	A promise that will be either fulfilled with no value passed, or rejected with an explicative message passed.
 	*/
 	test: function test(timeout) {
 		this.promise = promises.defer();
 		this.startTime = new Date();
-		this.timeout = (typeof timeout == 'number' ? timeout : config.values.timeout);
 		this.cancelled = false;
 		this.retryTimeoutId = -1;	// -1 is no magic value, it just helps with debugging
+		this.timeout = (typeof timeout == 'number'
+						? timeout
+						:  (typeof this.timeout == 'number'
+							? this.timeout
+							: ConfigManager.values.timeout)
+						);
 
 		this.onBeforeStart();
 
@@ -128,7 +134,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 		if (new Date() - this.startTime >= this.timeout)	// the timeout has expired
 			this.failImmediately(report);
 		else
-			this.retryTimeoutId = setTimeout(this.start.bind(this), config.values.matchTriesDelay);
+			this.retryTimeoutId = setTimeout(this.start.bind(this), ConfigManager.values.matchTriesDelay);
 	},
 
 	/** Makes this matcher fail immediately, not trying anymore.

@@ -70,7 +70,7 @@ describe('StateStep', function() {
 	});
 
 
-	xdescribe('should be rejected on', function() {
+	describe('should be rejected on', function() {
 		it('missing elements', function(done) {
 			new StateStep({ 'TestWidget.missing': 'toto' }, { TestWidget: TestWidget })
 				.test().then(function() {
@@ -122,13 +122,13 @@ describe('StateStep', function() {
 					}, done);
 			});
 
-			xit('should do immediate evaluation if set to 0', function(done) {
+			it('should do immediate evaluation if set to 0', function(done) {
 				featureWithScenario([
 					TestWidget.immediateAction(),	// make sure the content of the output is reset
 					TestWidget.delayedAction(),
 					{
 						timeout: 0,
-						'TestWidget.output': expectedOutputs.immediateActionLink
+						'TestWidget.output': expectedOutputs.delayedActionLink
 					}
 				]).test().then(function() {
 					done(new Error('Matched while the expected result should have been set later than evaluation.'))
@@ -171,7 +171,7 @@ describe('StateStep', function() {
 				).end();
 			});
 
-			xit('should detect changes and fail earlier than maximum if there was a change', function(done) {
+			it('should detect changes and fail earlier than maximum if there was a change', function(done) {
 				this.timeout(DELAYED_ACTIONS_DELAY * 3);
 
 				featureWithScenario([
@@ -188,7 +188,7 @@ describe('StateStep', function() {
 				});
 			});
 
-			xit('should fail if expected state comes later than timeout', function(done) {
+			it('should fail if expected state comes later than timeout', function(done) {
 				this.timeout(DELAYED_ACTIONS_DELAY * 2);
 
 				featureWithScenario([
@@ -205,7 +205,7 @@ describe('StateStep', function() {
 				});
 			});
 
-			xit('should fail if expected state comes later than timeout and timeout is set to 0', function(done) {
+			it('should fail if expected state comes later than timeout and timeout is set to 0', function(done) {
 				this.timeout(DELAYED_ACTIONS_DELAY * 2);
 
 				featureWithScenario([
