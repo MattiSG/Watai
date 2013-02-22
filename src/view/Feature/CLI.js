@@ -1,6 +1,6 @@
 var animator = require('../../../src/lib/cli-animator');
 
-var ViewsManager = require('../ViewsManager');
+var StepCLIView = require('../Step/CLI');
 
 
 var FeatureCLI = new Class(/** @lends FeatureCLI# */{
@@ -17,6 +17,9 @@ var FeatureCLI = new Class(/** @lends FeatureCLI# */{
 		this.feature = feature;
 
 		this.feature.on('start', this.onStart.bind(this));
+		this.feature.on('step', function(step) {
+			new StepCLIView(step);
+		});
 	},
 
 	/** Presents details of a test start to the user.

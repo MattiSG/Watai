@@ -43,6 +43,12 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*/
 	cancelled: false,
 
+	/** The promise for this step to be ultimately evaluated, rejected if the step fails.
+	*
+	*@type	{Promise}
+	*/
+	promise: null,
+
 
 	/** Starts the evaluation process, returning a promise that will be resolved after at most the given timeout.
 	*
@@ -50,7 +56,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*@returns	{Promise}	A promise that will be either fulfilled with no value passed, or rejected with an explicative message passed.
 	*/
 	test: function test(timeout) {
-		this.promise = promises.defer();
+		this.deferred  = promises.defer();
 		this.startTime = new Date();
 		this.cancelled = false;
 		this.retryTimeoutId = -1;	// -1 is no magic value, it just helps with debugging
@@ -63,11 +69,13 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 		this.onBeforeStart();
 
+		this.promise = this.deferred.promise;
+
 		this.emit('start', this);
 
 		this.start();
 
-		return this.promise.promise;
+		return this.promise;
 	},
 
 	/** Called before a series of calls to `start`, right after a caller has asked this step to be `test`ed.
@@ -116,7 +124,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 		if (this.cancelled)
 			return;
 
-		this.promise.resolve(this, data);
+		this.deferred.resolve(this, data);
 	},
 
 	/** Reject the promise.
@@ -145,7 +153,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	failImmediately: function failImmediately(report) {
 		var failureMessagePrefix = (this.timeout > 0 ? 'After ' + this.timeout + ' milliseconds, ' : '');
 
-		this.promise.reject(failureMessagePrefix + this.formatFailure(report));
+		this.deferred.reject(failureMessagePrefix + this.formatFailure(report));
 	},
 
 	/** Formats the message displayed to the user in case of a failure.
