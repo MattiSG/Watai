@@ -1,14 +1,14 @@
-/**@namespace	Logs feature failures and errors as they come.
+/** Logs feature failures and errors as they come.
+*
+*@class
 */
-var Instafail = {};
+var Instafail = new Class(/** @lends Instafail# */{
+	Extends: require('../PromiseView'),
 
-var animator = require('../../../src/lib/cli-animator');
-
-/** Presents details of a test step failure to the user.
-*/
-Instafail.stepFailure = function onStepFailure(failure, stepIndex) {
-	process.stdout.write('   - at step ' + stepIndex + ': ' + failure + '\n');
-}
-
+	submodel: {
+		name: 'step',
+		view: require('../Step/CLI')
+	}
+});
 
 module.exports = Instafail;	// CommonJS export
