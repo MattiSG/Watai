@@ -29,12 +29,12 @@ var suitePath	= args[0],
 	suite		= new Watai.SuiteLoader(suitePath);
 
 suite.getRunner()
-	 .run()
+	 .test()
 	 .then(function() {
 		process.exit(0);
-	}, function(report) {
+	 }, function(report) {
 		process.exit(1);
-	}).end();
+	 }).end();
 
 
 /** Loads plugins based on any passed options.

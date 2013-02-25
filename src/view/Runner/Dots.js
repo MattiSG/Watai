@@ -13,7 +13,7 @@ var RunnerDots = new Class({
 	events: {
 		/** Informs the user that the emitting Runner is waiting for the browser.
 		*/
-		beforeRun: function onBeforeRun() {
+		driverInit: function onDriverInit() {
 			this.startTime = new Date();
 			process.stdout.write(this.model + '\n');
 		},

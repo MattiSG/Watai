@@ -163,7 +163,7 @@ var Runner = new Class( /** @lends Runner# */ {
 
 	/** Returns the WebDriver instance this Runner created for the current run.
 	*
-	*@return	WebDriver
+	*@returns	WebDriver
 	*/
 	getDriver: function getDriver() {
 		return this.driver;
@@ -174,12 +174,11 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@returns	{Promise}	A promise for results, resolved if all features pass (param: this Runner), rejected otherwise (param: hash mapping failed features to their reasons for rejection, or an Error if an error appeared in the runner itself or the evaluation was cancelled).
 	*@see	#addFeature
 	*/
-	run: function run() {
-		this.emit('beforeRun', this);
-
+	test: function test() {
 		this.deferred = promises.defer();
-
 		this.promise = this.deferred.promise;
+
+		this.emit('driverInit', this);
 
 		if (this.ready) {
 			this.start();
@@ -198,14 +197,15 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 
 	/** Actually starts the evaluation process.
-	* Emits "run".
+	* Emits "start".
+	*
 	*@private
 	*/
 	start: function start() {
 		this.failures = Object.create(null);
 		this.currentFeature = -1;
 
-		this.emit('run', this);
+		this.emit('start', this);
 
 		this.startNextFeature();
 	},
@@ -231,12 +231,8 @@ var Runner = new Class( /** @lends Runner# */ {
 	evaluateFeature: function evaluateFeature(feature) {
 		this.emit('feature', feature);
 
-		try {
-			feature.test().then(this.startNextFeature.bind(this),
-								this.handleFeatureFailure.bind(this, feature)); // leave last arg to pass failure description
-		} catch (error) {
-			this.handleError(error);
-		}
+		feature.test().then(this.startNextFeature.bind(this),
+							this.handleFeatureFailure.bind(this, feature)); // leave last arg to pass failure description
 	},
 
 	/** Callback handler upon feature evaluation. Flags failures and calls the `startNextFeature` handler.
@@ -253,10 +249,9 @@ var Runner = new Class( /** @lends Runner# */ {
 
 	/** Informs of the end result and cleans the instance up after tests runs.
 	*
-	*@param	{Boolean}	success	Whether all features succeeded or not.
 	*@private
 	*/
-	finish: function finish(success) {
+	finish: function finish() {
 		var resolve			= this.deferred.resolve.bind(this.deferred, this),
 			reject			= this.deferred.reject.bind(this.deferred, this.failures),
 			fulfill			= resolve,
@@ -276,7 +271,8 @@ var Runner = new Class( /** @lends Runner# */ {
 		promises.when(precondition(), fulfill, reject);
 	},
 
-	/** Updates inner state so that consequent calls to `run()` know they need to reload the driver.
+	/** Updates inner state so that consequent calls to `test()` know they need to reload the driver.
+	*
 	*@private
 	*/
 	markUsed: function markUsed() {
@@ -284,24 +280,10 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 
 	/** Stops the current evaluation.
-	*@return	this	For chainability.
 	*/
 	cancel: function cancel() {
 		this.removeListener('ready', this.start);
-		this.handleError(new Error('Evaluation was cancelled'));
-		return this;	//TODO: should return a promise for cancellation, since the current evaluated feature won't be stopped
-	},
-
-	/** Rejects the promise for results, passing it the given error, and quits the driver depending on the current automatic exit settings.
-	*@private
-	*/
-	handleError: function handleError(error) {
-		this.markUsed();
-
-		if (this.config.quit == 'always')
-			this.killDriver();
-
-		this.deferred.reject(error);
+		return this.finish();
 	},
 
 	/** Quits the managed browser.

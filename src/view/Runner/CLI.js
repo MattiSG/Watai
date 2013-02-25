@@ -16,7 +16,7 @@ var RunnerCLI = new Class({
 	events: {
 		/** Informs user that the emitting Runner is waiting for the browser.
 		*/
-		beforeRun: function onBeforeRun() {
+		driverInit: function onDriverInit() {
 			animator.spin(this.model + ' (waiting for browser…)');
 		},
 
