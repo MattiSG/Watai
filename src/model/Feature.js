@@ -16,12 +16,12 @@ var Feature = new Class( /** @lends Feature# */ {
 	*/
 	steps: [],
 
-	/** The steps that failed.
+	/** The reasons for failures of the steps.
 	*
 	*@type	{Array.<Step>}
 	*@private
 	*/
-	failedSteps: [],
+	reasons: [],
 
 	/** A hash with all widgets accessible to this Feature, indexed on their names.
 	*
@@ -144,8 +144,8 @@ var Feature = new Class( /** @lends Feature# */ {
 			stepIndex++;
 
 			if (stepIndex == this.steps.length) {
-				if (this.failedSteps.length)
-					return deferred.reject(this.failedSteps);
+				if (this.reasons.length)
+					return deferred.reject(this.reasons);
 
 				return deferred.resolve(this);
 			}
@@ -155,7 +155,7 @@ var Feature = new Class( /** @lends Feature# */ {
 			this.emit('step', step, stepIndex);
 
 			step.test()
-				.fail(this.failedSteps.push.bind(this.failedSteps))
+				.fail(this.reasons.push.bind(this.reasons))
 				.fin(process.nextTick.bind(process, evaluateNext))
 				.end();
 

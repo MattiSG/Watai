@@ -7,7 +7,7 @@ var Instafail = new Class(/** @lends Instafail# */{
 
 	submodel: {
 		name: 'step',
-		view: require('../Step/CLI')
+		view: require('../Step/Instafail')
 	}
 });
 

@@ -2,7 +2,7 @@
 *
 *@class
 */
-var StepCLI = new Class(/** @lends StepCLI# */{
+var StepInstafail = new Class(/** @lends StepInstafail# */{
 	Extends: require('../PromiseView'),
 
 	/** Presents details of a step failure to the user.
@@ -11,8 +11,8 @@ var StepCLI = new Class(/** @lends StepCLI# */{
 	*/
 	showFailure: function showFailure(message) {
 		//stepIndex++;	// make the step index 1-based for the user	// TODO: add stepIndex back
-		this.animator.log('   ↳', 'cyan', message, 'cyan');
+		process.stdout.write('- ' + message + '\n');
 	}
 });
 
-module.exports = StepCLI;	// CommonJS export
+module.exports = StepInstafail;	// CommonJS export

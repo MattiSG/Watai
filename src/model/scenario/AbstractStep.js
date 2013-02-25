@@ -164,7 +164,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*@see	#fail
 	*/
 	formatFailure: function formatFailure(report) {
-		return report || 'there was a failure, but no information was given about it  :-/';
+		return report || 'There was a failure, but no information was given about it  :-/';
 	}
 });
 
