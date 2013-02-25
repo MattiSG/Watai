@@ -170,6 +170,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 
 	/** Evaluates all features added to this Runner.
+	* Emits "driverInit".
 	*
 	*@returns	{Promise}	A promise for results, resolved if all features pass (param: this Runner), rejected otherwise (param: hash mapping failed features to their reasons for rejection, or an Error if an error appeared in the runner itself or the evaluation was cancelled).
 	*@see	#addFeature
@@ -183,7 +184,7 @@ var Runner = new Class( /** @lends Runner# */ {
 		if (this.ready) {
 			this.start();
 		} else {	// we already run before, or we just initialized
-			this.once('ready', this.start);
+			this.once('ready', this.start.bind(this));
 
 			if (! this.loading) {
 				if (this.driver)

@@ -157,7 +157,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		ConfigManager.values.views.each(function(viewName) {
 			try {
 				var viewClass = require('../view/Runner/' + viewName);
-				var result = new viewClass(runner);
+				new viewClass(runner);
 			} catch (err) {
 				throw new ReferenceError([
 					err.message, '',

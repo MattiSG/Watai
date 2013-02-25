@@ -41,7 +41,7 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 	/** Presents details of a test start to the user.
 	* Attaches to resolution handlers.
 	*
-	*@param	{model}	model	The model that is about to start.
+	*@param	model	The model that is about to start.
 	*/
 	onStart: function onStart() {
 		this.model.promise.then(
