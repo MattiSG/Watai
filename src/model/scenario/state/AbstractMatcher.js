@@ -167,6 +167,12 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 					+ this.expected
 					+ '".';
 		}
+	},
+
+	/** Redefines the parent formatting to remove the timeout information, which resides in the parent State step.
+	*/
+	failImmediately: function failImmediately(report) {
+		this.deferred.reject(this.formatFailure(report));
 	}
 });
 

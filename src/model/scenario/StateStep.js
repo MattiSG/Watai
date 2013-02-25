@@ -46,6 +46,9 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 		}, this);
 	},
 
+	/**
+	*@see	AbstractStep#start
+	*/
 	start: function start() {
 		var assertionsPromises = this.assertions.map(function(assertion) {
 			return assertion();
@@ -58,6 +61,11 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 				).end();
 	},
 
+	/** Parses local options (i.e. the ones specific to this state assertion) and removes them from the given description.
+	*
+	*@param		{Hash.<String, ?>}	description	A state assertion hash.
+	*@returns	{Hash.<String, ?>}	The same assertion hash, with its options removed.
+	*/
 	removeOptions: function removeOptions(description) {
 		if (description.hasOwnProperty('timeout')) {
 			this.timeout = description.timeout;
@@ -130,7 +138,7 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 		}
 
 		return function evaluateStateDescriptorMatchers() {	// this is an "instance"
-			this.emit('descriptor', this, elementName, expected);
+			this.emit('descriptor', deferred.promise, elementName, expected);
 
 			activeMatchers.each(function(matcher) {
 				matcher.test(this.timeout)
