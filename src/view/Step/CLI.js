@@ -11,7 +11,7 @@ var StepCLI = new Class(/** @lends StepCLI# */{
 	*/
 	showFailure: function showFailure(message) {
 		//stepIndex++;	// make the step index 1-based for the user	// TODO: add stepIndex back
-		this.animator.log('   ↳', 'cyan', message, 'cyan');
+		process.stdout.write('   ↳ ' + message + '\n');
 	}
 });
 
