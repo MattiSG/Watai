@@ -30,14 +30,7 @@ var views = [
 
 /** This test suite is written with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */
-describe('Views', function() {
-
-	describe('manager', function() {
-		it('should exist', function() {
-			Watai.ViewsManager.should.be.a('object');
-			Watai.ViewsManager.attach.should.be.a('function');
-		});
-	});
+xdescribe('Views', function() {
 
 	views.forEach(function(view) {
 		var emitter = new EventEmitter(),

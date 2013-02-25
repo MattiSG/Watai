@@ -7,7 +7,6 @@ var ConfigLoader	= require('mattisg.configloader');
 var Widget			= require('../model/Widget'),
 	Feature			= require('../model/Feature'),
 	Runner			= require('./Runner'),
-	ViewsManager	= require('../view/ViewsManager'),
 	ConfigManager	= require('../lib/configManager');
 
 
@@ -149,8 +148,18 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	},
 
 	attachViewsTo: function attachViewsTo(runner) {
-		ConfigManager.values.views.each(function(view) {
-			ViewsManager.attach('Runner/' + view, runner);
+		ConfigManager.values.views.each(function(viewName) {
+			try {
+				var viewClass = require('../view/Runner/' + viewName);
+				var result = new viewClass(runner);
+			} catch (err) {
+				throw new ReferenceError([
+					err.message, '',
+					'The view "' + viewName + '" could not be loaded.',
+					'Are you sure you did not misspell it?',
+					'If not, then it might be that the config file you are using does not match the executed Watai version.'
+				].join('\n'));
+			}
 		});
 	},
 

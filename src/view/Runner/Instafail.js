@@ -1,13 +1,17 @@
-/**@namespace	Logs feature failures and errors as they come.
+var FeatureInstafailView = require('../Feature/Instafail');
+
+
+/**@class	Logs feature failures and errors as they come.
 */
-var Instafail = {};
+var RunnerInstafail = new Class({
+	events: {
+		/** Attaches the Feature/Instafail view to all features started by the Runner listened to.
+		*/
+		feature: function onFeatureStart(feature) {
+			new FeatureInstafailView(feature);
+		}
+	}
+});
 
 
-/** Attaches the Feature/Instafail view to all features started by the Runner listened to.
-*/
-Instafail.featureStart = function onFeatureStart(feature) {
-	require('../ViewsManager').attach('Feature/Instafail', feature);
-}
-
-
-module.exports = Instafail;	// CommonJS export
+module.exports = RunnerInstafail;	// CommonJS export

@@ -6,6 +6,11 @@ var Runner = new Class( /** @lends Runner# */ {
 
 	Extends: require('events').EventEmitter,
 
+	/** The promise object for results, resolved when all features of this Runner have been evaluated.
+	*@type	{Promise}
+	*/
+	promise: null,
+
 	/** A hash mapping all failed features to their reasons for rejection.
 	*If empty, the run was successful.
 	*@type	{Object.<Feature, String>}
@@ -173,6 +178,9 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.emit('beforeRun', this);
 
 		this.deferred = promises.defer();
+
+		this.promise = this.deferred.promise;
+
 		if (this.ready) {
 			this.start();
 		} else {	// we already run before, or we just initialized
@@ -186,7 +194,7 @@ var Runner = new Class( /** @lends Runner# */ {
 			}
 		}
 
-		return this.deferred.promise;
+		return this.promise;
 	},
 
 	/** Actually starts the evaluation process.
@@ -231,8 +239,7 @@ var Runner = new Class( /** @lends Runner# */ {
 		}
 	},
 
-	/** Callback handler upon feature evaluation. Emits events and calls the `startNextFeature` handler.
-	* Emits "featureSuccess", "featureError", "featureFailure".
+	/** Callback handler upon feature evaluation. Flags failures and calls the `startNextFeature` handler.
 	*
 	*@private
 	*@see	#startNextFeature
@@ -244,33 +251,29 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.startNextFeature();
 	},
 
-	/** Informs of the end result and cleans up everything after tests runs.
-	* Emits "success", "failure".
+	/** Informs of the end result and cleans the instance up after tests runs.
 	*
 	*@param	{Boolean}	success	Whether all features succeeded or not.
 	*@private
 	*/
 	finish: function finish(success) {
-		var resolve	=		this.deferred.resolve.bind(this.deferred, this),
-			reject	=		this.deferred.reject.bind(this.deferred, this.failures),
-			fulfill	=		resolve,
-			eventType =		'success',
-			precondition =	(this.config.quit != 'always'
-							? this.markUsed
-							: this.killDriver
-							).bind(this),
-			failures =		this.failures;	// copy them in case the precondition cleans them up
+		var resolve			= this.deferred.resolve.bind(this.deferred, this),
+			reject			= this.deferred.reject.bind(this.deferred, this.failures),
+			fulfill			= resolve,
+			precondition	= (this.config.quit == 'always'
+								? this.killDriver
+								: this.markUsed
+							  ).bind(this),
+			failures		= this.failures;	// copy them in case the precondition cleans them up
 
 		if (Object.getLength(failures) == 0) {
 			if (this.config.quit == 'on success')
 				precondition = this.killDriver.bind(this);
 		} else {
-			eventType = 'failure';
 			fulfill = reject;
 		}
 
 		promises.when(precondition(), fulfill, reject);
-		this.emit(eventType, failures);
 	},
 
 	/** Updates inner state so that consequent calls to `run()` know they need to reload the driver.

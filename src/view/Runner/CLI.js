@@ -3,37 +3,37 @@ var animator = require('../../../src/lib/cli-animator');
 var FeatureCLIView = require('../Feature/CLI');
 
 
-/**@namespace A command-line interface that outputs and formats a Runner’s events.
+/**@class A command-line interface that outputs and formats a Runner’s events.
 */
-var RunnerCLI = {};
+var RunnerCLI = new Class({
+	Extends: require('../PromiseView'),
 
+	submodel: {
+		name: 'feature',
+		view: FeatureCLIView
+	},
 
-/** Informs user that the emitting Runner is waiting for the browser.
-*/
-RunnerCLI.beforeRun = function onBeforeRun(runner) {
-	animator.spin(runner + ' (waiting for browser…)');
-}
+	events: {
+		/** Informs user that the emitting Runner is waiting for the browser.
+		*/
+		beforeRun: function onBeforeRun() {
+			animator.spin(this.model + ' (waiting for browser…)');
+		},
 
-/** Informs user that the emitting Runner is ready to start.
-*/
-RunnerCLI.ready = function onReady(runner) {
-	animator.log('⨁', 'info', runner + '                       ');
-}
+		/** Informs user that the emitting Runner is ready to start.
+		*/
+		ready: function onReady() {
+			animator.log('⨁', 'info', this.model + '                       ');
+		}
+	},
 
-/** Attaches CLI Feature view to the started feature.
-*
-*@param	{Feature}	feature	The feature that is about to start.
-*/
-RunnerCLI.feature = function onFeature(feature) {
-	new FeatureCLIView(feature);
-}
-
-/** Resets the shell prompt.
-*/
-RunnerCLI.failure = RunnerCLI.success = function redrawCursor() {
-	animator.clear();
-	animator.showCursor();
-}
+	/** Resets the shell prompt.
+	*/
+	showEnd: function showEnd() {
+		animator.clear();
+		animator.showCursor();
+	}
+});
 
 
 module.exports = RunnerCLI;	// CommonJS export

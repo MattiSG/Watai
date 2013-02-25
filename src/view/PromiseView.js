@@ -44,13 +44,11 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 	*@param	{model}	model	The model that is about to start.
 	*/
 	onStart: function onStart() {
-		if (this.model.promise) {
-			this.model.promise.then(
-				this.showSuccess.bind(this),
-				this.showFailure.bind(this)
-			);
-			this.model.promise.fin(this.showEnd.bind(this));
-		}
+		this.model.promise.then(
+			this.showSuccess.bind(this),
+			this.showFailure.bind(this)
+		);
+		this.model.promise.fin(this.showEnd.bind(this));
 
 		this.showStart();
 	},

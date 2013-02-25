@@ -60,9 +60,6 @@ var Watai = {
 	*@private	(protected, exported for easier testing)
 	*/
 	Hook:			require('./model/Hook'),
-	/**@see	ViewsManager
-	*/
-	ViewsManager:	require('./view/ViewsManager'),
 	/**@see	configManager
 	*/
 	config:			require('./lib/configManager'),
