@@ -1,5 +1,3 @@
-var animator = require('../../../src/lib/cli-animator');
-
 var FeatureCLIView = require('../Feature/CLI');
 
 
@@ -17,21 +15,21 @@ var RunnerCLI = new Class({
 		/** Informs user that the emitting Runner is waiting for the browser.
 		*/
 		driverInit: function onDriverInit() {
-			animator.spin(this.model + ' (waiting for browser…)');
+			this.animator.spin(this.model + ' (waiting for browser…)');
 		},
 
 		/** Informs user that the emitting Runner is ready to start.
 		*/
 		ready: function onReady() {
-			animator.log('⨁', 'info', this.model + '                       ');
+			this.animator.log('⨁', 'info', this.model + '                       ');
 		}
 	},
 
 	/** Resets the shell prompt.
 	*/
 	showEnd: function showEnd() {
-		animator.clear();
-		animator.showCursor();
+		this.animator.clear();
+		this.animator.showCursor();
 	}
 });
 
