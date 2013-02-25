@@ -48,9 +48,17 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 			this.model.promise.then(
 				this.showSuccess.bind(this),
 				this.showFailure.bind(this)
-			)
+			);
 			this.model.promise.fin(this.showEnd.bind(this));
 		}
+
+		this.showStart();
+	},
+
+	/** Presents details of a model evaluation start to the user.
+	*/
+	showStart: function showStart() {
+		// to be redefined by inheriting classes
 	},
 
 	/** Presents details of a model success to the user.

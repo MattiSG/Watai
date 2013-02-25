@@ -11,9 +11,6 @@ var FeatureCLI = new Class(/** @lends FeatureCLI# */{
 	},
 
 	events: {
-		start: function() {
-			this.showStart();
-		},
 		step: function(step) {
 			showStart = this.showStart.bind(this);
 			step.on('start', function() {
