@@ -33,7 +33,8 @@ var RunnerDots = new Class({
 	/** Presents a summary of the test procedure to the user.
 	*/
 	showEnd: function showEnd() {
-		var failuresCount = 0;
+		var featuresCount = this.features.length,
+			failuresCount = 0;
 
 		process.stdout.write('\n');
 
@@ -44,13 +45,15 @@ var RunnerDots = new Class({
 			}
 		});
 
+		var successCount = (featuresCount - failuresCount);
+
 		process.stdout.write('\nFinished in '
-							 + getDurationString(startTime, new Date())
+							 + getDurationString(this.startTime, new Date())
 							 + ': '
-							 + this.features.length
-							 + ' features, '
-							 + (this.features.length - failuresCount)
-							 + ' success, '
+							 + pluralize(featuresCount, 'failure')
+							 + ', '
+							 + successCount + ' success' + (successCount > 1 ? 'es' : '')
+							 + ', '
 							 + pluralize(failuresCount, 'failure')
 							 + '\n');
 	}

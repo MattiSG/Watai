@@ -26,15 +26,19 @@ if (args.length > 1) {
 
 
 var suitePath	= args[0],
-	suite		= new Watai.SuiteLoader(suitePath);
+	suite		= new Watai.SuiteLoader(suitePath),
+	statusCode	= 0;
 
 suite.getRunner()
 	 .test()
-	 .then(function() {
-		process.exit(0);
-	 }, function(report) {
-		process.exit(1);
-	 }).end();
+	 .fail(function() {
+	 	statusCode = 1;
+	 }).end();	// ensure any uncaught exception gets rethrown
+
+
+process.on('exit', function() {
+	process.exit(statusCode);
+});
 
 
 /** Loads plugins based on any passed options.
