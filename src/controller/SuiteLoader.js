@@ -73,12 +73,18 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			this.config.name = pathsUtils.basename(path, '/');	// remove a possible trailing separator
 	},
 
+	/** Returns and, if necessary, initializes the runner that contains all features for this suite.
+	*
+	*@returns	{Runner}	The runner that contains all features for this suite.
+	*/
 	getRunner: function getRunner() {
-		this.runner = new Runner(this.config);
-		this.attachViewsTo(this.runner);
-		this.context = vm.createContext(this.buildContext());
+		if (! this.runner) {
+			this.runner = new Runner(this.config);
+			this.attachViewsTo(this.runner);
+			this.context = vm.createContext(this.buildContext());
 
-		fs.readdir(this.path, this.loadAllFiles.bind(this));
+			fs.readdir(this.path, this.loadAllFiles.bind(this));
+		}
 
 		return this.runner;
 	},
