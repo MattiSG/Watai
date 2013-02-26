@@ -4,12 +4,6 @@
 var CLIanimator = {};
 
 
-process.on('SIGINT', function() {
-	CLIanimator.showCursor();
-	process.stdout.write('\n');
-	process.exit();
-});
-
 /** Presents the given information to the user.
 *@param	{String}	prefix			A symbol to prepend to the message.
 *@param	{String}	type			The type of information to present (i.e. "debug", "info", "warn"…).
@@ -111,5 +105,17 @@ function stop() {
 	clearInterval(play.timer);
 	CLIanimator.showCursor();
 }
+
+/*
+* Ensure we don't mess the user's prompt up.
+*/
+
+process.on('SIGINT', function() {
+	CLIanimator.showCursor();
+	process.stdout.write('\n');
+	process.exit();
+});
+
+process.addListener('uncaughtException', CLIanimator.showCursor);	// ensure the prompt is always restored, even if the process crashes
 
 module.exports = CLIanimator;	// CommonJS export

@@ -75,6 +75,15 @@ var Widget = new Class( /** @lends Widget# */ {
 				}
 			}
 		});
+	},
+
+	/** Returns the user-provided name of this widget.
+	*
+	*@returns	{String}
+	*@see		#name
+	*/
+	toString: function toString() {
+		return this.name;
 	}
 });
 

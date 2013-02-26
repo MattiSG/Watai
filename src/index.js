@@ -12,7 +12,7 @@ var Watai = require('./Watai'),
 * Here is the main CLI entry point.
 */
 
-args = preProcessArguments(process.argv);
+var args = preProcessArguments(process.argv);
 
 if (args.length == 0) {
 	logger.error('Oops, you didn’t provide any test suite to execute!');
