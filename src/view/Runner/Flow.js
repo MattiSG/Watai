@@ -14,7 +14,7 @@ var RunnerVerbose = new Class({
 		/** Informs the user that the emitting Runner is ready to start.
 		*/
 		ready: function onReady(runner) {
-			this.animator.log('➔   ', 'info', runner + '                       ');
+			this.animator.log('➔ ', 'info', runner + '                       ');
 		}
 	}
 });

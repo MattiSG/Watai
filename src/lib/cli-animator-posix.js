@@ -80,7 +80,9 @@ var typeToColorCode = {
 	'info'	: 32,
 	'error'	: 35,
 	'warn'	: 31,
-	'yellow': 33
+	'yellow': 33,
+	'grey'	: 90,
+	'gray'	: 90
 }
 
 /** Plays the given array of strings.
