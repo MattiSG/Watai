@@ -54,10 +54,9 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 			return assertion();
 		});
 
-		promises.all(assertionsPromises)
+		promises.allResolved(assertionsPromises)
 				.then(
-					this.succeed.bind(this),
-					this.fail.bind(this)
+					this.onAllDescriptorsDone.bind(this)
 				).end();
 	},
 
@@ -124,7 +123,7 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 				matcher.cancel();
 			});
 
-			if (matchersLeft <= 0)
+			if (failures.length > 0)
 				deferred.reject(failures);
 			else
 				deferred.resolve();
@@ -148,6 +147,32 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 
 			return deferred.promise;
 		}.bind(this);
+	},
+
+	/** Extracts failures from descriptor promises and calls either `succeed` or `fail` based on this information.
+	*
+	*@param	{Array.<Promise>}	The promises for each state descriptor, either fulfilled or rejected.
+	*/
+	onAllDescriptorsDone: function onAllDescriptorsDone(promises) {
+		var failures = [];
+
+		promises.each(function(promise) {
+			if (promise.isRejected())
+				failures = failures.concat(promise.valueOf().exception);	// as passed when rejecting a promise from #generateAssertion, this is an array containing reasons of rejection for each matcher
+		});
+
+		if (failures.length > 0)
+			this.fail(failures);
+		else
+			this.succeed();
+	},
+
+	/**
+	*
+	*@see	AbstractStep#formatFailure
+	*/
+	formatFailure: function formatFailure(failures) {
+		return '\n- ' + failures.join('\n- ');
 	}
 });
 

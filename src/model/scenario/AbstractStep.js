@@ -151,7 +151,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*@private
 	*/
 	failImmediately: function failImmediately(report) {
-		var failureMessagePrefix = (this.timeout > 0 ? 'After ' + this.timeout + ' milliseconds, ' : '');
+		var failureMessagePrefix = (this.timeout > 0 ? 'After ' + this.timeout + ' milliseconds: ' : '');
 
 		this.deferred.reject(failureMessagePrefix + this.formatFailure(report));
 	},

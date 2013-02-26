@@ -72,6 +72,8 @@ describe('StateStep', function() {
 
 	describe('should be rejected on', function() {
 		it('missing elements', function(done) {
+			this.timeout(5000);
+
 			new StateStep({ 'TestWidget.missing': 'toto' }, { TestWidget: TestWidget })
 				.test().then(function() {
 					done(new Error('Resolved instead of rejected!'));
@@ -85,15 +87,16 @@ describe('StateStep', function() {
 			new StateStep(wrongTexts, { TestWidget: TestWidget })
 				.test().then(function() {
 					done(new Error('Unmatched widget state description should not be resolved.'));
-				}, function(reason) {
-					if (reason
-						&& reason.contains(firstKey)
-						&& reason.contains(wrongTexts[firstKey])
-						&& reason.contains(expectedContents[firstKey])) {
-						done();
-					} else {
-						done(new Error('Unmatched widget state description was properly rejected, but the reason for rejection was not clear enough (got "' + firstReason + '").'));
-					}
+				},function(reason) {
+					Object.each(require('../../helpers/testWidget').expectedContents, function(text, key) {
+						if (! (reason
+							&& reason.contains(key)
+							&& reason.contains(wrongTexts['TestWidget.' + key])
+							&& reason.contains(expectedContents['TestWidget.' + key]))) {
+							done(new Error('Unmatched widget state description was properly rejected, but the reason for rejection was not clear enough (got "' + reason + '", expected values associated with "' + key + '").'));
+						}
+					});
+					done();
 				}
 			).end();
 		});
