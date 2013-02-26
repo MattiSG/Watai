@@ -7,14 +7,12 @@ var StepVerbose = new Class({
 
 	events: {
 		descriptor: function(promise, elementName, expected) {
-			var expectedDescription	= (typeof expected)
-									+ ' '
-									+ (expected.name || expected.description || expected),
+			var expectedDescription	= expected.name || expected.description || expected,
 				elementDescription	= elementName.replace('.', '’s ')
 
 			promise.then(
-				this.animator.log.bind(this.animator, '   ┝✓', 'info', elementDescription + ' matches ' + expectedDescription),
-				this.animator.log.bind(this.animator, '   ┝✗', 'warn', elementDescription + ' does not match ' + expectedDescription, 'warn')
+				this.animator.log.bind(this.animator, '   ┝ ✓', 'info', elementDescription + ' matches ' + expectedDescription),
+				this.animator.log.bind(this.animator, '   ┝ ✗', 'warn', elementDescription + ' does not match ' + expectedDescription, 'warn')
 			);
 		}
 	},
