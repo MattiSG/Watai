@@ -40,7 +40,6 @@ var Widget = new Class( /** @lends Widget# */ {
 				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
 
 				return function() {
-					widget.emit('action', key, method, args);
 					return method.apply(widget, args);
 				}
 			}
@@ -70,7 +69,6 @@ var Widget = new Class( /** @lends Widget# */ {
 				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
 
 				return function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
-					widget.emit('action', key, method, args);
 					return widget[key].then(function(element) {
 						return element[method].apply(element, args);
 					});
