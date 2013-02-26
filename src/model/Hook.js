@@ -31,8 +31,8 @@ var Hook = function Hook(hook, driver) {
 	*@private
 	*/
 	this.handleInput = function handleInput(input) {
-		var deferred = promises.defer(),
-			reject = function() { deferred.reject() };	// it seems WebDriver's promises pass weird arguments that prevent the rejector from being used directly
+		var deferred	= promises.defer(),
+			reject		= function() { deferred.reject.apply(deferred, arguments) };	// it seems WebDriver's promises pass weird arguments that prevent the rejector from being used directly
 
 		this.toSeleniumElement().then(function(elm) {
 			elm.clear().then(function() {

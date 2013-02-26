@@ -71,7 +71,9 @@ var Widget = new Class( /** @lends Widget# */ {
 
 				return function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
 					widget.emit('action', key, method, args);
-					return widget[key][method].apply(widget[key], args);
+					return widget[key].then(function(element) {
+						return element[method].apply(element, args);
+					});
 				}
 			}
 		});
