@@ -24,7 +24,7 @@ var driver,
 *@private
 */
 	driverClientsCount = 0;
-	
+
 
 /** Returns an object with a `driver` key, which will be set before the test suite in which this function is called, and will be quit after the suite if it is the last one of this test run.
 *
@@ -56,7 +56,7 @@ function setDriverIn(holder) {
 function openDriverWithin(destination) {
 	return function openDriver(done) {
 		this.timeout(config.browserWarmupTimeout);
-		
+
 		if (! driver) {
 			driver = makeDriver(done);
 			destination.driver = driver;
@@ -86,11 +86,11 @@ function makeDriver(done) {
 		console.error('  See the troubleshooting guide if you need help  ;)');
 		process.exit(1);
 	});
-	
+
 	result.get(config.baseURL).then(function() {
 			done();	// remove arguments for compatibility with mocha
 		}, done);
-	
+
 	return result;
 }
 
@@ -102,6 +102,8 @@ function makeDriver(done) {
 */
 function closeDriverWithin(source) {
 	return function quitDriver(done) {
+		this.timeout(10000);
+
 		if (--driverClientsCount <= 0)
 			source.driver.quit().then(done, done);
 		else

@@ -1,6 +1,8 @@
 var EventEmitter = require('events').EventEmitter;
 
+
 var Watai		= require('../helpers/subject'),
+	config		= require('../config'),
 	stdoutSpy	= require('../helpers/StdoutSpy');
 
 
@@ -13,56 +15,54 @@ var feature = new Watai.Feature('Test feature', [], {});
 */
 var views = [
 		'Runner/CLI',
-		'Runner/Growl',
 		'Runner/Dots',
-		'Runner/Flow'
+		'Runner/Flow',
+		'Runner/Instafail'
 	],
 /** Event names mapped to the parameters expected by the event.
 */
-	events = {
-		driverInit		: [],
-		ready			: [],
-		failure			: [],
-		success			: []
-	};
+	events = [ 'driverInit', 'start' ];
 
 
 
 /** This test suite is written with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */
-xdescribe('Views', function() {
+describe('Views', function() {
+	var emitter;
+
+	before(function() {
+		config.quit = 'always';
+		emitter = new Watai.Runner(config);
+		emitter.test();
+	});
 
 	views.forEach(function(view) {
-		var emitter = new EventEmitter(),
-			subject;
+		var subject;
 
 		describe(view, function() {
 			it('should exist', function() {
 				(function() {
-					subject = Watai.ViewsManager.attach(view, emitter);
+					var subjectClass = require(Watai.path + '/view/' + view);
+					subject = new subjectClass(emitter);
 				}).should.not.throw();
 			});
 
-			it('should return its emitter', function() {
-				subject.should.equal(emitter);
-			});
+			events.each(function(eventName) {
+				describe(eventName + ' event', function() {
+					before(function() {
+						stdoutSpy.reset();
+					});
 
-			Object.each(events, function(params, eventName) {
-				before(function() {
-					stdoutSpy.mute();
-					stdoutSpy.reset();
-				});
+					it('should output something', function() {
+						stdoutSpy.mute();
+						emitter.emit(eventName);
+						stdoutSpy.unmute();
+						stdoutSpy.called().should.be.true;
+					});
 
-				it('should listen to ' + eventName, function() {
-					params.unshift(eventName);
-					emitter.emit.apply(emitter, params);
-					params.shift();	// leave the array as it was, for the next tests
-
-					stdoutSpy.called().should.be.true;
-				});
-
-				after(function() {
-					stdoutSpy.unmute();
+					after(function() {
+						stdoutSpy.unmute();	// keep it in the `after` handler just in case something goes wrong in the test
+					});
 				});
 			});
 		});
