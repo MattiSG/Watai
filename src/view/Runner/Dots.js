@@ -50,7 +50,7 @@ var RunnerDots = new Class({
 		process.stdout.write('\nFinished in '
 							 + getDurationString(this.startTime, new Date())
 							 + ': '
-							 + pluralize(featuresCount, 'failure')
+							 + pluralize(featuresCount, 'feature')
 							 + ', '
 							 + successCount + ' success' + (successCount > 1 ? 'es' : '')
 							 + ', '
