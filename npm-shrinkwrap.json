@@ -1,6 +1,6 @@
 {
   "name": "watai",
-  "version": "0.5.0-alpha1",
+  "version": "0.5.0-alpha2",
   "dependencies": {
     "q": {
       "version": "0.8.8"
