@@ -59,6 +59,7 @@ var RunnerPageDump = new Class(/** @lends RunnerPageDump# */{
 	dumpPage: function dumpPage(domDump) {
 		var message = this.header;
 		message.push(domDump);
+		message.push('');
 
 		process.stdout.write(message.join('\n'));
 	}
