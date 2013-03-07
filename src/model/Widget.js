@@ -97,7 +97,7 @@ var Widget = new Class( /** @lends Widget# */ {
 *@private
 */
 Widget.magic = {
-	click:	/(.+)(Link|Button|Checkbox)$/i
+	click:	/(.+)(Link|Button|Checkbox|Option)$/i
 }
 
 module.exports = Widget;	// CommonJS export
