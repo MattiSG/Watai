@@ -108,11 +108,11 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	},
 
 	/** Immediately cancels the requested match, ignoring any timeouts.
-	* The promise is left untouched, neither fulfilled nor rejected.
+	* The promise is rejected with a "Cancelled" error.
 	*/
 	cancel: function cancel() {
 		this.cancelled = true;
-		clearTimeout(this.retryTimeoutId);
+		this.deferred.reject(new Error('Cancelled'));
 	},
 
 	/** Fulfill the promise.
