@@ -21,13 +21,11 @@ Benefits
 Status
 ------
 
-### Watai is currently alpha-level software ###
+### Watai is currently beta-level software ###
 
-This means that its stability and feature set can not be guaranteed. It is constantly improving, and a high level of quality control is applied to its development. But mistakes can always happen.
+This means that its stability and feature set are evolving. It is constantly improving, and a high level of quality control is applied to its development. But mistakes can always happen.
 
-We are currently using Watai in a live project, and at least two other teams do so. It works well on its core feature set, but errors are not really developer-friendly at the moment, so you could get blocked on some specificities of your app.
-
-You are highly encouraged to try out Watai and see if it fits your needs. Getting started and writing your first test should take you around 15 minutes, and the results should get you quite excited  :)
+We are currently using Watai in a big live project, and at least two other teams do so. You are highly encouraged to try out Watai and see if it fits your needs. Getting started and writing your first test should take you around 15 minutes, and the results should get you quite excited  :)
 
 If anything goes wrong, please open an issue, and I'll do my best to get you out of trouble!
 
@@ -35,9 +33,7 @@ If anything goes wrong, please open an issue, and I'll do my best to get you out
 
 [SemVer](http://semver.org/) is followed to convey the state of the software through version numbers.
 
-You can rely on the fact that the syntax you write your tests in won't change until a minor version number (the `y` in `x.y.z`) is updated.
-
-Versions considered stable are tagged with a version number and **not** suffixed with `-alpha`. They are good fallbacks if anything goes wrong after an update.
+You can rely on the fact that the syntax you write your tests in won't change until a minor version number (the `y` in `x.y.z`) is updated. Versions not sufficiently field-tested will be suffixed with `-alpha`.
 
 Installing
 ----------
