@@ -116,6 +116,9 @@ process.on('SIGINT', function() {
 	process.exit();
 });
 
-process.addListener('uncaughtException', CLIanimator.showCursor);	// ensure the prompt is always restored, even if the process crashes
+process.addListener('uncaughtException', function(e) {
+	CLIanimator.showCursor();	// ensure the prompt is always restored, even if the process crashes
+	throw e;
+});
 
 module.exports = CLIanimator;	// CommonJS export
