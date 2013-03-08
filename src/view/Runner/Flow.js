@@ -14,8 +14,8 @@ var RunnerFlow = new Class({
 		/** Informs user that this view's Runner is waiting for the browser.
 		*/
 		driverInit: function onDriverInit() {
-			this.animator.log('➔ ', 'info', this.model);
-			process.stdout.write('    Waiting for browser… ');
+			this.animator.log('➔    ', 'info', this.model);
+			process.stdout.write('       Waiting for browser… ');
 		},
 
 		/** Informs the user that this view's Runner is ready to start.

@@ -22,6 +22,7 @@ var FeatureDots = new Class(/** @lends FeatureDots# */{
 	showFailureDetails: function showFailureDetails() {
 		var result = '[FAILED] '
 					+ this.model.description
+					+ ' (#' + this.model.id + ')'
 					+ ':\n\t- '
 					+ this.model.promise.valueOf().exception.join('\n\t- ');
 

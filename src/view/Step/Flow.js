@@ -11,8 +11,8 @@ var StepVerbose = new Class({
 				elementDescription	= elementName.replace('.', '’s ')
 
 			promise.then(
-				this.animator.log.bind(this.animator, '   ┝ ✓', 'info', elementDescription + ' matches ' + expectedDescription),
-				this.animator.log.bind(this.animator, '   ┝ ✗', 'warn', elementDescription + ' does not match ' + expectedDescription, 'warn')
+				this.animator.log.bind(this.animator, '      ┝ ✓', 'info', elementDescription + ' matches ' + expectedDescription),
+				this.animator.log.bind(this.animator, '      ┝ ✗', 'warn', elementDescription + ' does not match ' + expectedDescription, 'warn')
 			);
 		}
 	},
@@ -20,7 +20,7 @@ var StepVerbose = new Class({
 	/** Presents details of a test success to the user.
 	*/
 	showSuccess: function showSuccess() {
-		this.animator.log('   ┝', 'info', /*'step ' + stepIndex + */' passed');
+		this.animator.log('      ┝', 'info', /*'step ' + stepIndex + */' passed');
 	},
 
 	/** Presents details of a test failure to the user.
@@ -29,7 +29,7 @@ var StepVerbose = new Class({
 	*/
 	showFailure: function showFailure(reasons) {
 		reasons.each(function(reason) {
-			this.animator.log('   ┝', 'cyan', reason, 'cyan');
+			this.animator.log('      ┝', 'cyan', reason, 'cyan');
 		}, this);
 	}
 });

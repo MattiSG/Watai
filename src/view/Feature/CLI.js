@@ -32,7 +32,7 @@ var FeatureCLI = new Class(/** @lends FeatureCLI# */{
 	/** Presents details of a test failure to the user.
 	*/
 	showFailure: function showFailure() {
-		this.animator.log('✘', 'warn', this.model.description, 'warn');
+		this.animator.log('✘', 'warn', this.model.description + ' (#' + this.model.id + ')', 'warn');
 	},
 
 	/** Clears the feature spinner.
