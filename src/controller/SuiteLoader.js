@@ -129,8 +129,9 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			throw err;
 		}
 
-		var featureFiles = [],
-			widgetFiles = [];
+		var featureFiles	= {},
+			widgetFiles		= [];
+
 		files.forEach(function(file) {
 			var match;	// if capturing parentheses are used in the file type detection regexp (see SuiteLoader.paths), this var holds the `match()` result
 
@@ -144,13 +145,11 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			}
 		}, this);
 
-		featureFiles = featureFiles.clean();	// since elements are added at the user-defined index, the array could be sparse: remove undefined elements. MooTools method.
-
-		if (featureFiles.length <= 0)
+		if (Object.getLength(featureFiles) <= 0)
 			throw new Error('No feature found! Feature names have to match this RegExp: ' + SuiteLoader.paths.featureMarker);
 
 		widgetFiles.forEach(this.loadWidget.bind(this));
-		featureFiles.forEach(this.loadFeature.bind(this));
+		Object.each(featureFiles, this.loadFeature, this);
 	},
 
 	attachViewsTo: function attachViewsTo(runner) {
@@ -221,12 +220,13 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 	/** Loads the given file as a feature into this SuiteLoader's underlying runner.
 	*
-	*@param	featureFile	Path to a feature description file. See examples to see how such a file should be written.
+	*@param		{String}	featureFile	Path to a feature description file. See examples to see how such a file should be written.
+	*@param		{Number}	featureId	Numerical identifier of the feature to load.
 	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
 	*
 	*@see	#loadAllFiles
 	*/
-	loadFeature: function loadFeature(featureFile) {
+	loadFeature: function loadFeature(featureFile, featureId) {
 		ConfigManager.getLogger('load').verbose('+ loading ' + featureFile);
 
 		try {
@@ -234,7 +234,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 							+ '__features__.push(new Feature('
 							+								 'featureContents.description,'
 							+								 'featureContents.scenario,'
-							+								 '__widgets__'
+							+								 '__widgets__,'
+							+								 featureId
 							+ '));',
 							this.context,
 							featureFile);

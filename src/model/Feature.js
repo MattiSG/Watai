@@ -34,9 +34,14 @@ var Feature = new Class( /** @lends Feature# */ {
 	/** The user-provided feature name.
 	*
 	*@type	{String}
-	*@private
 	*/
 	description: '',
+
+	/** A numerical identifier that the user can easily identify.
+	*
+	*@type	{Number}
+	*/
+	id: 0,
 
 	promise: null,
 
@@ -56,9 +61,11 @@ var Feature = new Class( /** @lends Feature# */ {
 	*@param	{String}	description	A plain text description of the feature, advised to be written in a BDD fashion.
 	*@param	{Array}		scenario	An array that describes states and transitions. See class documentation for formatting.
 	*@param	{Object.<String, Widget>}	widgets	A hash listing all widgets accessible to this Feature, indexed on their names.
+	*@param	{Number}	[id]		The numerical identifier of this feature.
 	*/
-	initialize: function init(description, scenario, widgets) {
+	initialize: function init(description, scenario, widgets, id) {
 		this.description = description;
+		this.id = id || 0;
 
 		this.widgets = widgets;	//TODO: transform so that they can be referred to with the "Widget" suffix optional?
 
