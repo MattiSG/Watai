@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+
+
 var Watai = require('./Watai'),
 	/** Path to the directory containing option-callable scripts.
 	*@type	{String}

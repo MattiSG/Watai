@@ -23,13 +23,12 @@
   "files": [
     "src",
     "doc",
-    "go",
     "README.md",
     "npm-shrinkwrap.json",
     "license.LGPL.txt"
   ],
-  "main": "src/index.js",
-  "bin": "go",
+  "main": "src/Watai.js",
+  "bin": "src/index.js",
   "directories": {
     "lib": "./src",
     "doc": "./doc",

@@ -163,5 +163,5 @@ case "$1" in
 		shift
 		node debug $SRC_DIR "$@" ;;
 	* )	# simply run the tool
-		node $SRC_DIR "$@" ;;
+		$SRC_DIR/index.js "$@" ;;
 esac
