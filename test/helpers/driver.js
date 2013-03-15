@@ -67,7 +67,7 @@ function openDriverWithin(destination) {
 	}
 }
 
-/** Creates a new WebDriver instance and loads the `baseURL` found in the loaded config, calling back when it is ready.
+/** Creates a new WebDriver instance and loads the `url` found in the loaded config, calling back when it is ready.
 *
 *@param	{function}	done	Callback for completion.
 *@return	{WebDriver}
@@ -87,9 +87,9 @@ function makeDriver(done) {
 		process.exit(1);
 	});
 
-	result.get(config.baseURL).then(function() {
-			done();	// remove arguments for compatibility with mocha
-		}, done);
+	result.get(config.url).then(function() {
+		done();	// remove arguments for compatibility with mocha
+	}, done);
 
 	return result;
 }

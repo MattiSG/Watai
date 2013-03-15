@@ -25,7 +25,7 @@ describe('Runner', function() {
 		it('should refuse to construct a runner with no Selenium Server URL', function() {
 			(function() {
 				new Watai.Runner({
-					baseURL: 'http://example.com'
+					url: 'http://example.com'
 				});
 			}).should.throw();
 		});

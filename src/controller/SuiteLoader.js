@@ -63,8 +63,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 		this.config = ConfigManager.values;
 
-		if (! config.baseURL) {
-			var msg = 'No baseURL was found in any "' + SuiteLoader.paths.config + '" file in directories above "' + this.path + '"';
+		if (! config.url) {
+			var msg = 'No URL was found in any "' + SuiteLoader.paths.config + '" file in directories above "' + this.path + '"';
 			ConfigManager.getLogger('load').error(msg);
 			throw new Error(msg);
 		}

@@ -30,13 +30,13 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	currentFeature: 0,
 
-	/** Whether the baseURL page has been loaded or not.
+	/** Whether the url page has been loaded or not.
 	*@type	{Boolean}
 	*@private
 	*/
 	ready: false,
 
-	/** True if the driver is currently waiting for the baseURL page to load.
+	/** True if the driver is currently waiting for the url page to load.
 	*@type	{Boolean}
 	*@private
 	*/
@@ -53,7 +53,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*
 	* A `Runner` is mostly set up through a configuration object.
 	* Such an object MUST contain the following items:
-	*	- `baseURL`: the URL at which the driver should start;
+	*	- `url`: the URL at which the driver should start;
 	* It SHOULD contain:
 	*	- `driverCapabilities`: an object that will be passed straight to the WebDriver instance, that describes the browser on which the tests should be run.
 	* It MAY contain:
@@ -86,8 +86,8 @@ var Runner = new Class( /** @lends Runner# */ {
 		if (typeof config.seleniumServerURL != 'string')
 			return new Error('The given Selenium server URL ("' + config.seleniumServerURL + '") is unreadable');
 
-		if (typeof config.baseURL != 'string')
-			return new Error('The given base URL ("' + config.baseURL + '") is unreadable');
+		if (typeof config.url != 'string')
+			return new Error('The given base URL ("' + config.url + '") is unreadable');
 
 		return null;
 	},
@@ -108,7 +108,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	loadBaseURL: function loadBaseURL() {
 		this.loading = true;
-		this.driver.get(this.config.baseURL).then(this.onReady.bind(this));
+		this.driver.get(this.config.url).then(this.onReady.bind(this));
 	},
 
 	/** Constructs a new WebDriver instance based on the given configuration.

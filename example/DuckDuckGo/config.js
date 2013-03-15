@@ -1,5 +1,5 @@
 module.exports = {
-	baseURL: 'https://duckduckgo.com/?kad=en_GB',	// passing the language code is used only because DuckDuckGo adjusts to your default language, which may make the test fail; you don't need to add anything to test your own website
+	url: 'https://duckduckgo.com/?kad=en_GB',	// passing the language code is used only because DuckDuckGo adjusts to your default language, which may make the test fail; you don't need to add anything to test your own website
 
 	// see all allowed values at http://code.google.com/p/selenium/wiki/DesiredCapabilities
 	driverCapabilities: {
