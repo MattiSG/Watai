@@ -55,7 +55,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	* Such an object MUST contain the following items:
 	*	- `url`: the URL at which the driver should start;
 	* It SHOULD contain:
-	*	- `driverCapabilities`: an object that will be passed straight to the WebDriver instance, that describes the browser on which the tests should be run.
+	*	- `desiredCapabilities`: an object that will be passed straight to the WebDriver instance, that describes the browser on which the tests should be run.
 	* It MAY contain:
 	*	- `name`: the name of the suite. Defaults to the name of the containing folder.
 	*
@@ -124,7 +124,7 @@ var Runner = new Class( /** @lends Runner# */ {
 
 		var result = new webdriver.Builder()
 						.usingServer(config.seleniumServerURL)
-						.withCapabilities(config.driverCapabilities)
+						.withCapabilities(config.desiredCapabilities)
 						.build();
 
 		return result;

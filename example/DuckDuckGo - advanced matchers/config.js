@@ -2,7 +2,7 @@ module.exports = {
 	url: 'https://duckduckgo.com/?kad=en_GB',	// passing the language code is used only because DuckDuckGo adjusts to your default language, which may make the test fail; you don't need to add anything to test your own website
 
 	// see all allowed values at http://code.google.com/p/selenium/wiki/DesiredCapabilities
-	driverCapabilities: {
+	desiredCapabilities: {
 		browserName: 'chrome',	// if you’d rather test with Chrome, you will need to install chromedriver
 								// read more at https://github.com/MattiSG/Watai/wiki/Testing-with-Chrome
 

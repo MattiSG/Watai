@@ -2,7 +2,7 @@ module.exports = {
 	url: 'http://pdc.refedd.org/', //TODO: add environments support (production / dev…)
 
 	// see all allowed values at http://code.google.com/p/selenium/wiki/DesiredCapabilities
-	driverCapabilities: {
+	desiredCapabilities: {
 		browserName: 'firefox',	// if you’d rather test with Chrome, you will need to install chromedriver
 								// read more at https://github.com/MattiSG/Watai/wiki/Testing-with-Chrome
 

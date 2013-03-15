@@ -76,7 +76,7 @@ function openDriverWithin(destination) {
 function makeDriver(done) {
 	var result = new webdriver.Builder()
 							  .usingServer(config.seleniumServerURL)
-							  .withCapabilities(config.driverCapabilities)
+							  .withCapabilities(config.desiredCapabilities)
 							  .build();
 
 	result.session_.then(null, function() {

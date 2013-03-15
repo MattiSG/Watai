@@ -1,7 +1,7 @@
 {
 	"url": "https://checkmytrip.com/",
 
-	"driverCapabilities": {
+	"desiredCapabilities": {
 		"browserName": "chrome",
 		"javascriptEnabled": true
 	},
