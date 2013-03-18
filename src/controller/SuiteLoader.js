@@ -237,15 +237,20 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@see	#loadAllFiles
 	*/
 	loadFeature: function loadFeature(featureFile, featureId) {
-		ConfigManager.getLogger('load').verbose('+ loading ' + featureFile);
+		winston.loggers.get('load').verbose('+ loading ' + featureFile);
+
+		var featureParams = [
+			'featureContents.description',
+			'featureContents.scenario',
+			'__widgets__',
+			'config',
+			featureId
+		];
 
 		try {
 			vm.runInContext('var featureContents = ' + fs.readFileSync(featureFile) + ';'
 							+ '__features__.push(new Feature('
-							+								 'featureContents.description,'
-							+								 'featureContents.scenario,'
-							+								 '__widgets__,'
-							+								 featureId
+							+ featureParams.join(',')
 							+ '));',
 							this.context,
 							featureFile);

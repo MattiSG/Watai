@@ -8,7 +8,7 @@ var Watai		= require('../helpers/subject'),
 
 /** A simple Feature stub, to have proper parameters to pass to events.
 */
-var feature = new Watai.Feature('Test feature', [], {});
+var feature = new Watai.Feature('Test feature', [], {}, require('../config'));
 
 
 /** The views to test.

@@ -111,7 +111,7 @@ describe('StateStep', function() {
 
 			before(function() {
 				featureWithScenario = function featureWithScenario(scenario) {
-					return new Watai.Feature('Test feature', scenario, { TestWidget: TestWidget });
+					return new Watai.Feature('Test feature', scenario, { TestWidget: TestWidget }, require('../../config'));
 				}
 
 				expectedOutputs = require('../../helpers/testWidget').expectedOutputs;

@@ -61,15 +61,16 @@ var Feature = new Class( /** @lends Feature# */ {
 	*@param	{String}	description	A plain text description of the feature, advised to be written in a BDD fashion.
 	*@param	{Array}		scenario	An array that describes states and transitions. See class documentation for formatting.
 	*@param	{Object.<String, Widget>}	widgets	A hash listing all widgets accessible to this Feature, indexed on their names.
+	*@param	{Hash}		config		The test-suite-level configuration elements.
 	*@param	{Number}	[id]		The numerical identifier of this feature.
 	*/
-	initialize: function init(description, scenario, widgets, id) {
-		this.description = description;
-		this.id = id || 0;
+	initialize: function init(description, scenario, widgets, config, id) {
+		this.description	= description;
+		this.id				= id || 0;
+		this.config			= config;
+		this.widgets		= widgets;	//TODO: transform so that they can be referred to with the "Widget" suffix optional?
 
-		this.widgets = widgets;	//TODO: transform so that they can be referred to with the "Widget" suffix optional?
-
-		this.steps = this.loadScenario(scenario);
+		this.steps			= this.loadScenario(scenario);
 	},
 
 	/** Parses an array that describes states and transitions and transforms it into a sequence of promises to be evaluated.
