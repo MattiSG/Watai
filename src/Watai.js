@@ -28,7 +28,7 @@ Object.each(setup.log, function(options, name) {
 */
 try {
 	var longjohn = require('longjohn');
-	longjohn.async_trace_limit = setup.debug.asyncTraces;
+	longjohn.async_trace_limit = setup.asyncTracesLimit;
 	winston.loggers.get('init').silly('Long stack traces loaded');
 } catch (e) {
 	winston.loggers.get('init').warn('No long stack traces module found');

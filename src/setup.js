@@ -1,4 +1,4 @@
-{
+module.exports = {
 	"log": {
 		"init": {
 			"console": {
@@ -13,7 +13,5 @@
 			}
 		}
 	},
-	"debug": {
-		"asyncTraces": 40
-	}
+	"asyncTracesLimit": 40	// set to -1 for unlimited, 0 for none. More details at <https://github.com/mattinsler/longjohn#README>.
 }
