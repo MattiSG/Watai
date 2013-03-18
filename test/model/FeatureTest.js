@@ -7,7 +7,7 @@ var Watai = require('../helpers/subject'),
 
 /** Timeout value of the test's config.
 */
-var GLOBAL_TIMEOUT = 500;	//TODO: get from configManager
+var GLOBAL_TIMEOUT = 500;
 
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).

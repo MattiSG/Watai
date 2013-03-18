@@ -1,13 +1,13 @@
 var fs			= require('fs'),
 	vm			= require('vm'),
-	pathsUtils	= require('path');
+	pathsUtils	= require('path'),
+	winston		= require('winston');
 
 var ConfigLoader	= require('mattisg.configloader');
 
 var Widget			= require('../model/Widget'),
 	Feature			= require('../model/Feature'),
-	Runner			= require('./Runner'),
-	ConfigManager	= require('../lib/configManager');
+	Runner			= require('./Runner');
 
 
 var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
@@ -54,19 +54,16 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		this.path = pathsUtils.resolve(path) + '/';	//TODO: Node 0.8 has path.sep
 
 		var config = new ConfigLoader({
-			from: this.path,
-			appName: 'watai',
-			observer: ConfigManager.getLogger('init').silly
+			from	: this.path,
+			appName	: 'watai',
+			observer: winston.loggers.get('init').silly
 		}).load(SuiteLoader.paths.config);
 
-		ConfigManager.set(config);
-
-		this.config = ConfigManager.values;
 
 		if (! config.baseURL) {
 			var msg = 'No baseURL was found in any "' + SuiteLoader.paths.config + '" file in directories above "' + this.path + '"';
-			ConfigManager.getLogger('load').error(msg);
-			throw new Error(msg);
+			winston.loggers.get('load').error(msg);
+			throw new ReferenceError(msg);
 		}
 
 		if (! config.name)
@@ -107,7 +104,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		result[SuiteLoader.contextGlobals.featuresList] = this.features;	// hook to pass instantiated features to this context
 		result[SuiteLoader.contextGlobals.widgetsList] = {};	// stays in the managed context, but necessary for features to have a reference to all widgets, since they are evaluated in _this_ context, not their instanciation one…
 
-		result[SuiteLoader.contextGlobals.log] = ConfigManager.getLogger('load').info;	// this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
+		result[SuiteLoader.contextGlobals.log] = winston.loggers.get('load').info;	// this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
 
 		result[SuiteLoader.contextGlobals.assert] = require('assert');
 		result[SuiteLoader.contextGlobals.storage] = Object.create(null);
@@ -125,7 +122,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*/
 	loadAllFiles: function loadAllFiles(err, files) {
 		if (err) {
-			ConfigManager.getLogger('load').error('Error while trying to load description files in "' + this.path + '"!', { path: this.path });
+			winston.loggers.get('load').error('Error while trying to load description files in "' + this.path + '"!', { path: this.path });
 			throw err;
 		}
 
@@ -176,14 +173,14 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@see	#loadAllFiles
 	*/
 	loadData: function loadData(dataFile) {
-		ConfigManager.getLogger('load').verbose('~ loading ' + dataFile);
+		winston.loggers.get('load').verbose('~ loading ' + dataFile);
 
 		try {
 			vm.runInContext(fs.readFileSync(dataFile),
 							this.context,
 							dataFile);
 		} catch (error) {
-			ConfigManager.getLogger('load').error('**Error in file "' + dataFile + '"**', { path : dataFile });	// TODO: is it really useful to add this info?
+			winston.loggers.get('load').error('**Error in file "' + dataFile + '"**', { path : dataFile });	// TODO: is it really useful to add this info?
 			throw error;
 		}
 
@@ -198,7 +195,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@see	#loadAllFiles
 	*/
 	loadWidget: function loadWidget(widgetFile) {
-		ConfigManager.getLogger('load').verbose('- loading ' + widgetFile);
+		winston.loggers.get('load').verbose('- loading ' + widgetFile);
 
 		var widgetName = pathsUtils.basename(widgetFile, '.js');
 
@@ -211,7 +208,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 							this.context,
 							widgetFile);
 		} catch (error) {
-			ConfigManager.getLogger('load').error('**Error in file "' + widgetFile + '"**', { path: widgetFile });	// TODO: is it really useful to add this info?
+			winston.loggers.get('load').error('**Error in file "' + widgetFile + '"**', { path: widgetFile });	// TODO: is it really useful to add this info?
 			throw error;
 		}
 
@@ -240,7 +237,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 							this.context,
 							featureFile);
 		} catch (error) {
-			ConfigManager.getLogger('load').error('**Error in file "' + featureFile + '"**', { path: featureFile });	// TODO: is it really useful to add this info?
+			winston.loggers.get('load').error('**Error in file "' + featureFile + '"**', { path: featureFile });	// TODO: is it really useful to add this info?
 			throw error;
 		}
 

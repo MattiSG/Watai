@@ -1,5 +1,11 @@
-var promises		= require('q'),
-	ConfigManager	= require('../../lib/configManager');
+var promises		= require('q');
+
+
+/** Time, in ms, before a failed step retries.
+*
+*@type	{Number}
+*/
+var FAILURE_RETRY_DELAY = 100;
 
 
 /**@class	Abstract class that represents a feature step.
@@ -14,12 +20,13 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	Extends: require('events').EventEmitter,
 
 	/** Time, in milliseconds, before the lack of validation is considered an actual failure.
-	* Defaults to the configuration value.
+	*
 	*@type	{Number}
 	*/
 	timeout: null,
 
 	/** The time at which the evaluation was first requested, to evaluate the timeout.
+	*
 	*@type	{Date}
 	*@private
 	*/
@@ -52,20 +59,21 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 	/** Starts the evaluation process, returning a promise that will be resolved after at most the given timeout.
 	*
-	*@param	{Number}	[timeout]	optional, specifies a timeout, in milliseconds, for this step to consider the lack of validation as a failure. Defaults to the `timeout` ConfigManager value. Set to 0 to try only once.
+	*@param	{Number}	[timeout]	optional, specifies a timeout, in milliseconds, for this step to consider the lack of validation as a failure. Set to 0 to try only once. Defaults to immediate execution with no retry.
 	*@returns	{Promise}	A promise that will be either fulfilled with no value passed, or rejected with an explicative message passed.
 	*/
 	test: function test(timeout) {
-		this.deferred  = promises.defer();
-		this.startTime = new Date();
-		this.cancelled = false;
-		this.retryTimeoutId = -1;	// -1 is no magic value, it just helps with debugging
-		this.timeout = (typeof timeout == 'number'
-						? timeout
-						:  (typeof this.timeout == 'number'
-							? this.timeout
-							: ConfigManager.values.timeout)
-						);
+		this.deferred		= promises.defer();
+		this.startTime		= new Date();
+		this.cancelled		= false;
+		this.retryTimeoutId	= -1;	// -1 is no magic value, it just helps with debugging
+		this.timeout		=  (typeof this.timeout == 'number'
+								? this.timeout
+								:  (typeof timeout == 'number'
+									? timeout
+									: 0
+								   )
+							   );
 
 		this.onBeforeStart();
 
@@ -142,7 +150,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 		if (new Date() - this.startTime >= this.timeout)	// the timeout has expired
 			this.failImmediately(report);
 		else
-			this.retryTimeoutId = setTimeout(this.start.bind(this), ConfigManager.values.matchTriesDelay);
+			this.retryTimeoutId = setTimeout(this.start.bind(this), FAILURE_RETRY_DELAY);
 	},
 
 	/** Makes this matcher fail immediately, not trying anymore.

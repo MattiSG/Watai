@@ -1,5 +1,4 @@
-var promises =	require('q'),
-	config =	require('../../../lib/configManager');
+var promises =	require('q');
 
 
 /**@class	Abstract class from which all content matchers inherit.

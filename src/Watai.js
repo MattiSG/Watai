@@ -8,27 +8,30 @@ var winston			= require('winston'),
 	/* http://nodejs.org/api/path.html */
 	pathsUtils		= require('path'),
 	/* https://github.com/MattiSG/Node-ConfigLoader#readme */
-	ConfigLoader	= require('mattisg.configloader'),
-	ConfigManager	= require('./lib/configManager');
+	ConfigLoader	= require('mattisg.configloader');
 
 
-ConfigManager.set(require('./config'));
-
-var config = new ConfigLoader({
+var setup = new ConfigLoader({
 	from	: pathsUtils.dirname(module.parent.filename),
 	appName	: 'watai'
-}).load('config');
+}).load('setup');
 
-ConfigManager.set(config);
+
+// init loggers
+Object.each(setup.log, function(options, name) {
+	winston.loggers.close(name);
+	winston.loggers.add(name, options);
+});
+
 
 /* Try to load long stack traces development module.
 */
 try {
 	var longjohn = require('longjohn');
-	longjohn.async_trace_limit = config.debug.asyncTraces;
-	ConfigManager.getLogger('init').silly('Long stack traces loaded');
+	longjohn.async_trace_limit = setup.debug.asyncTraces;
+	winston.loggers.get('init').silly('Long stack traces loaded');
 } catch (e) {
-	ConfigManager.getLogger('init').warn('No long stack traces module found');
+	winston.loggers.get('init').warn('No long stack traces module found');
 }
 
 /**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
@@ -60,9 +63,7 @@ var Watai = {
 	*@private	(protected, exported for easier testing)
 	*/
 	Hook:			require('./model/Hook'),
-	/**@see	configManager
-	*/
-	config:			require('./lib/configManager'),
+	setup:			setup,
 	steps:			require('./model/scenario'),
 	matchers:		require('./model/scenario/state')
 }
