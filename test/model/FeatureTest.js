@@ -164,12 +164,7 @@ describe('Feature', function() {
 					'TestWidget.output': expectedOutputs.overlayedActionLink
 				}
 			]).test().then(function() { done() }, function(report) {
-				var message = 'No failure report. See code';
-
-				if (report && report.failures && report.failures[0])
-					message = report.failures[0];
-
-				done(new Error(message));
+				done(new Error(report));
 			}).end();
 		});
 	});
