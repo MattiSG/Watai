@@ -17,7 +17,7 @@ var FeatureVerbose = new Class({
 	},
 
 	showStart: function showStart() {
-		this.animator.log('  ' + this.idPlaceholder + ' ┍', 'info', this.model.description, 'gray');
+		this.animator.log('  ' + this.getPaddedId() + ' ┍', 'gray', this.model.description, 'gray');
 	},
 
 	/** Presents details of a test success to the user.
