@@ -36,6 +36,12 @@ var FeatureVerbose = new Class({
 		this.animator.log('✘ ' + this.getPaddedId() + ' ┕', 'warn', this.model.description, 'warn');
 	},
 
+	/** Visually separates two features.
+	*/
+	showEnd: function showEnd() {
+		process.stdout.write('\n');
+	},
+
 	/** Returns the viewed feature's numerical ID, possibly padded with spaces so that they all have the same length.
 	* The length is provided by the length of the `idPlaceholder` attribute.
 	*
