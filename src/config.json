@@ -1,6 +1,6 @@
 {
 	"timeout"			: 5000,
 	"quit"				: "always",
-	"views"				: ["CLI", "Growl"],
+	"views"				: ["CLI", "Instafail", "Growl"],
 	"seleniumServerURL"	: "http://127.0.0.1:4444/wd/hub"
 }
