@@ -54,6 +54,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	* A `Runner` is mostly set up through a configuration object.
 	* Such an object MUST contain the following items:
 	*	- `url`: the URL at which the driver should start;
+	*	- `seleniumServerURL`: the URL at which the driver is available.
 	* It SHOULD contain:
 	*	- `desiredCapabilities`: an object that will be passed straight to the WebDriver instance, that describes the browser on which the tests should be run.
 	* It MAY contain:
