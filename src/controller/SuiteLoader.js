@@ -59,7 +59,17 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			observer: winston.loggers.get('init').silly
 		}).load(SuiteLoader.paths.config);
 
+		this.config = this.parseConfig(config);
+	},
 
+	/** Validates and possibly transforms the given config hash to a form that is usable for the loaded test suite.
+	*
+	*@param		{Hash}	config	The config values to use for this test suite.
+	*@returns	{Hash}	The given config, validated and possibly transformed.
+	*@throws	{ReferenceError}	If no base URL is found in the given config.
+	*@private
+	*/
+	parseConfig: function parseConfig(config) {
 		if (! config.baseURL) {
 			var msg = 'No baseURL was found in any "' + SuiteLoader.paths.config + '" file in directories above "' + this.path + '"';
 			winston.loggers.get('load').error(msg);
@@ -67,7 +77,9 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		}
 
 		if (! config.name)
-			this.config.name = pathsUtils.basename(path, '/');	// remove a possible trailing separator
+			config.name = pathsUtils.basename(this.path, '/');	// remove a possible trailing separator
+
+		return config;
 	},
 
 	/** Returns and, if necessary, initializes the runner that contains all features for this suite.
@@ -98,7 +110,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			Widget: Widget,
 			Feature: Feature,
 			// making it available for global access like loading URLs, getting title...
-			driver: this.runner.getDriver()
+			driver: this.runner.getDriver(),
+			config: this.config
 		}
 
 		result[SuiteLoader.contextGlobals.featuresList] = this.features;	// hook to pass instantiated features to this context
@@ -150,7 +163,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	},
 
 	attachViewsTo: function attachViewsTo(runner) {
-		ConfigManager.values.views.each(function(viewName) {
+		this.config.views.each(function(viewName) {
 			try {
 				var viewClass = require('../view/Runner/' + viewName);
 				new viewClass(runner);
