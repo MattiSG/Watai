@@ -1,0 +1,19 @@
+{
+	"log": {
+		"init": {
+			"console": {
+				"level"		: "error",
+				"colorize"	: true
+			}
+		},
+		"load": {
+			"console": {
+				"level"		: "warn",
+				"colorize"	: true
+			}
+		}
+	},
+	"debug": {
+		"asyncTraces": 40
+	}
+}
