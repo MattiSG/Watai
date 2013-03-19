@@ -22,14 +22,18 @@ var Watai					= require('./Watai'),
 
 var argsProcessor = new Preprocessor(OPTIONS_HANDLERS_DIR);
 
-var processedArgs = argsProcessor.process(process.argv);
+var args = argsProcessor.process(process.argv);
 
-var args = processedArgs.remaining;
+var suites = args.remaining;
 
-validateParams(args);
+validateParams(suites);
 
-var suitePath	= args[0],
-	suite		= new Watai.SuiteLoader(suitePath, processedArgs.config),
+if (args.setup)
+	Watai.setup.reload(args.setup);
+
+
+var suitePath	= suites[0],
+	suite		= new Watai.SuiteLoader(suitePath, args.config),
 	statusCode	= 0;
 
 suite.getRunner()
