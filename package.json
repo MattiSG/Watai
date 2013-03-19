@@ -49,7 +49,7 @@
     "mootools": "1.4",
     "winston": "0.6",
     "selenium-webdriverjs": "0.1.0-r17990",
-    "mattisg.configloader": "0.1.2"
+    "mattisg.configloader": "0.1.3"
   },
   "optionalDependencies": {
     "growl": "1.6"
