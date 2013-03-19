@@ -1,0 +1,67 @@
+{
+	"firefox": {
+		"browserName"		: "firefox",
+		"platform"			: "ANY",
+		"javascriptEnabled"	: true
+	},
+
+	"ie": {
+		"browserName"		: "internet explorer",
+		"platform"			: "WINDOWS",
+		"javascriptEnabled"	: true
+	},
+
+	"chrome": {
+		"browserName"		: "chrome",
+		"platform"			: "ANY",
+		"javascriptEnabled"	: true
+	},
+
+	"opera"	: {
+		"browserName"		: "opera",
+		"platform"			: "ANY",
+		"javascriptEnabled"	: true
+	},
+
+	"safari": {
+		"browserName"		: "safari",
+		"platform"			: "MAC",
+		"javascriptEnabled"	: true
+	},
+
+	"htmlunit": {
+		"browserName"		: "htmlunit",
+		"platform"			: "ANY"
+	},
+
+	"htmlunitwithjs": {
+		"browserName"		: "htmlunit",
+		"version"			: "firefox",
+		"platform"			: "ANY",
+		"javascriptEnabled"	: true
+	},
+
+	"iphone": {
+		"browserName"		: "iPhone",
+		"platform"			: "MAC",
+		"javascriptEnabled"	: true
+	},
+
+	"ipad"	: {
+		"browserName"		: "iPad",
+		"platform"			: "MAC",
+		"javascriptEnabled"	: true
+	},
+
+	"android": {
+		"browserName"		: "android",
+		"platform"			: "ANDROID",
+		"javascriptEnabled"	: true
+	},
+
+	"phantomjs": {
+		"browserName"		:"phantomjs",
+		"platform"			: "ANY",
+		"javascriptEnabled"	: true
+	}
+}
