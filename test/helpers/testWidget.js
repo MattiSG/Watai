@@ -6,7 +6,7 @@ var Watai = require('./subject');
 var elements = exports.elements = {
 	id:						{ id: 'toto' },
 	css:					{ css: '.tutu' },
-	missing:				{ id: 'inexistant' },
+	missing:				{ id: 'missing' },
 	hidden:					{ id: 'hidden' },
 	regexpTestField:		{ css: 'input[name="regexpTestField"]' },
 	inputField:				{ css: 'input[name="field"]' },
