@@ -29,13 +29,31 @@ describe('--config option', function() {
 		});
 	});
 
-	it('should fail if passed incorrectly-formatted options', function(done) {
-		var subject = spawn(BIN, [ '--config', '{', 'test/resources/FailingSuite' ]);
+	describe('with details if passed incorrectly-formatted options', function(done) {
+		var subject,
+			detailsGiven = false;
 
-		subject.on('exit', function(code) {
-			code.should.equal(1);
-			done();
+		before(function() {
+			subject = spawn(BIN, [ '--config', '{', 'test/resources/FailingSuite' ]);
+
+			subject.stderr.on('data', function(data) {
+				if (data.toString().match(/--config/))
+					detailsGiven = true;
+			});
 		});
+
+
+		it('should fail', function(done) {
+			subject.on('exit', function(code) {
+				code.should.equal(1);
+				done();
+			});
+		});
+
+		it('should give details', function() {
+			detailsGiven.should.be.true;
+		});
+
 	});
 
 	it('should not do anything if passed empty options', function(done) {

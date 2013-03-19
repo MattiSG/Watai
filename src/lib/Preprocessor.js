@@ -42,7 +42,18 @@ Preprocessor.prototype.processAll = function processAll(args) {
 			var params = args.slice(i + 1, i + 1 + plugin.length);	// extract the required arguments from the CLI
 			i += plugin.length;	// update the options pointer: params for this option will be ignored
 
-			var optionResults = plugin.apply(null, params);
+			try {
+				var optionResults = plugin.apply(null, params);
+			} catch (err) {
+				err.message += ' (when trying to parse option "--' + pluginName + '"';
+
+				if (params.length)
+					err.message += ' with params "' + params.join('", "') + '"';
+
+				err.message += ')';
+
+				throw err;
+			}
 
 			if (optionResults)
 				result[pluginName] = optionResults;
