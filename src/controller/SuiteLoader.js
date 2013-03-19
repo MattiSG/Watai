@@ -5,9 +5,10 @@ var fs			= require('fs'),
 
 var ConfigLoader	= require('mattisg.configloader');
 
-var Widget			= require('../model/Widget'),
-	Feature			= require('../model/Feature'),
-	Runner			= require('./Runner');
+var Widget					= require('../model/Widget'),
+	Feature					= require('../model/Feature'),
+	Runner					= require('./Runner'),
+	browserCapabilitiesMap	= require('../lib/desiredCapabilities');
 
 
 var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
@@ -80,6 +81,9 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 		if (! config.name)
 			config.name = pathsUtils.basename(this.path, '/');	// remove a possible trailing separator
+
+		if (config.browser)
+			config.driverCapabilities = Object.merge(browserCapabilitiesMap[config.browser], config.driverCapabilities);
 
 		return config;
 	},
