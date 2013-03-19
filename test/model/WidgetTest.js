@@ -84,6 +84,14 @@ describe('Widget', function() {
 			});
 		});
 
+		it('should bind magically created `radio` methods to clicking', function(done) {
+			subject.select()();
+			checker.output.getText().then(function(text) {
+				text.should.equal(expectedOutputs.selectRadio);
+				done();
+			});
+		});
+
 
 		describe('setters', function() {
 			var EXPECTED = 'set method test';

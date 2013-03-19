@@ -34,6 +34,7 @@
 			<p><a id="delayLink2" href="#">Clicking this link will change contents beneath after 500ms</a></p>
 			<p><button id="button">Clicking this button will change contents beneath immediately</button></p>
 			<p><input type="checkbox" id="box" name="box" /><label for="box">Toggling this checbox will change contents beneath immediately</button></p>
+			<p><input type="radio" id="radio" name="radio" /><label for="radio">Selecting this radio button will change contents beneath immediately</button></p>
 			<p id="hidden">I am hidden</p>
 			<input name="regexpTestField" type="text" value="Default"/>
 		</div>
@@ -78,6 +79,10 @@
 
 			document.getElementById('box').onclick = function() {
 				document.getElementById('output').innerText = '#box has been checked';
+			}
+
+			document.getElementById('radio').onclick = function() {
+				document.getElementById('output').innerText = '#radio has been selected';
 			}
 
 			document.getElementById('under').onclick = function() {
