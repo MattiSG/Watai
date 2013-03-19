@@ -21,7 +21,7 @@ describe('--config option', function() {
 	});
 
 	it('should fail if not passed any option', function(done) {
-		var subject = spawn(BIN, [ '--config', 'test/resources/FailingSuite' ]);
+		var subject = spawn(BIN, [ '--config', 'example/DuckDuckGo' ]);
 
 		subject.on('exit', function(code) {
 			code.should.equal(1);
@@ -29,7 +29,7 @@ describe('--config option', function() {
 		});
 	});
 
-	describe('with details if passed incorrectly-formatted options', function(done) {
+	describe('passed badly-formatted options', function(done) {
 		var subject,
 			detailsGiven = false;
 
@@ -53,7 +53,6 @@ describe('--config option', function() {
 		it('should give details', function() {
 			detailsGiven.should.be.true;
 		});
-
 	});
 
 	it('should not do anything if passed empty options', function(done) {
