@@ -6,9 +6,9 @@ function showHelp(exitCode) {
 	var packageDescription = require('../../../package.json');
 
 	console.log([
-		"Usage: watai path/to/suite/description/folder",
-		"       watai --version",
-		"       watai --installed",
+		'Usage: watai [--config \'{"json":"hash"}\'] path/to/suite/description/folder',
+		'       watai --version',
+		'       watai --installed',
 		'Get more information at <' + packageDescription.homepage + '>'
 	].join('\n'));
 
