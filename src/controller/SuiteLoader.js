@@ -46,16 +46,18 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	* Features will be loaded in an internally-managed Runner, and all Widgets, Features and datasets will be made available in an internally-managed VM context (i.e. every definition is made in isolation).
 	*
 	*@constructs
-	*@param	path	Path to the folder containing a test description. Trailing slashes will be normalized, don't worry about them  :)
+	*@param	{String}	path		Path to the folder containing a test description. Trailing slashes will be normalized, don't worry about them  :)
+	*@param	{Hash}		[config]	A configuration object that will override the loaded config file.
 	*
 	*@see	http://nodejs.org/api/vm.html
 	*/
-	initialize: function init(path) {
+	initialize: function init(path, config) {
 		this.path = pathsUtils.resolve(path) + '/';	//TODO: Node 0.8 has path.sep
 
 		var config = new ConfigLoader({
 			from	: this.path,
 			appName	: 'watai',
+			override: config,
 			observer: winston.loggers.get('init').silly
 		}).load(SuiteLoader.paths.config);
 

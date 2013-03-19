@@ -29,7 +29,7 @@ var args = processedArgs.remaining;
 validateParams(args);
 
 var suitePath	= args[0],
-	suite		= new Watai.SuiteLoader(suitePath),
+	suite		= new Watai.SuiteLoader(suitePath, processedArgs.config),
 	statusCode	= 0;
 
 suite.getRunner()
