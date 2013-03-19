@@ -1,32 +1,32 @@
 #!/usr/bin/env node
+/*
+
+* Here is the main CLI entry point.
+*/
+
+var path = require('path');
 
 
-var Watai = require('./Watai'),
+var logger	= require('winston');
+
+
+var Watai					= require('./Watai'),
+	Preprocessor			= require('./lib/Preprocessor'),
 	/** Path to the directory containing option-callable scripts.
 	*@type	{String}
 	*@see	#preProcessArguments
 	*@private
 	*/
-	OPTIONS_HANDLERS_DIR = './plugins/',
-	showHelpAndExit	= require(OPTIONS_HANDLERS_DIR + 'help'),
-	logger			= require('winston');
+	OPTIONS_HANDLERS_DIR	= path.join(__dirname, 'plugins');
 
-/*
-* Here is the main CLI entry point.
-*/
 
-var args = preProcessArguments(process.argv);
+var argsProcessor = new Preprocessor(OPTIONS_HANDLERS_DIR);
 
-if (args.length == 0) {
-	logger.error('Oops, you didn’t provide any test suite to execute!');
-	showHelpAndExit(2);
-}
+var processedArgs = argsProcessor.process(process.argv);
 
-if (args.length > 1) {
-	logger.error('Too many arguments! (' + args + ')');
-	showHelpAndExit(2);
-}
+var args = processedArgs.remaining;
 
+validateParams(args);
 
 var suitePath	= args[0],
 	suite		= new Watai.SuiteLoader(suitePath),
@@ -44,44 +44,17 @@ process.on('exit', function() {
 });
 
 
-/** Loads plugins based on any passed options.
-* More precisely: any option prefixed with `--` will be recognized as a plugin, and if a matching file is found, the corresponding argument will be removed from the passed in array.
-* The convention is for such plugins to reside in a `plugins/<plugin_name>/index.js` file, and to export a function that define their expected arguments. The corresponding number of arguments will be popped from the arguments list.
-* The loaded plugin function may return an array of values, which will be added in the resulting arguments array.
-*
-*@return	{Array}	The transformed array of arguments, rid of its options and possibly filled with plugins results.
-*@private
-*/
-function preProcessArguments(args) {
-	args = args.slice(2);	// extract CLI arguments, see http://docs.nodejitsu.com/articles/command-line/how-to-parse-command-line-arguments
 
-	var result = [];
+function validateParams(params) {
+	var showHelpAndExit = require(path.join(OPTIONS_HANDLERS_DIR, 'help'));
 
-	for (var i = 0; i < args.length; i++) {
-		var optionMatch = args[i].match(/^--([^-].*)/);
-
-		if (! optionMatch) {	// this is not an option
-			result.push(args[i]);	// pass it without doing anything on it
-		} else {
-			var pluginName = optionMatch[1],	// [1] is the value of the first capturing parentheses
-				plugin;
-
-			try {
-				plugin = require(OPTIONS_HANDLERS_DIR + pluginName);
-			} catch (e) {	// no matching plugin to handle this option
-				result.push(args[i]);	// pass it without doing anything on it
-				continue;	// go straight to the next option
-			}
-
-			var params = args.slice(i + 1, i + 1 + plugin.length);	// extract the required arguments from the CLI
-			i += plugin.length;	// update the options pointer: params for this option will be ignored
-
-			var optionResults = plugin.apply(null, params);
-
-			if (optionResults)
-				result.push.apply(result, optionResults);	// the potential array of values returned by the plugin to the new arguments array
-		}
+	if (params.length == 0) {
+		logger.error('Oops, you didn’t provide any test suite to execute!');
+		showHelpAndExit(2);
 	}
 
-	return result;
+	if (params.length > 1) {
+		logger.error('Too many arguments! (' + params + ')');
+		showHelpAndExit(2);
+	}
 }
