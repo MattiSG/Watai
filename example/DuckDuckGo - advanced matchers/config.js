@@ -1,15 +1,7 @@
 module.exports = {
-	baseURL: 'https://duckduckgo.com/?kad=en_GB',	// passing the language code is used only because DuckDuckGo adjusts to your default language, which may make the test fail; you don't need to add anything to test your own website
-
-	// see all allowed values at http://code.google.com/p/selenium/wiki/DesiredCapabilities
-	driverCapabilities: {
-		browserName: 'chrome',	// if you’d rather test with Chrome, you will need to install chromedriver
-								// read more at https://github.com/MattiSG/Watai/wiki/Testing-with-Chrome
-
-		// If your browsers are placed in a “non-default” path, set the paths to the **binaries** in the following keys:
-		//	firefox_binary: '/Applications/Firefox.app/Contents/MacOS/firefox',
-		//	'chrome.binary': '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-	},
-
+	baseURL: 'https://duckduckgo.com/?kad=en_GB',	// you don't need to add any query string to test your own website
+													// passing the language code is used only because DuckDuckGo adjusts to your default language, which may make the test fail
+	browser: 'chrome',	// this is a shortcut, relying on chromedriver having been installed, and on browsers being in their default paths
+						// for more information, see the [documentation](https://github.com/MattiSG/Watai/wiki/Testing-with-Chrome) or check out the DuckDuckGo simple example
 	views: [ 'Flow' ]
 }
