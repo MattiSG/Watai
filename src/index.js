@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-/*
 
+/*
 * Here is the main CLI entry point.
 */
 

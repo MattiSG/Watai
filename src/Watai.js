@@ -1,38 +1,11 @@
-/* This library depends on [MooTools 1.4+](http://mootools.net). */
+/* This library depends on [MooTools 1.4+](http://mootools.net).
+* Since MooTools augments prototypes, requiring it here is enough.
+*/
 require('mootools');
-/* Object property paths manipulation */
+/* Object property paths manipulation.
+*/
 require('./lib/mootools-additions');
 
-/* Logging is done with [Winston](https://github.com/flatiron/winston). */
-var winston			= require('winston'),
-	/* http://nodejs.org/api/path.html */
-	pathsUtils		= require('path'),
-	/* https://github.com/MattiSG/Node-ConfigLoader#readme */
-	ConfigLoader	= require('mattisg.configloader');
-
-
-var setup = new ConfigLoader({
-	from	: pathsUtils.dirname(module.parent.filename),
-	appName	: 'watai'
-}).load('setup');
-
-
-// init loggers
-Object.each(setup.log, function(options, name) {
-	winston.loggers.close(name);
-	winston.loggers.add(name, options);
-});
-
-
-/* Try to load long stack traces development module.
-*/
-try {
-	var longjohn = require('longjohn');
-	longjohn.async_trace_limit = setup.asyncTracesLimit;
-	winston.loggers.get('init').silly('Long stack traces loaded');
-} catch (e) {
-	winston.loggers.get('init').warn('No long stack traces module found');
-}
 
 /**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
 *
@@ -63,9 +36,15 @@ var Watai = {
 	*@private	(protected, exported for easier testing)
 	*/
 	Hook:			require('./model/Hook'),
-	setup:			setup,
+	/**@see	SetupLoader
+	*/
+	setup:			require('./controller/SetupLoader'),
 	steps:			require('./model/scenario'),
 	matchers:		require('./model/scenario/state')
 }
+
+
+Watai.setup.reload();	// ensure setup is initialized at least once
+
 
 module.exports = Watai;	// CommonJS export
