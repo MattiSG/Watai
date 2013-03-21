@@ -58,6 +58,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			from		: this.path,
 			appName		: 'watai',
 			override	: config,
+			visitAlso	: pathsUtils.dirname(__dirname),	// load defaults from there
 			observer	: winston.loggers.get('init').silly,
 			transform	: this.parseConfigStep.bind(this)
 		}).load(SuiteLoader.paths.config);
