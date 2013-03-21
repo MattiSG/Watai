@@ -1,9 +1,12 @@
 var fs			= require('fs'),
 	vm			= require('vm'),
 	pathsUtils	= require('path'),
-	winston		= require('winston');
+	winston		= require('winston'),
+	urlUtils	= require('url');
+
 
 var ConfigLoader	= require('mattisg.configloader');
+
 
 var Widget					= require('../model/Widget'),
 	Feature					= require('../model/Feature'),
@@ -56,10 +59,11 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		this.path = pathsUtils.resolve(path) + '/';	//TODO: Node 0.8 has path.sep
 
 		var config = new ConfigLoader({
-			from	: this.path,
-			appName	: 'watai',
-			override: config,
-			observer: winston.loggers.get('init').silly
+			from		: this.path,
+			appName		: 'watai',
+			override	: config,
+			observer	: winston.loggers.get('init').silly,
+			transform	: this.parseConfigStep.bind(this)
 		}).load(SuiteLoader.paths.config);
 
 		this.config = this.parseConfig(config);
@@ -86,6 +90,38 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			config.driverCapabilities = Object.merge(browserCapabilitiesMap[config.browser], config.driverCapabilities);
 
 		return config;
+	},
+
+	/** Transforms the given partial config hash from a form that may contain user shortcuts to a more complete form that is usable for the loaded test suite.
+	*
+	*@param		{Hash}	config	The config values to load.
+	*@returns	{Hash}	The given config values, possibly transformed.
+	*@private
+	*/
+	parseConfigStep: function parseConfigStep(config) {
+		if (config.baseURL)
+			config.baseURL = this.objectifyURL(config.baseURL);
+
+		if (config.seleniumServerURL)
+			config.seleniumServerURL = this.objectifyURL(config.seleniumServerURL);
+
+		return config;
+	},
+
+	/** Uniforms an URL, specified as a string or an URL object (as specified by the `url` Node core module), to an "overridable" URL object, i.e. an object with keys that take precedence over others removed.
+	*
+	*@param		{String|Hash}	url	The URL to transform.
+	*@returns	{Hash}			The given URL, represented as an object as specified by the `url` Node core module.
+	*@private
+	*/
+	objectifyURL: function objectifyURL(url) {
+		if (typeof url == 'string') {
+			url = urlUtils.parse(url);	// url.parse is idempotent for objects, so adding it inside allows support for string URLs, and backward compatibility
+			delete url.host;	// the `host` value overrides both `hostname` and `port`; since we want to allow specific overrides and `url.parse` fills all fields, delete the redundant one
+			delete url.path;	// the `path` value overrides both `pathname` and `search`; since we want to allow specific overrides and `url.parse` fills all fields, delete the redundant one
+		}
+
+		return url;
 	},
 
 	/** Returns and, if necessary, initializes the runner that contains all features for this suite.

@@ -1,5 +1,8 @@
-var webdriver = require('selenium-webdriverjs'),
-	promises = require('q');
+var url = require('url');
+
+
+var webdriver	= require('selenium-webdriverjs'),
+	promises	= require('q');
 
 
 var Runner = new Class( /** @lends Runner# */ {
@@ -64,11 +67,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@see	WebDriver.Builder#withCapabilities
 	*/
 	initialize: function init(config) {
-		var error = this.findConfigError(config);
-		if (error)
-			throw error;
-
-		this.config = config;
+		this.parseConfig(config);
 
 		this.initDriver();
 	},
@@ -79,17 +78,23 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@return	{Error|null}	An error object describing the encountered problem, or `null` if no error was found.
 	*@see	#initialize	For details on the configuration object.
 	*/
-	findConfigError: function findConfigError(config) {
+	parseConfig: function parseConfig(config) {
 		if (! config)
-			return new Error('You need to provide a configuration to create a Runner!');
+			throw new Error('You need to provide a configuration to create a Runner!');
 
-		if (typeof config.seleniumServerURL != 'string')
-			return new Error('The given Selenium server URL ("' + config.seleniumServerURL + '") is unreadable');
+		try {
+			config.seleniumServerURL = url.format(config.seleniumServerURL);
+		} catch (err) {
+			throw new Error('The given Selenium server URL ("' + config.seleniumServerURL + '") is unreadable (' + err.message + ')');
+		}
 
-		if (typeof config.baseURL != 'string')
-			return new Error('The given base URL ("' + config.baseURL + '") is unreadable');
+		try {
+			config.baseURL = url.format(config.baseURL);	// allow taking objects describing the URL
+		} catch (err) {
+			throw new Error('The given base URL ("' + config.baseURL + '") is unreadable (' + err.message + ')');
+		}
 
-		return null;
+		this.config = config;
 	},
 
 	/** Initializes the underlying driver of this Runner.

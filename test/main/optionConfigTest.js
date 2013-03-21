@@ -20,6 +20,25 @@ describe('--config option', function() {
 		});
 	});
 
+	describe('overrides partial config values, such as', function() {	// TODO: this would be better in SuiteLoader unit tests; to be done in a large SuiteLoader refactor
+		it('baseURL#port', function(done) {
+			this.timeout(30 * 1000);
+
+			var config = {
+				baseURL: {	// the strategy is to use a suite that fails with its default config, and works with the overriding options
+					pathname: __dirname + '/../resources/page_with_missing_element.html'	// overriding the pathname only means at least the protocol has to be obtained from the actual config file
+				}
+			};
+
+			var subject = spawn(BIN, [ '--config', JSON.stringify(config), 'test/resources/FailingSuite' ]);
+
+			subject.on('exit', function(code) {
+				code.should.equal(0);
+				done();
+			});
+		});
+	});
+
 	it('should fail if not passed any option', function(done) {
 		var subject = spawn(BIN, [ '--config', 'example/DuckDuckGo' ]);
 
