@@ -15,6 +15,7 @@ var elements = exports.elements = {
 	otherDelayedActionLink:	{ id: 'delayLink2' },
 	pressButton:			{ id: 'button' },
 	toggleCheckbox:			{ id: 'box' },
+	selectRadio:			{ id: 'radio' },
 	overlayedActionLink:	{ id: 'under' },
 	hideOverlayLink:		{ id: 'removeOver' },
 	output:					{ id: 'output' },
@@ -42,6 +43,7 @@ exports.expectedOutputs = {
 	otherDelayedActionLink:	'#delayLink2 has been clicked',
 	pressButton:			'#button has been pressed',
 	toggleCheckbox:			'#box has been checked',
+	selectRadio:			'#radio has been selected',
 	overlayedActionLink:	'#under has been clicked'
 }
 
