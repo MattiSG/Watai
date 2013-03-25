@@ -29,6 +29,13 @@
 		"javascriptEnabled"	: true
 	},
 
+	"aurora": {
+		"browserName"		: "firefox",
+		"firefox_binary"	: "/Applications/FirefoxAurora.app/Contents/MacOS/firefox-bin",
+		"platform"			: "ANY",
+		"javascriptEnabled"	: true
+	},
+
 	"htmlunit": {
 		"browserName"		: "htmlunit",
 		"platform"			: "ANY"
