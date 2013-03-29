@@ -79,6 +79,32 @@ describe('Hook', function() {
 				done();
 			});
 		});
+
+		describe('with iframe', function() {
+			var hookName = 'iframe';
+
+			before(function() {
+				Watai.Hook.addHook(hooksTarget, hookName, {
+					css:	'h1',
+					frame:	hookName
+				}, my.driver);
+			});
+
+			checkHook(hooksTarget, hookName, 'Watai intermediary test support page');
+		});
+
+		describe('with nested iframe', function() {
+			var hookName = 'iframe > iframe';
+
+			before(function() {
+				Watai.Hook.addHook(hooksTarget, hookName, {
+					css:	'h1',
+					frame:	hookName
+				}, my.driver);
+			});
+
+			checkHook(hooksTarget, hookName, 'Watai second test support page');
+		});
 	});
 
 	describe('setter', function() {

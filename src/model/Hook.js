@@ -2,13 +2,24 @@ var webdriver = require('selenium-webdriver'),
 	promises = require('q');
 
 
+var FRAME_PATH_SEPARATOR = '>';
+
+
 /**@class	A Hook allows one to target a specific element on a web page.
 * It is a wrapper around both a selector and its type (css, xpath, id…).
 *
-*@param	hook	A single value-pair hash whose key may be one of `css`, `id`, or any other value of Selenium's `By` class; and whose value must be a string of the matching form.
+*@param	hook	A value-pair hash within which one key must, and only one key may, be one of `css`, `id`, or any other value of Selenium's `By` class; and whose value must be a string of the matching form.
+*				Optionally, that hook may also contain a "frame" key, whose value is a String containing the ID attribute of the frame (e.g. <iframe>…) element within which the selector is to be sought. If the sought frame is nested, then the it is to be described as the IDs of each frame along the path, joined by '>' characters.
 *@param	driver	The WebDriver instance in which the described elements are to be sought.
 */
 var Hook = function Hook(hook, driver) {
+	this.framePath = [];
+
+	if (hook.frame) {
+		this.framePath = hook.frame.split(FRAME_PATH_SEPARATOR);
+		delete hook.frame;	// we need to remove that key, since the selector type is unknown, so we'll take it from the only key in the object
+	}
+
 	this.type = Object.getOwnPropertyNames(hook)[0];
 	this.selector = hook[this.type];
 
@@ -20,6 +31,12 @@ var Hook = function Hook(hook, driver) {
 	*@private
 	*/
 	this.toSeleniumElement = function toSeleniumElement() {
+		this.driver.switchTo().defaultContent();
+
+		this.framePath.each(function(frameId) {	// drill down the frames
+			this.driver.switchTo().frame(frameId.trim());	// trim whitespace; splitting along the /\s*>\s*/ RegExp didn't seem to make the trick, for no understandable reason
+		}, this);
+
 		return this.driver.findElement(webdriver.By[this.type](this.selector));
 	}
 
