@@ -1,7 +1,7 @@
 var url = require('url');
 
 
-var webdriver	= require('selenium-webdriverjs'),
+var webdriver	= require('selenium-webdriver'),
 	promises	= require('q');
 
 

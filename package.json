@@ -48,7 +48,7 @@
     "q": "0.8",
     "mootools": "1.4",
     "winston": "0.6",
-    "selenium-webdriverjs": "0.1.0-r17990",
+    "selenium-webdriver": "2",
     "mattisg.configloader": "0.1.5"
   },
   "optionalDependencies": {

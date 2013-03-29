@@ -34,8 +34,8 @@
         }
       }
     },
-    "selenium-webdriverjs": {
-      "version": "0.1.0-r17990"
+    "selenium-webdriver": {
+      "version": "2.31"
     },
     "mattisg.configloader": {
       "version": "0.1.5"
