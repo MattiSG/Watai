@@ -13,10 +13,14 @@ var FRAME_PATH_SEPARATOR = '>';
 *@param	driver	The WebDriver instance in which the described elements are to be sought.
 */
 var Hook = function Hook(hook, driver) {
-	this.framePath = [];
+	this.frameSwitchPromises = [];
 
 	if (hook.frame) {
-		this.framePath = hook.frame.split(FRAME_PATH_SEPARATOR);
+		this.frameSwitchPromises = hook.frame.split(FRAME_PATH_SEPARATOR).map(function(frameId) {
+			return function() {
+				return this.driver.switchTo().frame(frameId.trim());	// trim whitespace; splitting along the /\s*>\s*/ RegExp didn't seem to make the trick, for no understandable reason
+			}.bind(this);
+		}, this);
 		delete hook.frame;	// we need to remove that key, since the selector type is unknown, so we'll take it from the only key in the object
 	}
 
@@ -31,13 +35,22 @@ var Hook = function Hook(hook, driver) {
 	*@private
 	*/
 	this.toSeleniumElement = function toSeleniumElement() {
-		this.driver.switchTo().defaultContent();
+		var deferred = promises.defer();
 
-		this.framePath.each(function(frameId) {	// drill down the frames
-			this.driver.switchTo().frame(frameId.trim());	// trim whitespace; splitting along the /\s*>\s*/ RegExp didn't seem to make the trick, for no understandable reason
-		}, this);
+		this.frameSwitchPromises.reduce(
+			function drill(soFar, switchFrame) {
+				return soFar.then(switchFrame, deferred.reject);
+			},
+			this.driver.switchTo().defaultContent()
+		).then(function() {
+			 this.driver.findElement(webdriver.By[this.type](this.selector)).then(function() {
+			 	deferred.resolve();	// wrapping this way looks stupid but is the only way to avoid WebDriver's promises misbehavior
+			 }, function() {
+			 	deferred.reject.apply(deferred, arguments);	// wrapping this way looks stupid but is the only way to avoid WebDriver's promises misbehavior
+			 });
+		}.bind(this));
 
-		return this.driver.findElement(webdriver.By[this.type](this.selector));
+		return deferred.promise;
 	}
 
 	/** Sends the given sequence of keystrokes to the element pointed by this hook.
