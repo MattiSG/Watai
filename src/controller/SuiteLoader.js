@@ -83,8 +83,16 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		if (! config.name)
 			config.name = pathsUtils.basename(this.path, '/');	// remove a possible trailing separator
 
-		if (config.browser)
+		if (config.browser) {
+			if (! browserCapabilitiesMap[config.browser]) {
+				throw new ReferenceError('The browser "' + config.browser + '" does not have any standard definition.\n'
+										 + 'Are you sure you spelled it properly?\n'
+										 + 'If you did not make any typo, provide a full "driverCapabilities" hash rather than a "browser" name.\n'
+										 + 'More details at <https://github.com/MattiSG/Watai/wiki/Configuration#browser>.');
+			}
+
 			config.driverCapabilities = Object.merge(browserCapabilitiesMap[config.browser], config.driverCapabilities);
+		}
 
 		return config;
 	},
