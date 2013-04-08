@@ -1,6 +1,6 @@
 {
   "name": "watai",
-  "version": "0.5.1-alpha2",
+  "version": "0.5.1",
   "description": "A declarative full-stack web testing framework. Maintainable integration tests for all browsers.",
   "keywords": [
     "test",
