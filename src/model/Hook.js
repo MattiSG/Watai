@@ -1,6 +1,18 @@
-var webdriver = require('selenium-webdriver'),
-	promises = require('q');
+var promises = require('q');
 
+/** Mapping from short selector types to WebDriver's fully qualified selector types.
+*
+*@see	<http://code.google.com/p/selenium/wiki/JsonWireProtocol#POST_/session/:sessionId/element>
+*/
+var WATAI_SELECTOR_TYPES_TO_WEBDRIVER_TYPES = {
+	css		: 'css selector',
+	xpath	: 'xpath',
+	a		: 'partial link text',
+	linkText: 'link text',
+	id		: 'id',
+	'class'	: 'class name',
+	tag		: 'tag name'
+}
 
 /**@class	A Hook allows one to target a specific element on a web page.
 * It is a wrapper around both a selector and its type (css, xpath, id…).
@@ -20,7 +32,7 @@ var Hook = function Hook(hook, driver) {
 	*@private
 	*/
 	this.toSeleniumElement = function toSeleniumElement() {
-		return this.driver.findElement(webdriver.By[this.type](this.selector));
+		return this.driver.element(WATAI_SELECTOR_TYPES_TO_WEBDRIVER_TYPES[this.type], this.selector);
 	}
 
 	/** Sends the given sequence of keystrokes to the element pointed by this hook.
@@ -31,15 +43,18 @@ var Hook = function Hook(hook, driver) {
 	*@private
 	*/
 	this.handleInput = function handleInput(input) {
-		var deferred	= promises.defer(),
-			reject		= function() { deferred.reject.apply(deferred, arguments) };	// it seems WebDriver's promises pass weird arguments that prevent the rejector from being used directly
+		var deferred = promises.defer(),
+			element;
 
 		this.toSeleniumElement().then(function(elm) {
-			elm.clear().then(function() {
-				elm.sendKeys(input).then(deferred.resolve,
-										 reject);
-			}, reject);
-		}, reject)
+			element = elm;
+			return elm.clear();
+		}).then(function() {
+			return element.type(input);
+		}).then(
+			deferred.resolve,
+			deferred.reject
+		);
 
 		return deferred.promise;
 	}

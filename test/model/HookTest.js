@@ -15,9 +15,11 @@ exports.checkHook = checkHook = function checkHook(subject, hookName, expectedCo
 	});
 
 	it('should have the correct text in the retrieved element', function(done) {
-		subject[hookName].getText().then(function(content) {
-			content.should.equal(expectedContent);
-			done();
+		subject[hookName].then(function(element) {
+			element.text().then(function(content) {
+				content.should.equal(expectedContent);
+				done();
+			});
 		});
 	});
 }
@@ -74,9 +76,11 @@ describe('Hook', function() {
 
 			Watai.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
 
-			hooksTarget[target].getAttribute('value').then(function(content) {
-				content.should.equal('Default');
-				done();
+			hooksTarget[target].then(function(element) {
+				element.getAttribute('value').then(function(content) {
+					content.should.equal('Default');
+					done();
+				});
 			});
 		});
 	});
@@ -90,10 +94,18 @@ describe('Hook', function() {
 
 			hooksTarget[target] = newContent;
 
-			hooksTarget[target].getAttribute('value').then(function(content) {
-				content.should.equal(newContent);
-				done();
-			});
+			setTimeout(function() {	// TODO: this has to be delayed because the setter above triggers a series of async actions, and we need the evaluation to be done *after* these actions. This should be modified along with a rethink of the way the setter works.
+				hooksTarget[target].then(function(element) {
+					element.getAttribute('value').then(function(content) {
+						try {
+							content.should.equal(newContent);
+							done();
+						} catch (err) {
+							done(err);
+						}
+					});
+				});
+			}, 200);
 		});
 	});
 });
