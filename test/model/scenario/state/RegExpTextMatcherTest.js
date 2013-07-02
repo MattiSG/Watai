@@ -16,7 +16,7 @@ describe('RegExpTextMatcher', function() {
 			}, function(reason) {
 				done(new Error(reason || 'No failure message passed.'));
 			}
-		).end();
+		).done();
 	});
 
 	it('should pass on a regexp in nested nodes', function(done) {
@@ -26,7 +26,7 @@ describe('RegExpTextMatcher', function() {
 			}, function(reason) {
 				done(new Error(reason || 'No failure message passed.'));
 			}
-		).end();
+		).done();
 	});
 
 	it('should fail on non-matching regexps', function(done) {
@@ -37,7 +37,7 @@ describe('RegExpTextMatcher', function() {
 				reason.should.match(/did not match/);
 				done();
 			}
-		).end();
+		).done();
 	});
 
 	it('should fail on on missing elements', function(done) {
@@ -48,6 +48,6 @@ describe('RegExpTextMatcher', function() {
 				reason.should.match(/does not exist/);
 				done();
 			}
-		).end();
+		).done();
 	});
 });

@@ -45,7 +45,7 @@
     "node": ">=0.6.18"
   },
   "dependencies": {
-    "q": "0.8",
+    "q": ">= 0.9.5",
     "mootools": "1.4",
     "winston": "0.6",
     "selenium-webdriver": "2",
@@ -57,8 +57,7 @@
   "devDependencies": {
     "should": "1.1",
     "mocha": "1.4",
-    "visionmedia-jscoverage": "1.0",
-    "longjohn": "0.0.3"
+    "visionmedia-jscoverage": "1.0"
   },
   "preferGlobal": true
 }

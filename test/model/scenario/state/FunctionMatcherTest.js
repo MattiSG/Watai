@@ -13,7 +13,7 @@ describe('FunctionMatcher', function() {
 		new FunctionMatcher(function() { return true }, 'TestWidget.toggleCheckbox', { TestWidget: TestWidget })
 			.test().then(function() {
 				done()
-			}, done).end();
+			}, done).done();
 	});
 
 	it('should fail on a function returning `false`', function(done) {
@@ -23,7 +23,7 @@ describe('FunctionMatcher', function() {
 			}, function(reason) {
 				done();
 			}
-		).end();
+		).done();
 	});
 
 	it('should pass on a function returning a promise', function(done) {
@@ -36,7 +36,7 @@ describe('FunctionMatcher', function() {
 				{ TestWidget: TestWidget }
 			).test().then(function() {
 				done()
-			}, done).end();
+			}, done).done();
 	});
 
 	it('should fail on a function returning a throwing promise', function(done) {
@@ -55,6 +55,6 @@ describe('FunctionMatcher', function() {
 				reason.should.match(new RegExp(expectedMessage));
 				done();
 			}
-		).end();
+		).done();
 	});
 });

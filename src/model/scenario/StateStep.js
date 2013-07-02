@@ -54,10 +54,10 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 			return assertion();
 		});
 
-		promises.allResolved(assertionsPromises)
+		promises.allSettled(assertionsPromises)
 				.then(
 					this.onAllDescriptorsDone.bind(this)
-				).end();
+				).done();
 	},
 
 	/** Parses local options (i.e. the ones specific to this state assertion) and removes them from the given description.
@@ -142,7 +142,7 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 			activeMatchers.each(function(matcher) {
 				matcher.test(this.timeout)
 					   .then(finish, handleFailure)
-					   .end();	// rethrow any exception
+					   .done();	// rethrow any exception
 			}, this);
 
 			return deferred.promise;
@@ -151,14 +151,15 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 
 	/** Extracts failures from descriptor promises and calls either `succeed` or `fail` based on this information.
 	*
-	*@param	{Array.<Promise>}	The promises for each state descriptor, either fulfilled or rejected.
+	*@param	{Array.<PromiseSnapshot>}	The snapshots of promises for each state descriptor.
+	*@see	Q.allSettled
 	*/
-	onAllDescriptorsDone: function onAllDescriptorsDone(promises) {
+	onAllDescriptorsDone: function onAllDescriptorsDone(promiseSnapshots) {
 		var failures = [];
 
-		promises.each(function(promise) {
-			if (promise.isRejected())
-				failures = failures.concat(promise.valueOf().exception);	// as passed when rejecting a promise from #generateAssertion, this is an array containing reasons of rejection for each matcher
+		promiseSnapshots.each(function(promiseSnapshot) {
+			if (promiseSnapshot.state == 'rejected')
+				failures = failures.concat(promiseSnapshot.reason);	// as passed when rejecting a promise from #generateAssertion, this is an array containing reasons of rejection for each matcher
 		});
 
 		if (failures.length > 0)

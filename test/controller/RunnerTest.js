@@ -133,7 +133,7 @@ describe('Runner', function() {
 					done();
 				else	// .should.equal simply does nothing?!
 					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 2'));
-			}, done).end();
+			}, done).done();
 		});
 
 		it('should run even if called immediately after init', function(done) {
@@ -144,7 +144,7 @@ describe('Runner', function() {
 					done();
 				else	// .should.equal simply does nothing?!
 					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 3'));
-			}, done).end();
+			}, done).done();
 		});
 
 		it('with failing features should be rejected', function(done) {
@@ -158,7 +158,7 @@ describe('Runner', function() {
 					return done(new Error('Missing feature failures details.'));
 				passed.failures = report;
 				done();
-			}).end();
+			}).done();
 		});
 	});
 
@@ -196,7 +196,7 @@ describe('Runner', function() {
 
 			subject.killDriver().then(function() {
 				var result = subject.killDriver();
-				result.then(done, done).end();
+				result.then(done, done).done();
 			}, done);
 		});
 
@@ -215,7 +215,7 @@ describe('Runner', function() {
 			subject.test().then(function() {
 				should.exist(subject.driver);
 				done();
-			}, done).end();
+			}, done).done();
 		});
 
 		it('should quit on success if set to "on success"', function(done) {
@@ -225,7 +225,7 @@ describe('Runner', function() {
 			subject.test().then(function() {
 				should.not.exist(subject.driver);
 				done();
-			}, done).end();
+			}, done).done();
 		});
 
 		it('should quit if set to "always"', function(done) {
@@ -235,7 +235,7 @@ describe('Runner', function() {
 			subject.test().then(function() {
 				should.not.exist(subject.driver);
 				done();
-			}, done).end();
+			}, done).done();
 		});
 	});
 });

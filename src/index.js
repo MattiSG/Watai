@@ -40,7 +40,7 @@ suite.getRunner()
 	 .test()
 	 .fail(function() {
 	 	statusCode = 1;
-	 }).end();	// ensure any uncaught exception gets rethrown
+	 }).done();	// ensure any uncaught exception gets rethrown
 
 
 process.on('exit', function() {

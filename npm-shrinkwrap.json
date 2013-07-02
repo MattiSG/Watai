@@ -3,7 +3,7 @@
   "version": "0.5.1",
   "dependencies": {
     "q": {
-      "version": "0.8.8"
+      "version": "0.9.6"
     },
     "mootools": {
       "version": "1.4.5"
