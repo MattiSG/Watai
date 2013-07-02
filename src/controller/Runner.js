@@ -1,7 +1,7 @@
 var url = require('url');
 
 
-var webdriver	= require('selenium-webdriver'),
+var webdriver	= require('wd'),
 	promises	= require('q');
 
 
@@ -64,7 +64,6 @@ var Runner = new Class( /** @lends Runner# */ {
 	*
 	*@constructs
 	*@param	{Object}	config	A configuration object, as defined above.
-	*@see	WebDriver.Builder#withCapabilities
 	*/
 	initialize: function init(config) {
 		this.parseConfig(config);
@@ -127,10 +126,15 @@ var Runner = new Class( /** @lends Runner# */ {
 	buildDriverFrom: function buildDriverFrom(config) {
 		this.emit('restart');
 
-		var result = new webdriver.Builder()
-						.usingServer(config.seleniumServerURL)
-						.withCapabilities(config.driverCapabilities)
-						.build();
+		var seleniumServer = url.parse(config.seleniumServerURL);	// TODO: get the URL already parsed from the config instead of serializing it at each step
+
+		var result = webdriver.promiseRemote();
+
+		result.init({
+			desiredCapabilities	: config.driverCapabilities,
+			host				: seleniumServer.hostname,
+			port				: seleniumServer.port
+		});
 
 		return result;
 	},

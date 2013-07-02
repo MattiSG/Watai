@@ -1,7 +1,7 @@
 require('mocha');
 require('should');
 var pathsUtils = require('path'),
-	webdriver = require('selenium-webdriver'),
+	webdriver = require('wd'),
 	ConfigLoader = require('mattisg.configloader');
 
 /** Loaded configuration for the test runs.
@@ -74,22 +74,24 @@ function openDriverWithin(destination) {
 *@private
 */
 function makeDriver(done) {
-	var result = new webdriver.Builder()
-							  .usingServer(config.seleniumServerURL)
-							  .withCapabilities(config.driverCapabilities)
-							  .build();
+	var result = webdriver.promiseRemote(),
+		seleniumServer = require('url').parse(config.seleniumServerURL);	// TODO: get the URL already parsed from the config instead of serializing it at each step
 
-	result.session_.then(null, function() {
+	result.init({
+		desiredCapabilities	: config.driverCapabilities,
+		host				: seleniumServer.hostname,
+		port				: seleniumServer.port
+	}).then(function() {
+		result.get(config.baseURL).then(function() {
+			done();	// remove arguments for compatibility with mocha
+		}, done);
+	}, function() {
 		console.error('');
 		console.error('**The Selenium server could not be reached!**');
 		console.error('> Did you start it up?');
 		console.error('  See the troubleshooting guide if you need help  ;)');
 		process.exit(1);
 	});
-
-	result.get(config.baseURL).then(function() {
-			done();	// remove arguments for compatibility with mocha
-		}, done);
 
 	return result;
 }
