@@ -113,32 +113,24 @@ describe('Runner', function() {
 			subject.addFeature(feature);
 
 			subject.test().then(function() {
-				if (featureEvaluationCount == 1)
-					done();
-				else	// .should.equal simply does nothing?!
-					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 1'));
-			}, done);
+				featureEvaluationCount.should.equal(1);
+			}).done(done);
 		});
 
 		it('should evaluate features once again if called again', function(done) {
 			this.timeout(config.browserWarmupTime);
+
 			subject.test().then(function() {
-				if (featureEvaluationCount == 2)
-					done();
-				else	// .should.equal simply does nothing?!
-					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 2'));
-			}, done).done();
+				featureEvaluationCount.should.equal(2);
+			}).done(done);
 		});
 
 		it('should run even if called immediately after init', function(done) {
 			this.timeout(config.browserWarmupTime);
 
 			subjectWithFailure.addFeature(feature).test().then(function() {
-				if (featureEvaluationCount == 3)
-					done();
-				else	// .should.equal simply does nothing?!
-					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 3'));
-			}, done).done();
+				featureEvaluationCount.should.equal(3);
+			}).done(done);
 		});
 
 		it('with failing features should be rejected', function(done) {
