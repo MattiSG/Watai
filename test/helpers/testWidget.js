@@ -55,10 +55,13 @@ exports.expectedOutputs = {
 */
 exports.getWidget = function(driver) {
 	return new Watai.Widget('Test widget', {
+
 		elements: elements,
+
 		submit: function submit(value) {
-			this.inputField = value;
-			return this.inputField.submit();
+			return this.setInputField(value)().then(function(field) {
+				return driver.submit(field);
+			});
 		}
 	}, driver);
 }
