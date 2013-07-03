@@ -134,8 +134,10 @@ describe('Runner', function() {
 		});
 
 		it('with failing features should be rejected', function(done) {
+			this.timeout(config.browserWarmupTime);
+
 			subjectWithFailure.addFeature(failingFeature).test().then(function() {
-				done(new Error('Resolved instead of rejected.'))
+				done(new Error('Resolved instead of rejected.'));
 			}, function(report) {
 				should.equal(typeof report, 'object');
 				if (! report[failingFeature])
