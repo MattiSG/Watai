@@ -91,12 +91,6 @@ describe('Runner', function() {
 				emitted.driverInit++;
 			});
 
-			emitted.restart = 0;
-
-			subjectWithFailure.on('restart', function() {
-				emitted.restart++;
-			});
-
 			emitted.feature = 0;
 
 			subjectWithFailure.on('feature', function() {
@@ -173,10 +167,6 @@ describe('Runner', function() {
 
 		it('should have the same count of "start" and "driverInit" events', function() {
 			should.strictEqual(emitted.driverInit, emitted.start);
-		});
-
-		it('should have emitted the correct count of "restart" events', function() {
-			should.strictEqual(emitted.restart, 0);
 		});
 	});
 

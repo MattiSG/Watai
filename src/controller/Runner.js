@@ -116,7 +116,6 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 
 	/** Constructs a new WebDriver instance based on the given configuration.
-	* Emits "restart".
 	*
 	*@param	{Object}	config	The configuration object based on which the driver will be built.
 	*@return	{WebDriver}	The matching WebDriver instance.
@@ -124,8 +123,6 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	buildDriverFrom: function buildDriverFrom(config) {
-		this.emit('restart');
-
 		var seleniumServer = url.parse(config.seleniumServerURL);	// TODO: get the URL already parsed from the config instead of serializing it at each step
 
 		var result = webdriver.promiseRemote();
