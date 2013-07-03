@@ -283,14 +283,6 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.ready = false;
 	},
 
-	/** Stops the current evaluation.
-	*/
-	cancel: function cancel() {
-		this.removeListener('ready', this.start);
-		this.failures['*'] = 'Run was cancelled';
-		return this.finish();
-	},
-
 	/** Quits the managed browser.
 	*
 	*@return	{Promise}	A promise resolved once the browser has been properly quit.

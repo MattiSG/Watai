@@ -164,21 +164,6 @@ describe('Runner', function() {
 		});
 	});
 
-	describe('cancellation', function() {
-		it('should reject the evaluation with an error on the "*" feature', function(done) {
-			this.timeout(config.browserWarmupTime);
-
-			subject.test().done(function() {
-				done(new Error('Resolved instead of rejected!'))
-			}, function(failures) {
-				failures['*'].should.match(/cancel/);
-				done();
-			});
-
-			subject.cancel();
-		})
-	});
-
 	describe('driver kill', function() {
 		it('should be idempotent through repetition', function(done) {
 			this.timeout(config.browserWarmupTime / 2);	// this should be faster than warmup, but can still be longer than the default timeout
