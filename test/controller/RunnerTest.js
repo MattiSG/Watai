@@ -179,15 +179,14 @@ describe('Runner', function() {
 			this.timeout(config.browserWarmupTime / 2);	// this should be faster than warmup, but can still be longer than the default timeout
 
 			subject.killDriver().then(function() {
-				var result = subject.killDriver();
-				result.then(done, done).done();
-			}, done);
+				return subject.killDriver();
+			}).done(done);
 		});
 
 		it('should not forbid a proper second run', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			subject.test().then(function() { done() }, done);
+			subject.test().done(function() { done() }, done);
 		});
 	});
 
@@ -196,30 +195,30 @@ describe('Runner', function() {
 			this.timeout(config.browserWarmupTime);
 
 			subject.config.quit = 'never';
-			subject.test().then(function() {
+			subject.test().done(function() {
 				should.exist(subject.driver);
 				done();
-			}, done).done();
+			});
 		});
 
 		it('should quit on success if set to "on success"', function(done) {
 			this.timeout(config.browserWarmupTime);
 
 			subject.config.quit = 'on success';
-			subject.test().then(function() {
+			subject.test().done(function() {
 				should.not.exist(subject.driver);
 				done();
-			}, done).done();
+			});
 		});
 
 		it('should quit if set to "always"', function(done) {
 			this.timeout(config.browserWarmupTime);
 
 			subject.config.quit = 'always';
-			subject.test().then(function() {
+			subject.test().done(function() {
 				should.not.exist(subject.driver);
 				done();
-			}, done).done();
+			});
 		});
 	});
 });
