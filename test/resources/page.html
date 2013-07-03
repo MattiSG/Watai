@@ -57,43 +57,43 @@
 		<script type="text/javascript">
 			var DELAYED_ACTIONS_DELAY = 500;
 
-			document.getElementById('link').onclick = function() {
-				document.getElementById('output').innerText = '#link has been clicked';
-			}
+			document.getElementById('link').addEventListener('click', function() {
+				document.getElementById('output').textContent = '#link has been clicked';
+			});
 
-			document.getElementById('delayLink').onclick = function() {
+			document.getElementById('delayLink').addEventListener('click', function() {
 				window.setTimeout(function() {
-					document.getElementById('output').innerText = '#delayLink has been clicked';
+					document.getElementById('output').textContent = '#delayLink has been clicked';
 				}, DELAYED_ACTIONS_DELAY);
-			}
+			});
 
-			document.getElementById('delayLink2').onclick = function() {
+			document.getElementById('delayLink2').addEventListener('click', function() {
 				window.setTimeout(function() {
-					document.getElementById('output').innerText = '#delayLink2 has been clicked';
+					document.getElementById('output').textContent = '#delayLink2 has been clicked';
 				}, DELAYED_ACTIONS_DELAY);
-			}
+			});
 
-			document.getElementById('button').onclick = function() {
-				document.getElementById('output').innerText = '#button has been pressed';
-			}
+			document.getElementById('button').addEventListener('click', function() {
+				document.getElementById('output').textContent = '#button has been pressed';
+			});
 
-			document.getElementById('box').onclick = function() {
-				document.getElementById('output').innerText = '#box has been checked';
-			}
+			document.getElementById('box').addEventListener('click', function() {
+				document.getElementById('output').textContent = '#box has been checked';
+			});
 
-			document.getElementById('radio').onclick = function() {
-				document.getElementById('output').innerText = '#radio has been selected';
-			}
+			document.getElementById('radio').addEventListener('click', function() {
+				document.getElementById('output').textContent = '#radio has been selected';
+			});
 
-			document.getElementById('under').onclick = function() {
-				document.getElementById('output').innerText = '#under has been clicked';
-			}
+			document.getElementById('under').addEventListener('click', function() {
+				document.getElementById('output').textContent = '#under has been clicked';
+			});
 
-			document.getElementById('removeOver').onclick = function() {
+			document.getElementById('removeOver').addEventListener('click', function() {
 				window.setTimeout(function() {
 					document.getElementById('over').style.cssText = 'display: none';
 				}, 10);	// this has to be very short because "not clickable" failures are extremely slow to come back from WebDriver, so if this delay was long we would probably go beyond the delays in the tests
-			}
+			});
 		</script>
 	</body>
 </html>
