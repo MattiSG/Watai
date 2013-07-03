@@ -130,11 +130,10 @@ var Runner = new Class( /** @lends Runner# */ {
 
 		var result = webdriver.promiseRemote();
 
-		result.init({
-			desiredCapabilities	: config.driverCapabilities,
-			host				: seleniumServer.hostname,
-			port				: seleniumServer.port
-		});
+		result.init(Object.merge(config.driverCapabilities, {
+			host: seleniumServer.hostname,
+			port: seleniumServer.port
+		}));
 
 		return result;
 	},

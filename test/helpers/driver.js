@@ -77,11 +77,10 @@ function makeDriver(done) {
 	var result = webdriver.promiseRemote(),
 		seleniumServer = require('url').parse(config.seleniumServerURL);	// TODO: get the URL already parsed from the config instead of serializing it at each step
 
-	result.init({
-		desiredCapabilities	: config.driverCapabilities,
-		host				: seleniumServer.hostname,
-		port				: seleniumServer.port
-	}).then(function() {
+	result.init(Object.merge(config.driverCapabilities, {
+		host: seleniumServer.hostname,
+		port: seleniumServer.port
+	})).then(function() {
 		result.get(config.baseURL).then(function() {
 			done();	// remove arguments for compatibility with mocha
 		}, done);
