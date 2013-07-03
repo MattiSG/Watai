@@ -173,7 +173,7 @@ var Feature = new Class( /** @lends Feature# */ {
 
 		this.emit('start', this);
 
-		process.nextTick(evaluateNext);	// all other steps will be aync, decrease discrepancies and give control back ASAP
+		process.nextTick(evaluateNext);	// all other steps will be async, decrease discrepancies and give control back ASAP
 
 		return this.promise;
 	},

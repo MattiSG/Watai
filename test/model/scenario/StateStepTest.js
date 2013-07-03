@@ -87,7 +87,7 @@ describe('StateStep', function() {
 			new StateStep(wrongTexts, { TestWidget: TestWidget })
 				.test().then(function() {
 					done(new Error('Unmatched widget state description should not be resolved.'));
-				},function(reason) {
+				}, function(reason) {
 					Object.each(require('../../helpers/testWidget').expectedContents, function(text, key) {
 						if (! (reason
 							&& reason.contains(key)

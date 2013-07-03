@@ -146,13 +146,13 @@ describe('Feature', function() {
 					'TestWidget.output': expectedOutputs.overlayedActionLink
 				}
 			]).test().then(function() {
-				done(new Error('Passed while the overlayed element should not have been clickable!'))
+				done(new Error('Passed while the overlayed element should not have been clickable!'));
 			}, function() {
 				var waitedMs = new Date() - start;
 				if (waitedMs >= GLOBAL_TIMEOUT)
 					done();
 				else
-					done(new Error('Waited only ' + waitedMs + ' ms instead of at least ' + GLOBAL_TIMEOUT + ' ms.'))
+					done(new Error('Waited only ' + waitedMs + ' ms instead of at least ' + GLOBAL_TIMEOUT + ' ms.'));
 			}).done();
 		});
 
