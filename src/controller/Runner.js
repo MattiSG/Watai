@@ -33,17 +33,19 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	currentFeature: 0,
 
-	/** Whether the baseURL page has been loaded or not.
-	*@type	{Boolean}
+	/** Promise for the driver to be initialized.
+	*
+	*@type	{Promise}
 	*@private
 	*/
-	ready: false,
+	initialized: null,
 
-	/** True if the driver is currently waiting for the baseURL page to load.
-	*@type	{Boolean}
+	/** Promise for the baseURL to be loaded.
+	*
+	*@type	{Promise}
 	*@private
 	*/
-	loading: false,
+	baseUrlLoaded: null,
 
 	/** The promise controller (deferred object) for results, resolved when all features of this Runner have been evaluated.
 	*@type	{q.deferred}
@@ -97,59 +99,64 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 
 	/** Initializes the underlying driver of this Runner.
-	*@return	this	For chainability.
+	* Emits "driverInit".
+	*
+	*@return	{Promise}	A promise for the driver to be initialized.
 	*@private
 	*/
 	initDriver: function initDriver() {
-		this.ready = false;
-		this.driver = this.buildDriverFrom(this.config);
-		this.loadBaseURL();
-		return this;
+		if (! this.driver) {
+			this.emit('driverInit', this);
+			this.initialized = this.buildDriverFrom(this.config);
+		}
+
+		return this.initialized;
 	},
 
 	/** Navigates to the base page for this runner.
+	*
+	*@return	{Promise}	A promise for the base page to be loaded.
 	*@private
 	*/
 	loadBaseURL: function loadBaseURL() {
-		this.loading = true;
-		this.driver.get(this.config.baseURL).done(this.onReady.bind(this));
+		this.loaded = this.driver.get(this.config.baseURL);
+
+		this.loaded.then(this.onReady.bind(this));
+
+		return this.loaded;
 	},
 
 	/** Constructs a new WebDriver instance based on the given configuration.
 	*
-	*@param	{Object}	config	The configuration object based on which the driver will be built.
-	*@return	{WebDriver}	The matching WebDriver instance.
-	*@see	#initialize	For details on the configuration object.
+	*@param		{Object}	config	The configuration object based on which the driver will be built.
+	*@return	{Promise}	The promise for the `driver` instance variable to be ready.
+	*@see		#initialize	For details on the configuration object.
 	*@private
 	*/
 	buildDriverFrom: function buildDriverFrom(config) {
 		var seleniumServer = url.parse(config.seleniumServerURL);	// TODO: get the URL already parsed from the config instead of serializing it at each step
 
-		var result = webdriver.promiseRemote();
+		this.driver = webdriver.promiseRemote();
 
-		result.init(Object.merge(config.driverCapabilities, {
+		return this.driver.init(Object.merge(config.driverCapabilities, {
 			host: seleniumServer.hostname,
 			port: seleniumServer.port
 		}));
-
-		return result;
 	},
 
 	/** Tells whether the underlying driver of this Runner has loaded the base page or not.
-	* This changes after the `ready` event has been emitted by this Runner.
 	*
 	*@return	{Boolean}	`true` if the page has been loaded, `false` otherwise.
 	*/
 	isReady: function isReady() {
-		return this.ready;
+		return !! (this.loaded && this.loaded.isFulfilled());
 	},
 
-	/** Emits the "ready" event and updates this runner's status.
+	/** Emits the "ready" event.
+	*
 	*@private
 	*/
 	onReady: function onReady() {
-		this.loading = false;
-		this.ready = true;
 		this.emit('ready', this);
 	},
 
@@ -173,7 +180,6 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 
 	/** Evaluates all features added to this Runner.
-	* Emits "driverInit".
 	*
 	*@returns	{Promise}	A promise for results, resolved if all features pass (param: this Runner), rejected otherwise (param: hash mapping failed features to their reasons for rejection, or an Error if an error appeared in the runner itself or the evaluation was cancelled).
 	*@see	#addFeature
@@ -182,20 +188,9 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.deferred = promises.defer();
 		this.promise = this.deferred.promise;
 
-		this.emit('driverInit', this);
-
-		if (this.ready) {
-			this.start();
-		} else {	// we already run before, or we just initialized
-			this.once('ready', this.start.bind(this));
-
-			if (! this.loading) {
-				if (this.driver)
-					this.loadBaseURL();
-				else	// the driver has been explicitly killed before running again
-					this.initDriver();
-			}
-		}
+		this.initDriver()
+			.then(this.loadBaseURL.bind(this))
+			.then(this.start.bind(this));
 
 		return this.promise;
 	},
@@ -221,14 +216,14 @@ var Runner = new Class( /** @lends Runner# */ {
 	startNextFeature: function startNextFeature() {
 		this.currentFeature++;
 
-		if (this.ready
-			&& this.currentFeature < this.features.length)
+		if (this.currentFeature < this.features.length)
 			this.evaluateFeature(this.features[this.currentFeature]);
 		else
 			this.finish();
 	},
 
 	/** Prepares and triggers the evaluation of the given feature.
+	* Emits "feature".
 	*
 	*@private
 	*/
@@ -262,25 +257,16 @@ var Runner = new Class( /** @lends Runner# */ {
 			killDriver		= this.killDriver.bind(this),
 			precondition	= (this.config.quit == 'always'
 								? killDriver
-								: this.markUsed.bind(this)),
-			failures		= this.failures;	// copy them in case the precondition cleans them up
+								: promises);
 
-		if (Object.getLength(failures) > 0) {
+		if (Object.getLength(this.failures) > 0) {
 			fulfill = reject;
 		} else {
 			if (this.config.quit == 'on success')
 				precondition = killDriver;
 		}
 
-		promises.when(precondition(), fulfill, reject);
-	},
-
-	/** Updates inner state so that consequent calls to `test()` know they need to reload the driver.
-	*
-	*@private
-	*/
-	markUsed: function markUsed() {
-		this.ready = false;
+		precondition().then(fulfill, reject);
 	},
 
 	/** Quits the managed browser.
@@ -289,12 +275,10 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	killDriver: function killDriver() {
 		var driver = this.driver;
-		this.driver = null;
+		this.driver = null;	// delete reference, as it won't be usable once quitted
 
-		this.markUsed();
-
-		return (driver
-				? driver.quit()
+		return (driver	// multiple calls to killDriver() might be issued
+				? this.initialized.then(function() { return driver.quit() })
 				: promises());	// normalize return type to a promise, so that it can safely be called even if the driver had already been quit
 	},
 

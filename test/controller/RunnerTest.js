@@ -39,11 +39,16 @@ describe('Runner', function() {
 		it('should emit "ready" when ready', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			subject.isReady().should.not.be.ok;
+			subject.isReady().should.be.false;
 
+			subject.test();
 			subject.once('ready', function() {
-				subject.isReady().should.be.ok;
-				done();
+				try {
+					subject.isReady().should.be.true;
+					done();
+				} catch(err) {
+					done(err);
+				}
 			});
 		});
 	});
@@ -103,13 +108,15 @@ describe('Runner', function() {
 		});
 
 
-		it('should return a promise', function() {
-			promises.isPromise(subject.test()).should.be.ok;
-			subject.cancel();
+		it('should return a promise', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject.test().done(function() { done() });
 		});
 
 		it('should evaluate features once', function(done) {
 			this.timeout(config.browserWarmupTime);
+
 			subject.addFeature(feature);
 
 			subject.test().then(function() {
@@ -151,16 +158,16 @@ describe('Runner', function() {
 	});
 
 	describe('events', function() {
-		it('should have emitted the correct count of "feature" events', function() {
+		it('should have emitted as many "feature" events as loaded features', function() {
 			should.strictEqual(emitted.feature, 3);
 		});
 
-		it('should have emitted the correct count of "start" events', function() {
+		it('should have emitted as many "start" events as was started', function() {
 			should.strictEqual(emitted.start, 2);
 		});
 
-		it('should have the same count of "start" and "driverInit" events', function() {
-			should.strictEqual(emitted.driverInit, emitted.start);
+		it('should have emitted only one "driverInit" event, on init', function() {
+			should.strictEqual(emitted.driverInit, 0);	// on init => before we could listen to it, so there are 0 caught events
 		});
 	});
 
