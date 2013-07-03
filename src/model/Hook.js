@@ -43,20 +43,16 @@ var Hook = function Hook(hook, driver) {
 	*@private
 	*/
 	this.handleInput = function handleInput(input) {
-		var deferred = promises.defer(),
-			element;
+		var element;
 
-		this.toSeleniumElement().then(function(elm) {
+		return this.toSeleniumElement().then(function(elm) {
 			element = elm;
 			return elm.clear();
 		}).then(function() {
 			return element.type(input);
-		}).then(
-			deferred.resolve,
-			deferred.reject
-		);
-
-		return deferred.promise;
+		}).then(function() {
+			return element;	// allow easier chaining
+		});
 	}
 }
 
