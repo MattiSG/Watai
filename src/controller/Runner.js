@@ -112,7 +112,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	loadBaseURL: function loadBaseURL() {
 		this.loading = true;
-		this.driver.get(this.config.baseURL).then(this.onReady.bind(this));
+		this.driver.get(this.config.baseURL).done(this.onReady.bind(this));
 	},
 
 	/** Constructs a new WebDriver instance based on the given configuration.
@@ -259,17 +259,17 @@ var Runner = new Class( /** @lends Runner# */ {
 		var resolve			= this.deferred.resolve.bind(this.deferred, this),
 			reject			= this.deferred.reject.bind(this.deferred, this.failures),
 			fulfill			= resolve,
+			killDriver		= this.killDriver.bind(this),
 			precondition	= (this.config.quit == 'always'
-								? this.killDriver
-								: this.markUsed
-							  ).bind(this),
+								? killDriver
+								: this.markUsed.bind(this)),
 			failures		= this.failures;	// copy them in case the precondition cleans them up
 
-		if (Object.getLength(failures) == 0) {
-			if (this.config.quit == 'on success')
-				precondition = this.killDriver.bind(this);
-		} else {
+		if (Object.getLength(failures) > 0) {
 			fulfill = reject;
+		} else {
+			if (this.config.quit == 'on success')
+				precondition = killDriver;
 		}
 
 		promises.when(precondition(), fulfill, reject);
