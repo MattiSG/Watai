@@ -300,10 +300,9 @@ var Runner = new Class( /** @lends Runner# */ {
 
 		this.markUsed();
 
-		if (driver)
-			return driver.quit();
-		else
-			return promises.fcall(function() {});	// normalize return type to a promise, so that it can safely be called even if the driver had already been quit
+		return (driver
+				? driver.quit()
+				: promises());	// normalize return type to a promise, so that it can safely be called even if the driver had already been quit
 	},
 
 	toString: function toString() {
