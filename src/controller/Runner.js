@@ -287,6 +287,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	cancel: function cancel() {
 		this.removeListener('ready', this.start);
+		this.failures['*'] = 'Run was cancelled';
 		return this.finish();
 	},
 

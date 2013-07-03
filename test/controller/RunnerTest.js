@@ -165,11 +165,16 @@ describe('Runner', function() {
 	});
 
 	describe('cancellation', function() {
-		xit('should reject the evaluation with an error', function(done) {
+		it('should reject the evaluation with an error on the "*" feature', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			subject.test().then(function() { done(new Error('Resolved instead of rejected!')) },
-								function() { done() });
+			subject.test().done(function() {
+				done(new Error('Resolved instead of rejected!'))
+			}, function(failures) {
+				failures['*'].should.match(/cancel/);
+				done();
+			});
+
 			subject.cancel();
 		})
 	});
