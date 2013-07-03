@@ -30,10 +30,12 @@ var views = [
 describe('Views', function() {
 	var emitter;
 
-	before(function() {
+	before(function(done) {
+		this.timeout(config.browserWarmupTime);
+
 		config.quit = 'always';
 		emitter = new Watai.Runner(config);
-		emitter.test();
+		emitter.test().done(function() { done() });
 	});
 
 	views.forEach(function(view) {
