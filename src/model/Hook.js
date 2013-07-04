@@ -85,8 +85,12 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 
 	target.__defineSetter__(key, inputHandler);	// legacy support; works when setting inputs without any need to wait (for example, fails on animated elements)
 
-	target['set' + key.capitalize()] = function(input) {	// wrapping to allow call-like syntax in scenarios
-		return inputHandler.bind(null, input);	// use this setter when needing setters with timeouts
+	var setterName = 'set' + key.capitalize();
+
+	if (! target[setterName]) {	// do not overwrite possibly preexisting setters
+		target[setterName] = function(input) {	// wrapping to allow call-like syntax in scenarios
+			return inputHandler.bind(null, input);	// use this setter when needing setters with timeouts
+		}
 	}
 }
 
