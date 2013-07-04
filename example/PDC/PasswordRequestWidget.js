@@ -1,11 +1,11 @@
 {
 	elements: {
-		email: { id: 'request_email' },
-		captcha: { id: 'recaptcha_response_field' }
+		email	: { id: 'request_email' },
+		captcha	: { id: 'recaptcha_response_field' }
 	},
-	
+
 	askFor: function(address) {
-		this.email = address;
-		return this.email.submit();
+		return	this.setEmail(address)()
+					.then(driver.submit.bind(driver));
 	}
 }
