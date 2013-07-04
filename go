@@ -53,19 +53,25 @@ case "$1" in
 		dirs=""
 
 		if [[ $1 = "--exhaustive" ]]
-		then shift
-			 dirs="$DEFAULT_TEST_DIRS $ADDITIONAL_DIRS"
+		then
+			shift
 
-			 echo '****************'
-			 echo 'Testing examples'
-			 echo '****************'
-			 if ./go 'example/DuckDuckGo' && ./go 'example/DuckDuckGo - advanced matchers' && ./go 'example/PDC'
-			 then
-			 	echo 'All examples pass'
-			 else
-			 	echo 'Some examples fail, cancelling tests'
-			 	exit 1
-			 fi
+			dirs="$DEFAULT_TEST_DIRS $ADDITIONAL_DIRS"
+
+			echo '****************'
+			echo 'Testing examples'
+			echo '****************'
+
+			for suite in $BASEDIR/example/*
+			do
+				if ! ./go "$suite"
+				then
+					echo 'Some examples fail, cancelling tests'
+					exit 1
+				fi
+			done
+
+			echo 'All examples pass'
 		fi
 
 		for arg in "$@"
