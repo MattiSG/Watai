@@ -10,6 +10,7 @@ var WATAI_SELECTOR_TYPES_TO_WEBDRIVER_TYPES = {
 	a		: 'partial link text',
 	linkText: 'link text',
 	id		: 'id',
+	name	: 'name',
 	'class'	: 'class name',
 	tag		: 'tag name'
 }
