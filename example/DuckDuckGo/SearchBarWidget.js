@@ -2,9 +2,10 @@
 	elements: {
 		field:	{ name: 'q' }
 	},
-	
-	searchFor: function searchFor(term) {
-		this.field = term;
-		return this.field.submit();
+
+	submit: function submit() {
+		return this.field.then(function(element) {
+			return driver.submit(element);
+		});
 	}
 }
