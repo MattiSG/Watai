@@ -5,8 +5,7 @@
 	},
 
 	lookup: function lookup(country) {
-		return this.setSelector(country + '\n')().then(function(selector) {
-			return driver.submit(selector);
-		});
+		return	this.setSelector(country + '\n')()
+					.then(driver.submit.bind(driver));
 	}
 }

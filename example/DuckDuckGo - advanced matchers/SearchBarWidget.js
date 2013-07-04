@@ -4,8 +4,7 @@
 	},
 
 	searchFor: function searchFor(term) {
-		return this.setField(term)().then(function(element) {
-			return driver.submit(element);
-		});
+		return	this.setField(term)()
+					.then(driver.submit.bind(driver));
 	}
 }
