@@ -136,12 +136,14 @@ var Runner = new Class( /** @lends Runner# */ {
 	buildDriverFrom: function buildDriverFrom(config) {
 		var seleniumServer = url.parse(config.seleniumServerURL);	// TODO: get the URL already parsed from the config instead of serializing it at each step
 
-		this.driver = webdriver.promiseRemote();
+		this.driver = webdriver.promiseRemote({
+			host		: seleniumServer.hostname,
+			port		: seleniumServer.port,
+			username	: (seleniumServer.auth ? seleniumServer.auth.split(':')[0] : undefined),	// TODO: this is a workaround WD's lack of `url.parse` compatibility. This code is to be refactored once <https://github.com/admc/wd/pull/141> is merged.
+			accessKey	: (seleniumServer.auth ? seleniumServer.auth.split(':')[1] : undefined)
+		});
 
-		return this.driver.init(Object.merge(config.driverCapabilities, {
-			host: seleniumServer.hostname,
-			port: seleniumServer.port
-		}));
+		return this.driver.init(config.driverCapabilities);
 	},
 
 	/** Tells whether the underlying driver of this Runner has loaded the base page or not.
