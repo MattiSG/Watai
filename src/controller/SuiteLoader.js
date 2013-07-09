@@ -100,15 +100,19 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	/** Transforms the given partial config hash from a form that may contain user shortcuts to a more complete form that is usable for the loaded test suite.
 	*
 	*@param		{Hash}	config	The config values to load.
+	*@param		{Hash}	alreadyLoaded	The config values that were previously parsed.
 	*@returns	{Hash}	The given config values, possibly transformed.
 	*@private
 	*/
-	parseConfigStep: function parseConfigStep(config) {
+	parseConfigStep: function parseConfigStep(config, alreadyLoaded) {
 		if (config.baseURL)
 			config.baseURL = this.objectifyURL(config.baseURL);
 
 		if (config.seleniumServerURL)
 			config.seleniumServerURL = this.objectifyURL(config.seleniumServerURL);
+
+		if (config.tags && alreadyLoaded.tags)
+			config.tags = alreadyLoaded.tags.concat(config.tags);
 
 		return config;
 	},
