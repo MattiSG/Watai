@@ -139,11 +139,15 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.driver = webdriver.promiseRemote({
 			host		: seleniumServer.hostname,
 			port		: seleniumServer.port,
-			username	: (seleniumServer.auth ? seleniumServer.auth.split(':')[0] : undefined),	// TODO: this is a workaround WD's lack of `url.parse` compatibility. This code is to be refactored once <https://github.com/admc/wd/pull/141> is merged.
+			username	: (seleniumServer.auth ? seleniumServer.auth.split(':')[0] : undefined),	// TODO: this is a workaround WD's lack of `url.parse` compatibility. This code is to be refactored once <https://github.com/admc/wd/pull/143> is published. // replace with: this.driver = webdriver.promiseRemote(seleniumServer);
 			accessKey	: (seleniumServer.auth ? seleniumServer.auth.split(':')[1] : undefined)
 		});
 
-		return this.driver.init(config.driverCapabilities);
+		return this.driver.init(Object.merge(config.driverCapabilities, {
+			name	: this.config.name,	// TODO: find a better way to pass config elements instead of whitelisting
+			tags	: this.config.tags,
+			build	: this.config.build
+		}));
 	},
 
 	/** Tells whether the underlying driver of this Runner has loaded the base page or not.
