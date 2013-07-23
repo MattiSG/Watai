@@ -131,7 +131,8 @@ case "$1" in
 		echo "Archived repository"
 		echo "Adding production dependencies…"
 		mv node_modules node_modules_dev
-		npm install --prod
+		rm 'npm-shrinkwrap.json'
+		npm install --production
 		zip -q -u $outputFile -r node_modules
 		echo "Updating shrinwrap…"
 		npm shrinkwrap
