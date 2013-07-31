@@ -2,7 +2,8 @@ var fs			= require('fs'),
 	vm			= require('vm'),
 	pathsUtils	= require('path'),
 	winston		= require('winston'),
-	urlUtils	= require('url');
+	urlUtils	= require('url'),
+	promises	= require('q');
 
 
 var ConfigLoader	= require('mattisg.configloader');
@@ -15,10 +16,11 @@ var Widget					= require('../model/Widget'),
 
 
 var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
-	/** The configuration for this test suite.
+	/** The promise for the configuration for this test suite.
+	*@type	Q
 	*@private
 	*/
-	config: {},
+	configPromise: null,
 
 	/** Runner that will be fed all features found in the loaded suite.
 	*@type	Runner
@@ -63,7 +65,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			transform	: this.parseConfigStep.bind(this)
 		}).load(SuiteLoader.paths.config);
 
-		this.config = this.parseConfig(config);
+		this.configPromise = this.parseConfig(config);
 	},
 
 	/** Transforms the given partial config hash from a form that may contain user shortcuts to a more complete form that is usable for the loaded test suite.
@@ -110,7 +112,28 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			config.driverCapabilities = Object.merge(browserCapabilitiesMap[config.browser], config.driverCapabilities);
 		}
 
-		return config;
+		var asyncElements = [];
+
+		Object.each(config, function(value, key) {
+			if (typeof value == 'function') {
+				if (! value.length) {	// a function with no arg is executed synchronously
+					config[key] = value();
+				} else {	// if it has args, consider the first one is a callback
+					var promise = promises.defer();
+
+					value(function(result) {
+						config[key] = result;
+						promise.resolve(key);
+					});
+
+					asyncElements.push(promise.promise);
+				}
+			}
+		});
+
+		return	asyncElements.length
+				? promises.all(asyncElements).then(function() { return config })
+				: promises(config);
 	},
 
 	/** Uniforms an URL, specified as a string or an URL object (as specified by the `url` Node core module), to an "overridable" URL object, i.e. an object with keys that take precedence over others removed.
@@ -129,20 +152,24 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		return url;
 	},
 
-	/** Returns and, if necessary, initializes the runner that contains all features for this suite.
+	/** Returns a promise for the runner that contains all features of this suite.
 	*
-	*@returns	{Runner}	The runner that contains all features for this suite.
+	*@returns	{Promise<Runner>}
 	*/
 	getRunner: function getRunner() {
-		if (! this.runner) {
-			this.runner = new Runner(this.config);
+		if (this.runner)
+			return promises(this.runner);
+
+		return this.configPromise.then(function(config) {
+			this.config = config;
+			this.runner = new Runner(config);
 			this.attachViewsTo(this.runner);
 			this.context = vm.createContext(this.buildContext());
 
 			fs.readdir(this.path, this.loadAllFiles.bind(this));
-		}
 
-		return this.runner;
+			return this.runner;
+		}.bind(this));
 	},
 
 	/** Generates the list of variables that will be offered globally to Widgets, Features and Data elements.
