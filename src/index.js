@@ -37,8 +37,9 @@ var suitePath	= suites[0],
 	statusCode	= 0;
 
 suite.getRunner()
-	 .test()
-	 .fail(function() {
+	 .then(function(runner) {
+	 	return runner.test();
+	 }).fail(function() {
 	 	statusCode = 1;
 	 }).done();	// ensure any uncaught exception gets rethrown
 
