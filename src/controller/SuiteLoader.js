@@ -66,6 +66,22 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		this.config = this.parseConfig(config);
 	},
 
+	/** Transforms the given partial config hash from a form that may contain user shortcuts to a more complete form that is usable for the loaded test suite.
+	*
+	*@param		{Hash}	config	The config values to load.
+	*@returns	{Hash}	The given config values, possibly transformed.
+	*@private
+	*/
+	parseConfigStep: function parseConfigStep(config) {
+		if (config.baseURL)
+			config.baseURL = this.objectifyURL(config.baseURL);
+
+		if (config.seleniumServerURL)
+			config.seleniumServerURL = this.objectifyURL(config.seleniumServerURL);
+
+		return config;
+	},
+
 	/** Validates and possibly transforms the given config hash to a form that is usable for the loaded test suite.
 	*
 	*@param		{Hash}	config	The config values to use for this test suite.
@@ -93,22 +109,6 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 			config.driverCapabilities = Object.merge(browserCapabilitiesMap[config.browser], config.driverCapabilities);
 		}
-
-		return config;
-	},
-
-	/** Transforms the given partial config hash from a form that may contain user shortcuts to a more complete form that is usable for the loaded test suite.
-	*
-	*@param		{Hash}	config	The config values to load.
-	*@returns	{Hash}	The given config values, possibly transformed.
-	*@private
-	*/
-	parseConfigStep: function parseConfigStep(config) {
-		if (config.baseURL)
-			config.baseURL = this.objectifyURL(config.baseURL);
-
-		if (config.seleniumServerURL)
-			config.seleniumServerURL = this.objectifyURL(config.seleniumServerURL);
 
 		return config;
 	},
