@@ -29,7 +29,6 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	runner: null,
 
 	/** Sandbox for features, widgets and data load.
-	* Will always offer the `driver` magical variable to give access to the WebDriver instance in user code.
 	*
 	*@type	VM
 	*@see	http://nodejs.org/api/vm.html
