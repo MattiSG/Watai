@@ -67,34 +67,44 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@see	WebDriver.Builder#withCapabilities
 	*/
 	initialize: function init(config) {
-		this.parseConfig(config);
+		this.config = this.parseConfig(config);
 
 		this.initDriver();
 	},
 
 	/** Checks the passed configuration hash for any missing mandatory definitions.
 	*
-	*@param	{Object}	config	The configuration object to check (may not be defined, which will return an error).
-	*@return	{Error|null}	An error object describing the encountered problem, or `null` if no error was found.
+	*@param		{Object}	config	The configuration object to check (may not be defined, which will return an error).
+	*@throws	{Error}	An error object describing the encountered problem.
 	*@see	#initialize	For details on the configuration object.
 	*/
 	parseConfig: function parseConfig(config) {
 		if (! config)
 			throw new Error('You need to provide a configuration to create a Runner!');
 
-		try {
-			config.seleniumServerURL = url.format(config.seleniumServerURL);
-		} catch (err) {
-			throw new Error('The given Selenium server URL ("' + config.seleniumServerURL + '") is unreadable (' + err.message + ')');
+		config.baseURL			 = this.formatURL(config, 'baseURL');
+		config.seleniumServerURL = this.formatURL(config, 'seleniumServerURL');
+
+		return config;
+	},
+
+	/** Checks the presence and formats the element stored in the given config, expecting an URL.
+	*
+	*@param		{Object}	config	The configuration to examine.
+	*@param		{String}	key		The configuration key that holds the URL to check and reformat.
+	*@throws	{Error}		If the given value is not a valid URL.
+	*@returns	{String}	The URL stored in the given config, normalized.
+	*/
+	formatURL: function formatURL(config, key) {
+		if (! config[key]) {
+			throw new Error('No ' + key + ' was found in the given config')
 		}
 
 		try {
-			config.baseURL = url.format(config.baseURL);	// allow taking objects describing the URL
+			return url.format(config[key]);	// allow taking objects describing the URL
 		} catch (err) {
-			throw new Error('The given base URL ("' + config.baseURL + '") is unreadable (' + err.message + ')');
+			throw new Error('The given ' + key + ' ("' + config[key] + '") is unreadable (' + err.message + ')');
 		}
-
-		this.config = config;
 	},
 
 	/** Initializes the underlying driver of this Runner.
