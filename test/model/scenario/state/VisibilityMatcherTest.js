@@ -21,7 +21,7 @@ describe('VisibilityMatcher', function() {
 
 				done(new Error(message));
 			}
-		).end();
+		).done();
 	});
 
 	it('should fail on `false` in state descriptors on existing elements', function(done) {
@@ -32,7 +32,7 @@ describe('VisibilityMatcher', function() {
 				reason.should.match(/was visible/);
 				done();
 			}
-		).end();
+		).done();
 	});
 
 	it('should fail on `true` in state descriptors on missing elements', function(done) {
@@ -43,7 +43,7 @@ describe('VisibilityMatcher', function() {
 				reason.should.match(/was not visible/);
 				done();
 			}
-		).end();
+		).done();
 	});
 
 	it('should pass on `false` in state descriptors on missing elements', function(done) {
@@ -53,7 +53,7 @@ describe('VisibilityMatcher', function() {
 			}, function(reason) {
 				done(new Error(reason || 'No failure message passed.'));
 			}
-		).end();
+		).done();
 	});
 
 	it('should fail on `true` in state descriptors on hidden elements', function(done) {
@@ -64,7 +64,7 @@ describe('VisibilityMatcher', function() {
 					reason.should.match(/was not visible/);
 					done();
 			}
-		).end();
+		).done();
 	});
 
 	it('should pass on `false` in state descriptors on hidden elements', function(done) {
@@ -74,6 +74,6 @@ describe('VisibilityMatcher', function() {
 			}, function(reason) {
 				done(new Error(reason || 'No failure message passed.'));
 			}
-		).end();
+		).done();
 	});
 });

@@ -165,7 +165,7 @@ var Feature = new Class( /** @lends Feature# */ {
 			step.test(this.config.timeout)
 				.fail(this.reasons.push.bind(this.reasons))
 				.fin(process.nextTick.bind(process, evaluateNext))
-				.end();
+				.done();
 
 		}).bind(this);
 

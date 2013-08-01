@@ -49,7 +49,7 @@ describe('Feature', function() {
 				done();
 			}, function(err) {
 				done(new Error(err));
-			}).end();
+			}).done();
 		});
 
 		it('a failing function should be rejected', function(done) {
@@ -57,7 +57,7 @@ describe('Feature', function() {
 				done(new Error('Resolved instead of rejected!'));
 			}, function() {
 				done();	// can't pass it directly, Mocha complains about param not being an error
-			}).end();
+			}).done();
 		});
 
 		it('a failing promise should be rejected', function(done) {
@@ -67,7 +67,7 @@ describe('Feature', function() {
 				done(new Error('Resolved instead of rejected!'));
 			}, function() {
 				done();
-			}).end();
+			}).done();
 		});
 
 		it('multiple failing promises should be rejected', function(done) {
@@ -79,7 +79,7 @@ describe('Feature', function() {
 				done(new Error('Resolved instead of rejected!'));
 			}, function() {
 				done();
-			}).end();
+			}).done();
 		});
 
 		it('a function should be called', function(done) {
@@ -95,7 +95,7 @@ describe('Feature', function() {
 			}, function() {
 				done(new Error('Feature evaluation failed, with' + (called ? '' : 'out')
 								+ ' actually calling the scenario function (but that’s still an error)'));
-			}).end();
+			}).done();
 		});
 	});
 
@@ -153,7 +153,7 @@ describe('Feature', function() {
 					done();
 				else
 					done(new Error('Waited only ' + waitedMs + ' ms instead of at least ' + GLOBAL_TIMEOUT + ' ms.'))
-			}).end();
+			}).done();
 		});
 
 		it('should be fine if made clickable', function(done) {
@@ -165,7 +165,7 @@ describe('Feature', function() {
 				}
 			]).test().then(function() { done() }, function(report) {
 				done(new Error(report));
-			}).end();
+			}).done();
 		});
 	});
 

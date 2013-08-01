@@ -43,7 +43,7 @@ describe('StateStep', function() {
 			}, function(err) {
 				done(new Error('Should have passed (reason: "' + err + ')'));
 			}
-		).end();
+		).done();
 	});
 
 
@@ -80,7 +80,7 @@ describe('StateStep', function() {
 				}, function() {
 					done();
 				}
-			).end();
+			).done();
 		});
 
 		it('non-matching textual content', function(done) {
@@ -98,7 +98,7 @@ describe('StateStep', function() {
 					});
 					done();
 				}
-			).end();
+			).done();
 		});
 	});
 
@@ -153,7 +153,7 @@ describe('StateStep', function() {
 					}, function(reason) {
 						done(new Error(reason || 'No failure message passed.'));
 					}
-				).end();
+				).done();
 			});
 
 			it('should not be longer than needed if set to a positive value', function(done) {
@@ -171,7 +171,7 @@ describe('StateStep', function() {
 					}, function(reason) {
 						done(new Error(reason || 'No failure message passed.'));
 					}
-				).end();
+				).done();
 			});
 
 			it('should detect changes and fail earlier than maximum if there was a change', function(done) {
