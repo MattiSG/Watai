@@ -1,6 +1,6 @@
 {
   "name": "watai",
-  "version": "0.6.0-alpha.3",
+  "version": "0.6.0-alpha.5",
   "dependencies": {
     "q": {
       "version": "0.9.6",
@@ -19,8 +19,9 @@
           "from": "async@0.1.x"
         },
         "colors": {
-          "version": "0.6.0-1",
-          "from": "colors@0.x.x"
+          "version": "0.6.1",
+          "from": "colors@0.x.x",
+          "resolved": "https://registry.npmjs.org/colors/-/colors-0.6.1.tgz"
         },
         "cycle": {
           "version": "1.0.2",
@@ -45,8 +46,9 @@
       }
     },
     "wd": {
-      "version": "0.0.33",
-      "from": "wd@>= 0.0.33",
+      "version": "0.0.34",
+      "from": "wd@0.0.34",
+      "resolved": "https://registry.npmjs.org/wd/-/wd-0.0.34.tgz",
       "dependencies": {
         "async": {
           "version": "0.2.9",
@@ -149,8 +151,9 @@
               "from": "node-uuid@~1.4.0"
             },
             "mime": {
-              "version": "1.2.9",
-              "from": "mime@~1.2.9"
+              "version": "1.2.10",
+              "from": "mime@~1.2.9",
+              "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.10.tgz"
             },
             "form-data": {
               "version": "0.0.8",
@@ -167,6 +170,16 @@
                   }
                 }
               }
+            }
+          }
+        },
+        "archiver": {
+          "version": "0.4.6",
+          "from": "archiver@~0.4.6",
+          "dependencies": {
+            "readable-stream": {
+              "version": "1.0.2",
+              "from": "readable-stream@~1.0.2"
             }
           }
         }

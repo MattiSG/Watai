@@ -1,6 +1,6 @@
 {
   "name": "watai",
-  "version": "0.6.0-alpha.4",
+  "version": "0.6.0-alpha.5",
   "description": "A declarative full-stack web testing framework. Maintainable integration tests for all browsers.",
   "keywords": [
     "test",
@@ -48,7 +48,7 @@
     "q": ">= 0.9.5",
     "mootools": "1.4",
     "winston": "0.6",
-    "wd": ">= 0.0.33",
+    "wd": "0.0.34",
     "mattisg.configloader": "0.1.5"
   },
   "optionalDependencies": {
