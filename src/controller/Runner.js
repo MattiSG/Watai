@@ -195,13 +195,15 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	test: function test() {
 		this.deferred = promises.defer();
-		this.promise = this.deferred.promise;
+		var promise = this.promise = this.deferred.promise;
 
-		this.initDriver()
-			.then(this.loadBaseURL.bind(this))
-			.then(this.start.bind(this));
+		this.emit('start', this);
 
-		return this.promise;
+		return this.initDriver()
+					.then(this.loadBaseURL.bind(this))
+					.then(this.start.bind(this),
+						  this.deferred.reject)	// ensure failures in driver init are propagated
+					.finally(function() { return promise });
 	},
 
 	/** Actually starts the evaluation process.
@@ -213,9 +215,9 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.failures = Object.create(null);
 		this.currentFeature = -1;
 
-		this.emit('start', this);
-
 		this.startNextFeature();
+
+		return this.promise;
 	},
 
 	/** Increments the feature index, starts evaluation of the next feature, and quits the driver if all features were evaluated.

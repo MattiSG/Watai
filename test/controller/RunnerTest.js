@@ -155,6 +155,26 @@ describe('Runner', function() {
 				done();
 			}).done();
 		});
+
+		describe('with an unreachable Selenium server', function() {
+			var subject;
+
+			before(function() {
+				var unreachableConfig = Object.clone(config);
+
+				unreachableConfig.seleniumServerURL = 'http://0.0.0.0:3333';
+
+				subject = new Watai.Runner(unreachableConfig);
+			});
+
+			it('should be rejected', function(done) {
+				subject.test().done(function() {
+					done(new Error('Resolved instead of being rejected!'));
+				}, function(err) {
+					done();
+				});
+			});
+		});
 	});
 
 	describe('events', function() {
