@@ -1,14 +1,9 @@
 var EventEmitter = require('events').EventEmitter;
 
 
-var Watai		= require('../helpers/subject'),
-	config		= require('../config'),
-	stdoutSpy	= require('../helpers/StdoutSpy');
-
-
-/** A simple Feature stub, to have proper parameters to pass to events.
-*/
-var feature = new Watai.Feature('Test feature', [], {}, require('../config'));
+var Watai			= require('../helpers/subject'),
+	ConfigLoader	= require('mattisg.configloader'),
+	stdoutSpy		= require('../helpers/StdoutSpy');
 
 
 /** The views to test.
@@ -31,11 +26,22 @@ describe('Views', function() {
 	var emitter;
 
 	before(function(done) {
+		var config = new ConfigLoader({
+			from		: __dirname,
+			appName		: 'watai',
+			override	: { quit: 'always' },
+			visitAlso	: '../../src'
+		}).load('config');
+
 		this.timeout(config.browserWarmupTime);
 
-		config.quit = 'always';
 		emitter = new Watai.Runner(config);
-		emitter.test().done(function() { done() });
+		emitter.test().then(function() {
+			done();
+		}, function(err) {
+			console.log('Additional error information:', err.data);
+			done(err);
+		});
 	});
 
 	views.forEach(function(view) {
