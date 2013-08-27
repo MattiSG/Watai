@@ -13,12 +13,27 @@ try {
 var RunnerGrowl = new Class({
 	Extends: require('../PromiseView'),
 
-	showFailure: function showFailure() {
-		growl('Test failed  :(', { priority: 4 });
+	showFailure: function showFailure(reason) {
+		this.show(reason.toString(), {
+			title:		'Test failed',
+			priority:	4
+		});
 	},
 
 	showSuccess: function showSuccess() {
-		growl('Test succeeded!  :)', { priority: 3 });
+		this.show(this.model.features.length + ' features passed', {
+			title: 'Test succeeded'
+		});
+	},
+
+	show: function show(content, options) {
+		var defaults = {
+			name:		'Watai',
+			image:		this.model.config.driverCapabilities.browserName.capitalize(),
+			priority:	3
+		};
+
+		growl(content, Object.merge(defaults, options));
 	}
 });
 
