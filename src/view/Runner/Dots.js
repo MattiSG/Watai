@@ -56,25 +56,14 @@ var RunnerDots = new Class({
 		process.stdout.write('\nFinished in '
 							 + getDurationString(this.startTime, new Date())
 							 + ': '
-							 + pluralize(featuresCount, 'feature')
+							 + 'feature'.count(featuresCount)
 							 + ', '
-							 + successCount + ' success' + (successCount > 1 ? 'es' : '')
+							 + 'success'.count(successCount, 'es')
 							 + ', '
-							 + pluralize(failuresCount, 'failure')
+							 + 'failure'.count(failuresCount)
 							 + '\n');
 	}
 });
-
-
-/** Displays an amount, postfixed with an 's' if needed.
-*
-*@param {Number} count	The number used to pluralize the string.
-*@returns {String} string	The string to pluralize based on the count.
-*@private
-*/
-var pluralize = function pluralize(count, string) {
-	return count + ' ' + string + (count == 1 ? '' : 's');
-}
 
 
 /** Computes the duration between two dates.
@@ -97,7 +86,7 @@ var getDurationString = function getDurationString(first, second) {
 	['hour', 'minute', 'second'].forEach(function(unit) {
 		var value = durations[unit];
 		if (value > 0)
-			result += pluralize(value, unit) + ' ';
+			result += unit.count(value) + ' ';
 	});
 
 	return result.trim();

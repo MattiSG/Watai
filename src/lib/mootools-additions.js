@@ -63,3 +63,16 @@ Object.extend( /* @lends Object */ {
 		return source;
 	}
 });
+
+String.implement( /* @lends String */ {
+
+	/** A naive approach to pluralization: postfixes this string with an 's' if needed, and prefixes it with the given amount.
+	*
+	*@param {Number}	count		The count of items represented by this string.
+	*@param	{String}	[postfix]	The String to append in plural form. Defaults to 's'.
+	*@returns {String} string	This string, pluralized based on the count.
+	*/
+	count: function count(count, postfix) {
+		return count + ' ' + this + (count == 1 ? '' : postfix || 's');
+	}
+});
