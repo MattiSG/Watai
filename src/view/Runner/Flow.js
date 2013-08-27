@@ -23,7 +23,13 @@ var RunnerFlow = new Class({
 		ready: function onReady() {
 			process.stdout.write('ready!\n');
 		}
-	}
+	},
+
+	showFailure: function showFailure(reason) {
+		var description = this.getErrorDescription(reason);
+		this.animator.log('✘ ', 'warn', description.title, 'warn');
+		this.animator.log('', 'debug', description.help, 'debug')
+	},
 });
 
 module.exports = RunnerFlow;	// CommonJS export

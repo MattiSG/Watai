@@ -25,6 +25,12 @@ var RunnerCLI = new Class({
 		}
 	},
 
+	showFailure: function showFailure(reason) {
+		var description = this.getErrorDescription(reason);
+		this.animator.log('✘ ', 'warn', description.title, 'warn');
+		this.animator.log('', 'debug', description.help, 'debug')
+	},
+
 	/** Resets the shell prompt.
 	*/
 	showEnd: function showEnd() {

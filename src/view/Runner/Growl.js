@@ -14,7 +14,7 @@ var RunnerGrowl = new Class({
 	Extends: require('../PromiseView'),
 
 	showFailure: function showFailure(reason) {
-		this.show(reason.toString(), {
+		this.show(this.getErrorDescription(reason).title, {
 			title:		'Test failed',
 			priority:	4
 		});
