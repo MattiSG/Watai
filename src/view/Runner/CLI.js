@@ -1,6 +1,3 @@
-var FeatureCLIView = require('../Feature/CLI');
-
-
 /**@class A command-line interface that outputs and formats a Runner’s events.
 */
 var RunnerCLI = new Class({
@@ -8,7 +5,7 @@ var RunnerCLI = new Class({
 
 	submodel: {
 		name: 'feature',
-		view: FeatureCLIView
+		view: require('../Feature/CLI')
 	},
 
 	events: {

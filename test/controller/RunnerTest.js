@@ -30,7 +30,7 @@ describe('Runner', function() {
 			}).should.throw();
 		});
 
-		it ('should not throw when constructing with proper config', function() {
+		it('should not throw when constructing with proper config', function() {
 			(function() {
 				subject = new Watai.Runner(config);
 			}).should.not.throw();
@@ -77,7 +77,7 @@ describe('Runner', function() {
 	], {}, require('../config'));
 
 
-	describe('run', function() {
+	describe('test()', function() {
 		var subjectWithFailure;	// a second subject that will have a failing feature added
 
 
