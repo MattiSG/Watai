@@ -27,8 +27,8 @@ var RunnerFlow = new Class({
 
 	showFailure: function showFailure(reason) {
 		var description = this.getErrorDescription(reason);
-		this.animator.log('✘ ', 'warn', description.title, 'warn');
-		this.animator.log('', 'debug', description.help, 'debug')
+		this.animator.log('✘ ', 'warn', description.title, 'warn', process.stderr);
+		this.animator.log('', 'debug', description.help, 'debug', process.stderr);
 	},
 });
 
