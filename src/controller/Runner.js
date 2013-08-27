@@ -147,9 +147,9 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.driver = webdriver.promiseRemote(url.parse(config.seleniumServerURL));	// TODO: get the URL already parsed from the config instead of serializing it at each step
 
 		return this.driver.init(Object.merge(config.driverCapabilities, {
-			name	: this.config.name,	// TODO: find a better way to pass config elements instead of whitelisting
-			tags	: this.config.tags,
-			build	: this.config.build
+			name	: config.name,	// TODO: find a better way to pass config elements instead of whitelisting
+			tags	: config.tags,
+			build	: config.build
 		}));
 	},
 
