@@ -12,17 +12,17 @@ var RunnerCLI = new Class({
 	},
 
 	events: {
-		/** Informs user that the emitting Runner is waiting for the browser.
-		*/
-		driverInit: function onDriverInit() {
-			this.animator.spin(this.model + ' (waiting for browser…)');
-		},
-
 		/** Informs user that the emitting Runner is ready to start.
 		*/
 		ready: function onReady() {
 			this.animator.log('⨁', 'info', this.model + '                       ');
 		}
+	},
+
+	/** Informs user that the emitting Runner is waiting for the browser.
+	*/
+	showStart: function showStart() {
+		this.animator.spin(this.model + ' (waiting for browser…)');
 	},
 
 	showFailure: function showFailure(reason) {

@@ -16,7 +16,7 @@ var views = [
 	],
 /** Event names mapped to the parameters expected by the event.
 */
-	events = [ 'driverInit', 'start' ];
+	events = [ 'start', 'ready' ];
 
 
 

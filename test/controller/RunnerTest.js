@@ -90,12 +90,6 @@ describe('Runner', function() {
 				emitted.start++;
 			});
 
-			emitted.driverInit = 0;
-
-			subjectWithFailure.on('driverInit', function() {
-				emitted.driverInit++;
-			});
-
 			emitted.feature = 0;
 
 			subjectWithFailure.on('feature', function() {
@@ -184,10 +178,6 @@ describe('Runner', function() {
 
 		it('should have emitted as many "start" events as was started', function() {
 			should.strictEqual(emitted.start, 2);
-		});
-
-		it('should have emitted only one "driverInit" event, on init', function() {
-			should.strictEqual(emitted.driverInit, 0);	// on init => before we could listen to it, so there are 0 caught events
 		});
 	});
 

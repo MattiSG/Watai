@@ -109,16 +109,13 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 
 	/** Initializes the underlying driver of this Runner.
-	* Emits "driverInit".
 	*
 	*@return	{Promise}	A promise for the driver to be initialized.
 	*@private
 	*/
 	initDriver: function initDriver() {
-		if (! this.driver) {
-			this.emit('driverInit', this);
+		if (! this.driver)
 			this.initialized = this.buildDriverFrom(this.config);
-		}
 
 		return this.initialized;
 	},
