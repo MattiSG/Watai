@@ -10,7 +10,7 @@ try {
 *
 *@class
 */
-var RunnerGrowl = Class({
+var RunnerGrowl = new Class({
 	Extends: require('../PromiseView'),
 
 	showFailure: function showFailure() {
