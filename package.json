@@ -52,7 +52,8 @@
     "mattisg.configloader": "0.1.5"
   },
   "optionalDependencies": {
-    "growl": "1.6"
+    "growl": "1.6",
+    "longjohn": "0.2"
   },
   "devDependencies": {
     "should": "1.1",
