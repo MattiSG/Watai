@@ -6,6 +6,8 @@
 		"javascriptEnabled": true
 	},
 
+	"timeout": 10000,
+
 	"views": [ "Dots", "Instafail" ],
 	"quit": "always"
 }
