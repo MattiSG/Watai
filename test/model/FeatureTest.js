@@ -142,9 +142,7 @@ describe('Feature', function() {
 
 			featureWithScenario([
 				WidgetTest.overlayedAction(),
-				{
-					'TestWidget.output': expectedOutputs.overlayedActionLink
-				}
+				{ 'TestWidget.output': expectedOutputs.overlayedActionLink }
 			]).test().then(function() {
 				done(new Error('Passed while the overlayed element should not have been clickable!'));
 			}, function() {
@@ -209,14 +207,6 @@ describe('Feature', function() {
 			[ 'start', 'step' ].forEach(function(type) {
 				it('should fire a "' + type + '" event', expectFired(type));
 			});
-
-			// [ 'step:start', 'step:end', 'step:failure' ].forEach(function(type) {
-			// 	it('should fire a "' + type + '" event and pass the 0-based step index', expectFired(type, 0));
-			// });
-
-			// [ 'match:start', 'match:end', 'match:failure' ].forEach(function(type) {
-			// 	it('should NOT fire any "' + type + '" event', expectNotFired(type));
-			// });
 		});
 
 		describe('of a feature with an empty scenario', function() {
