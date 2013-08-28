@@ -121,6 +121,8 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	compare: function compare(actual) {
 		if (this.match(actual, this.expected))
 			this.succeed();
+		else if (this.original && this.match(actual, this.original))
+			this.failImmediately(actual);
 		else
 			this.fail(actual);
 	},
@@ -148,24 +150,26 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 					+ ' from element '
 					+ this.selector
 					+ '.';
-		} else if (actual != this.original) {
-			return this.selector
-					+ ' changed its value to "'
-					+ actual
-					+ '" rather than to "'
-					+ this.expected
-					+ '".';
-		} else {
-			return this.selector
-					+ "'s "
-					+ this.type
-					+ ' was'
-					+ (this.timeout > 0 ? ' still "' : ' "')
-					+ actual
-					+ '" instead of "'
-					+ this.expected
-					+ '".';
 		}
+
+		if (actual != this.original) {
+			return this.selector
+				+ ' changed its value to "'
+				+ actual
+				+ '" rather than to "'
+				+ this.expected
+				+ '".';
+		}
+
+		return this.selector
+				+ "'s "
+				+ this.type
+				+ ' was'
+				+ (this.timeout > 0 ? ' still "' : ' "')
+				+ actual
+				+ '" instead of "'
+				+ this.expected
+				+ '".';
 	},
 
 	/** Formats a "NoSuchElement" JsonWire error.
