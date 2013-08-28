@@ -135,7 +135,7 @@ case "$1" in
 		rm 'npm-shrinkwrap.json'
 		npm install --production
 		zip -q -u $outputFile -r node_modules
-		echo "Updating shrinwrap…"
+		echo "Updating shrinkwrap…"
 		npm shrinkwrap
 		echo "Restoring dev dependencies…"
 		rm -rf node_modules
