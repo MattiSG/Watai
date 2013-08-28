@@ -1,17 +1,15 @@
 {
 	elements: {
 		field							: { css: '#clock input[type=text]' },
+		submitButton					: { css: '#clock input[type=submit]' },
 		result							: { css: '#clock .time-holder .time' },
 		selectAutocompleteResultButton	: { css: '.xLISTItem_dropdown' }
 	},
 
 	lookup: function lookup(town) {
-		return	this.setField(town + '\n')()	// 'newline' to open the autocompletion list
+		return	this.setField(town)()	// immediate execution to start the chain
 					.then(this.selectAutocompleteResult())
-					.then(function() {
-						return this.field;
-					}.bind(this))
-					.then(driver.submit.bind(driver));
+					.then(this.submit());
 	},
 
 	getCurrentHour: function getCurrentHour() {
