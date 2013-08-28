@@ -11,13 +11,6 @@ var RunnerDots = new Class({
 	readyTime	: null,
 
 	events: {
-		/** Informs the user that the emitting Runner is waiting for the browser.
-		*/
-		driverInit: function onDriverInit() {
-			this.startTime = new Date();
-			process.stdout.write(this.model + '\n');
-		},
-
 		/** Informs the user that the emitting Runner is ready to start.
 		*/
 		ready: function onReady() {
@@ -28,6 +21,19 @@ var RunnerDots = new Class({
 		feature: function onFeature(feature) {
 			this.features.push(new FeatureDotsView(feature));
 		}
+	},
+
+	/** Informs the user that the emitting Runner is waiting for the browser.
+	*/
+	showStart: function showStart() {
+		this.startTime = new Date();
+		process.stdout.write(this.model + '\n');
+	},
+
+	showFailure: function showFailure(reason) {
+		var description = this.getErrorDescription(reason);
+		console.error(description.title);
+		console.error(description.help);
 	},
 
 	/** Presents a summary of the test procedure to the user.
@@ -50,25 +56,14 @@ var RunnerDots = new Class({
 		process.stdout.write('\nFinished in '
 							 + getDurationString(this.startTime, new Date())
 							 + ': '
-							 + pluralize(featuresCount, 'feature')
+							 + 'feature'.count(featuresCount)
 							 + ', '
-							 + successCount + ' success' + (successCount > 1 ? 'es' : '')
+							 + 'success'.count(successCount, 'es')
 							 + ', '
-							 + pluralize(failuresCount, 'failure')
+							 + 'failure'.count(failuresCount)
 							 + '\n');
 	}
 });
-
-
-/** Displays an amount, postfixed with an 's' if needed.
-*
-*@param {Number} count	The number used to pluralize the string.
-*@returns {String} string	The string to pluralize based on the count.
-*@private
-*/
-var pluralize = function pluralize(count, string) {
-	return count + ' ' + string + (count == 1 ? '' : 's');
-}
 
 
 /** Computes the duration between two dates.
@@ -91,7 +86,7 @@ var getDurationString = function getDurationString(first, second) {
 	['hour', 'minute', 'second'].forEach(function(unit) {
 		var value = durations[unit];
 		if (value > 0)
-			result += pluralize(value, unit) + ' ';
+			result += unit.count(value) + ' ';
 	});
 
 	return result.trim();

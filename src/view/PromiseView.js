@@ -1,3 +1,6 @@
+var ERRORS_LIST	= require('../errors');
+
+
 var PromiseView = new Class(/** @lends PromiseView# */{
 
 	/** Shortcut for views that require animation.
@@ -38,13 +41,34 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 			this.model.on(key, this.events[key].bind(this));
 	},
 
+	/** Tries to generate a human-readable version of errors propagated from external libraries.
+	*
+	*@param		{Error|Object}		error	The original raised error.
+	*@return	{Hash<String>|Object}	If the error was identified, a hash with the following pairs:
+	*	title:	a user-displayable explanation for the given error
+	*	help:	a user-displayable list of possible actions to take to solve the problem
+	*	Otherwise, the original passed error.
+	*/
+	getErrorDescription: function getErrorDescription(error) {
+		var userDisplayable = ERRORS_LIST[error && error.code];
+
+		if (! userDisplayable)
+			return error;
+
+		return {
+			title:	userDisplayable.title || error.toString(),
+			help:	(userDisplayable.help + '\n' || '')
+					+ "Get more help at <https://github.com/MattiSG/Watai/wiki/Troubleshooting>"
+		}
+	},
+
 	/** Presents details of a test start to the user.
 	* Attaches to resolution handlers.
 	*
 	*@param	model	The model that is about to start.
 	*/
 	onStart: function onStart() {
-		this.model.promise.then(
+		this.model.promise.done(
 			this.showSuccess.bind(this),
 			this.showFailure.bind(this)
 		);

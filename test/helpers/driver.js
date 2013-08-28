@@ -90,7 +90,7 @@ function makeDriver(done) {
 			'  See the troubleshooting guide if you need help  ;)'
 		].join('\n'));
 
-		process.exit(1);
+		process.exit(4);
 	}).done(done);
 
 	return result;

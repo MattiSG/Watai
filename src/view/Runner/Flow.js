@@ -11,19 +11,25 @@ var RunnerFlow = new Class({
 	},
 
 	events: {
-		/** Informs user that this view's Runner is waiting for the browser.
-		*/
-		driverInit: function onDriverInit() {
-			this.animator.log('➔    ', 'info', this.model);
-			process.stdout.write('       Waiting for browser… ');
-		},
-
 		/** Informs the user that this view's Runner is ready to start.
 		*/
 		ready: function onReady() {
 			process.stdout.write('ready!\n');
 		}
-	}
+	},
+
+	/** Informs user that this view's Runner is waiting for the browser.
+	*/
+	showStart: function showStart() {
+		this.animator.log('➔    ', 'info', this.model);
+		process.stdout.write('       Waiting for browser… ');
+	},
+
+	showFailure: function showFailure(reason) {
+		var description = this.getErrorDescription(reason);
+		this.animator.log('✘ ', 'warn', description.title, 'warn', process.stderr);
+		this.animator.log('', 'debug', description.help, 'debug', process.stderr);
+	},
 });
 
 module.exports = RunnerFlow;	// CommonJS export

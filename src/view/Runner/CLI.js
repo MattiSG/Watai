@@ -1,6 +1,3 @@
-var FeatureCLIView = require('../Feature/CLI');
-
-
 /**@class A command-line interface that outputs and formats a Runner’s events.
 */
 var RunnerCLI = new Class({
@@ -8,21 +5,27 @@ var RunnerCLI = new Class({
 
 	submodel: {
 		name: 'feature',
-		view: FeatureCLIView
+		view: require('../Feature/CLI')
 	},
 
 	events: {
-		/** Informs user that the emitting Runner is waiting for the browser.
-		*/
-		driverInit: function onDriverInit() {
-			this.animator.spin(this.model + ' (waiting for browser…)');
-		},
-
 		/** Informs user that the emitting Runner is ready to start.
 		*/
 		ready: function onReady() {
 			this.animator.log('⨁', 'info', this.model + '                       ');
 		}
+	},
+
+	/** Informs user that the emitting Runner is waiting for the browser.
+	*/
+	showStart: function showStart() {
+		this.animator.spin(this.model + ' (waiting for browser…)');
+	},
+
+	showFailure: function showFailure(reason) {
+		var description = this.getErrorDescription(reason);
+		this.animator.log('✘ ', 'warn', description.title, 'warn', process.stderr);
+		this.animator.log('', 'debug', description.help, 'debug', process.stderr);
 	},
 
 	/** Resets the shell prompt.

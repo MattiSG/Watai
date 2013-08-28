@@ -30,7 +30,7 @@ describe('Runner', function() {
 			}).should.throw();
 		});
 
-		it ('should not throw when constructing with proper config', function() {
+		it('should not throw when constructing with proper config', function() {
 			(function() {
 				subject = new Watai.Runner(config);
 			}).should.not.throw();
@@ -77,7 +77,7 @@ describe('Runner', function() {
 	], {}, require('../config'));
 
 
-	describe('run', function() {
+	describe('test()', function() {
 		var subjectWithFailure;	// a second subject that will have a failing feature added
 
 
@@ -88,12 +88,6 @@ describe('Runner', function() {
 
 			subjectWithFailure.on('start', function() {
 				emitted.start++;
-			});
-
-			emitted.driverInit = 0;
-
-			subjectWithFailure.on('driverInit', function() {
-				emitted.driverInit++;
 			});
 
 			emitted.feature = 0;
@@ -155,6 +149,26 @@ describe('Runner', function() {
 				done();
 			}).done();
 		});
+
+		describe('with an unreachable Selenium server', function() {
+			var subject;
+
+			before(function() {
+				var unreachableConfig = Object.clone(config);
+
+				unreachableConfig.seleniumServerURL = 'http://0.0.0.0:3333';
+
+				subject = new Watai.Runner(unreachableConfig);
+			});
+
+			it('should be rejected', function(done) {
+				subject.test().done(function() {
+					done(new Error('Resolved instead of being rejected!'));
+				}, function(err) {
+					done();
+				});
+			});
+		});
 	});
 
 	describe('events', function() {
@@ -164,10 +178,6 @@ describe('Runner', function() {
 
 		it('should have emitted as many "start" events as was started', function() {
 			should.strictEqual(emitted.start, 2);
-		});
-
-		it('should have emitted only one "driverInit" event, on init', function() {
-			should.strictEqual(emitted.driverInit, 0);	// on init => before we could listen to it, so there are 0 caught events
 		});
 	});
 
