@@ -32,8 +32,10 @@ var RunnerDots = new Class({
 
 	showFailure: function showFailure(reason) {
 		var description = this.getErrorDescription(reason);
-		console.error(description.title);
-		console.error(description.help);
+		if (description.title) {	// if we can't give more info, simply don't show anything
+			console.error(description.title);
+			console.error(description.help);
+		}
 	},
 
 	/** Presents a summary of the test procedure to the user.

@@ -9,7 +9,7 @@ var VisibilityMatcher = new Class( /** @lends matchers.VisibilityMatcher# */ {
 
 	onElementFound: function(element) {
 		element.isDisplayed()
-				.then(this.compare,
+				.done(this.compare,
 					  this.fail);
 	},
 

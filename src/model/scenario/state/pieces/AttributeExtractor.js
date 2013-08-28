@@ -9,7 +9,7 @@ var AttributeExtractor = new Class( /** @lends matchers.AttributeExtractor# */ {
 	attribute: null,
 
 	onElementFound: function(element) {
-		element.getAttribute(this.attribute || this.type).then(this.compare, this.fail);
+		element.getAttribute(this.attribute || this.type).done(this.compare, this.fail);
 	}
 });
 

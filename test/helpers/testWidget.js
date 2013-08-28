@@ -19,7 +19,8 @@ var elements = exports.elements = {
 	overlayedActionLink:	{ id: 'under' },
 	hideOverlayLink:		{ id: 'removeOver' },
 	output:					{ id: 'output' },
-	outputField:			{ name: 'outputField' }
+	outputField:			{ name: 'outputField' },
+	badSelector:			{ thisIsInvalid: 'sure' }
 }
 
 /** Expected values for the texts of the elements described above, as defined in the test support page.

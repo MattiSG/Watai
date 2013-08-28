@@ -19,7 +19,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@type	{Object.<Feature, String>}
 	*@private
 	*/
-	failures: Object.create(null),
+	failures: {},
 
 	/** The list of all features to evaluate with this configuration.
 	*@type	{Array.<Feature>}
@@ -209,7 +209,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	start: function start() {
-		this.failures = Object.create(null);
+		this.failures = {};
 		this.currentFeature = -1;
 
 		this.startNextFeature();

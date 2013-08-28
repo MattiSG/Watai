@@ -18,7 +18,7 @@ var FunctionalStep = new Class({
 		}
 
 		if (result && result.then) {	// that was a promise, wait for it to be resolved
-			result.then(this.succeed.bind(this),
+			result.done(this.succeed.bind(this),
 						this.fail.bind(this));
 		} else {	// we can't second-guess anything from the returned value, so as long as it didn't throw, we'll consider it worked
 			this.succeed(result);

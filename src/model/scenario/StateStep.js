@@ -55,9 +55,7 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 		});
 
 		promises.allSettled(assertionsPromises)
-				.then(
-					this.onAllDescriptorsDone.bind(this)
-				).done();
+				.done(this.onAllDescriptorsDone.bind(this));
 	},
 
 	/** Parses local options (i.e. the ones specific to this state assertion) and removes them from the given description.
@@ -141,8 +139,7 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 
 			activeMatchers.each(function(matcher) {
 				matcher.test(this.timeout)
-					   .then(finish, handleFailure)
-					   .done();	// rethrow any exception
+					   .done(finish, handleFailure);
 			}, this);
 
 			return deferred.promise;

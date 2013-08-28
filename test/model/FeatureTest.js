@@ -142,9 +142,7 @@ describe('Feature', function() {
 
 			featureWithScenario([
 				WidgetTest.overlayedAction(),
-				{
-					'TestWidget.output': expectedOutputs.overlayedActionLink
-				}
+				{ 'TestWidget.output': expectedOutputs.overlayedActionLink }
 			]).test().then(function() {
 				done(new Error('Passed while the overlayed element should not have been clickable!'));
 			}, function() {
@@ -153,6 +151,20 @@ describe('Feature', function() {
 					done();
 				else
 					done(new Error('Waited only ' + waitedMs + ' ms instead of at least ' + GLOBAL_TIMEOUT + ' ms.'));
+			}).done();
+		});
+
+		it('should give human-readable details', function(done) {
+			featureWithScenario([
+				WidgetTest.overlayedAction()
+			]).test().then(function() {
+				done(new Error('Passed while the overlayed element should not have been clickable!'));
+			}, function(reasons) {
+				var reason = reasons[0];
+				if (reason.match(/not clickable/))
+					done();
+				else
+					done(new Error('"' + reason + '" is not a human-readable reason for failure'));
 			}).done();
 		});
 
@@ -209,14 +221,6 @@ describe('Feature', function() {
 			[ 'start', 'step' ].forEach(function(type) {
 				it('should fire a "' + type + '" event', expectFired(type));
 			});
-
-			// [ 'step:start', 'step:end', 'step:failure' ].forEach(function(type) {
-			// 	it('should fire a "' + type + '" event and pass the 0-based step index', expectFired(type, 0));
-			// });
-
-			// [ 'match:start', 'match:end', 'match:failure' ].forEach(function(type) {
-			// 	it('should NOT fire any "' + type + '" event', expectNotFired(type));
-			// });
 		});
 
 		describe('of a feature with an empty scenario', function() {

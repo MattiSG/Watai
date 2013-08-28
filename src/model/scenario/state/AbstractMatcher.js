@@ -92,7 +92,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	*/
 	start: function start() {
 		Object.getFromPath(this.widgets, this.selector)
-			  .then(this.onElementFound.bind(this),	// this wrapping is needed because the promise from `getFromPath` is a WebDriver promise, so we can't add failure handlers only, we need to set all handlers at once through the `then` method
+			  .done(this.onElementFound.bind(this),	// this wrapping is needed because the promise from `getFromPath` is a WebDriver promise, so we can't add failure handlers only, we need to set all handlers at once through the `then` method
 			  		this.onElementMissing.bind(this));
 	},
 
@@ -110,7 +110,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	*@param	{Error}	The error raised by WebDriver.
 	*/
 	onElementMissing: function onElementMissing(error) {
-		this.fail('Element "' + this.selector + '" does not exist on the page.')
+		this.fail(error);
 	},
 
 	/** Compares the given value to the expected value, using the `match` method, and fails or succeeds the match automatically.
@@ -168,10 +168,13 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 		}
 	},
 
-	/** Redefines the parent formatting to remove the timeout information, which resides in the parent State step.
+	/** Formats a "NoSuchElement" JsonWire error.
+	*
+	*@param		{JsonWireError}	error	The error to format.
+	*@returns	{String}	The formatted error.
 	*/
-	failImmediately: function failImmediately(report) {
-		this.deferred.reject(this.formatFailure(report));
+	formatJsonWireError7: function formatJsonWireError7(error) {
+		return this.selector + ' was not found.'
 	}
 });
 
