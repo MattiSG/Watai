@@ -124,6 +124,7 @@ case "$1" in
 		cd - > /dev/null
 		exit 0 ;;
 	dist )
+		$0 export-examples
 		cd $BASEDIR
 		outputFile=dist/watai-$(git describe --tags)-NPMdeps.zip
 		mkdir dist 2> /dev/null
