@@ -154,6 +154,20 @@ describe('Feature', function() {
 			}).done();
 		});
 
+		it('should give human-readable details', function(done) {
+			featureWithScenario([
+				WidgetTest.overlayedAction()
+			]).test().then(function() {
+				done(new Error('Passed while the overlayed element should not have been clickable!'));
+			}, function(reasons) {
+				var reason = reasons[0];
+				if (reason.match(/not clickable/))
+					done();
+				else
+					done(new Error('"' + reason + '" is not a human-readable reason for failure'));
+			}).done();
+		});
+
 		it('should be fine if made clickable', function(done) {
 			featureWithScenario([
 				WidgetTest.hideOverlay(),
