@@ -50,15 +50,13 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 	*	Otherwise, the original passed error.
 	*/
 	getErrorDescription: function getErrorDescription(error) {
-		var userDisplayable = ERRORS_LIST[error && error.code];
-
-		if (! userDisplayable)
-			return error;
+		var userDisplayable = ERRORS_LIST[error && error.code] || {};
 
 		return {
-			title:	userDisplayable.title || error.toString(),
-			help:	(userDisplayable.help + '\n' || '')
-					+ "Get more help at <https://github.com/MattiSG/Watai/wiki/Troubleshooting>"
+			title:	userDisplayable.title,	// no default value: this is how a client can know if a detailed description was found; don't try putting `error.toString()`: some values do _not_ have a toString() method
+			help:	(userDisplayable.help ? userDisplayable.help + '\n' : '')
+					+ "Get more help at <https://github.com/MattiSG/Watai/wiki/Troubleshooting>",
+			source:	error
 		}
 	},
 
