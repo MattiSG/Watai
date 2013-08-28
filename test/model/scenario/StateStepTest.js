@@ -174,23 +174,6 @@ describe('StateStep', function() {
 				).done();
 			});
 
-			it('should detect changes and fail earlier than maximum if there was a change', function(done) {
-				this.timeout(DELAYED_ACTIONS_DELAY * 3);
-
-				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.delayedAction(),
-					{
-						timeout: DELAYED_ACTIONS_DELAY * 2,
-						'TestWidget.output': expectedOutputs.otherDelayedActionLink
-					}
-				]).test().then(function() {
-					done(new Error('Matched while the expected result should have been set later than evaluation.'))
-				}, function() {
-					done();
-				});
-			});
-
 			it('should fail if expected state comes later than timeout', function(done) {
 				this.timeout(DELAYED_ACTIONS_DELAY * 2);
 
