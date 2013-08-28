@@ -93,6 +93,9 @@
 				window.setTimeout(function() {
 					document.getElementById('over').style.cssText = 'display: none';
 				}, 10);	// this has to be very short because "not clickable" failures are extremely slow to come back from WebDriver, so if this delay was long we would probably go beyond the delays in the tests
+				window.setTimeout(function() {
+					document.getElementById('over').style.cssText = 'display: block';
+				}, 2000);	// ensure we don't break the test case for next tests
 			});
 		</script>
 	</body>
