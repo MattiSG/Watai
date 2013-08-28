@@ -159,6 +159,8 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*@private
 	*/
 	failImmediately: function failImmediately(report) {
+		clearTimeout(this.retryTimeoutId);	// shouldn't happen, but in case subclasses call this method directly
+
 		var failureMessagePrefix = (this.timeout > 0 ? 'After ' + (new Date - this.startTime) + ' milliseconds: ' : '');
 
 		this.deferred.reject(failureMessagePrefix + this._formatFailure(report));
