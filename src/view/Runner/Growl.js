@@ -14,24 +14,30 @@ var RunnerGrowl = new Class({
 	Extends: require('../PromiseView'),
 
 	showFailure: function showFailure(reason) {
-			title:		'Test failed',
 		this.show((this.getErrorDescription(reason).title || 'failure'.count(Object.getLength(reason))), {
+			title:		this.model + ' failed',
 			priority:	4
 		});
 	},
 
 	showSuccess: function showSuccess() {
 		this.show('feature'.count(this.model.features.length) + ' passed', {
-			title: 'Test succeeded'
+			title: this.model + ' succeeded'
 		});
+	},
+
+	getBrowserName: function getBrowserName() {
+		return this.model.config.driverCapabilities.browserName.capitalize();
 	},
 
 	show: function show(content, options) {
 		var defaults = {
 			name:		'Watai',
-			image:		this.model.config.driverCapabilities.browserName.capitalize(),
+			image:		this.getBrowserName(),
 			priority:	3
 		};
+
+		content += ' under ' + this.getBrowserName();
 
 		growl(content, Object.merge(defaults, options));
 	}
