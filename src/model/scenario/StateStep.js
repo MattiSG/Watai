@@ -170,7 +170,7 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 	*@see	AbstractStep#formatFailure
 	*/
 	formatFailure: function formatFailure(failures) {
-		return '\n- ' + failures.join('\n- ');
+		return failures.join('\n- ');
 	}
 });
 
