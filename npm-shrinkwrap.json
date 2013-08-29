@@ -19,9 +19,8 @@
           "from": "async@0.1.x"
         },
         "colors": {
-          "version": "0.6.1",
-          "from": "colors@0.x.x",
-          "resolved": "https://registry.npmjs.org/colors/-/colors-0.6.1.tgz"
+          "version": "0.6.2",
+          "from": "colors@0.x.x"
         },
         "cycle": {
           "version": "1.0.2",
@@ -46,9 +45,8 @@
       }
     },
     "wd": {
-      "version": "0.0.34",
-      "from": "wd@0.0.34",
-      "resolved": "https://registry.npmjs.org/wd/-/wd-0.0.34.tgz",
+      "version": "0.1.0",
+      "from": "wd@0.1",
       "dependencies": {
         "async": {
           "version": "0.2.9",
@@ -147,13 +145,12 @@
               "from": "cookie-jar@~0.3.0"
             },
             "node-uuid": {
-              "version": "1.4.0",
+              "version": "1.4.1",
               "from": "node-uuid@~1.4.0"
             },
             "mime": {
-              "version": "1.2.10",
-              "from": "mime@~1.2.9",
-              "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.10.tgz"
+              "version": "1.2.11",
+              "from": "mime@~1.2.9"
             },
             "form-data": {
               "version": "0.0.8",
@@ -174,12 +171,16 @@
           }
         },
         "archiver": {
-          "version": "0.4.6",
+          "version": "0.4.8",
           "from": "archiver@~0.4.6",
           "dependencies": {
             "readable-stream": {
-              "version": "1.0.2",
+              "version": "1.0.17",
               "from": "readable-stream@~1.0.2"
+            },
+            "iconv-lite": {
+              "version": "0.2.11",
+              "from": "iconv-lite@~0.2.11"
             }
           }
         }
