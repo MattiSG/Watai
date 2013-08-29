@@ -45,29 +45,29 @@ describe('Feature', function() {
 
 
 		it('an empty feature should be accepted', function(done) {
-			featureWithScenario([]).test().then(function() {
+			featureWithScenario([]).test().done(function() {
 				done();
 			}, function(err) {
 				done(new Error(err));
-			}).done();
+			});
 		});
 
 		it('a failing function should be rejected', function(done) {
-			failingFeatureTest().then(function() {
+			failingFeatureTest().done(function() {
 				done(new Error('Resolved instead of rejected!'));
 			}, function() {
 				done();	// can't pass it directly, Mocha complains about param not being an error
-			}).done();
+			});
 		});
 
 		it('a failing promise should be rejected', function(done) {
 			featureWithScenario([
 				failingPromise
-			]).test().then(function() {
+			]).test().done(function() {
 				done(new Error('Resolved instead of rejected!'));
 			}, function() {
 				done();
-			}).done();
+			});
 		});
 
 		it('multiple failing promises should be rejected', function(done) {
@@ -75,11 +75,11 @@ describe('Feature', function() {
 				makeFailingPromiseWithSuffix(0),
 				makeFailingPromiseWithSuffix(1),
 				makeFailingPromiseWithSuffix(2)
-			]).test().then(function() {
+			]).test().done(function() {
 				done(new Error('Resolved instead of rejected!'));
 			}, function() {
 				done();
-			}).done();
+			});
 		});
 
 		it('a function should be called', function(done) {
@@ -87,7 +87,7 @@ describe('Feature', function() {
 
 			featureWithScenario([ function() {
 				called = true;
-			} ]).test().then(function() {
+			} ]).test().done(function() {
 				if (called)
 					done();
 				else
@@ -95,7 +95,7 @@ describe('Feature', function() {
 			}, function() {
 				done(new Error('Feature evaluation failed, with' + (called ? '' : 'out')
 								+ ' actually calling the scenario function (but that’s still an error)'));
-			}).done();
+			});
 		});
 	});
 
@@ -143,7 +143,7 @@ describe('Feature', function() {
 			featureWithScenario([
 				WidgetTest.overlayedAction(),
 				{ 'TestWidget.output': expectedOutputs.overlayedActionLink }
-			]).test().then(function() {
+			]).test().done(function() {
 				done(new Error('Passed while the overlayed element should not have been clickable!'));
 			}, function() {
 				var waitedMs = new Date() - start;
@@ -151,13 +151,13 @@ describe('Feature', function() {
 					done();
 				else
 					done(new Error('Waited only ' + waitedMs + ' ms instead of at least ' + GLOBAL_TIMEOUT + ' ms.'));
-			}).done();
+			});
 		});
 
 		it('should give human-readable details', function(done) {
 			featureWithScenario([
 				WidgetTest.overlayedAction()
-			]).test().then(function() {
+			]).test().done(function() {
 				done(new Error('Passed while the overlayed element should not have been clickable!'));
 			}, function(reasons) {
 				var reason = reasons[0];
@@ -165,7 +165,7 @@ describe('Feature', function() {
 					done();
 				else
 					done(new Error('"' + reason + '" is not a human-readable reason for failure'));
-			}).done();
+			});
 		});
 
 		it('should be fine if made clickable', function(done) {
@@ -175,9 +175,9 @@ describe('Feature', function() {
 				{
 					'TestWidget.output': expectedOutputs.overlayedActionLink
 				}
-			]).test().then(function() { done() }, function(report) {
+			]).test().done(function() { done() }, function(report) {
 				done(new Error(report));
-			}).done();
+			});
 		});
 	});
 

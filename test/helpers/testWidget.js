@@ -60,9 +60,8 @@ exports.getWidget = function(driver) {
 		elements: elements,
 
 		submit: function submit(value) {
-			return this.setInputField(value)().then(function(field) {
-				return driver.submit(field);
-			});
+			return	this.setInputField(value)()
+						.then(driver.submit.bind(driver));
 		}
 	}, driver);
 }

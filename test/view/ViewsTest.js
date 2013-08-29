@@ -36,7 +36,7 @@ describe('Views', function() {
 		this.timeout(config.browserWarmupTime);
 
 		emitter = new Watai.Runner(config);
-		emitter.test().then(function() {
+		emitter.test().done(function() {
 			done();
 		}, function(err) {
 			console.log('Additional error information:', err.data);

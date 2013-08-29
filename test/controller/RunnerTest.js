@@ -138,16 +138,15 @@ describe('Runner', function() {
 			this.timeout(config.browserWarmupTime);
 
 			subjectWithFailure.addFeature(failingFeature).test().then(function() {
-				done(new Error('Resolved instead of rejected.'));
+				throw new Error('Resolved instead of rejected.');
 			}, function(report) {
 				should.equal(typeof report, 'object');
 				if (! report[failingFeature])
-					return done(new Error('Missing feature.'));
+					throw new Error('Missing feature.');
 				if (! report[failingFeature].length)
-					return done(new Error('Missing feature failures details.'));
+					throw new Error('Missing feature failures details.');
 				passed.failures = report;
-				done();
-			}).done();
+			}).done(done);
 		});
 
 		describe('with an unreachable Selenium server', function() {
