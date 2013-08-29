@@ -128,9 +128,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	loadBaseURL: function loadBaseURL() {
 		this.loaded = this.driver.get(this.config.baseURL);
 
-		this.loaded.then(this.onReady.bind(this));
-
-		return this.loaded;
+		return this.loaded.then(this.onReady.bind(this));
 	},
 
 	/** Constructs a new WebDriver instance based on the given configuration.
@@ -213,12 +211,11 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.failures = {};
 		this.currentFeature = -1;
 
-		this.startNextFeature();
-
-		return this.promise;
+		return this.startNextFeature();
 	},
 
 	/** Increments the feature index, starts evaluation of the next feature, and quits the driver if all features were evaluated.
+	*@returns	{QPromise}	The promise for this run to be finished.
 	*
 	*@private
 	*/
@@ -229,6 +226,8 @@ var Runner = new Class( /** @lends Runner# */ {
 			this.evaluateFeature(this.features[this.currentFeature]);
 		else
 			this.finish();
+
+		return this.promise;
 	},
 
 	/** Prepares and triggers the evaluation of the given feature.
