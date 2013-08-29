@@ -161,9 +161,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	failImmediately: function failImmediately(report) {
 		clearTimeout(this.retryTimeoutId);
 
-		var failureMessagePrefix = (this.timeout > 0 ? 'After ' + (new Date - this.startTime) + ' milliseconds: ' : '');
-
-		this.deferred.reject(failureMessagePrefix + this._formatFailure(report));
+		this.deferred.reject(this._formatFailure(report) + ' (tried for ' + (new Date - this.startTime) + ' ms)');
 	},
 
 	/** Formats the given failure report.
