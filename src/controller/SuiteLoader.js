@@ -2,7 +2,8 @@ var fs			= require('fs'),
 	vm			= require('vm'),
 	pathsUtils	= require('path'),
 	winston		= require('winston'),
-	urlUtils	= require('url');
+	urlUtils	= require('url'),
+	promises	= require('q');
 
 
 var ConfigLoader	= require('mattisg.configloader');
@@ -15,21 +16,21 @@ var Widget					= require('../model/Widget'),
 
 
 var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
-	/** The configuration for this test suite.
+	/** The promise for the configuration for this test suite.
+	*@type	{QPromise}
 	*@private
 	*/
-	config: {},
+	configPromise: null,
 
 	/** Runner that will be fed all features found in the loaded suite.
-	*@type	Runner
+	*@type	{Runner}
 	*@private
 	*/
 	runner: null,
 
 	/** Sandbox for features, widgets and data load.
-	* Will always offer the `driver` magical variable to give access to the WebDriver instance in user code.
 	*
-	*@type	VM
+	*@type	{vm}
 	*@see	http://nodejs.org/api/vm.html
 	*@private
 	*/
@@ -63,7 +64,23 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			transform	: this.parseConfigStep.bind(this)
 		}).load(SuiteLoader.paths.config);
 
-		this.config = this.parseConfig(config);
+		this.configPromise = this.parseConfig(config);
+	},
+
+	/** Transforms the given partial config hash from a form that may contain user shortcuts to a more complete form that is usable for the loaded test suite.
+	*
+	*@param		{Hash}	config	The config values to load.
+	*@returns	{Hash}	The given config values, possibly transformed.
+	*@private
+	*/
+	parseConfigStep: function parseConfigStep(config) {
+		if (config.baseURL)
+			config.baseURL = this.objectifyURL(config.baseURL);
+
+		if (config.seleniumServerURL)
+			config.seleniumServerURL = this.objectifyURL(config.seleniumServerURL);
+
+		return config;
 	},
 
 	/** Validates and possibly transforms the given config hash to a form that is usable for the loaded test suite.
@@ -94,21 +111,46 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			config.driverCapabilities = Object.merge(browserCapabilitiesMap[config.browser], config.driverCapabilities);
 		}
 
-		return config;
+		var asyncElements = [];
+
+		Object.each(config, function(value, key) {
+			if (typeof value == 'function') {
+				if (! value.length) {	// a function with no arg is executed synchronously
+					config[key] = value();
+				} else {	// if it has args, consider the first one is a callback
+					var promise = promises.defer();
+
+					value(function(result) {
+						config[key] = result;
+						promise.resolve(key);
+					});
+
+					asyncElements.push(promise.promise);
+				}
+			}
+		});
+
+		return	asyncElements.length
+				? promises.all(asyncElements).then(function() { return config })
+				: promises(config);
 	},
 
 	/** Transforms the given partial config hash from a form that may contain user shortcuts to a more complete form that is usable for the loaded test suite.
 	*
 	*@param		{Hash}	config	The config values to load.
+	*@param		{Hash}	alreadyLoaded	The config values that were previously parsed.
 	*@returns	{Hash}	The given config values, possibly transformed.
 	*@private
 	*/
-	parseConfigStep: function parseConfigStep(config) {
+	parseConfigStep: function parseConfigStep(config, alreadyLoaded) {
 		if (config.baseURL)
 			config.baseURL = this.objectifyURL(config.baseURL);
 
 		if (config.seleniumServerURL)
 			config.seleniumServerURL = this.objectifyURL(config.seleniumServerURL);
+
+		if (config.tags && alreadyLoaded.tags)
+			config.tags = alreadyLoaded.tags.concat(config.tags);
 
 		return config;
 	},
@@ -129,20 +171,24 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		return url;
 	},
 
-	/** Returns and, if necessary, initializes the runner that contains all features for this suite.
+	/** Returns a promise for the runner that contains all features of this suite.
 	*
-	*@returns	{Runner}	The runner that contains all features for this suite.
+	*@returns	{Promise<Runner>}
 	*/
 	getRunner: function getRunner() {
-		if (! this.runner) {
-			this.runner = new Runner(this.config);
+		if (this.runner)
+			return promises(this.runner);
+
+		return this.configPromise.then(function(config) {
+			this.config = config;
+			this.runner = new Runner(config);
 			this.attachViewsTo(this.runner);
 			this.context = vm.createContext(this.buildContext());
 
 			fs.readdir(this.path, this.loadAllFiles.bind(this));
-		}
 
-		return this.runner;
+			return this.runner;
+		}.bind(this));
 	},
 
 	/** Generates the list of variables that will be offered globally to Widgets, Features and Data elements.
@@ -167,7 +213,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		result[SuiteLoader.contextGlobals.log] = winston.loggers.get('load').info;	// this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
 
 		result[SuiteLoader.contextGlobals.assert] = require('assert');
-		result[SuiteLoader.contextGlobals.storage] = Object.create(null);
+		result[SuiteLoader.contextGlobals.storage] = {};
 
 		return result;
 	},

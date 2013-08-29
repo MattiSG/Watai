@@ -9,7 +9,7 @@ var TextExtractor = new Class( /** @lends matchers.TextExtractor# */ {
 	attribute: null,
 
 	onElementFound: function(element) {
-		element.getText().then(this.compare, this.fail);
+		element.text().done(this.compare, this.fail);
 	}
 });
 

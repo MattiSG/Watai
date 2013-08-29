@@ -1,10 +1,11 @@
 {
 	elements: {
-		field:	{ name: 'q' }
+		field:			{ name: 'q' },
+		submitButton:	{ id: 'search_button_homepage' }
 	},
-	
+
 	searchFor: function searchFor(term) {
-		this.field = term;
-		return this.field.submit();
+		return	this.setField(term)()
+					.then(this.submit());
 	}
 }

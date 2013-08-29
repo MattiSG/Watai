@@ -19,7 +19,8 @@ var elements = exports.elements = {
 	overlayedActionLink:	{ id: 'under' },
 	hideOverlayLink:		{ id: 'removeOver' },
 	output:					{ id: 'output' },
-	outputField:			{ name: 'outputField' }
+	outputField:			{ name: 'outputField' },
+	badSelector:			{ thisIsInvalid: 'sure' }
 }
 
 /** Expected values for the texts of the elements described above, as defined in the test support page.
@@ -55,10 +56,12 @@ exports.expectedOutputs = {
 */
 exports.getWidget = function(driver) {
 	return new Watai.Widget('Test widget', {
+
 		elements: elements,
+
 		submit: function submit(value) {
-			this.inputField = value;
-			return this.inputField.submit();
+			return	this.setInputField(value)()
+						.then(driver.submit.bind(driver));
 		}
 	}, driver);
 }

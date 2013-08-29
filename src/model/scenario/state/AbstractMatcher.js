@@ -26,12 +26,6 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	*/
 	widgets: [],
 
-	/** The first value that was retrieved from the element to match content on.
-	* This allows us to detect changes and fail earlier if there was a change different from the content we're expecting.
-	*@private
-	*/
-	original: undefined,
-
 	/** A widget element selector, describing the element whose content is to be matched.
 	*@type	{String}
 	*@private
@@ -68,31 +62,13 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 		return this;
 	},
 
-	/** Initializes the original value this matcher will encounter.
-	*
-	*@private
-	*/
-	onBeforeStart: function onBeforeStart() {
-		this.original = undefined;
-	},
-
-	/** Stores the actually encountered value, to detect bad changes.
-	*
-	*@param	actual	The actual content that was found by this matcher.
-	*@private
-	*/
-	onFailure: function onFailure(actual) {
-		if (typeof this.original == 'undefined')
-			this.original = actual;	// this is used to wait for a _change_ in the element value rather than for a match
-	},
-
 	/** Starts an actual match, by trying to obtain the element pointed by this instance's selector.
 	*
 	*@private
 	*/
 	start: function start() {
 		Object.getFromPath(this.widgets, this.selector)
-			  .then(this.onElementFound.bind(this),	// this wrapping is needed because the promise from `getFromPath` is a WebDriver promise, so we can't add failure handlers only, we need to set all handlers at once through the `then` method
+			  .done(this.onElementFound.bind(this),	// this wrapping is needed because the promise from `getFromPath` is a WebDriver promise, so we can't add failure handlers only, we need to set all handlers at once through the `then` method
 			  		this.onElementMissing.bind(this));
 	},
 
@@ -110,7 +86,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	*@param	{Error}	The error raised by WebDriver.
 	*/
 	onElementMissing: function onElementMissing(error) {
-		this.fail('Element "' + this.selector + '" does not exist on the page.')
+		this.fail(error);
 	},
 
 	/** Compares the given value to the expected value, using the `match` method, and fails or succeeds the match automatically.
@@ -148,30 +124,26 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 					+ ' from element '
 					+ this.selector
 					+ '.';
-		} else if (actual != this.original) {
-			return this.selector
-					+ ' changed its value to "'
-					+ actual
-					+ '" rather than to "'
-					+ this.expected
-					+ '".';
-		} else {
-			return this.selector
-					+ "'s "
-					+ this.type
-					+ ' was'
-					+ (this.timeout > 0 ? ' still "' : ' "')
-					+ actual
-					+ '" instead of "'
-					+ this.expected
-					+ '".';
 		}
+
+		return this.selector
+				+ "'s "
+				+ this.type
+				+ ' was'
+				+ (this.timeout > 0 ? ' still "' : ' "')
+				+ actual
+				+ '" instead of "'
+				+ this.expected
+				+ '".';
 	},
 
-	/** Redefines the parent formatting to remove the timeout information, which resides in the parent State step.
+	/** Formats a "NoSuchElement" JsonWire error.
+	*
+	*@param		{JsonWireError}	error	The error to format.
+	*@returns	{String}	The formatted error.
 	*/
-	failImmediately: function failImmediately(report) {
-		this.deferred.reject(this.formatFailure(report));
+	formatJsonWireError7: function formatJsonWireError7(error) {
+		return this.selector + ' was not found.'
 	}
 });
 

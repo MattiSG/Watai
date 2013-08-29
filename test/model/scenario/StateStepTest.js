@@ -43,7 +43,7 @@ describe('StateStep', function() {
 			}, function(err) {
 				done(new Error('Should have passed (reason: "' + err + ')'));
 			}
-		).end();
+		).done();
 	});
 
 
@@ -80,14 +80,14 @@ describe('StateStep', function() {
 				}, function() {
 					done();
 				}
-			).end();
+			).done();
 		});
 
 		it('non-matching textual content', function(done) {
 			new StateStep(wrongTexts, { TestWidget: TestWidget })
 				.test().then(function() {
 					done(new Error('Unmatched widget state description should not be resolved.'));
-				},function(reason) {
+				}, function(reason) {
 					Object.each(require('../../helpers/testWidget').expectedContents, function(text, key) {
 						if (! (reason
 							&& reason.contains(key)
@@ -98,7 +98,7 @@ describe('StateStep', function() {
 					});
 					done();
 				}
-			).end();
+			).done();
 		});
 	});
 
@@ -153,7 +153,7 @@ describe('StateStep', function() {
 					}, function(reason) {
 						done(new Error(reason || 'No failure message passed.'));
 					}
-				).end();
+				).done();
 			});
 
 			it('should not be longer than needed if set to a positive value', function(done) {
@@ -171,24 +171,7 @@ describe('StateStep', function() {
 					}, function(reason) {
 						done(new Error(reason || 'No failure message passed.'));
 					}
-				).end();
-			});
-
-			it('should detect changes and fail earlier than maximum if there was a change', function(done) {
-				this.timeout(DELAYED_ACTIONS_DELAY * 3);
-
-				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.delayedAction(),
-					{
-						timeout: DELAYED_ACTIONS_DELAY * 2,
-						'TestWidget.output': expectedOutputs.otherDelayedActionLink
-					}
-				]).test().then(function() {
-					done(new Error('Matched while the expected result should have been set later than evaluation.'))
-				}, function() {
-					done();
-				});
+				).done();
 			});
 
 			it('should fail if expected state comes later than timeout', function(done) {

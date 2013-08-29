@@ -1,0 +1,7 @@
+{
+	"ECONNREFUSED": {
+		"code":		4,
+		"title":	"The Selenium server could not be reached",
+		"help":		"You should start it up with a command like `java -jar selenium-server-standalone.jar`"
+	}
+}

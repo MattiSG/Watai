@@ -1,5 +1,5 @@
 {
-	description: 'A password request reset should be protected by a captcha',
+	description: 'A password reset request should be protected by a captcha',
 
 	scenario: [
 		LoginWidget.open(),

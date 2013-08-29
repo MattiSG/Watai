@@ -23,7 +23,7 @@ var FunctionMatcher = new Class( /** @lends matchers.FunctionMatcher# */ {
 		if (! evaluationResult) {
 			this.fail();
 		} else if (typeof evaluationResult.then == 'function') {	// the user-provided function returned a promise
-			evaluationResult.then(this.succeed, this.fail);
+			evaluationResult.done(this.succeed, this.fail);
 		} else {
 			this.succeed(evaluationResult);
 		}

@@ -17,7 +17,8 @@ var Watai					= require('./Watai'),
 	*@see	#preProcessArguments
 	*@private
 	*/
-	OPTIONS_HANDLERS_DIR	= path.join(__dirname, 'plugins');
+	OPTIONS_HANDLERS_DIR	= path.join(__dirname, 'plugins'),
+	ERRORS_LIST				= require('./errors');
 
 
 var argsProcessor = new Preprocessor(OPTIONS_HANDLERS_DIR);
@@ -37,10 +38,12 @@ var suitePath	= suites[0],
 	statusCode	= 0;
 
 suite.getRunner()
-	 .test()
-	 .fail(function() {
-	 	statusCode = 1;
-	 }).end();	// ensure any uncaught exception gets rethrown
+	 .then(function(runner) {
+	 	return runner.test();
+	 }).fail(function(err) {
+	 	var error = ERRORS_LIST[err && err.code] || { code: 1 };
+	 	statusCode = error.code;
+	 }).done();	// ensure any uncaught exception gets rethrown
 
 
 process.on('exit', function() {

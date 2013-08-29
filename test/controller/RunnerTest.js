@@ -30,7 +30,7 @@ describe('Runner', function() {
 			}).should.throw();
 		});
 
-		it ('should not throw when constructing with proper config', function() {
+		it('should not throw when constructing with proper config', function() {
 			(function() {
 				subject = new Watai.Runner(config);
 			}).should.not.throw();
@@ -39,11 +39,16 @@ describe('Runner', function() {
 		it('should emit "ready" when ready', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			subject.isReady().should.not.be.ok;
+			subject.isReady().should.be.false;
 
+			subject.test();
 			subject.once('ready', function() {
-				subject.isReady().should.be.ok;
-				done();
+				try {
+					subject.isReady().should.be.true;
+					done();
+				} catch(err) {
+					done(err);
+				}
 			});
 		});
 	});
@@ -72,7 +77,7 @@ describe('Runner', function() {
 	], {}, require('../config'));
 
 
-	describe('run', function() {
+	describe('test()', function() {
 		var subjectWithFailure;	// a second subject that will have a failing feature added
 
 
@@ -83,18 +88,6 @@ describe('Runner', function() {
 
 			subjectWithFailure.on('start', function() {
 				emitted.start++;
-			});
-
-			emitted.driverInit = 0;
-
-			subjectWithFailure.on('driverInit', function() {
-				emitted.driverInit++;
-			});
-
-			emitted.restart = 0;
-
-			subjectWithFailure.on('restart', function() {
-				emitted.restart++;
 			});
 
 			emitted.feature = 0;
@@ -109,85 +102,82 @@ describe('Runner', function() {
 		});
 
 
-		it('should return a promise', function() {
-			promises.isPromise(subject.test()).should.be.ok;
-			subject.cancel();
+		it('should return a promise', function(done) {
+			this.timeout(config.browserWarmupTime);
+
+			subject.test().done(function() { done() });
 		});
 
 		it('should evaluate features once', function(done) {
 			this.timeout(config.browserWarmupTime);
+
 			subject.addFeature(feature);
 
 			subject.test().then(function() {
-				if (featureEvaluationCount == 1)
-					done();
-				else	// .should.equal simply does nothing?!
-					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 1'));
-			}, done);
+				featureEvaluationCount.should.equal(1);
+			}).done(done);
 		});
 
 		it('should evaluate features once again if called again', function(done) {
 			this.timeout(config.browserWarmupTime);
+
 			subject.test().then(function() {
-				if (featureEvaluationCount == 2)
-					done();
-				else	// .should.equal simply does nothing?!
-					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 2'));
-			}, done).end();
+				featureEvaluationCount.should.equal(2);
+			}).done(done);
 		});
 
 		it('should run even if called immediately after init', function(done) {
 			this.timeout(config.browserWarmupTime);
 
 			subjectWithFailure.addFeature(feature).test().then(function() {
-				if (featureEvaluationCount == 3)
-					done();
-				else	// .should.equal simply does nothing?!
-					done(new Error('Feature has been called ' + featureEvaluationCount + ' times instead of 3'));
-			}, done).end();
+				featureEvaluationCount.should.equal(3);
+			}).done(done);
 		});
 
 		it('with failing features should be rejected', function(done) {
+			this.timeout(config.browserWarmupTime);
+
 			subjectWithFailure.addFeature(failingFeature).test().then(function() {
-				done(new Error('Resolved instead of rejected.'))
+				throw new Error('Resolved instead of rejected.');
 			}, function(report) {
 				should.equal(typeof report, 'object');
 				if (! report[failingFeature])
-					return done(new Error('Missing feature.'));
+					throw new Error('Missing feature.');
 				if (! report[failingFeature].length)
-					return done(new Error('Missing feature failures details.'));
+					throw new Error('Missing feature failures details.');
 				passed.failures = report;
-				done();
-			}).end();
+			}).done(done);
+		});
+
+		describe('with an unreachable Selenium server', function() {
+			var subject;
+
+			before(function() {
+				var unreachableConfig = Object.clone(config);
+
+				unreachableConfig.seleniumServerURL = 'http://0.0.0.0:3333';
+
+				subject = new Watai.Runner(unreachableConfig);
+			});
+
+			it('should be rejected', function(done) {
+				subject.test().done(function() {
+					done(new Error('Resolved instead of being rejected!'));
+				}, function(err) {
+					done();
+				});
+			});
 		});
 	});
 
 	describe('events', function() {
-		it('should have emitted the correct count of "feature" events', function() {
+		it('should have emitted as many "feature" events as loaded features', function() {
 			should.strictEqual(emitted.feature, 3);
 		});
 
-		it('should have emitted the correct count of "start" events', function() {
+		it('should have emitted as many "start" events as was started', function() {
 			should.strictEqual(emitted.start, 2);
 		});
-
-		it('should have the same count of "start" and "driverInit" events', function() {
-			should.strictEqual(emitted.driverInit, emitted.start);
-		});
-
-		it('should have emitted the correct count of "restart" events', function() {
-			should.strictEqual(emitted.restart, 0);
-		});
-	});
-
-	describe('cancellation', function() {
-		xit('should reject the evaluation with an error', function(done) {
-			this.timeout(config.browserWarmupTime);
-
-			subject.test().then(function() { done(new Error('Resolved instead of rejected!')) },
-								function() { done() });
-			subject.cancel();
-		})
 	});
 
 	describe('driver kill', function() {
@@ -195,15 +185,14 @@ describe('Runner', function() {
 			this.timeout(config.browserWarmupTime / 2);	// this should be faster than warmup, but can still be longer than the default timeout
 
 			subject.killDriver().then(function() {
-				var result = subject.killDriver();
-				result.then(done, done).end();
-			}, done);
+				return subject.killDriver();
+			}).done(done);
 		});
 
 		it('should not forbid a proper second run', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			subject.test().then(function() { done() }, done);
+			subject.test().done(function() { done() }, done);
 		});
 	});
 
@@ -212,30 +201,30 @@ describe('Runner', function() {
 			this.timeout(config.browserWarmupTime);
 
 			subject.config.quit = 'never';
-			subject.test().then(function() {
+			subject.test().done(function() {
 				should.exist(subject.driver);
 				done();
-			}, done).end();
+			});
 		});
 
 		it('should quit on success if set to "on success"', function(done) {
 			this.timeout(config.browserWarmupTime);
 
 			subject.config.quit = 'on success';
-			subject.test().then(function() {
+			subject.test().done(function() {
 				should.not.exist(subject.driver);
 				done();
-			}, done).end();
+			});
 		});
 
 		it('should quit if set to "always"', function(done) {
 			this.timeout(config.browserWarmupTime);
 
 			subject.config.quit = 'always';
-			subject.test().then(function() {
+			subject.test().done(function() {
 				should.not.exist(subject.driver);
 				done();
-			}, done).end();
+			});
 		});
 	});
 });

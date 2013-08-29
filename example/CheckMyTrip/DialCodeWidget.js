@@ -1,12 +1,12 @@
 {
 	elements: {
-		selector: { css: '#dialingCode input[type=text]' },
-		result: { css: '#dialingCode .result-wrapper .main' }
+		selector		: { css: '#dialingCode input[type=text]' },
+		submitButton	: { css: '#dialingCode input[type=submit]' },
+		result			: { css: '#dialingCode .result-wrapper .main' },
 	},
-	
+
 	lookup: function lookup(country) {
-		this.selector = country;
-		this.selector.sendKeys('\n');
-		return this.selector.submit();
+		return	this.setSelector(country)()	// immediate execution to start the chain
+					.then(this.submit());
 	}
 }

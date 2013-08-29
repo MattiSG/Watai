@@ -22,7 +22,7 @@ var RunnerPageDump = new Class(/** @lends RunnerPageDump# */{
 
 	/** The promise for a page source dump.
 	*
-	*@type	{Promise}
+	*@type	{QPromise}
 	*@private
 	*/
 	pageSourcePromise: null,
@@ -39,7 +39,7 @@ var RunnerPageDump = new Class(/** @lends RunnerPageDump# */{
 				step.once('start', function() {
 					step.promise.fail(function() {
 						if (! view.pageSourcePromise)
-							view.pageSourcePromise = driver.getPageSource();
+							view.pageSourcePromise = driver.source();
 					});
 				});
 			});
