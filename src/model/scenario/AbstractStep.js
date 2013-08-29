@@ -220,7 +220,6 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	* {"message":"Not JSON response","data":"<html>\n<head>\n<title>Error 500 org.openqa.selenium.WebDriverException: org.openqa.selenium.WebDriverException: Cannot find matching element locator to: null\nBuild info: version: '2.33.0', revision: '4e90c97', time: '2013-05-22 15:32:38'\nSystem info: os.name: 'Mac OS X',
 	*/
 	formatWdError: function formatWdError(error) {
-		debugger;
 		var jsonWireError = error['jsonwire-error'];	// that's a wd-generated error property with details from the Selenium server
 		if (jsonWireError) {
 			var handler = this['formatJsonWireError' + jsonWireError.status];	// magic methods may be provided by any inheriting class, to decorate JSONwire errors
