@@ -44,10 +44,10 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 	/** Tries to generate a human-readable version of errors propagated from external libraries.
 	*
 	*@param		{Error|Object}		error	The original raised error.
-	*@return	{Hash<String>|Object}	If the error was identified, a hash with the following pairs:
-	*	title:	a user-displayable explanation for the given error
+	*@return	{Hash<String|Object>}	A hash with the following pairs:
+	*	title:	a user-displayable explanation for the given error, or undefined if no detailed description could be found
 	*	help:	a user-displayable list of possible actions to take to solve the problem
-	*	Otherwise, the original passed error.
+	*	source:	the original passed error
 	*/
 	getErrorDescription: function getErrorDescription(error) {
 		var userDisplayable = ERRORS_LIST[error && error.code] || {};

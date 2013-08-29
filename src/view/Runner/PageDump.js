@@ -22,7 +22,7 @@ var RunnerPageDump = new Class(/** @lends RunnerPageDump# */{
 
 	/** The promise for a page source dump.
 	*
-	*@type	{Promise}
+	*@type	{QPromise}
 	*@private
 	*/
 	pageSourcePromise: null,

@@ -26,20 +26,30 @@ var RunnerGrowl = new Class({
 		});
 	},
 
+	/** Returns the name of the browser that was used by the runner this view is for, properly capitalized.
+	*
+	*@returns	{String}
+	*/
 	getBrowserName: function getBrowserName() {
 		return this.model.config.driverCapabilities.browserName.capitalize();
 	},
 
-	show: function show(content, options) {
+	/** Displays a Growl notification, appending additional and default information
+	*
+	*@param	{String}	message	The content to present to the user.
+	*@param	{Hash}		options	Options to pass to the `growl` method.
+	*@see	<https://github.com/visionmedia/node-growl>
+	*/
+	show: function show(message, options) {
 		var defaults = {
 			name:		'Watai',
 			image:		this.getBrowserName(),
 			priority:	3
 		};
 
-		content += ' under ' + this.getBrowserName();
+		message += ' under ' + this.getBrowserName();
 
-		growl(content, Object.merge(defaults, options));
+		growl(message, Object.merge(defaults, options));
 	}
 });
 

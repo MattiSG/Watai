@@ -10,7 +10,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	Extends: require('events').EventEmitter,
 
 	/** The promise object for results, resolved when all features of this Runner have been evaluated.
-	*@type	{Promise}
+	*@type	{QPromise}
 	*/
 	promise: null,
 
@@ -35,14 +35,14 @@ var Runner = new Class( /** @lends Runner# */ {
 
 	/** Promise for the driver to be initialized.
 	*
-	*@type	{Promise}
+	*@type	{QPromise}
 	*@private
 	*/
 	initialized: null,
 
 	/** Promise for the baseURL to be loaded.
 	*
-	*@type	{Promise}
+	*@type	{QPromise}
 	*@private
 	*/
 	baseUrlLoaded: null,
@@ -110,7 +110,7 @@ var Runner = new Class( /** @lends Runner# */ {
 
 	/** Initializes the underlying driver of this Runner.
 	*
-	*@return	{Promise}	A promise for the driver to be initialized.
+	*@return	{QPromise}	A promise for the driver to be initialized.
 	*@private
 	*/
 	initDriver: function initDriver() {
@@ -122,7 +122,7 @@ var Runner = new Class( /** @lends Runner# */ {
 
 	/** Navigates to the base page for this runner.
 	*
-	*@return	{Promise}	A promise for the base page to be loaded.
+	*@return	{QPromise}	A promise for the base page to be loaded.
 	*@private
 	*/
 	loadBaseURL: function loadBaseURL() {
@@ -136,7 +136,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	/** Constructs a new WebDriver instance based on the given configuration.
 	*
 	*@param		{Object}	config	The configuration object based on which the driver will be built.
-	*@return	{Promise}	The promise for the `driver` instance variable to be ready.
+	*@return	{QPromise}	The promise for the `driver` instance variable to be ready.
 	*@see		#initialize	For details on the configuration object.
 	*@private
 	*/
@@ -186,8 +186,9 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 
 	/** Evaluates all features added to this Runner.
+	* Emits the "start" event.
 	*
-	*@returns	{Promise}	A promise for results, resolved if all features pass (param: this Runner), rejected otherwise (param: hash mapping failed features to their reasons for rejection, or an Error if an error appeared in the runner itself or the evaluation was cancelled).
+	*@returns	{QPromise}	A promise for results, resolved if all features pass (param: this Runner), rejected otherwise (param: hash mapping failed features to their reasons for rejection, or an Error if an error appeared in the runner itself or the evaluation was cancelled).
 	*@see	#addFeature
 	*/
 	test: function test() {
@@ -204,7 +205,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	},
 
 	/** Actually starts the evaluation process.
-	* Emits "start".
+	*@returns	{QPromise}	The promise for this run to be finished.
 	*
 	*@private
 	*/
@@ -265,7 +266,7 @@ var Runner = new Class( /** @lends Runner# */ {
 			killDriver		= this.killDriver.bind(this),
 			precondition	= (this.config.quit == 'always'
 								? killDriver
-								: promises);
+								: promises);	// Q without params simply returns a fulfilled promise
 
 		if (Object.getLength(this.failures) > 0) {
 			fulfill = reject;
@@ -279,7 +280,7 @@ var Runner = new Class( /** @lends Runner# */ {
 
 	/** Quits the managed browser.
 	*
-	*@return	{Promise}	A promise resolved once the browser has been properly quit.
+	*@return	{QPromise}	A promise resolved once the browser has been properly quit.
 	*/
 	killDriver: function killDriver() {
 		var driver = this.driver;

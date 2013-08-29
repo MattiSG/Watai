@@ -39,7 +39,7 @@ var Hook = function Hook(hook, driver) {
 	/** Sends the given sequence of keystrokes to the element pointed by this hook.
 	*
 	*@param	input	A string that will be sent to this element.
-	*@returns	{Promise}	A promise, resolved when keystrokes have been received, rejected in case of a failure.
+	*@returns	{QPromise}	A promise, resolved when keystrokes have been received, rejected in case of a failure.
 	*@see	http://seleniumhq.org/docs/03_webdriver.html#sendKeys
 	*@private
 	*/
@@ -89,7 +89,7 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 
 	if (! target[setterName]) {	// do not overwrite possibly preexisting setters
 		target[setterName] = function(input) {	// wrapping to allow call-like syntax in scenarios
-			return inputHandler.bind(null, input);	// use this setter when needing setters with timeouts
+			return inputHandler.bind(null, input);
 		}
 	}
 }

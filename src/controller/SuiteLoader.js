@@ -17,20 +17,20 @@ var Widget					= require('../model/Widget'),
 
 var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	/** The promise for the configuration for this test suite.
-	*@type	Q
+	*@type	{QPromise}
 	*@private
 	*/
 	configPromise: null,
 
 	/** Runner that will be fed all features found in the loaded suite.
-	*@type	Runner
+	*@type	{Runner}
 	*@private
 	*/
 	runner: null,
 
 	/** Sandbox for features, widgets and data load.
 	*
-	*@type	VM
+	*@type	{vm}
 	*@see	http://nodejs.org/api/vm.html
 	*@private
 	*/

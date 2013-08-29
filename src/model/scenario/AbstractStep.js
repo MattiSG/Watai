@@ -52,7 +52,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 	/** The promise for this step to be ultimately evaluated, rejected if the step fails.
 	*
-	*@type	{Promise}
+	*@type	{QPromise}
 	*/
 	promise: null,
 
@@ -60,7 +60,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	/** Starts the evaluation process, returning a promise that will be resolved after at most the given timeout.
 	*
 	*@param	{Number}	[timeout]	optional, specifies a timeout, in milliseconds, for this step to consider the lack of validation as a failure. Set to 0 to try only once. Defaults to immediate execution with no retry.
-	*@returns	{Promise}	A promise that will be either fulfilled with no value passed, or rejected with an explicative message passed.
+	*@returns	{QPromise}	A promise that will be either fulfilled with no value passed, or rejected with an explicative message passed.
 	*/
 	test: function test(timeout) {
 		this.deferred		= promises.defer();
@@ -159,7 +159,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*@private
 	*/
 	failImmediately: function failImmediately(report) {
-		clearTimeout(this.retryTimeoutId);	// shouldn't happen, but in case subclasses call this method directly
+		clearTimeout(this.retryTimeoutId);
 
 		var failureMessagePrefix = (this.timeout > 0 ? 'After ' + (new Date - this.startTime) + ' milliseconds: ' : '');
 
@@ -223,15 +223,15 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 		debugger;
 		var jsonWireError = error['jsonwire-error'];	// that's a wd-generated error property with details from the Selenium server
 		if (jsonWireError) {
-			var handler = this['formatJsonWireError' + jsonWireError.status];
+			var handler = this['formatJsonWireError' + jsonWireError.status];	// magic methods may be provided by any inheriting class, to decorate JSONwire errors
 
 			if (handler)
 				return handler.call(this, error.cause);
 			else
 				return jsonWireError.detail;
 
-		} else if (error.data) {	// wd-generated error, but wd couldn't parse its contents
-			return   error.data	// feature prominently Selenium server's error details
+		} else if (error.data) {	// wd-generated error, but wd couldn't parse its contents, so we'll have to do it ourselves
+			return error.data	// feature prominently Selenium server's error details
 						.split('WebDriverException:').getLast()	// TODO: that stuff should get logged somewhere else than the terminal rather than being completely removed
 						.split('Build info')[0]	// remove all extraneous information
 						.trim()
