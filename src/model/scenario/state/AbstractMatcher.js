@@ -137,6 +137,17 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 				+ '".';
 	},
 
+	/**
+	*@see	AbstractStep#getDescription
+	*/
+	getDescription: function getDescription() {
+		return	'Match '
+				+ this.selector + '’s '
+				+ (this.attribute || this.type)
+				+ ' against '
+				+ this.expected;
+	},
+
 	/** Formats a "NoSuchElement" JsonWire error.
 	*
 	*@param		{JsonWireError}	error	The error to format.

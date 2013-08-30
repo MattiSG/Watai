@@ -33,6 +33,13 @@ var FunctionMatcher = new Class( /** @lends matchers.FunctionMatcher# */ {
 		return this.selector
 				+ ' had its testing function fail, saying "' + actual + '":\n'
 				+ this.expected;
+	},
+
+	/**
+	*@see	AbstractStep#getDescription
+	*/
+	getDescription: function getDescription() {
+		return 'Evaluation of ' + (this.expected.name || 'an unnamed function') + ' on ' + this.selector;
 	}
 });
 

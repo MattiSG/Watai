@@ -166,11 +166,17 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 	},
 
 	/**
-	*
 	*@see	AbstractStep#formatFailure
 	*/
 	formatFailure: function formatFailure(failures) {
 		return failures.join('\n- ');
+	},
+
+	/**
+	*@see	AbstractStep#getDescription
+	*/
+	getDescription: function getDescription() {
+		return 'State assertion';
 	}
 });
 

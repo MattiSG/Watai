@@ -20,7 +20,7 @@ var StepVerbose = new Class({
 	/** Presents details of a test success to the user.
 	*/
 	showSuccess: function showSuccess() {
-		this.animator.log('      ┝', 'info', /*'step ' + stepIndex + */' passed');
+		this.animator.log('      ┝', 'info', this.model.getDescription() + ' passed');
 	},
 
 	/** Presents details of a test failure to the user.

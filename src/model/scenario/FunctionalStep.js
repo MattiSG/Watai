@@ -21,6 +21,13 @@ var FunctionalStep = new Class({
 	start: function start() {
 		promises.fcall(this.action)
 				.done(this.succeed.bind(this), this.fail.bind(this));
+	},
+
+	/**
+	*@see	AbstractStep#getDescription
+	*/
+	getDescription: function getDescription() {
+		return this.action.name || '[unnamed action]';
 	}
 });
 

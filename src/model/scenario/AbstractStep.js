@@ -91,6 +91,18 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 		return this.promise.finally(this.finish.bind(this));
 	},
 
+	/** Gives a human-readable description of the action this step represents.
+	* To be overridden by inheriting classes.
+	*
+	*@returns	{String}
+	*@abstract
+	*@private
+	*@see	#description
+	*/
+	getDescription: function getDescription() {
+		throw new Error('A concrete step should define its own description method!'); // to be defined by inheriting classes
+	},
+
 	/** Called before a series of calls to `start`, right after a caller has asked this step to be `test`ed.
 	* Useful for inheriting classes, if some cleanup or preparation has to be done once before starting an evaluation, taking into account that no guarantee is ever made on the number of times `start` will be called due to timeouts.
 	* To be overridden by inheriting classes.

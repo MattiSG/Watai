@@ -27,6 +27,13 @@ var VisibilityMatcher = new Class( /** @lends matchers.VisibilityMatcher# */ {
 					+ this.selector
 					+ ' was not visible on the page while it should have.';
 		}
+	},
+
+	/**
+	*@see	AbstractStep#getDescription
+	*/
+	getDescription: function getDescription() {
+		return 'Visibility of ' + this.selector;
 	}
 });
 

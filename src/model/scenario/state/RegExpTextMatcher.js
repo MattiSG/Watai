@@ -23,6 +23,13 @@ var RegExpTextMatcher = new Class( /** @lends matchers.RegExpTextMatcher# */ {
 				+ '", which did not match the regular expression '
 				+ this.expected
 				+ '.';
+	},
+
+	/**
+	*@see	AbstractStep#getDescription
+	*/
+	getDescription: function getDescription() {
+		return 'Match of ' + this.selector + ' textual content against ' + this.expected;
 	}
 });
 
