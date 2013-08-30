@@ -134,6 +134,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*@private
 	*/
 	finish: function finish() {
+		clearTimeout(this.retryTimeoutId);
 		this.stopTime = new Date();
 	},
 
@@ -173,8 +174,6 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*@private
 	*/
 	failImmediately: function failImmediately(report) {
-		clearTimeout(this.retryTimeoutId);
-
 		this.deferred.reject(this._formatFailure(report) + ' (tried for ' + (this.stopTime - this.startTime) + ' ms)');
 	},
 
