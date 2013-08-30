@@ -25,12 +25,10 @@ var StepVerbose = new Class({
 
 	/** Presents details of a test failure to the user.
 	*
-	*@param	{Array.<String>}	reasons	Details on the failure.
+	*@param	{String}	reason	Details on the failure.
 	*/
-	showFailure: function showFailure(reasons) {
-		reasons.each(function(reason) {
-			this.animator.log('      ┝', 'cyan', reason, 'cyan');
-		}, this);
+	showFailure: function showFailure(reason) {
+		this.animator.log('      ┝', 'cyan', reason, 'cyan');
 	}
 });
 

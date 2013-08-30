@@ -25,19 +25,74 @@ describe('Step flow view', function() {
 
 
 	describe('functional step', function() {
-		describe('widget action', function() {
-			var SUBMITTED_VALUE = 'test';
+		function testShouldContain(term, done) {
+			subject = new StepFlowView(step);
+
+			var tester = function() {
+				stdoutSpy.unmute();
+				stdoutSpy.printed().should.include(term);
+			}
+
+			stdoutSpy.mute();
+			step.test().then(tester, tester).finally(done);
+		}
+
+		describe('arbitrary action report', function() {
+			var ACTION = 'testAction';
+
+			describe('successful action', function() {
+				before(function() {
+					step = new Watai.steps.FunctionalStep(function testAction() {
+						/* do nothing */
+					});
+				});
+
+				it('should mention name of a successful action', function(done) {
+					testShouldContain(ACTION, done);
+				});
+			});
+
+			describe('failing action', function() {
+				var REASON = 'Boom!';
+
+				before(function() {
+					step = new Watai.steps.FunctionalStep(function testAction() {
+						throw REASON;
+					});
+				});
+
+				it('should mention action name', function(done) {
+					testShouldContain(ACTION, done);
+				});
+
+				it('should mention thrown value', function(done) {
+					testShouldContain(REASON, done);
+				});
+			});
+		});
+
+		xdescribe('widget action report', function() {
+			var ACTION = 'submit',
+				PARAM = 'test';
 
 			before(function() {
-				step = new Watai.steps.FunctionalStep(testWidget.submit(SUBMITTED_VALUE));
+				step = new Watai.steps.FunctionalStep(testWidget[ACTION](PARAM));
 				subject = new StepFlowView(step);
 			});
 
-			xit('should be descriptive', function(done) {
+			it('should mention name of the action', function(done) {
 				stdoutSpy.mute();
 				step.test().then(function() {
 					stdoutSpy.unmute();
-					stdoutSpy.printed().should.match(new RegExp(SUBMITTED_VALUE));
+					stdoutSpy.printed().should.include(ACTION);
+				}).done(done, done);
+			});
+
+			it('should mention params of the action', function(done) {
+				stdoutSpy.mute();
+				step.test().then(function() {
+					stdoutSpy.unmute();
+					stdoutSpy.printed().should.include(PARAM);
 				}).done(done, done);
 			});
 		});
