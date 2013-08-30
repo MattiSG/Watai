@@ -1,11 +1,11 @@
-/**@class	A matcher that tests for its element's existence in the DOM.
+/**@class	A matcher that tests for its element's visibility in the DOM.
 *@extends	matchers.AbstractMatcher
 *@memberOf	matchers
 */
 var VisibilityMatcher = new Class( /** @lends matchers.VisibilityMatcher# */ {
 	Extends: require('./AbstractMatcher'),
 
-	type: 'existence',
+	type: 'visibility',
 
 	onElementFound: function(element) {
 		element.isDisplayed()
