@@ -23,6 +23,15 @@ var FunctionalStep = new Class({
 				.done(this.succeed.bind(this), this.fail.bind(this));
 	},
 
+	formatFailure: function formatFailure(report) {
+		return (this.getDescription()
+				+ ' failed'
+				+ (report
+					? ', returning "' + report + '"'
+					: '')
+				);
+	},
+
 	/**
 	*@see	AbstractStep#getDescription
 	*/
