@@ -134,10 +134,10 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 				finish();
 		}
 
-		return function evaluateStateDescriptorMatchers() {	// this is an "instance"
-			this.emit('descriptor', deferred.promise, elementName, expected);
-
+		return function evaluateStateDescriptorMatchers() {
 			activeMatchers.each(function(matcher) {
+				this.emit('matcher', matcher);
+
 				matcher.test(this.timeout)
 					   .done(finish, handleFailure);
 			}, this);
