@@ -5,24 +5,33 @@ var Watai = require('../../helpers/subject'),
 	my = require('../../helpers/driver').getDriverHolder(),
 	FunctionalStep = Watai.steps.FunctionalStep;
 
-/** Milliseconds the actions take to delay changing the output on the test page.
-* Set in the test page (`test/resources/page.html`).
-*/
-var DELAYED_ACTIONS_DELAY = 500;
-
 
 describe('FunctionalStep', function() {
-	var TestWidget;
+	var TestWidget,
+		subject;
 
 	before(function() {
 		TestWidget = require('../../helpers/testWidget').getWidget(my.driver);
+		subject = new FunctionalStep(function() { /* do nothing */ });
 	});
 
+	describe('AstractStepTest (through FunctionalStep)', function() {
+		it('should offer a `test` method', function(done) {
+			subject.test.should.be.a('function');
+			subject.test().done(function() { done() });
+		});
 
-	it('should offer a `test` method', function() {
-		var result = new FunctionalStep(function() { /* do nothing */ });
-		result.test.should.be.a('function');
-		promises.isPromise(result.test()).should.be.ok;
+		it('should have a `startTime` date attribute', function() {
+			subject.startTime.should.be.an.instanceof(Date);
+		});
+
+		it('should have a `stopTime` date attribute', function() {
+			subject.stopTime.should.be.an.instanceof(Date);
+		});
+
+		it('should have a stopTime bigger than its startTime', function() {
+			subject.stopTime.getTime().should.not.be.below(subject.startTime.getTime());
+		});
 	});
 
 	describe('user-visible errors', function() {
@@ -54,3 +63,4 @@ describe('FunctionalStep', function() {
 		});
 	});
 });
+

@@ -25,12 +25,17 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*/
 	timeout: null,
 
-	/** The time at which the evaluation was first requested, to evaluate the timeout.
+	/** The time at which the evaluation was first requested, to evaluate the duration.
 	*
 	*@type	{Date}
-	*@private
 	*/
 	startTime: null,
+
+	/** The time at which the evaluation ended, to evaluate the duration.
+	*
+	*@type	{Date}
+	*/
+	stopTime: null,
 
 	/** The [timeout ID](http://nodejs.org/docs/latest/api/all.html#all_settimeout_cb_ms) that makes this matcher retry.
 	* Needed to be able to cancel a match request.
@@ -83,7 +88,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 		this.start();
 
-		return this.promise;
+		return this.promise.finally(this.finish.bind(this));
 	},
 
 	/** Called before a series of calls to `start`, right after a caller has asked this step to be `test`ed.
@@ -121,6 +126,15 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	cancel: function cancel() {
 		this.cancelled = true;
 		this.deferred.reject(new Error('Cancelled'));
+	},
+
+	/** Cleans this step.
+	* To be called once its promise is fulfilled.
+	*
+	*@private
+	*/
+	finish: function finish() {
+		this.stopTime = new Date();
 	},
 
 	/** Fulfill the promise.
@@ -161,7 +175,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	failImmediately: function failImmediately(report) {
 		clearTimeout(this.retryTimeoutId);
 
-		this.deferred.reject(this._formatFailure(report) + ' (tried for ' + (new Date - this.startTime) + ' ms)');
+		this.deferred.reject(this._formatFailure(report) + ' (tried for ' + (this.stopTime - this.startTime) + ' ms)');
 	},
 
 	/** Formats the given failure report.
