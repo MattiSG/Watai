@@ -39,9 +39,19 @@ var Widget = new Class( /** @lends Widget# */ {
 			widget[key] = function() {
 				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
 
-				return function() {
+				// in order to present a meaningful test report, we need to have actions provide as much description elements as possible
+				// in user-provided functions, the function's name takes this place
+				// however, when wrapping these names, we can't assign to a Function's name, and dynamically creating its name means creating it through evaluation, which means we'd first have to extract its arguments' names, which is getting very complicated
+				var action = function() {
 					return method.apply(widget, args);
 				}
+
+				action.widget = widget;
+				action.element = key;
+				action.title = method.name;
+				action.args = args;
+
+				return action;
 			}
 		});
 	},

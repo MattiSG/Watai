@@ -71,7 +71,7 @@ describe('Step flow view', function() {
 			});
 		});
 
-		xdescribe('widget action report', function() {
+		describe('widget action report', function() {
 			var ACTION = 'submit',
 				PARAM = 'test';
 
