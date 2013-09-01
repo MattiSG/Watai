@@ -72,28 +72,59 @@ describe('Step flow view', function() {
 		});
 
 		describe('widget action report', function() {
-			var ACTION = 'submit',
-				PARAM = 'test';
+			var ACTION,
+				PARAM;
 
-			before(function() {
+			beforeEach(function() {
 				step = new Watai.steps.FunctionalStep(testWidget[ACTION](PARAM));
 				subject = new StepFlowView(step);
 			});
 
-			it('should mention name of the action', function(done) {
-				stdoutSpy.mute();
-				step.test().then(function() {
-					stdoutSpy.unmute();
-					stdoutSpy.printed().should.include(ACTION);
-				}).done(done, done);
+			describe('with a simple action name', function() {
+				before(function() {
+					ACTION = 'submit';
+					PARAM = 'test';
+				});
+
+				it('should mention the name of the action', function(done) {
+					stdoutSpy.mute();
+					step.test().then(function() {
+						stdoutSpy.unmute();
+						stdoutSpy.printed().should.include(ACTION);
+					}).done(done, done);
+				});
+
+				it('should mention the params of the action', function(done) {
+					stdoutSpy.mute();
+					step.test().then(function() {
+						stdoutSpy.unmute();
+						stdoutSpy.printed().should.include(PARAM);
+					}).done(done, done);
+				});
 			});
 
-			it('should mention params of the action', function(done) {
-				stdoutSpy.mute();
-				step.test().then(function() {
-					stdoutSpy.unmute();
-					stdoutSpy.printed().should.include(PARAM);
-				}).done(done, done);
+			describe('with a multi-word action name', function() {
+				before(function() {
+					ACTION = 'beClever';
+				});
+
+				var DESCRIPTION = 'do something very clever';	// this is the function name, humanized
+
+				it('should mention the user-provided action name', function(done) {
+					stdoutSpy.mute();
+					step.test().then(function() {
+						stdoutSpy.unmute();
+						stdoutSpy.printed().should.include(DESCRIPTION);
+					}).done(done, done);
+				});
+
+				it('should mention the key at which the action is available', function(done) {
+					stdoutSpy.mute();
+					step.test().then(function() {
+						stdoutSpy.unmute();
+						stdoutSpy.printed().should.include(ACTION);
+					}).done(done, done);
+				});
 			});
 		});
 	});

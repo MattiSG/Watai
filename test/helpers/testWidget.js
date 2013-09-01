@@ -62,6 +62,10 @@ exports.getWidget = function(driver) {
 		submit: function submit(value) {
 			return	this.setInputField(value)()
 						.then(driver.submit.bind(driver));
+		},
+
+		beClever: function doSomethingVeryClever() {	// used in report view test
+			return true;
 		}
 	}, driver);
 }

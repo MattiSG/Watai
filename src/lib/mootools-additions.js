@@ -70,9 +70,18 @@ String.implement( /* @lends String */ {
 	*
 	*@param {Number}	count		The count of items represented by this string.
 	*@param	{String}	[postfix]	The String to append in plural form. Defaults to 's'.
-	*@returns {String} string	This string, pluralized based on the count.
+	*@returns {String}	This string, pluralized based on the count.
 	*/
 	count: function count(count, postfix) {
 		return count + ' ' + this + (count == 1 ? '' : postfix || 's');
+	},
+
+	/** Transforms this camel-cased or hyphenated string into a spaced string.
+	* Example: 'areCookiesGood' => 'are cookies good'
+	*
+	*@returns	{String}	This string, with capitals replaced by a space and a small letter.
+	*/
+	humanize: function humanize() {
+		return this.hyphenate().replace(/[-_]/g, ' ').clean();
 	}
 });
