@@ -78,11 +78,18 @@ var Widget = new Class( /** @lends Widget# */ {
 			widget[basename] = function() {	// wrapping to allow immediate calls in scenario steps	//TODO: rather return an object with methods, and leave preparation for scenarios to the Widget constructor
 				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
 
-				return function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
+				var action = function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
 					return widget[key].then(function(element) {
 						return element[method].apply(element, args);
 					});
 				}
+
+				action.widget = widget;
+				action.element = basename;
+				action.title = basename;
+				action.args = args;
+
+				return action;
 			}
 		});
 	},
