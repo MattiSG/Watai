@@ -159,4 +159,40 @@ describe('Step flow view', function() {
 			});
 		});
 	});
+
+	describe('text matching step', function() {
+		var VALUE;
+
+		beforeEach(function() {
+			step = new Watai.steps.StateStep({
+				'TestWidget.id': VALUE
+			}, {
+				TestWidget: testWidget
+			});
+		});
+
+		describe('with an empty value', function() {
+			before(function() {
+				VALUE = '';
+			});
+
+			it('should mention the element name', function(done) {
+				testShouldContain('id', done);
+			});
+
+			it('should mention the expected value', function(done) {
+				testShouldContain('""', done);
+			});
+		});
+
+		describe('with a non-empty value', function() {
+			before(function() {
+				VALUE = 'toto';
+			});
+
+			it('should mention the expected value', function(done) {
+				testShouldContain(VALUE, done);
+			});
+		});
+	});
 });
