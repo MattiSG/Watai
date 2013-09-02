@@ -76,7 +76,7 @@ describe('Step flow view', function() {
 				PARAM;
 
 			beforeEach(function() {
-				if (PARAM)
+				if (typeof PARAM != 'undefined')
 					step = new Watai.steps.FunctionalStep(testWidget[ACTION](PARAM));
 				else
 					step = new Watai.steps.FunctionalStep(testWidget[ACTION]());
@@ -97,8 +97,30 @@ describe('Step flow view', function() {
 						stdoutSpy.printed().should.include(ACTION);
 					}).done(done, done);
 				});
+			});
 
-				it('should mention the params of the action', function(done) {
+			describe('empty action parameters', function() {
+				before(function() {
+					ACTION = 'submit';
+					PARAM = '';
+				});
+
+				it('should be mentioned', function(done) {
+					stdoutSpy.mute();
+					step.test().then(function() {
+						stdoutSpy.unmute();
+						stdoutSpy.printed().should.include('""');
+					}).done(done, done);
+				});
+			});
+
+			describe('non-empty action parameters', function() {
+				before(function() {
+					ACTION = 'submit';
+					PARAM = 'test';
+				});
+
+				it('should be mentioned', function(done) {
 					stdoutSpy.mute();
 					step.test().then(function() {
 						stdoutSpy.unmute();
@@ -110,7 +132,7 @@ describe('Step flow view', function() {
 			describe('with a multi-word action name', function() {
 				before(function() {
 					ACTION = 'beClever';
-					PARAM = null;
+					PARAM = undefined;
 				});
 
 				var DESCRIPTION = 'do something very clever';	// this is the function name, humanized
@@ -135,7 +157,7 @@ describe('Step flow view', function() {
 			describe('with a magic action', function() {
 				before(function() {
 					ACTION = 'changeTextareaValueNow';
-					PARAM = null;
+					PARAM = undefined;
 				});
 
 				var DESCRIPTION = 'change textarea value now';

@@ -144,8 +144,9 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 		return	'Match '
 				+ this.selector + '’s '
 				+ (this.attribute || this.type)
-				+ ' against '
-				+ this.expected;
+				+ ' against "'
+				+ this.expected
+				+ '"';
 	},
 
 	/** Formats a "NoSuchElement" JsonWire error.
