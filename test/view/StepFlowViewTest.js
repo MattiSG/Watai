@@ -76,7 +76,11 @@ describe('Step flow view', function() {
 				PARAM;
 
 			beforeEach(function() {
-				step = new Watai.steps.FunctionalStep(testWidget[ACTION](PARAM));
+				if (PARAM)
+					step = new Watai.steps.FunctionalStep(testWidget[ACTION](PARAM));
+				else
+					step = new Watai.steps.FunctionalStep(testWidget[ACTION]());
+
 				subject = new StepFlowView(step);
 			});
 
@@ -106,6 +110,7 @@ describe('Step flow view', function() {
 			describe('with a multi-word action name', function() {
 				before(function() {
 					ACTION = 'beClever';
+					PARAM = null;
 				});
 
 				var DESCRIPTION = 'do something very clever';	// this is the function name, humanized
@@ -123,6 +128,31 @@ describe('Step flow view', function() {
 					step.test().then(function() {
 						stdoutSpy.unmute();
 						stdoutSpy.printed().should.include(ACTION);
+					}).done(done, done);
+				});
+			});
+
+			describe('with a magic action', function() {
+				before(function() {
+					ACTION = 'immediateAction';
+					PARAM = null;
+				});
+
+				var DESCRIPTION = 'immediate action link';
+
+				it('should mention the target element', function(done) {
+					stdoutSpy.mute();
+					step.test().then(function() {
+						stdoutSpy.unmute();
+						stdoutSpy.printed().should.include(DESCRIPTION);
+					}).done(done, done);
+				});
+
+				it('should mention the magically-generated `click` action', function(done) {
+					stdoutSpy.mute();
+					step.test().then(function() {
+						stdoutSpy.unmute();
+						stdoutSpy.printed().should.include('click');
 					}).done(done, done);
 				});
 			});
