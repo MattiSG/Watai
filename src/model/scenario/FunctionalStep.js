@@ -54,8 +54,8 @@ var FunctionalStep = new Class({
 		return	this.action.widget
 				+ ' '
 				+ humanizedAction
-				+ (this.action.args
-					? ' ' + this.action.args
+				+ (this.action.args.length
+					? ' with "' + this.action.args.join('", "') + '"'
 					: '')
 				+ (humanizedAction != this.action.element	// make it easier to locate source
 					? ' (as ' + this.action.element + ')'
