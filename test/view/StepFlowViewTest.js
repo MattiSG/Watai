@@ -134,13 +134,13 @@ describe('Step flow view', function() {
 
 			describe('with a magic action', function() {
 				before(function() {
-					ACTION = 'immediateAction';
+					ACTION = 'changeTextareaValueNow';
 					PARAM = null;
 				});
 
-				var DESCRIPTION = 'immediate action link';
+				var DESCRIPTION = 'change textarea value now';
 
-				it('should mention the target element', function(done) {
+				it('should mention the human-readable action', function(done) {
 					stdoutSpy.mute();
 					step.test().then(function() {
 						stdoutSpy.unmute();
@@ -148,11 +148,12 @@ describe('Step flow view', function() {
 					}).done(done, done);
 				});
 
-				it('should mention the magically-generated `click` action', function(done) {
+				it('should mention the generated action name', function(done) {
 					stdoutSpy.mute();
 					step.test().then(function() {
 						stdoutSpy.unmute();
-						stdoutSpy.printed().should.include('click');
+						stdoutSpy.printed().should.include(ACTION);
+						stdoutSpy.printed().should.not.match(/link/i);	// ensure the action name does not contain the original element name
 					}).done(done, done);
 				});
 			});

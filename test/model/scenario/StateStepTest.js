@@ -56,7 +56,7 @@ describe('StateStep', function() {
 
 		it('with a magically-added property path should throw', function() {
 			(function() {
-				new StateStep({ 'TestWidget.delayedAction': 'toto'}, { TestWidget: TestWidget });	// The actual element is `delayedActionLink`. `delayedAction` is an action shortcut, but may not be used as a property.]);
+				new StateStep({ 'TestWidget.changeTextareaValueLater': 'toto'}, { TestWidget: TestWidget });	// The actual element is `changeTextareaValueLaterLink`. `changeTextareaValueLater` is an action shortcut, but may not be used as a property.]);
 			}).should.throw(/not an element/);
 		});
 
@@ -127,11 +127,11 @@ describe('StateStep', function() {
 
 			it('should do immediate evaluation if set to 0', function(done) {
 				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.delayedAction(),
+					TestWidget.changeTextareaValueNow(),	// make sure the content of the output is reset
+					TestWidget.changeTextareaValueLater(),
 					{
 						timeout: 0,
-						'TestWidget.output': expectedOutputs.delayedActionLink
+						'TestWidget.output': expectedOutputs.changeTextareaValueLaterLink
 					}
 				]).test().then(function() {
 					done(new Error('Matched while the expected result should have been set later than evaluation.'))
@@ -142,11 +142,11 @@ describe('StateStep', function() {
 
 			it('should do delayed evaluation if set to a proper positive value', function(done) {
 				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.delayedAction(),
+					TestWidget.changeTextareaValueNow(),	// make sure the content of the output is reset
+					TestWidget.changeTextareaValueLater(),
 					{
 						timeout: DELAYED_ACTIONS_DELAY * 2,
-						'TestWidget.output': expectedOutputs.delayedActionLink
+						'TestWidget.output': expectedOutputs.changeTextareaValueLaterLink
 					}
 				]).test().then(function() {
 						done();
@@ -160,11 +160,11 @@ describe('StateStep', function() {
 				this.timeout(DELAYED_ACTIONS_DELAY * 3);
 
 				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.otherDelayedAction(),
+					TestWidget.changeTextareaValueNow(),	// make sure the content of the output is reset
+					TestWidget.changeTextareaValueLaterAgain(),
 					{
 						timeout: DELAYED_ACTIONS_DELAY * 2,
-						'TestWidget.output': expectedOutputs.otherDelayedActionLink
+						'TestWidget.output': expectedOutputs.changeTextareaValueLaterAgainLink
 					}
 				]).test().then(function() {
 						done();
@@ -178,11 +178,11 @@ describe('StateStep', function() {
 				this.timeout(DELAYED_ACTIONS_DELAY * 2);
 
 				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.otherDelayedAction(),
+					TestWidget.changeTextareaValueNow(),	// make sure the content of the output is reset
+					TestWidget.changeTextareaValueLaterAgain(),
 					{
 						timeout: DELAYED_ACTIONS_DELAY / 10,
-						'TestWidget.output': expectedOutputs.otherDelayedActionLink
+						'TestWidget.output': expectedOutputs.changeTextareaValueLaterAgainLink
 					}
 				]).test().then(function() {
 					done(new Error('Matched while the expected result should have been set later than evaluation.'))
@@ -195,11 +195,11 @@ describe('StateStep', function() {
 				this.timeout(DELAYED_ACTIONS_DELAY * 2);
 
 				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.delayedAction(),
+					TestWidget.changeTextareaValueNow(),	// make sure the content of the output is reset
+					TestWidget.changeTextareaValueLater(),
 					{
 						timeout: 0,
-						'TestWidget.output': expectedOutputs.delayedActionLink
+						'TestWidget.output': expectedOutputs.changeTextareaValueLaterLink
 					}
 				]).test().then(function() {
 					done(new Error('Matched while the expected result should have been set later than evaluation.'))
