@@ -76,18 +76,12 @@ case "$1" in
 
 		for arg in "$@"
 		do
-			if echo $arg | grep -q '^\-\-'
-			then opts="$arg $opts"
-			else dirs="$dirs $TEST_DIR/$arg"	# allows for "go test controller" for example, instead of "go test test/controller"
-
+			if [[ -e "$arg" ]]
+			then dirs="$dirs $arg"
 			fi
 		done
 
-		if [[ -z $dirs ]]
-		then dirs="$DEFAULT_TEST_DIRS"
-		fi
-
-		$MOCHA_CMD --bail $opts $dirs ;;
+		$MOCHA_CMD --bail $opts ${dirs:-$DEFAULT_TEST_DIRS} ;;
 	coverage )	# based on http://tjholowaychuk.com/post/18175682663
 		rm -rf $COVERAGE_DIR
 		$JSCOVERAGE $SRC_DIR $COVERAGE_DIR
