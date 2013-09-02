@@ -24,18 +24,20 @@ describe('Step flow view', function() {
 	});
 
 
-	describe('functional step', function() {
-		function testShouldContain(term, done) {
-			subject = new StepFlowView(step);
+	function testShouldContain(term, done) {
+		subject = new StepFlowView(step);
 
-			var tester = function() {
-				stdoutSpy.unmute();
-				stdoutSpy.printed().should.include(term);
-			}
-
-			stdoutSpy.mute();
-			step.test().then(tester, tester).finally(done);
+		var tester = function() {
+			stdoutSpy.unmute();
+			stdoutSpy.printed().should.include(term);
 		}
+
+		stdoutSpy.mute();
+		step.test().then(tester, tester).finally(done);
+	}
+
+
+	describe('functional step', function() {
 
 		describe('arbitrary action report', function() {
 			var ACTION = 'testAction';
@@ -80,8 +82,6 @@ describe('Step flow view', function() {
 					step = new Watai.steps.FunctionalStep(testWidget[ACTION](PARAM));
 				else
 					step = new Watai.steps.FunctionalStep(testWidget[ACTION]());
-
-				subject = new StepFlowView(step);
 			});
 
 			describe('with a simple action name', function() {
@@ -91,11 +91,7 @@ describe('Step flow view', function() {
 				});
 
 				it('should mention the name of the action', function(done) {
-					stdoutSpy.mute();
-					step.test().then(function() {
-						stdoutSpy.unmute();
-						stdoutSpy.printed().should.include(ACTION);
-					}).done(done, done);
+					testShouldContain(ACTION, done);
 				});
 			});
 
@@ -106,11 +102,7 @@ describe('Step flow view', function() {
 				});
 
 				it('should be mentioned', function(done) {
-					stdoutSpy.mute();
-					step.test().then(function() {
-						stdoutSpy.unmute();
-						stdoutSpy.printed().should.include('""');
-					}).done(done, done);
+					testShouldContain('""', done);
 				});
 			});
 
@@ -121,11 +113,7 @@ describe('Step flow view', function() {
 				});
 
 				it('should be mentioned', function(done) {
-					stdoutSpy.mute();
-					step.test().then(function() {
-						stdoutSpy.unmute();
-						stdoutSpy.printed().should.include(PARAM);
-					}).done(done, done);
+					testShouldContain(PARAM, done);
 				});
 			});
 
@@ -138,19 +126,11 @@ describe('Step flow view', function() {
 				var DESCRIPTION = 'do something very clever';	// this is the function name, humanized
 
 				it('should mention the user-provided action name', function(done) {
-					stdoutSpy.mute();
-					step.test().then(function() {
-						stdoutSpy.unmute();
-						stdoutSpy.printed().should.include(DESCRIPTION);
-					}).done(done, done);
+					testShouldContain(DESCRIPTION, done);
 				});
 
 				it('should mention the key at which the action is available', function(done) {
-					stdoutSpy.mute();
-					step.test().then(function() {
-						stdoutSpy.unmute();
-						stdoutSpy.printed().should.include(ACTION);
-					}).done(done, done);
+					testShouldContain(ACTION, done);
 				});
 			});
 
@@ -163,14 +143,12 @@ describe('Step flow view', function() {
 				var DESCRIPTION = 'change textarea value now';
 
 				it('should mention the human-readable action', function(done) {
-					stdoutSpy.mute();
-					step.test().then(function() {
-						stdoutSpy.unmute();
-						stdoutSpy.printed().should.include(DESCRIPTION);
-					}).done(done, done);
+					testShouldContain(DESCRIPTION, done);
 				});
 
 				it('should mention the generated action name', function(done) {
+					subject = new StepFlowView(step);
+
 					stdoutSpy.mute();
 					step.test().then(function() {
 						stdoutSpy.unmute();
