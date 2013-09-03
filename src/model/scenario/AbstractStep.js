@@ -88,7 +88,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 		this.start();
 
-		return this.promise.finally(this.finish.bind(this));
+		return this.promise;
 	},
 
 	/** Gives a human-readable description of the action this step represents.
@@ -137,6 +137,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*/
 	cancel: function cancel() {
 		this.cancelled = true;
+		this.finish();
 		this.deferred.reject(new Error('Cancelled'));
 	},
 
@@ -159,6 +160,8 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 		if (this.cancelled)
 			return;
 
+		this.finish();
+
 		this.deferred.resolve(this, data);
 	},
 
@@ -174,10 +177,12 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 		this.onFailure(report);
 
-		if (new Date() - this.startTime >= this.timeout)	// the timeout has expired
+		if (new Date() - this.startTime >= this.timeout) {	// the timeout has expired
+			this.finish();
 			this.failImmediately(report);
-		else
+		} else {
 			this.retryTimeoutId = setTimeout(this.start.bind(this), FAILURE_RETRY_DELAY);
+		}
 	},
 
 	/** Makes this matcher fail immediately, not trying anymore.
