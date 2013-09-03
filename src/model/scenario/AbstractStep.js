@@ -191,7 +191,9 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*@private
 	*/
 	failImmediately: function failImmediately(report) {
-		this.deferred.reject(this._formatFailure(report) + ' (tried for ' + (this.stopTime - this.startTime) + ' ms)');
+		var durationSeconds = (this.stopTime - this.startTime) / 1000;
+
+		this.deferred.reject(this._formatFailure(report) + ' (tried for ' + durationSeconds.round(1) + ' s)');	// TODO: duration info formatting should be left to the view
 	},
 
 	/** Formats the given failure report.
