@@ -7,6 +7,21 @@ var Watai = require('../../../helpers/subject'),
 describe('ContentMatcher', function() {
 	var widget;
 
+	function shouldPass(elementName, done) {
+		new ContentMatcher(TestWidget.expectedContents[elementName], 'TestWidget.' + elementName, { TestWidget: widget })
+			.test()
+			.done(function() { done() });
+	}
+
+	function shouldFail(elementName, done) {
+		new ContentMatcher(TestWidget.expectedContents[elementName] + 'cannot match that', 'TestWidget.' + elementName, { TestWidget: widget })
+			.test()
+			.done(
+				function() { done(new Error('Resolved instead of rejected')) },
+				function() { done() }
+			);
+	}
+
 	before(function() {
 		widget = TestWidget.getWidget(my.driver);
 	});
@@ -14,47 +29,28 @@ describe('ContentMatcher', function() {
 	describe('on existing elements', function() {
 		describe('on textual content', function() {
 			it('should pass on matching', function(done) {
-				new ContentMatcher(TestWidget.expectedContents.id, 'TestWidget.id', { TestWidget: widget })
-					.test()
-					.done(function() { done() });
+				shouldPass('id', done);
 			});
 
 			it('should fail on non-matching', function(done) {
-				new ContentMatcher(TestWidget.expectedContents.id + 'cannot match that', 'TestWidget.id', { TestWidget: widget })
-					.test()
-					.done(
-						function() { done(new Error('Resolved instead of rejected')) },
-						function() { done() }
-					);
+				shouldFail('id', done);
 			});
 		});
 
 		describe('on value', function() {
 			it('should pass on matching', function(done) {
-				new ContentMatcher(TestWidget.expectedContents.outputField, 'TestWidget.outputField', { TestWidget: widget })
-					.test()
-					.done(function() { done() });
+				shouldPass('outputField', done);
 			});
 
 			it('should fail on non-matching', function(done) {
-				new ContentMatcher(TestWidget.expectedContents.outputField + 'cannot match that', 'TestWidget.outputField', { TestWidget: widget })
-					.test()
-					.done(
-						function() { done(new Error('Resolved instead of rejected')) },
-						function() { done() }
-					);
+				shouldFail('outputField', done);
 			});
 		});
 	});
 
 	describe('on missing elements', function() {
 		it('should fail', function(done) {
-			new ContentMatcher('missing', 'TestWidget.missing', { TestWidget: widget })
-				.test()
-				.done(
-					function() { done(new Error('Resolved instead of rejected')) },
-					function() { done() }
-				);
+			shouldFail('missing', done);
 		});
 	});
 });
