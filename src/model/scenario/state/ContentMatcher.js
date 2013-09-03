@@ -37,7 +37,9 @@ var ContentMatcher = new Class( /** @lends matchers.ContentMatcher# */ {
 				+ ' in '
 				+ this.selector
 				+ ', which does not match '
-				+ (this.expected || 'the empty string')
+				+ (this.expected
+					? '"' + this.expected + '"'
+					: 'the empty string')
 				+ '.';
 	}
 });
