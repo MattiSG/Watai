@@ -58,13 +58,13 @@ describe('Widget', function() {
 	describe('magic', function() {
 
 		it('should do some magic on *Link names', function() {
-			subject.should.have.property('immediateAction');
-			subject.immediateAction.should.be.a('function');	// on 'link', this should be a shortcut to clicking the element, not a simple access
+			subject.should.have.property('changeTextareaValueNow');
+			subject.changeTextareaValueNow.should.be.a('function');	// on 'link', this should be a shortcut to clicking the element, not a simple access
 		});
 
 
 		Object.each({
-			immediateAction	: 'immediateActionLink',
+			changeTextareaValueNow	: 'changeTextareaValueNowLink',
 			press			: 'pressButton',
 			toggle			: 'toggleCheckbox',
 			select			: 'selectRadio'

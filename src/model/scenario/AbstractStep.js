@@ -19,18 +19,30 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 	Extends: require('events').EventEmitter,
 
+	/** Unique identifier for this type of step.
+	* To be redefined by inheriting classes.
+	*
+	*@type	{String}
+	*/
+	type: 'abstract step',
+
 	/** Time, in milliseconds, before the lack of validation is considered an actual failure.
 	*
 	*@type	{Number}
 	*/
 	timeout: null,
 
-	/** The time at which the evaluation was first requested, to evaluate the timeout.
+	/** The time at which the evaluation was first requested, to evaluate the duration.
 	*
 	*@type	{Date}
-	*@private
 	*/
 	startTime: null,
+
+	/** The time at which the evaluation ended, to evaluate the duration.
+	*
+	*@type	{Date}
+	*/
+	stopTime: null,
 
 	/** The [timeout ID](http://nodejs.org/docs/latest/api/all.html#all_settimeout_cb_ms) that makes this matcher retry.
 	* Needed to be able to cancel a match request.
@@ -86,6 +98,17 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 		return this.promise;
 	},
 
+	/** Gives a human-readable description of the action this step represents.
+	* To be overridden by inheriting classes.
+	*
+	*@returns	{String}
+	*@abstract
+	*@private
+	*/
+	toString: function toString() {
+		throw new Error('A concrete step should define its own description method!'); // to be defined by inheriting classes
+	},
+
 	/** Called before a series of calls to `start`, right after a caller has asked this step to be `test`ed.
 	* Useful for inheriting classes, if some cleanup or preparation has to be done once before starting an evaluation, taking into account that no guarantee is ever made on the number of times `start` will be called due to timeouts.
 	* To be overridden by inheriting classes.
@@ -120,7 +143,18 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*/
 	cancel: function cancel() {
 		this.cancelled = true;
+		this.finish();
 		this.deferred.reject(new Error('Cancelled'));
+	},
+
+	/** Cleans this step.
+	* To be called once its promise is fulfilled.
+	*
+	*@private
+	*/
+	finish: function finish() {
+		clearTimeout(this.retryTimeoutId);
+		this.stopTime = new Date();
 	},
 
 	/** Fulfill the promise.
@@ -131,6 +165,8 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	succeed: function succeed(data) {
 		if (this.cancelled)
 			return;
+
+		this.finish();
 
 		this.deferred.resolve(this, data);
 	},
@@ -147,10 +183,12 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 		this.onFailure(report);
 
-		if (new Date() - this.startTime >= this.timeout)	// the timeout has expired
+		if (new Date() - this.startTime >= this.timeout) {	// the timeout has expired
+			this.finish();
 			this.failImmediately(report);
-		else
+		} else {
 			this.retryTimeoutId = setTimeout(this.start.bind(this), FAILURE_RETRY_DELAY);
+		}
 	},
 
 	/** Makes this matcher fail immediately, not trying anymore.
@@ -159,9 +197,9 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*@private
 	*/
 	failImmediately: function failImmediately(report) {
-		clearTimeout(this.retryTimeoutId);
+		var durationSeconds = (this.stopTime - this.startTime) / 1000;
 
-		this.deferred.reject(this._formatFailure(report) + ' (tried for ' + (new Date - this.startTime) + ' ms)');
+		this.deferred.reject(this._formatFailure(report) + ' (tried for ' + durationSeconds.round(1) + ' s)');	// TODO: duration info formatting should be left to the view
 	},
 
 	/** Formats the given failure report.

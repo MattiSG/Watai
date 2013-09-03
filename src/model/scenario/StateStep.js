@@ -6,6 +6,8 @@ var stateMatchers = require('./state');
 var StateStep = new Class(/** @lends state.StateStep# */{
 	Extends: require('./AbstractStep'),
 
+	type: 'state',
+
 	/** The dictionary of all widgets within which the given state assertion should be understood.
 	*
 	*@type	{Hash.<String, Widget>}
@@ -97,50 +99,24 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 
 	/**
 	*@param		{String}	elementName	The widget element whose content is to be evaluated.
-	*@param		{?}			expected	The expected value for the element content. This is currently a String, but could change when new matchers are added.
+	*@param		{Object}	expected	The expected value for the element content.
 	*@returns	{Function}	A promise-returning function.
 	*@private
 	*/
-	generateAssertion: function generateAssertion(elementName, expected) {	// TODO: model this in a class
-		var activeMatchers	= [],
-			failures		= [],
-			deferred		= promises.defer();
+	generateAssertion: function generateAssertion(elementName, expected) {
+		var deferred		= promises.defer(),
+			matcherClass	= stateMatchers.forValue(expected);
 
-		stateMatchers.allFor(expected).each(function(matcherClass) {
-			var matcher = new matcherClass(expected, elementName, this.widgets);
-			activeMatchers.push(matcher);
-		}, this);
+		if (! matcherClass)
+			throw new TypeError('No matcher found for the given value type.\nHad to check for "' + expected + '", which is of type ' + typeof expected + '.');
 
-		if (activeMatchers.length <= 0)
-			throw new TypeError('No matcher found for the given value type  :-/  (had to check for "' + expected + '").');
+		var matcher = new matcherClass(expected, elementName, this.widgets);
 
-		var matchersLeft = activeMatchers.length;
+		return function evaluateStateDescriptorMatcher() {
+			this.emit('matcher', matcher);
 
-		function finish() {
-			activeMatchers.each(function(matcher) {	// first we need to make sure no failed matcher is going to try again to match even after another ended the evaluation
-				matcher.cancel();
-			});
-
-			if (failures.length > 0)
-				deferred.reject(failures);
-			else
-				deferred.resolve();
-		}
-
-		function handleFailure(message) {
-			failures.push(message);
-
-			if (--matchersLeft <= 0)
-				finish();
-		}
-
-		return function evaluateStateDescriptorMatchers() {	// this is an "instance"
-			this.emit('descriptor', deferred.promise, elementName, expected);
-
-			activeMatchers.each(function(matcher) {
-				matcher.test(this.timeout)
-					   .done(finish, handleFailure);
-			}, this);
+			matcher.test(this.timeout)
+				   .done(deferred.resolve, deferred.reject);
 
 			return deferred.promise;
 		}.bind(this);
@@ -166,11 +142,14 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 	},
 
 	/**
-	*
 	*@see	AbstractStep#formatFailure
 	*/
 	formatFailure: function formatFailure(failures) {
-		return failures.join('\n- ');
+		return '- ' + failures.join('\n- ');
+	},
+
+	toString: function toString() {
+		return 'State assertion';
 	}
 });
 

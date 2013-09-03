@@ -39,9 +39,19 @@ var Widget = new Class( /** @lends Widget# */ {
 			widget[key] = function() {
 				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
 
-				return function() {
+				// in order to present a meaningful test report, we need to have actions provide as much description elements as possible
+				// in user-provided functions, the function's name takes this place
+				// however, when wrapping these names, we can't assign to a Function's name, and dynamically creating its name means creating it through evaluation, which means we'd first have to extract its arguments' names, which is getting very complicated
+				var action = function() {
 					return method.apply(widget, args);
 				}
+
+				action.widget = widget;
+				action.reference = key;
+				action.title = method.name;
+				action.args = args;
+
+				return action;
 			}
 		});
 	},
@@ -68,11 +78,18 @@ var Widget = new Class( /** @lends Widget# */ {
 			widget[basename] = function() {	// wrapping to allow immediate calls in scenario steps	//TODO: rather return an object with methods, and leave preparation for scenarios to the Widget constructor
 				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
 
-				return function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
+				var action = function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
 					return widget[key].then(function(element) {
 						return element[method].apply(element, args);
 					});
 				}
+
+				action.widget = widget;
+				action.reference = basename;
+				action.title = basename;
+				action.args = args;
+
+				return action;
 			}
 		});
 	},

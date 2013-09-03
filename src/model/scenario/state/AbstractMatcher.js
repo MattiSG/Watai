@@ -14,7 +14,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 
 	/** The type of content this matcher can match an element on.
 	*/
-	type: 'abstract',
+	type: 'abstract matcher',
 
 	/** The value this matcher should look for.
 	*/
@@ -135,6 +135,15 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 				+ '" instead of "'
 				+ this.expected
 				+ '".';
+	},
+
+	toString: function toString() {
+		return	'Match '
+				+ this.selector + '’s '
+				+ (this.attribute || this.type)
+				+ ' against "'
+				+ this.expected
+				+ '"';
 	},
 
 	/** Formats a "NoSuchElement" JsonWire error.

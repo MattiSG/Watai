@@ -93,5 +93,26 @@ describe('MooTools additions', function() {
 				});
 			});
 		});
+
+
+		describe('humanize', function() {
+			var EXPECTED = 'i like cookies';
+
+			it('should treat small camel-cased strings', function() {
+				'iLikeCookies'.humanize().should.equal(EXPECTED);
+			});
+
+			it('should treat capitalized camel-cased strings', function() {
+				'ILikeCookies'.humanize().should.equal(EXPECTED);
+			});
+
+			it('should treat hyphenated strings', function() {
+				'i-like-cookies'.humanize().should.equal(EXPECTED);
+			});
+
+			it('should treat snake-cased strings', function() {
+				'i_like_cookies'.humanize().should.equal(EXPECTED);
+			});
+		});
 	});
 });
