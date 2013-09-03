@@ -137,10 +137,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 				+ '".';
 	},
 
-	/**
-	*@see	AbstractStep#getDescription
-	*/
-	getDescription: function getDescription() {
+	toString: function toString() {
 		return	'Match '
 				+ this.selector + '’s '
 				+ (this.attribute || this.type)

@@ -29,10 +29,7 @@ var VisibilityMatcher = new Class( /** @lends matchers.VisibilityMatcher# */ {
 		}
 	},
 
-	/**
-	*@see	AbstractStep#getDescription
-	*/
-	getDescription: function getDescription() {
+	toString: function toString() {
 		return 'Visibility of ' + this.selector;
 	}
 });

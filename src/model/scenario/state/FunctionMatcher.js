@@ -25,10 +25,7 @@ var FunctionMatcher = new Class( /** @lends matchers.FunctionMatcher# */ {
 				+ this.expected;
 	},
 
-	/**
-	*@see	AbstractStep#getDescription
-	*/
-	getDescription: function getDescription() {
+	toString: function toString() {
 		return 'Evaluation of ' + (this.expected.name || 'an unnamed function') + ' on ' + this.selector;
 	}
 });

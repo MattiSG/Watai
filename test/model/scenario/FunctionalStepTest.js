@@ -32,10 +32,6 @@ describe('FunctionalStep', function() {
 		it('should have a stopTime bigger than its startTime', function() {
 			subject.stopTime.getTime().should.not.be.below(subject.startTime.getTime());
 		});
-
-		it('should have a `getDescription` string getter', function() {
-			subject.getDescription().should.be.a('string');
-		});
 	});
 
 	describe('user-visible errors', function() {

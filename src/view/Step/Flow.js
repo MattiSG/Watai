@@ -14,7 +14,7 @@ var StepVerbose = new Class({
 		if (this.model.type == 'state')
 			return;
 
-		this.animator.log('      ┝', 'info', this.model.getDescription());
+		this.animator.log('      ┝', 'info', this.model);
 	},
 
 	/** Presents details of a test failure to the user.

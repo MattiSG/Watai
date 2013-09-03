@@ -104,9 +104,8 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*@returns	{String}
 	*@abstract
 	*@private
-	*@see	#description
 	*/
-	getDescription: function getDescription() {
+	toString: function toString() {
 		throw new Error('A concrete step should define its own description method!'); // to be defined by inheriting classes
 	},
 

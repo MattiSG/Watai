@@ -26,7 +26,7 @@ var FunctionalStep = new Class({
 	},
 
 	formatFailure: function formatFailure(report) {
-		return (this.getDescription()
+		return (this
 				+ ' failed'
 				+ (report
 					? ', returning "' + report + '"'
@@ -34,10 +34,7 @@ var FunctionalStep = new Class({
 				);
 	},
 
-	/**
-	*@see	AbstractStep#getDescription
-	*/
-	getDescription: function getDescription() {
+	toString: function toString() {
 		if (this.action.widget) {	// this is a Widget action
 			return this.describeAction();
 		} else if (this.action.name) {	// this is a custom user function, hopefully the user provided a good name for it

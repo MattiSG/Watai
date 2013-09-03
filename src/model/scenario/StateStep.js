@@ -148,10 +148,7 @@ var StateStep = new Class(/** @lends state.StateStep# */{
 		return '- ' + failures.join('\n- ');
 	},
 
-	/**
-	*@see	AbstractStep#getDescription
-	*/
-	getDescription: function getDescription() {
+	toString: function toString() {
 		return 'State assertion';
 	}
 });
