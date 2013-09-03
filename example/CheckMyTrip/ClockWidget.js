@@ -8,7 +8,8 @@
 
 	lookup: function lookup(town) {
 		return	this.setField(town)()	// immediate execution to start the chain
-					.then(this.selectAutocompleteResult())
+					.delay(800)
+					.then(this.setField('\ue015'))	// down arrow
 					.then(this.submit());
 	},
 
