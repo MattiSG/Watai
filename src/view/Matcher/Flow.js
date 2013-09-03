@@ -6,7 +6,7 @@ var MatcherVerbose = new Class({
 	/** Presents details of a test success to the user.
 	*/
 	showSuccess: function showSuccess() {
-		this.animator.log('      ┝ ✓', 'info', this.model.getDescription());
+		this.animator.log('      ┝  ✓', 'info', this.model.getDescription());
 	},
 
 	/** Presents details of a test failure to the user.
@@ -14,7 +14,7 @@ var MatcherVerbose = new Class({
 	*@param	{String}	reason	Details on the failure.
 	*/
 	showFailure: function showFailure(reason) {
-		this.animator.log('      ┝ ✗', 'warn', reason);
+		this.animator.log('      ┝  ✗', 'warn', reason);
 	}
 });
 
