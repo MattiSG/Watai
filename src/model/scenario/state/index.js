@@ -5,8 +5,7 @@
 */
 var matchers = {
 	VisibilityMatcher:	require('./VisibilityMatcher'),
-	TextMatcher:		require('./TextMatcher'),
-	ValueMatcher:		require('./ValueMatcher'),
+	ContentMatcher:		require('./ContentMatcher'),
 	RegExpTextMatcher:	require('./RegExpTextMatcher'),
 	RegExpValueMatcher:	require('./RegExpValueMatcher'),
 	FunctionMatcher:	require('./FunctionMatcher')
@@ -28,8 +27,7 @@ matchers.allFor = function allMatchersFor(expected) {
 		result.push(matchers.RegExpValueMatcher);
 		result.push(matchers.RegExpTextMatcher);
 	} else {
-		result.push(matchers.ValueMatcher);
-		result.push(matchers.TextMatcher);
+		result.push(matchers.ContentMatcher);
 	}
 
 	return result;

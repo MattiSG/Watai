@@ -1,7 +1,8 @@
 var Watai			= require('../helpers/subject'),
 	stdoutSpy		= require('../helpers/StdoutSpy'),
 	StepFlowView	= require(Watai.path + '/view/Step/Flow'),
-	my = require('../helpers/driver').getDriverHolder();
+	TestWidget		= require('../helpers/testWidget'),
+	my				= require('../helpers/driver').getDriverHolder();
 
 
 /** This test suite is written with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
@@ -12,7 +13,7 @@ describe('Step flow view', function() {
 		testWidget;
 
 	before(function() {
-		testWidget = require('../helpers/testWidget').getWidget(my.driver);
+		testWidget = TestWidget.getWidget(my.driver);
 	});
 
 	beforeEach(function() {
@@ -33,7 +34,19 @@ describe('Step flow view', function() {
 		}
 
 		stdoutSpy.mute();
-		step.test().then(tester, tester).finally(done);
+		step.test().then(tester, tester).done(done, done);
+	}
+
+	function testShouldNotMatch(regexp, done) {
+		subject = new StepFlowView(step);
+
+		var tester = function() {
+			stdoutSpy.unmute();
+			stdoutSpy.printed().should.not.match(regexp);
+		}
+
+		stdoutSpy.mute();
+		step.test().then(tester, tester).done(done, done);
 	}
 
 
@@ -181,17 +194,39 @@ describe('Step flow view', function() {
 			});
 
 			it('should mention the expected value', function(done) {
-				testShouldContain('""', done);
+				testShouldContain('empty string', done);
 			});
 		});
 
-		describe('with a non-empty value', function() {
+		describe('with a matching value', function() {
 			before(function() {
-				VALUE = 'toto';
+				VALUE = TestWidget.expectedContents.id;
+			});
+
+			it('should mention the matched value', function(done) {
+				testShouldContain(VALUE, done);
+			});
+
+			it('should not mention that the "value" matcher fails', function(done) {
+				testShouldNotMatch(/Error|null/, done);
+			});
+		});
+
+		describe('with a non-matching value', function() {
+			before(function() {
+				VALUE = 'herpaderp';
 			});
 
 			it('should mention the expected value', function(done) {
 				testShouldContain(VALUE, done);
+			});
+
+			it('should mention the actual value', function(done) {
+				testShouldContain(TestWidget.expectedContents.id, done);
+			});
+
+			it('should not mention that the "value" matcher fails', function(done) {
+				testShouldNotMatch(/Error|null/, done);
 			});
 		});
 	});
