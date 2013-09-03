@@ -38,11 +38,18 @@ var FunctionalStep = new Class({
 	*@see	AbstractStep#getDescription
 	*/
 	getDescription: function getDescription() {
-		if (this.action.widget)	// this is a Widget action
+		if (this.action.widget) {	// this is a Widget action
 			return this.describeAction();
+		} else if (this.action.name) {	// this is a custom user function, hopefully the user provided a good name for it
+			var humanized = this.action.name.humanize();
 
-		// this is a custom user function, hopefully the user provided a good name for it
-		return this.action.name || '[unnamed action]';
+			if (humanized != this.action.name)
+				humanized += ' (as ' + this.action.name + ')';
+
+			return humanized;
+		}
+
+		return '[unnamed action]';
 	},
 
 	/** Tries to describe the wrapped step, assuming it is a Widget-generated action.
@@ -59,8 +66,8 @@ var FunctionalStep = new Class({
 				+ (this.action.args.length
 					? ' with "' + this.action.args.join('", "') + '"'
 					: '')
-					? ' (as ' + this.action.element + ')'
 				+ (humanizedAction != this.action.reference	// make it easier to locate source
+					? ' (as ' + this.action.widget + '.' + this.action.reference + ')'
 					: '')
 	}
 });
