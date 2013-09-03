@@ -149,6 +149,25 @@ describe('Runner', function() {
 			}).done(done);
 		});
 
+		describe('bail option', function() {
+			it('should not evaluate a feature after one has failed', function(done) {
+				var calledCount = featureEvaluationCount,
+					subject = new Watai.Runner(config);
+
+				subject.config.bail = true;
+				subject.addFeature(failingFeature);
+				subject.addFeature(feature).test().then(
+					function() {
+						throw new Error('Resolved instead of being rejected!');
+					},
+					function() {
+						if (featureEvaluationCount > calledCount)
+							throw new Error('Bail option does not stop evaluation');
+					}
+				).done(done, done);
+			});
+		});
+
 		describe('with an unreachable Selenium server', function() {
 			var subject;
 
