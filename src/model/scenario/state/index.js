@@ -4,11 +4,10 @@
 * You can access them through this hash.
 */
 var matchers = {
-	VisibilityMatcher:	require('./VisibilityMatcher'),
-	ContentMatcher:		require('./ContentMatcher'),
-	RegExpTextMatcher:	require('./RegExpTextMatcher'),
-	RegExpValueMatcher:	require('./RegExpValueMatcher'),
-	FunctionMatcher:	require('./FunctionMatcher')
+	VisibilityMatcher	: require('./VisibilityMatcher'),
+	ContentMatcher		: require('./ContentMatcher'),
+	ContentRegExpMatcher: require('./ContentRegExpMatcher'),
+	FunctionMatcher		: require('./FunctionMatcher')
 }
 
 /** Returns an array of all matcher classes that are able to test for the given expected value.
@@ -24,8 +23,7 @@ matchers.allFor = function allMatchersFor(expected) {
 	} else if (typeof expected == 'function') {
 		result.push(matchers.FunctionMatcher);
 	} else if (expected.constructor && expected.constructor.name === 'RegExp') {	// since elements are loaded in a separate context, the `instanceof` fails, as it compares constructors references
-		result.push(matchers.RegExpValueMatcher);
-		result.push(matchers.RegExpTextMatcher);
+		result.push(matchers.ContentRegExpMatcher);
 	} else {
 		result.push(matchers.ContentMatcher);
 	}
