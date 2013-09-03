@@ -47,7 +47,7 @@ var Widget = new Class( /** @lends Widget# */ {
 				}
 
 				action.widget = widget;
-				action.element = key;
+				action.reference = key;
 				action.title = method.name;
 				action.args = args;
 
@@ -85,7 +85,7 @@ var Widget = new Class( /** @lends Widget# */ {
 				}
 
 				action.widget = widget;
-				action.element = basename;
+				action.reference = basename;
 				action.title = basename;
 				action.args = args;
 

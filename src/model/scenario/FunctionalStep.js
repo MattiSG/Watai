@@ -51,7 +51,7 @@ var FunctionalStep = new Class({
 	*@see	Widget
 	*/
 	describeAction: function describeAction() {
-		var humanizedAction = (this.action.title || this.action.element).humanize()	// makes naming functions themselves optional, but let them have higher precedence: users can thus provide more details in function names without making it long to access them in tests
+		var humanizedAction = (this.action.title || this.action.reference).humanize()	// makes naming functions themselves optional, but let them have higher precedence over widget key: users can thus provide more details in function names without making it long to access them in tests
 
 		return	this.action.widget
 				+ ' '
@@ -59,8 +59,8 @@ var FunctionalStep = new Class({
 				+ (this.action.args.length
 					? ' with "' + this.action.args.join('", "') + '"'
 					: '')
-				+ (humanizedAction != this.action.element	// make it easier to locate source
 					? ' (as ' + this.action.element + ')'
+				+ (humanizedAction != this.action.reference	// make it easier to locate source
 					: '')
 	}
 });
