@@ -11,6 +11,9 @@ var StepVerbose = new Class({
 	/** Presents details of a test success to the user.
 	*/
 	showSuccess: function showSuccess() {
+		if (this.model.type == 'state')
+			return;
+
 		this.animator.log('      ┝', 'info', this.model.getDescription());
 	},
 
@@ -19,6 +22,9 @@ var StepVerbose = new Class({
 	*@param	{String}	reason	Details on the failure.
 	*/
 	showFailure: function showFailure(reason) {
+		if (this.model.type == 'state')
+			return;
+
 		this.animator.log('      ┝', 'cyan', reason, 'cyan');
 	}
 });

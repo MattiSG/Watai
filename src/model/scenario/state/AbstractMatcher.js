@@ -14,7 +14,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 
 	/** The type of content this matcher can match an element on.
 	*/
-	type: 'abstract',
+	type: 'abstract matcher',
 
 	/** The value this matcher should look for.
 	*/

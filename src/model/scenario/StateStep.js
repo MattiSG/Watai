@@ -6,6 +6,8 @@ var stateMatchers = require('./state');
 var StateStep = new Class(/** @lends state.StateStep# */{
 	Extends: require('./AbstractStep'),
 
+	type: 'state',
+
 	/** The dictionary of all widgets within which the given state assertion should be understood.
 	*
 	*@type	{Hash.<String, Widget>}

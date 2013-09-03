@@ -4,6 +4,8 @@ var promises = require('q');
 var FunctionalStep = new Class({
 	Extends: require('./AbstractStep'),
 
+	type: 'functional',
+
 	/** A function, promise-returning or not, to be executed. If it throws, or returns a rejected promise, this step will fail. Otherwise, it will succeed.
 	*
 	*@type	{Function}

@@ -19,6 +19,13 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 	Extends: require('events').EventEmitter,
 
+	/** Unique identifier for this type of step.
+	* To be redefined by inheriting classes.
+	*
+	*@type	{String}
+	*/
+	type: 'abstract step',
+
 	/** Time, in milliseconds, before the lack of validation is considered an actual failure.
 	*
 	*@type	{Number}
