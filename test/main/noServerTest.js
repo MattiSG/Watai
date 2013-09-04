@@ -6,14 +6,13 @@ var BIN = './src/index.js';
 
 describe('with no reachable server', function() {
 	var subject,
-		detailsGiven = false;
+		message;
 
 	before(function() {
-		subject = spawn(BIN, [ '--config', '{"seleniumServerURL":"http://0.0.0.0:3333"}', 'example/DuckDuckGo' ]);
+		subject = spawn(BIN, [ '--config', '{"seleniumServerURL":"http://0.0.0.0:3333","views":["CLI"]}', 'test/resources/SucceedingSuite' ]);	// activate a view in order to test message clarity
 
 		subject.stderr.on('data', function(data) {
-			if (data.toString().match(/server/))
-				detailsGiven = true;
+			message = data.toString();
 		});
 	});
 
@@ -27,6 +26,6 @@ describe('with no reachable server', function() {
 	});
 
 	it('should give details', function() {
-		detailsGiven.should.be.true;
+		message.should.match(/server/);
 	});
 });

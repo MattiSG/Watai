@@ -102,7 +102,12 @@ var Runner = new Class( /** @lends Runner# */ {
 		}
 
 		try {
-			return url.format(config[key]);	// allow taking objects describing the URL
+			var result = url.format(config[key]);	// allow taking objects describing the URL
+
+			if (! result)
+				throw 'parsed value is empty';	// [RETROCOMPATIBILITY] Node < 0.10 throws if `format`'s parameter is undefined, but ≥ 0.10 does not; to factor behavior, we'll throw ourselves
+
+			return result;
 		} catch (err) {
 			throw new Error('The given ' + key + ' ("' + config[key] + '") is unreadable (' + err.message + ')');
 		}
