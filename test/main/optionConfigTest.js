@@ -43,7 +43,7 @@ describe('--config option', function() {
 		var subject = spawn(BIN, [ '--config', 'example/DuckDuckGo' ]);
 
 		subject.on('exit', function(code) {
-			code.should.equal(1);
+			code.should.not.equal(0); // Node 0.8 returns an error code 1 and Node 0.10 returns an error code 8, for retrocompatibility we test only if the code is not a success code 0
 			done();
 		});
 	});
@@ -64,7 +64,7 @@ describe('--config option', function() {
 
 		it('should fail', function(done) {
 			subject.on('exit', function(code) {
-				code.should.equal(1);
+				code.should.not.equal(0); // Node 0.8 returns an error code 1 and Node 0.10 returns an error code 8, for retrocompatibility we test only if the code is not a success code 0
 				done();
 			});
 		});
