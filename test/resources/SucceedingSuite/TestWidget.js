@@ -1,3 +1,1 @@
-elements: {
-	present:	{ css: 'body' }
-}
+present:	{ css: 'body' }

@@ -1,6 +1,4 @@
-elements: {
-	usernameField: { id: 'profile_display_name' }
-},
+usernameField: { id: 'profile_display_name' },
 
 setUsername: function setUsername(newName) {
 	return	this.setUsernameField(newName)()

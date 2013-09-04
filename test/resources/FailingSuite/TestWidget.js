@@ -1,3 +1,1 @@
-elements: {
-	missing:	{ id: 'missing' }
-}
+missing:	{ id: 'missing' }
