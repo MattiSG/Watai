@@ -97,8 +97,8 @@ describe('Runner', function() {
 			});
 		});
 
-		after(function() {
-			subjectWithFailure.killDriver();
+		after(function(done) {
+			subjectWithFailure.killDriver().done(done, done);
 		});
 
 
@@ -149,10 +149,19 @@ describe('Runner', function() {
 			}).done(done);
 		});
 
-		describe('bail option', function() {
+		describe('with bail option', function() {
+			var subject;
+
+			before(function() {
+				subject = new Watai.Runner(config);
+			});
+
+			after(function(done) {
+				subject.killDriver().done(done, done);
+			});
+
 			it('should not evaluate a feature after one has failed', function(done) {
-				var calledCount = featureEvaluationCount,
-					subject = new Watai.Runner(config);
+				var calledCount = featureEvaluationCount;
 
 				subject.config.bail = true;
 				subject.addFeature(failingFeature);
