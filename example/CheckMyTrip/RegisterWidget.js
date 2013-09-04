@@ -1,7 +1,7 @@
 elements: {
-	firstName	: { css: '#register #register_firstName' },
-	lastName	: { css: '#register #register_lastName' },
-	submitButton: { css: '#register input[type=submit]'}
+	firstName	: '#register #register_firstName',
+	lastName	: '#register #register_lastName',
+	submitButton: '#register input[type=submit]'
 },
 
 register: function(first, last) {

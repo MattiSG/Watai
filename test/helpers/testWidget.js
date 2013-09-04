@@ -5,11 +5,11 @@ var Watai = require('./subject');
 */
 var elements = exports.elements = {
 	id									: { id: 'toto' },
-	css									: { css: '.tutu' },
 	missing								: { id: 'missing' },
 	hidden								: { id: 'hidden' },
-	regexpTestField						: { css: 'input[name="regexpTestField"]' },
-	inputField							: { css: 'input[name="field"]' },
+	css									: '.tutu',
+	regexpTestField						: 'input[name="regexpTestField"]',
+	inputField							: 'input[name="field"]',
 	changeTextareaValueNowLink			: { linkText: 'This paragraph is embedded in a link' },
 	changeTextareaValueLaterLink		: { id: 'delayLink' },
 	changeTextareaValueLaterAgainLink	: { id: 'delayLink2' },

@@ -2,7 +2,7 @@ elements: {
 	openLink			: { linkText: 'Connexion' },
 	email				: { id: 'login_email' },
 	password			: { id: 'login_password' },
-	requestPasswordLink	: { css: 'form .details a' }
+	requestPasswordLink	: 'form .details a'
 },
 
 login: function login(email, password) {
