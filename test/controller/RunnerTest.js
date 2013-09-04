@@ -97,8 +97,8 @@ describe('Runner', function() {
 			});
 		});
 
-		after(function() {
-			subjectWithFailure.killDriver();
+		after(function(done) {
+			subjectWithFailure.killDriver().done(done, done);
 		});
 
 
@@ -147,6 +147,34 @@ describe('Runner', function() {
 					throw new Error('Missing feature failures details.');
 				passed.failures = report;
 			}).done(done);
+		});
+
+		describe('with bail option', function() {
+			var subject;
+
+			before(function() {
+				subject = new Watai.Runner(config);
+			});
+
+			after(function(done) {
+				subject.killDriver().done(done, done);
+			});
+
+			it('should not evaluate a feature after one has failed', function(done) {
+				var calledCount = featureEvaluationCount;
+
+				subject.config.bail = true;
+				subject.addFeature(failingFeature);
+				subject.addFeature(feature).test().then(
+					function() {
+						throw new Error('Resolved instead of being rejected!');
+					},
+					function() {
+						if (featureEvaluationCount > calledCount)
+							throw new Error('Bail option does not stop evaluation');
+					}
+				).done(done, done);
+			});
 		});
 
 		describe('with an unreachable Selenium server', function() {
