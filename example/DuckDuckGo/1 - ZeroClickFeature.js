@@ -1,8 +1,6 @@
-{
-	description: 'Looking up an ambiguous term should make a Zero Click Info box appear.',
+description: 'Looking up an ambiguous term should make a Zero Click Info box appear.',
 
-	scenario: [
-		SearchBarWidget.searchFor(lookupTerm),
-		{ 'ZeroClickWidget.header': 'Meanings of ' + lookupTerm }
-	]
-}
+scenario: [
+	SearchBarWidget.searchFor(lookupTerm),
+	{ 'ZeroClickWidget.header': 'Meanings of ' + lookupTerm }
+]

@@ -1,7 +1,5 @@
-{
-	description: 'Trying to access a existing element should succeed.',
+description: 'Trying to access a existing element should succeed.',
 
-	scenario: [
-		{ 'TestWidget.present': true }
-	]
-}
+scenario: [
+	{ 'TestWidget.present': true }
+]

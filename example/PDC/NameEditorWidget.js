@@ -1,10 +1,8 @@
-{
-	elements: {
-		usernameField: { id: 'profile_display_name' }
-	},
+elements: {
+	usernameField: { id: 'profile_display_name' }
+},
 
-	setUsername: function setUsername(newName) {
-		return	this.setUsernameField(newName)()
-					.then(driver.submit.bind(driver));
-	}
+setUsername: function setUsername(newName) {
+	return	this.setUsernameField(newName)()
+				.then(driver.submit.bind(driver));
 }
