@@ -30,6 +30,8 @@ v0.6 [IN PROGRESS]
 `+` Add support for async functions in configuration
 `+` Add `bail` config key: if set to `true`, stops a test after the first failing feature
 `+` Almost all errors now have a proper description (server not reachable, elements not found in state assertions…)
+`+` Widgets and Features don't need an enclosing curly braces anymore
+`!` Your existing Widgets and Features will need to have their enclosing curly braces removed
 `!` Content matches against a String only
 `!` `Runner.driverInit` event is not fired anymore. API clients should use the `Runner.start` event instead.
 `~` Switch to [WD](https://github.com/admc/wd) as the underlying library
