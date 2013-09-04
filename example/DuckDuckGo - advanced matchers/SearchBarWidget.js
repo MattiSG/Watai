@@ -1,6 +1,6 @@
 elements: {
 	field:			{ name: 'q' },
-	submitButton:	{ id: 'search_button_homepage' }
+	submitButton:	'#search_button_homepage'
 },
 
 searchFor: function searchFor(term) {

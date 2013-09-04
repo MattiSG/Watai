@@ -1,7 +1,7 @@
 elements: {
 	openLink			: { linkText: 'Connexion' },
-	email				: { id: 'login_email' },
-	password			: { id: 'login_password' },
+	email				: '#login_email',
+	password			: '#login_password',
 	requestPasswordLink	: 'form .details a'
 },
 
