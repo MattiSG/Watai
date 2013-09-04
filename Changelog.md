@@ -31,6 +31,7 @@ v0.6 [IN PROGRESS]
 `+` Add `bail` config key: if set to `true`, stops a test after the first failing feature
 `+` Almost all errors now have a proper description (server not reachable, elements not found in state assertions…)
 `+` Widgets and Features don't need an enclosing curly braces anymore
+`!` Your existing Widgets will need to have their `elements` key removed
 `!` Your existing Widgets and Features will need to have their enclosing curly braces removed
 `!` Content matches against a String only
 `!` `Runner.driverInit` event is not fired anymore. API clients should use the `Runner.start` event instead.
