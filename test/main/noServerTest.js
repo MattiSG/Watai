@@ -9,7 +9,7 @@ describe('with no reachable server', function() {
 		detailsGiven = false;
 
 	before(function() {
-		subject = spawn(BIN, [ '--config', '{"seleniumServerURL":"http://0.0.0.0:3333"}', 'example/DuckDuckGo' ]);
+		subject = spawn(BIN, [ '--config', '{"seleniumServerURL":"http://0.0.0.0:3333","views":["CLI"]}', 'test/resources/SucceedingSuite' ]);	// activate a view in order to test message clarity
 
 		subject.stderr.on('data', function(data) {
 			if (data.toString().match(/server/))
