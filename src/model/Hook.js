@@ -15,6 +15,12 @@ var WATAI_SELECTOR_TYPES_TO_WEBDRIVER_TYPES = {
 	tag		: 'tag name'
 }
 
+/** Default Watai selector type
+*
+*@type	{String}
+*/
+var DEFAULT_SELECTOR_TYPE = 'css';
+
 /**@class	A Hook allows one to target a specific element on a web page.
 * It is a wrapper around both a selector and its type (css, xpath, id…).
 *
@@ -22,8 +28,15 @@ var WATAI_SELECTOR_TYPES_TO_WEBDRIVER_TYPES = {
 *@param	driver	The WebDriver instance in which the described elements are to be sought.
 */
 var Hook = function Hook(hook, driver) {
-	this.type = Object.getOwnPropertyNames(hook)[0];
-	this.selector = hook[this.type];
+
+	if (typeof hook == 'string') {
+		this.type = DEFAULT_SELECTOR_TYPE;
+		this.selector = hook;
+	}
+	else {
+		this.type = Object.getOwnPropertyNames(hook)[0]
+		this.selector = hook[this.type];
+	}
 
 	this.driver = driver;
 
