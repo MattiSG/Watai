@@ -43,10 +43,10 @@ describe('--setup option', function() {
 	it('should not do anything if passed empty options', function(done) {
 		this.timeout(30 * 1000);
 
-		var subject = spawn(BIN, [ '--setup', '{}', 'test/resources/FailingSuite' ]);
+		var subject = spawn(BIN, [ '--setup', '{}', 'test/resources/SucceedingSuite' ]);
 
 		subject.on('exit', function(code) {
-			code.should.equal(1);
+			code.should.equal(0);
 			done();
 		});
 	});
