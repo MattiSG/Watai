@@ -126,14 +126,6 @@ describe('Runner', function() {
 			}).done(done);
 		});
 
-		it('should run even if called immediately after init', function(done) {
-			this.timeout(config.browserWarmupTime);
-
-			subjectWithFailure.addFeature(feature).test().then(function() {
-				featureEvaluationCount.should.equal(3);
-			}).done(done);
-		});
-
 		it('with failing features should be rejected', function(done) {
 			this.timeout(config.browserWarmupTime);
 
@@ -150,22 +142,11 @@ describe('Runner', function() {
 		});
 
 		describe('with bail option', function() {
-			var subject;
-
-			before(function() {
-				subject = new Watai.Runner(config);
-			});
-
-			after(function(done) {
-				subject.killDriver().done(done, done);
-			});
-
 			it('should not evaluate a feature after one has failed', function(done) {
 				var calledCount = featureEvaluationCount;
 
-				subject.config.bail = true;
-				subject.addFeature(failingFeature);
-				subject.addFeature(feature).test().then(
+				subjectWithFailure.config.bail = true;
+				subjectWithFailure.addFeature(feature).test().then(
 					function() {
 						throw new Error('Resolved instead of being rejected!');
 					},
@@ -200,7 +181,7 @@ describe('Runner', function() {
 
 	describe('events', function() {
 		it('should have emitted as many "feature" events as loaded features', function() {
-			should.strictEqual(emitted.feature, 3);
+			should.strictEqual(emitted.feature, 2);
 		});
 
 		it('should have emitted as many "start" events as was started', function() {

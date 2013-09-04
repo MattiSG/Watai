@@ -1,0 +1,5 @@
+{
+	elements: {
+		present:	{ css: 'body' }
+	}
+}
