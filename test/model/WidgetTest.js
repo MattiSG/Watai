@@ -12,7 +12,7 @@ var Watai = require('../helpers/subject'),
 *@private
 */
 var checkerElements = {
-	output:	{ id: 'output' }
+	output:	'#output'
 }
 
 

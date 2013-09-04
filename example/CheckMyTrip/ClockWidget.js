@@ -1,8 +1,8 @@
 elements: {
-	field							: { css: '#clock input[type=text]' },
-	submitButton					: { css: '#clock input[type=submit]' },
-	result							: { css: '#clock .time-holder .time' },
-	selectAutocompleteResultButton	: { css: '.xLISTItem_dropdown' }
+	field							: '#clock input[type=text]' ,
+	submitButton					: '#clock input[type=submit]' ,
+	result							: '#clock .time-holder .time' ,
+	selectAutocompleteResultButton	: '.xLISTItem_dropdown'
 },
 
 lookup: function lookup(town) {

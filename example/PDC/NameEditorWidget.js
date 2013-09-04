@@ -1,5 +1,5 @@
 elements: {
-	usernameField: { id: 'profile_display_name' }
+	usernameField: '#profile_display_name'
 },
 
 setUsername: function setUsername(newName) {
