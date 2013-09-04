@@ -2,8 +2,12 @@ var promises = require('q');
 
 var stateMatchers = require('./state');
 
-
-var StateStep = new Class(/** @lends state.StateStep# */{
+/**@class	A step that parses and evaluates a widget state assertions.
+*
+*@extends	steps.AbstractStep
+*@memberOf	steps
+*/
+var StateStep = new Class(/** @lends steps.StateStep# */{
 	Extends: require('./AbstractStep'),
 
 	type: 'state',
