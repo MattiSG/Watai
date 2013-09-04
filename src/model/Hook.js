@@ -32,8 +32,7 @@ var Hook = function Hook(hook, driver) {
 	if (typeof hook == 'string') {
 		this.type = DEFAULT_SELECTOR_TYPE;
 		this.selector = hook;
-	}
-	else {
+	} else {
 		this.type = Object.getOwnPropertyNames(hook)[0]
 		this.selector = hook[this.type];
 	}
