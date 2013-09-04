@@ -44,7 +44,7 @@ This installation guide assumes a POSIX-compliant OS, such as Mac OS X or Linux.
 
 #### Node & NPM ####
 
-Watai runs as a [Node.js](http://nodejs.org) module. You will therefore need the Node runtime (v0.6+, v0.8+) and package manager (NPM).
+Watai runs as a [Node.js](http://nodejs.org) module. You will therefore need the Node runtime (v0.8, v0.10) and package manager (NPM).
 
 [Download](http://nodejs.org/download) the Node+NPM package for your environment if you don't already have it.
 
@@ -94,7 +94,7 @@ This will create a `node_modules` folder with all dependencies in the current di
 
 #### From behind a proxy ####
 
-If your proxy configuration prevents you from using `npm install` properly (i.e. you get `ERRTIMEOUT` errors), download the latest Watai **with NPM dependencies** package from the [Downloads](https://github.com/MattiSG/Watai/downloads) tab, unzip it and:
+If your proxy configuration prevents you from using `npm install` properly (i.e. you get `ERRTIMEOUT` errors), download the latest Watai **with NPM dependencies** package from the [Releases](https://github.com/MattiSG/Watai/releases) tab, unzip it and:
 
 	alias watai='node path/to/unzipped/folder/src'
 
