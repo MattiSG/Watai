@@ -23,7 +23,7 @@ var Watai					= require('./Watai'),
 
 var argsProcessor = new Preprocessor(OPTIONS_HANDLERS_DIR);
 
-var args = argsProcessor.process(process.argv);
+var args = argsProcessor.processArgv();
 
 var suites = args.remaining;
 

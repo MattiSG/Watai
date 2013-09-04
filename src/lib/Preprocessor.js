@@ -1,8 +1,22 @@
 var path = require('path');
 
-
+/** A parser for arguments that loads “plugins”, i.e. Node modules, based on options passed in UNIX long style (i.e. with two dashes).
+*
+*@class	Loads plugins based on options passed in UNIX long style.
+*/
 var Preprocessor = function Preprocessor(pluginsDir) {
 	this.pluginsDir = pluginsDir;
+}
+
+/** Loads plugins based on arguments passed to the main Node process.
+*
+*@return	{Hash}	A hash whose keys are the processed plugins, mapped to their result; plus a magic key 'remaining' containing all non-processed args.
+*@see		Preprocessor#processAll
+*/
+Preprocessor.prototype.processArgv = function processArgv() {
+	var args = process.argv.slice(2);	// extract CLI arguments, see http://docs.nodejitsu.com/articles/command-line/how-to-parse-command-line-arguments
+
+	return this.processAll(args);
 }
 
 /** Loads plugins based on any passed options.
@@ -12,12 +26,6 @@ var Preprocessor = function Preprocessor(pluginsDir) {
 *
 *@return	{Hash}	A hash whose keys are the processed plugins, mapped to their result; plus a magic key 'remaining' containing all non-processed args.
 */
-Preprocessor.prototype.process = function process(args) {
-	args = args.slice(2);	// extract CLI arguments, see http://docs.nodejitsu.com/articles/command-line/how-to-parse-command-line-arguments
-
-	return this.processAll(args);
-}
-
 Preprocessor.prototype.processAll = function processAll(args) {
 	var result = {
 		remaining: []
