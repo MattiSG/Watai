@@ -28,9 +28,7 @@ describe('Widget', function() {
 		expectedOutputs = testWidget.expectedOutputs;
 		subject = testWidget.getWidget(my.driver);
 
-		checker = new Watai.Widget('Events results widget', {
-			elements: checkerElements
-		}, my.driver);
+		checker = new Watai.Widget('Events results widget', checkerElements, my.driver);
 	});
 
 	describe('parsing', function() {
@@ -39,7 +37,7 @@ describe('Widget', function() {
 				if (elements.hasOwnProperty(key)
 					&& key != 'missing') {	// Should.js' property checker accesses the property, which would therefore make the missing element throw because it is unreachable
 					subject.should.have.property(key);
-					should(typeof subject[key] == 'object');	// prototype of WebDriver internal objects is not augmented
+					should(typeof subject[key] == 'object', 'Key "' + key + '" is not an object');	// prototype of WebDriver internal objects is not augmented
 				}
 		});
 
@@ -65,21 +63,19 @@ describe('Widget', function() {
 
 		Object.each({
 			changeTextareaValueNow	: 'changeTextareaValueNowLink',
-			press			: 'pressButton',
-			toggle			: 'toggleCheckbox',
-			select			: 'selectRadio'
+			press					: 'pressButton',
+			toggle					: 'toggleCheckbox',
+			select					: 'selectRadio'
 		}, function(elementName, action) {
-
-			it('should bind magically created `' + elementName.replace(action, '') + '` methods to clicking', function(done) {
+			it('should bind magically created click actions on "' + elementName.replace(action, '') + '"-ending elements', function(done) {
 				subject[action]()().then(function() {
-					checker.output.then(function(element) {
-						return element.text();
-					}).then(function(text) {
-						text.should.equal(expectedOutputs[elementName]);
-					}).done(done);
-				});
+					return checker.output;
+				}).then(function(checkerOutput) {
+					return checkerOutput.text();
+				}).then(function(checkerOutputText) {
+					checkerOutputText.should.equal(expectedOutputs[elementName]);
+				}).done(done, done);
 			});
-
 		});
 
 
