@@ -308,8 +308,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		try {
 			vm.runInContext(widgetName + ' = '
 							+ '__widgets__["' + widgetName + '"] = '
-							+ 'new Widget("' + widgetName + '",'
-							+ fs.readFileSync(widgetFile) + ','
+							+ 'new Widget("' + widgetName + '", '
+							+ '{' + fs.readFileSync(widgetFile) + '},'
 							+ 'driver);',
 							this.context,
 							widgetFile);
@@ -341,7 +341,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		];
 
 		try {
-			vm.runInContext('var featureContents = ' + fs.readFileSync(featureFile) + ';'
+			vm.runInContext('var featureContents = {' + fs.readFileSync(featureFile) + '};'
 							+ '__features__.push(new Feature('
 							+ featureParams.join(',')
 							+ '));',

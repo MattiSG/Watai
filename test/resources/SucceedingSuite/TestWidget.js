@@ -1,5 +1,3 @@
-{
-	elements: {
-		present:	{ css: 'body' }
-	}
+elements: {
+	present:	{ css: 'body' }
 }
