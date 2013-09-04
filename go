@@ -100,9 +100,11 @@ case "$1" in
 		open $DOC_DIR/api/index.html
 		exit 0 ;;
 	dev )
+		echo "Installing user dependencies…"
+		npm install .
 		echo "Temporarily disabling shrinkwrap…"
 		mv "npm-shrinkwrap.json" "npm-shrinkwrap.json~"
-		echo "Installing dev dependencies"
+		echo "Installing dev dependencies…"
 		npm install .
 		echo "Re-enabling shrinkwrap"
 		mv "npm-shrinkwrap.json~" "npm-shrinkwrap.json"
