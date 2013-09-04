@@ -98,7 +98,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		}
 
 		if (! config.name)
-			config.name = pathsUtils.basename(this.path, '/');	// remove a possible trailing separator
+			config.name = pathsUtils.basename(this.path, '/');	// [RETROCOMPATIBILITY] remove a possible trailing separator for Node < 0.9.6
 
 		if (config.browser) {
 			if (! browserCapabilitiesMap[config.browser]) {
