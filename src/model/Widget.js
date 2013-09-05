@@ -72,7 +72,7 @@ var Widget = new Class( /** @lends Widget# */ {
 			if (typeof value != 'function')
 				result.elements[key] = value;
 			else
-				result.actions[key] = value
+				result.actions[key] = value;
 		});
 
 		return result;
