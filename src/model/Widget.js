@@ -18,21 +18,21 @@ var Widget = new Class( /** @lends Widget# */ {
 	*
 	*@constructs
 	*@param	{String}	name	User-visible name of this widget.
-	*@param	{Hash}		values	A hash describing a widget's elements and methods. Keys will be made available directly on the resulting test widget, and associated values can be hooks for elements or functions for methods.
+	*@param	{Hash}		values	A hash describing a widget's elements and actions. Keys will be made available directly on the resulting test widget, and associated values can be hooks for elements or functions for actions.
 	*@param	{WebDriver}	driver	The WebDriver instance in which this widget should look for its elements.
 	*/
 	initialize: function init(name, values, driver) {
 		this.name = name;
 
 		var widget				= this,
-			elementsAndMethods	= this.extractElementsAndMethods(values);
+			elementsAndActions	= this.extractElementsAndActions(values);
 
-		Object.each(elementsAndMethods.elements, function(typeAndSelector, key) {
+		Object.each(elementsAndActions.elements, function(typeAndSelector, key) {
 			Hook.addHook(widget, key, typeAndSelector, driver);
 			widget.addMagic(key);
 		});
 
-		Object.each(elementsAndMethods.methods, function(method, key) {
+		Object.each(elementsAndActions.actions, function(method, key) {
 			widget[key] = function() {
 				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
 
@@ -53,32 +53,32 @@ var Widget = new Class( /** @lends Widget# */ {
 		});
 	},
 
-	/** Extract elements and methods from the given parameter
+	/** Extract elements and actions from the given parameter
 	*
-	*@param	{Hash} values	A hash describing a widget's elements and methods. Keys will be made available directly on the resulting test widget, and associated values can be hooks for elements or functions for methods.
+	*@param	{Hash} values	A hash describing a widget's elements and actions. Keys will be made available directly on the resulting test widget, and associated values can be hooks for elements or functions for actions.
 	*@return {Hash} A hash containing the following keys:
 	*	- `elements`: A hash mapping all hook names to their description.
-	*	- `methods`: A hash mapping all method names to the actual function.
+	*	- `actions`: A hash mapping all method names to the actual function.
 	*@see Hook
 	*@private
 	*/
-	extractElementsAndMethods: function extractElementsAndMethods(values) {
+	extractElementsAndActions: function extractElementsAndActions(values) {
 		var result = {
 			elements: {},
-			methods: {}
+			actions: {}
 		};
 
 		Object.each(values, function(value, key) {
 			if (typeof value != 'function')
 				result.elements[key] = value;
 			else
-				result.methods[key] = value
+				result.actions[key] = value
 		});
 
 		return result;
 	},
 
-	/** Add magic methods on specially-formatted elements.
+	/** Add magic actions on specially-formatted elements.
 	* _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`.
 	*
 	*@param	{String}	key	The key that should be considered for adding magic elements.
@@ -129,7 +129,7 @@ var Widget = new Class( /** @lends Widget# */ {
 /** Maps magic element regexps from the action that should be generated.
 * _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`._
 *
-* Keys are names of the methods that should be added to the element, and values are regexps that trigger the magic.
+* Keys are names of the actions that should be added to the element, and values are regexps that trigger the magic.
 * The name of the generated member is the content of the first capturing parentheses match in the regexp.
 *
 *@see	RegExp#exec
