@@ -1,9 +1,7 @@
-elements: {
-	field							: { css: '#clock input[type=text]' },
-	submitButton					: { css: '#clock input[type=submit]' },
-	result							: { css: '#clock .time-holder .time' },
-	selectAutocompleteResultButton	: { css: '.xLISTItem_dropdown' }
-},
+field							: { css: '#clock input[type=text]' },
+submitButton					: { css: '#clock input[type=submit]' },
+result							: { css: '#clock .time-holder .time' },
+selectAutocompleteResultButton	: { css: '.xLISTItem_dropdown' },
 
 lookup: function lookup(town) {
 	return	this.setField(town)()	// immediate execution to start the chain

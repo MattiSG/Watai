@@ -55,9 +55,7 @@ exports.expectedOutputs = {
 *@see	#elements
 */
 exports.getWidget = function(driver) {
-	return new Watai.Widget('Test widget', {
-
-		elements: elements,
+	return new Watai.Widget('Test widget', Object.merge({
 
 		submit: function submit(value) {
 			return	this.setInputField(value)()
@@ -67,5 +65,5 @@ exports.getWidget = function(driver) {
 		beClever: function doSomethingVeryClever() {	// used in report view test
 			return true;
 		}
-	}, driver);
+	}, elements), driver);
 }

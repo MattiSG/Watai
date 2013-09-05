@@ -26,16 +26,15 @@ var Widget = new Class( /** @lends Widget# */ {
 	initialize: function init(name, values, driver) {
 		this.name = name;
 
-		var widget = this;
+		var widget				= this,
+			elementsAndMethods	= this.extractElementsAndMethods(values);
 
-		Object.each(values.elements, function(typeAndSelector, key) {
+		Object.each(elementsAndMethods.elements, function(typeAndSelector, key) {
 			Hook.addHook(widget, key, typeAndSelector, driver);
 			widget.addMagic(key);
 		});
 
-		delete values.elements;	// this key is magic, we don't want to iterate over it, as other keys are user-defined actions
-
-		Object.each(values, function(method, key) {
+		Object.each(elementsAndMethods.methods, function(method, key) {
 			widget[key] = function() {
 				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
 
@@ -56,6 +55,29 @@ var Widget = new Class( /** @lends Widget# */ {
 		});
 	},
 
+	/** Extract elements and methods from the given parameter
+	*
+	*@param	values	A hash with the following form:
+	*	`elements`: a hash mapping attribute names to a hook. A hook is a one-pair hash mapping a selector type to an actual selector.
+	*	a series of methods definitions, i.e. `name: function name(…) { … }`, that will be made available
+	*@private
+	*/
+	extractElementsAndMethods: function extractElementsAndMethods(values) {
+		var result = {
+			elements: {},
+			methods: {}
+		};
+
+		Object.each(values, function(value, key) {
+			if (typeof value != 'function')
+				result.elements[key] = value;
+			else
+				result.methods[key] = value
+		});
+
+		return result;
+	},
+
 	/** Add magic methods on specially-formatted elements.
 	* _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`.
 	*
@@ -65,7 +87,6 @@ var Widget = new Class( /** @lends Widget# */ {
 	*/
 	addMagic: function addMagic(key) {
 		var widget = this;
-
 		Object.each(Widget.magic, function(matcher, method) {
 			var matches = matcher.exec(key);
 
