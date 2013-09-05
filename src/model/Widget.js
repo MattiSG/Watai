@@ -17,11 +17,9 @@ var Widget = new Class( /** @lends Widget# */ {
 	/**@class	Models a set of controls on a website.
 	*
 	*@constructs
-	*@param	name	User-visible name of this widget.
-	*@param	values	A hash with the following form:
-	*	`elements`: a hash mapping attribute names to a hook. A hook is a one-pair hash mapping a selector type to an actual selector.
-	*	a series of methods definitions, i.e. `name: function name(…) { … }`, that will be made available
-	*@param	driver	The WebDriver instance in which this widget should look for its elements.
+	*@param	{String}	name	User-visible name of this widget.
+	*@param	{Hash}		values	A hash describing a widget's elements and methods. Keys will be made available directly on the resulting test widget, and associated values can be hooks for elements or functions for methods.
+	*@param	{WebDriver}	driver	The WebDriver instance in which this widget should look for its elements.
 	*/
 	initialize: function init(name, values, driver) {
 		this.name = name;
@@ -57,9 +55,11 @@ var Widget = new Class( /** @lends Widget# */ {
 
 	/** Extract elements and methods from the given parameter
 	*
-	*@param	values	A hash with the following form:
-	*	`elements`: a hash mapping attribute names to a hook. A hook is a one-pair hash mapping a selector type to an actual selector.
-	*	a series of methods definitions, i.e. `name: function name(…) { … }`, that will be made available
+	*@param	{Hash} values	A hash describing a widget's elements and methods. Keys will be made available directly on the resulting test widget, and associated values can be hooks for elements or functions for methods.
+	*@return {Hash} A hash containing the following keys:
+	*	- `elements`: A hash mapping all hook names to their description.
+	*	- `methods`: A hash mapping all method names to the actual function.
+	*@see Hook
 	*@private
 	*/
 	extractElementsAndMethods: function extractElementsAndMethods(values) {
@@ -87,6 +87,7 @@ var Widget = new Class( /** @lends Widget# */ {
 	*/
 	addMagic: function addMagic(key) {
 		var widget = this;
+
 		Object.each(Widget.magic, function(matcher, method) {
 			var matches = matcher.exec(key);
 
