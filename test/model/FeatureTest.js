@@ -138,20 +138,18 @@ describe('Feature', function() {
 
 	describe('unclickable elements', function() {
 		it('should respect the global timeout', function(done) {
+			this.timeout(GLOBAL_TIMEOUT * 5);
+
 			var start = new Date();
 
 			featureWithScenario([
 				WidgetTest.overlayedAction(),
 				{ 'TestWidget.output': expectedOutputs.overlayedActionLink }
-			]).test().done(function() {
-				done(new Error('Passed while the overlayed element should not have been clickable!'));
+			]).test().then(function() {
+				throw new Error('Passed while the overlayed element should not have been clickable!');
 			}, function() {
-				var waitedMs = new Date() - start;
-				if (waitedMs >= GLOBAL_TIMEOUT)
-					done();
-				else
-					done(new Error('Waited only ' + waitedMs + ' ms instead of at least ' + GLOBAL_TIMEOUT + ' ms.'));
-			});
+				(new Date().getTime()).should.be.above(start.getTime() + GLOBAL_TIMEOUT);
+			}).done(done, done);
 		});
 
 		it('should give human-readable details', function(done) {
