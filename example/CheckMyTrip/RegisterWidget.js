@@ -1,8 +1,6 @@
-elements: {
-	firstName	: '#register #register_firstName',
-	lastName	: '#register #register_lastName',
-	submitButton: '#register input[type=submit]'
-},
+firstName	: '#register #register_firstName',
+lastName	: '#register #register_lastName',
+submitButton: '#register input[type=submit]',
 
 register: function(first, last) {
 	return	this.setFirstName(first)()

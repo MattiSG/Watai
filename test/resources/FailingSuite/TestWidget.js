@@ -1,3 +1,1 @@
-elements: {
-	missing: '#missing'
-}
+missing: '#missing'

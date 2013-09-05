@@ -1,9 +1,7 @@
-elements: {
-	email	: '#request_email',
-	captcha	: '#recaptcha_response_field'
-},
+email	: '#request_email',
+captcha	: '#recaptcha_response_field',
 
-askFor: function(address) {
+askFor: function requestPasswordFor(address) {
 	return	this.setEmail(address)()
 				.then(driver.submit.bind(driver));
 }

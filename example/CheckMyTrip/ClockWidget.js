@@ -1,18 +1,16 @@
-elements: {
-	field							: '#clock input[type=text]' ,
-	submitButton					: '#clock input[type=submit]' ,
-	result							: '#clock .time-holder .time' ,
-	selectAutocompleteResultButton	: '.xLISTItem_dropdown'
-},
+field							: '#clock input[type=text]' ,
+submitButton					: '#clock input[type=submit]' ,
+result							: '#clock .time-holder .time' ,
+selectAutocompleteResultButton	: '.xLISTItem_dropdown',
 
-lookup: function lookup(town) {
+lookup: function(town) {
 	return	this.setField(town)()	// immediate execution to start the chain
 				.delay(800)
 				.then(this.setField('\ue015'))	// down arrow
 				.then(this.submit());
 },
 
-getCurrentHour: function getCurrentHour() {
+getCurrentHour: function() {
 	return this.result.then(function(resultElement) {
 		return resultElement.text();
 	}).then(function(text) {

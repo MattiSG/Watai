@@ -16,15 +16,14 @@ describe('Widget usage within Feature', function() {
 			partTwo = 'two';
 
 		before(function() {
-			widget = new Watai.Widget('Test widget 2', {
-				elements: testWidget.elements,
+			widget = new Watai.Widget('Test widget 2', Object.merge({
 				setMarker: function setMarker(one) {
 					calledMarker = one;
 				},
 				concatenateTwo: function concatenateTwo(first, second) {
 					calledMarker = first + second;
 				}
-			}, my.driver);
+			}, testWidget.elements), my.driver);
 		});
 
 

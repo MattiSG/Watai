@@ -1,7 +1,5 @@
-elements: {
-	field:			{ name: 'q' },
-	submitButton:	'#search_button_homepage'
-},
+field:			{ name: 'q' },
+submitButton:	'#search_button_homepage',
 
 searchFor: function searchFor(term) {
 	return	this.setField(term)()
