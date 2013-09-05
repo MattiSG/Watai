@@ -1,6 +1,6 @@
 elements: {
-	email	: { id: 'request_email' },
-	captcha	: { id: 'recaptcha_response_field' }
+	email	: '#request_email',
+	captcha	: '#recaptcha_response_field'
 },
 
 askFor: function(address) {

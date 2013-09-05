@@ -30,6 +30,16 @@ describe('Hook', function() {
 
 
 	describe('selector', function() {
+		describe('default to css', function() {
+			var hookName = 'css';
+
+			before(function() {
+				Watai.Hook.addHook(hooksTarget, hookName, '#toto', my.driver);
+			});
+
+			checkHook(hooksTarget, hookName, 'This paragraph has id toto');
+		});
+
 		describe('with ID', function() {
 			var hookName = 'id';
 

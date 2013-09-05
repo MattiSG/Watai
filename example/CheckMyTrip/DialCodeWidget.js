@@ -1,7 +1,7 @@
 elements: {
-	selector		: { css: '#dialingCode input[type=text]' },
-	submitButton	: { css: '#dialingCode input[type=submit]' },
-	result			: { css: '#dialingCode .result-wrapper .main' },
+	selector		: '#dialingCode input[type=text]' ,
+	submitButton	: '#dialingCode input[type=submit]' ,
+	result			: '#dialingCode .result-wrapper .main'
 },
 
 lookup: function lookup(country) {
