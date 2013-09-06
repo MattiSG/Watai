@@ -20,7 +20,9 @@ var SETUP_FILE = 'setup';
 */
 var setup = {};
 
-
+/** Loads test runner setup configuration.
+* Differs from loading a suite in that the "setup" is needed for application bootstrapping.
+*/
 var SetupLoader = {
 
 	/** Reloads the setup data.

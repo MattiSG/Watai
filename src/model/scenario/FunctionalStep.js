@@ -1,7 +1,12 @@
 var promises = require('q');
 
-
-var FunctionalStep = new Class({
+/**@class	A step that parses and evaluates a function in a scenario.
+* A function may be a widget action, or a user-provided function.
+*
+*@extends	steps.AbstractStep
+*@memberOf	steps
+*/
+var FunctionalStep = new Class(/** @lends steps.FunctionalStep# */{
 	Extends: require('./AbstractStep'),
 
 	type: 'functional',
@@ -15,6 +20,7 @@ var FunctionalStep = new Class({
 
 	/**
 	*@param	{Function}	action	A function, promise-returning or not, to be executed. If it throws, or returns a rejected promise, this step will fail. Otherwise, it will succeed.
+	*@constructs
 	*/
 	initialize: function init(action) {
 		this.action = action;

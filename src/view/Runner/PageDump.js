@@ -27,6 +27,8 @@ var RunnerPageDump = new Class(/** @lends RunnerPageDump# */{
 	*/
 	pageSourcePromise: null,
 
+	/** Events that are listened to.
+	*/
 	events: {
 		feature: function(feature) {
 			if (this.attached)

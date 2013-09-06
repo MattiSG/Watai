@@ -18,7 +18,7 @@ WindowsCLI.log = function log(prefix, type, message, messageType) {
 
 /** Erases the current line.
 */
-CLIanimator.clear = function clear() {
+WindowsCLI.clear = function clear() {
 	process.stdout.write('\r');
 }
 
