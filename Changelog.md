@@ -39,6 +39,7 @@ v0.6 [IN PROGRESS]
 `~` Switch to [WD](https://github.com/admc/wd) as the underlying library ([#89](https://github.com/MattiSG/Watai/pull/89)).
 `~` Growl view gives much more details.
 `~` Explicit setters (`set<ElementName>`) now have precedence over magic setters.
+`~` `--installed` exits with `1` instead of `3` if Watai is not installed properly.
 `#` Compatibility with Node 0.10 has improved ([#90](https://github.com/MattiSG/Watai/pull/90)).
 
 

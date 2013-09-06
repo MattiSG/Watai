@@ -13,7 +13,7 @@ function isInstalled() {
 
 
 /** Presents the user with a message telling if this software passes a quick smoke test, and gives the main reason if not.
-* Exits the running process afterwards.
+* Exits the running process afterwards, with `0` if installed properly or nonzero otherwise.
 */
 function tellUserInstallationStatus() {
 	var evaluation = isInstalled();
@@ -25,7 +25,7 @@ function tellUserInstallationStatus() {
 		console.error('**Watai has not been installed properly, please make sure you followed all installation instructions.**');
 		console.error('Main reason: ' + evaluation.message + '.');
 		console.error('See http://github.com/MattiSG/Watai for details.');
-		process.exit(3);
+		process.exit(1);
 	}
 }
 
