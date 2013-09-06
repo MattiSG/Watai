@@ -21,8 +21,10 @@ To simplify upgrades, each line in a changelog message is prefixed with one of t
 - `#`: bugfix
 
 
-v0.6 [IN PROGRESS]
+v0.6
 ----
+
+An [upgrade guide](https://github.com/MattiSG/Watai/wiki/Upgrading-from-v0-5-to-v0-6) is available to help you update your tests through breaking changes.
 
 `+` Automatic file upload support: if you set a file field to a local file path, the file will be [sent to the Selenium server](http://sauceio.com/index.php/2012/03/selenium-tips-uploading-files-in-remote-webdriver/), making test assets available anywhere automatically.
 `+` Add [support for (async) functions in configuration](https://github.com/MattiSG/Watai/wiki/Configuration#async-config).
