@@ -6,6 +6,7 @@ var promises =	require('q');
 * A _matcher_ is an object that handles state descriptors, i.e. each key/value pair in a state description object from a Feature’s scenario.
 * Implementing a new matcher, i.e. offering a new content comparison type, is very easy: simply extend this class, taking example on the existing concrete matchers, and redefine at least `onElementFound`, calling `this.succeed`, `this.fail` and/or `this.compare`.
 *
+*@extends	steps.AbstractStep
 *@memberOf	matchers
 */
 var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
