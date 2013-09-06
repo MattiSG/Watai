@@ -26,21 +26,22 @@ Writers: use the present tense.
 v0.6 [IN PROGRESS]
 ----
 
-`+` Automatic file upload support.
-`+` Add support for async functions in configuration.
-`+` Add `bail` config key: if set to `true`, stops a test after the first failing feature.
+`+` Automatic file upload support: if you set a file field to a local file path, the file will be [sent to the Selenium server](http://sauceio.com/index.php/2012/03/selenium-tips-uploading-files-in-remote-webdriver/), making test assets available anywhere automatically.
+`+` Add [support for (async) functions in configuration](https://github.com/MattiSG/Watai/wiki/Configuration#async-config).
+`+` Add [`bail` config key](https://github.com/MattiSG/Watai/wiki/Configuration#bail): if set to `true`, stops a test after the first failing feature.
 `+` Almost all errors now have a proper description (server not reachable, elements not found in state assertions, widget actions failures…).
-`+` Authentication data is now taken from `seleniumServerURL`, allowing distant services such as SauceLabs to be used.
-`+` Meta-data fields `name`, `tags` and `build` are now parsed in config files and sent to the Selenium server.
-`+` There is now a default hook type: `css`. If you target an element with only a String, it will be considered as a CSS selector.
-`!` Widgets' elements and actions are now declared in a single hash. Your existing Widgets will need to have their `elements` key removed.
-`!` Widgets and Features don't need an enclosing curly braces anymore. Your existing Widgets and Features will need to have their enclosing curly braces removed.
+`+` Authentication data is now taken from [`seleniumServerURL`](https://github.com/MattiSG/Watai/wiki/Configuration#seleniumserverurl), allowing distant services such as SauceLabs to be used.
+`+` [Metadata fields](https://github.com/MattiSG/Watai/wiki/Configuration#metadata) `name`, `tags` and `build` are now parsed in config files and sent to the Selenium server.
+`+` There is now a default hook type: `css` ([#92](https://github.com/MattiSG/Watai/pull/92)). If you target an element with only a String, it will be considered as a CSS selector.
+`!` Widgets' elements and actions are now declared in a single hash ([#94](https://github.com/MattiSG/Watai/pull/94)). Your existing Widgets will need to have their `elements` key removed.
+`!` Widgets and Features don't need an enclosing curly braces anymore ([#91](https://github.com/MattiSG/Watai/pull/91)). Your existing Widgets and Features will need to have their enclosing curly braces removed.
 `!` Content matches against a String only.
 `!` `Runner.driverInit` event is not fired anymore. API clients should use the `Runner.start` event instead.
 `!` `Runner.restart` event is not fired anymore. API clients should use the `Runner.start` event instead.
-`~` Switch to [WD](https://github.com/admc/wd) as the underlying library.
+`~` Switch to [WD](https://github.com/admc/wd) as the underlying library ([#89](https://github.com/MattiSG/Watai/pull/89)).
 `~` Growl view gives much more details.
 `~` Explicit setters (`set<ElementName>`) now have precedence over magic setters.
+`#` Compatibility with Node 0.10 has improved ([#90](https://github.com/MattiSG/Watai/pull/90)).
 
 
 v0.5
