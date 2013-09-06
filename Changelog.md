@@ -20,8 +20,6 @@ To simplify upgrades, each line in a changelog message is prefixed with one of t
 - `~`: minor behavior change, might impact your tests or usage on some cases
 - `#`: bugfix
 
-Writers: use the present tense.
-
 
 v0.6 [IN PROGRESS]
 ----
