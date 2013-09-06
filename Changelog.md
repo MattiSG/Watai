@@ -47,38 +47,38 @@ v0.5
 
 ### v0.5.2
 
-`+` Config may be set through (a)sync functions
+`+` Config may be set through (a)sync functions.
 `~` Q promises updated to 0.9.6, bringing many new possibilities for API clients.
 
 
 ### v0.5.1
 
-`+` Add a `--config` option to override config at run time
-`+` Add a `--setup` option to override setup at run time
+`+` Add a `--config` option to override config at run time.
+`+` Add a `--setup` option to override setup at run time.
 `+` URLs in config (base, selenium) may be provided as URL objects instead of pure strings, allowing for specific overrides. Compatibility with strings is still offered, and will be maintained.
-`+` Add a `browser` config shortcut with usual defaults for `desiredCapabilities`
-`+` Default view now includes "Instafail"
-`~` Failure reports now give the exact spent time, not the expected timeout
+`+` Add a `browser` config shortcut with usual defaults for `desiredCapabilities`.
+`+` Default view now includes "Instafail".
+`~` Failure reports now give the exact spent time, not the expected timeout.
 `~` Setup options are now loaded from setup files. This is not considered breaking since loading them from config never worked.
-`~` Minor visual improvements to the Flow view
-`#` Fix default config values not being loaded in some cases
+`~` Minor visual improvements to the Flow view.
+`#` Fix default config values not being loaded in some cases.
 
 
 ### v0.5.0
 
 `+` Add "Flow" view, a more detailed step-by-step view of all actions, non-interactive for compatibility with headless environments.
 `+` Add "PageDump" view: if activated, a failure in the first feature will trigger a page source dump. Useful in headless environments.
-`+` Report failures in real-time
-`+` Show feature ID for easier identification
-`+` Warn when no features are found in a suite
-`+` Add magic for "Option" elements
-`!` Only one suite may be loaded at a time, no more CLI varargs
-`~` Much improved tests speed
-`~` "test" is now a valid suite name
-`~` Remove the need for log-level config tweaking
-`~` Made magic methods much more resilient
-`~` Correct a minor Dots view summary phrasing inconsistency
-`~` Improve missing elements tests performance
+`+` Report failures in real-time.
+`+` Show feature ID for easier identification.
+`+` Warn when no features are found in a suite.
+`+` Add magic for "Option" elements.
+`!` Only one suite may be loaded at a time, no more CLI varargs.
+`~` Much improved tests speed.
+`~` "test" is now a valid suite name.
+`~` Remove the need for log-level config tweaking.
+`~` Made magic methods much more resilient.
+`~` Correct a minor Dots view summary phrasing inconsistency.
+`~` Improve missing elements tests performance.
 
 
 v0.4
@@ -86,8 +86,8 @@ v0.4
 
 ### v0.4.5
 
-`+` Add 'Instafail' view
-`~` Improve CLI animator and view management system
+`+` Add 'Instafail' view.
+`~` Improve CLI animator and view management system.
 
 
 ### v0.4.4
@@ -97,18 +97,18 @@ v0.4
 
 ### v0.4.3
 
-`~` Improve Function matchers output in case of failure
-`#` Ensure cursor is redrawn even after a failure
+`~` Improve Function matchers output in case of failure.
+`#` Ensure cursor is redrawn even after a failure.
 
 
 ### v0.4.2
 `+` User-provided functions may be used in state descriptions.
-`#` Fix DuckDuckGo examples for non-English systems
+`#` Fix DuckDuckGo examples for non-English systems.
 
 
 ### v0.4.1
 
-`+` RegExp matchers may now be used on value attributes
+`+` RegExp matchers may now be used on value attributes.
 `+` Add magic setters to send keystrokes to elements: `set<ElementName>(input)`. These wrap WebDriver failures, unlike assignment setters.
 `!` Change syntax for action calls: call them as if they were immediate functions.
 
