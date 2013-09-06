@@ -44,7 +44,7 @@ This installation guide assumes a POSIX-compliant OS, such as Mac OS X or Linux.
 
 #### Node & NPM ####
 
-Watai runs as a [Node.js](http://nodejs.org) module. You will therefore need the Node runtime (v0.8, v0.10) and package manager (NPM).
+Watai runs as a [Node.js](http://nodejs.org) module. You will therefore need the Node runtime (>=0.6.8 <0.11) and package manager (NPM).
 
 [Download](http://nodejs.org/download) the Node+NPM package for your environment if you don't already have it.
 
