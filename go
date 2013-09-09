@@ -117,9 +117,6 @@ case "$1" in
 		outputFile="doc/tutorials/Watai-DuckDuckGo-example.zip"
 		git archive -9 --output="$outputFile" HEAD example/DuckDuckGo/
 		echo "Created $outputFile"
-		outputFile="doc/tutorials/Watai-PDC-example.zip"
-		git archive -9 --output="$outputFile" HEAD example/PDC/
-		echo "Created $outputFile"
 		cd - > /dev/null
 		exit 0 ;;
 	dist )

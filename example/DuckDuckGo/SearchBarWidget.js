@@ -1,4 +1,4 @@
-field:			{ name: 'q' },
+field:			'input[name=q]',
 submitButton:	'#search_button_homepage',
 
 searchFor: function searchFor(term) {
