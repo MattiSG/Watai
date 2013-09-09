@@ -113,6 +113,6 @@ Let’s make sure you’re fully ready to use Watai by typing:
 License
 -------
 
-The code for this software is distributed under an LGPL license. That means you may use it to test any type of software, be it free or proprietary. But if you make any changes to the test engine itself (i.e. this library), you have to share them back with the community. Sounds fair?  :)
+The code for this software is distributed under an [AGPL license](http://www.gnu.org/licenses/agpl.html). That means you may use it to test any type of software, be it free or proprietary. But if you make any changes to the test engine itself (i.e. this library), even if it is not redistributed and provided only as a webservice, you have to share them back with the community. Sounds fair?  :)
 
 Contact the author if you have any specific need or question regarding licensing.
