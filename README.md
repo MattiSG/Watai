@@ -46,7 +46,11 @@ This installation guide assumes a POSIX-compliant OS, such as Mac OS X or Linux.
 
 Watai runs as a [Node.js](http://nodejs.org) module. You will therefore need the Node runtime (>=0.6.8 <0.11) and package manager (NPM).
 
-[Download](http://nodejs.org/download) the Node+NPM package for your environment if you don't already have it.
+If you’re under OSX and have [Homebrew](http://mxcl.github.com/homebrew/):
+
+	brew install node
+
+Otherwise, [download](http://nodejs.org/download) the Node+NPM package for your environment if you don't already have it.
 
 #### Selenium Server ####
 
