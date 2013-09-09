@@ -33,7 +33,7 @@ An [upgrade guide](https://github.com/MattiSG/Watai/wiki/Upgrading-from-v0-5-to-
 
 - Widgets' elements and actions are now declared in a single hash ([#94](https://github.com/MattiSG/Watai/pull/94)). Your existing Widgets will need to have their `elements` key removed.
 - Widgets and Features don't need an enclosing curly braces anymore ([#91](https://github.com/MattiSG/Watai/pull/91)). Your existing Widgets and Features will need to have their enclosing curly braces removed.
-- Content matches against a String only.
+- Textual content matches against Strings or RegExps only, not Numbers anymore (reserving for later use) nor any other Object (preventing errors).
 - `Runner.driverInit` event is not fired anymore. API clients should use the `Runner.start` event instead.
 - `Runner.restart` event is not fired anymore. API clients should use the `Runner.start` event instead.
 
