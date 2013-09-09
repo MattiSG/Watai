@@ -110,7 +110,7 @@ Let’s make sure you’re fully ready to use Watai by typing:
 
 	watai --installed
 
-### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki/Introduction)! ###
+### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki/Tutorial)! ###
 
 - - - - - - -
 
