@@ -57,8 +57,7 @@
   "devDependencies": {
     "longjohn": "0.2",
     "should": ">= 1.2.2",
-    "mocha": ">= 1.4",
-    "visionmedia-jscoverage": "1.0"
+    "mocha": ">= 1.4"
   },
   "preferGlobal": true
 }

@@ -82,7 +82,10 @@ case "$1" in
 		done
 
 		$MOCHA_CMD --bail $opts ${dirs:-$DEFAULT_TEST_DIRS} ;;
-	coverage )	# based on http://tjholowaychuk.com/post/18175682663
+	coverage )
+		echo "Coverage information is not computable at the moment, due to an incompatibility with the used coverage library. This will be fixed ASAP."
+		exit 1
+		# based on http://tjholowaychuk.com/post/18175682663
 		rm -rf $COVERAGE_DIR
 		$JSCOVERAGE $SRC_DIR $COVERAGE_DIR
 		export npm_config_coverage=true
