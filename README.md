@@ -102,7 +102,7 @@ If your proxy configuration prevents you from using `npm install` properly (i.e.
 
 	alias watai='node path/to/unzipped/folder/src'
 
-Mark the `/src` at the end!
+Note the `/src` at the end!
 
 ### Validation ###
 
