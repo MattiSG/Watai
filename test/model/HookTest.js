@@ -110,5 +110,33 @@ describe('Hook', function() {
 				}).done(done);
 			}, 200);
 		});
+
+		describe('metadata', function() {
+			var target		= 'field',
+				newContent	= 'new content',
+				setterName	= 'set' + target.capitalize(),
+				subject;
+
+			before(function() {
+				Watai.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
+				subject = hooksTarget[setterName](newContent);
+			});
+
+			it('should have title', function() {
+				subject.should.have.property('title').with.equal('set field');
+			});
+
+			it('should have reference', function() {
+				subject.should.have.property('reference').with.equal(setterName);
+			});
+
+			it('should have widget', function() {
+				subject.should.have.property('widget').with.equal(hooksTarget);
+			});
+
+			it('should have args', function() {
+				subject.should.have.property('args').with.include(newContent);
+			});
+		});
 	});
 });
