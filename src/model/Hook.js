@@ -45,7 +45,7 @@ var Hook = function Hook(hook, driver) {
 	*@private
 	*/
 	this.toSeleniumElement = function toSeleniumElement() {
-		return this.driver.element(WATAI_SELECTOR_TYPES_TO_WEBDRIVER_TYPES[this.type], this.selector);
+		return this.driver.element(WATAI_SELECTOR_TYPES_TO_WEBDRIVER_TYPES[this.type] || this.type, this.selector);
 	}
 
 	/** Sends the given sequence of keystrokes to the element pointed by this hook.

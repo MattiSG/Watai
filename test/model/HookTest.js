@@ -50,11 +50,21 @@ describe('Hook', function() {
 			checkHook(hooksTarget, hookName, 'This paragraph has id toto');
 		});
 
-		describe('with CSS', function() {
+		describe('with css alias', function() {
 			var hookName = 'css';
 
 			before(function() {
 				Watai.Hook.addHook(hooksTarget, hookName, { css: '.tutu' }, my.driver);
+			});
+
+			checkHook(hooksTarget, hookName, 'This paragraph has class tutu');
+		});
+
+		describe('with css selector', function() {
+			var hookName = 'css selector';
+
+			before(function() {
+				Watai.Hook.addHook(hooksTarget, hookName, { 'css selector': '.tutu' }, my.driver);
 			});
 
 			checkHook(hooksTarget, hookName, 'This paragraph has class tutu');
@@ -70,11 +80,21 @@ describe('Hook', function() {
 			checkHook(hooksTarget, hookName, 'This paragraph is the third of the selectors div');
 		});
 
-		describe('with link text', function() {
+		describe('with linkText alias', function() {
 			var hookName = 'linkText';
 
 			before(function() {
 				Watai.Hook.addHook(hooksTarget, hookName, { linkText: 'This paragraph is embedded in a link' }, my.driver);
+			});
+
+			checkHook(hooksTarget, hookName, 'This paragraph is embedded in a link');
+		});
+
+		describe('with link text', function() {
+			var hookName = 'link text';
+
+			before(function() {
+				Watai.Hook.addHook(hooksTarget, hookName, { 'link text': 'This paragraph is embedded in a link' }, my.driver);
 			});
 
 			checkHook(hooksTarget, hookName, 'This paragraph is embedded in a link');
