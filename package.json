@@ -1,18 +1,21 @@
 {
   "name": "watai",
   "version": "0.6.0-beta.3",
-  "description": "A declarative full-stack web testing framework. Maintainable integration tests for all browsers.",
+  "description": "Integration testing for the modern web",
   "keywords": [
     "test",
     "testing",
+    "integration",
+    "functional",
     "validation",
+    "acceptance",
     "behavior",
     "behaviour",
     "BDD",
-    "TDD",
-    "integration",
     "browser",
-    "cross-browser"
+    "cross-browser",
+    "selenium",
+    "webdriver"
   ],
   "homepage": "https://github.com/MattiSG/Watai/",
   "bugs": "https://github.com/MattiSG/Watai/issues",
