@@ -51,7 +51,8 @@ var RunnerPageDump = new Class(/** @lends RunnerPageDump# */{
 	},
 
 	showFailure: function() {
-		this.pageSourcePromise.then(this.dumpPage.bind(this));
+		if (this.pageSourcePromise)	// we might fail even before the first feature was started (unreachable server, bad syntax…). In this case, do not do anything.
+			this.pageSourcePromise.then(this.dumpPage.bind(this));
 	},
 
 	/** Presents the given DOM dump to the user.
