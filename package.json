@@ -27,8 +27,9 @@
     "src",
     "doc",
     "README.md",
+    "Changelog.md",
     "npm-shrinkwrap.json",
-    "license.LGPL.txt"
+    "license.AGPL.txt"
   ],
   "main": "src/Watai.js",
   "bin": "src/index.js",
