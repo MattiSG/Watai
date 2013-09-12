@@ -58,7 +58,7 @@ exports.getWidget = function(driver) {
 	return new Watai.Widget('Test widget', Object.merge({
 
 		submit: function submit(value) {
-			return	this.setInputField(value)()
+			return	this.setInputField(value)
 						.then(driver.submit.bind(driver));
 		},
 

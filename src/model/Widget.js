@@ -47,6 +47,9 @@ var Widget = new Class( /** @lends Widget# */ {
 				action.reference = key;
 				action.title = method.name;
 				action.args = args;
+				action.then = function(fulfilledNext, rejectedNext, progressNext) {
+					return action().then(fulfilledNext, rejectedNext, progressNext);
+				}
 
 				return action;
 			}
@@ -110,6 +113,9 @@ var Widget = new Class( /** @lends Widget# */ {
 				action.reference = basename;
 				action.title = basename;
 				action.args = args;
+				action.then = function(fulfilledNext, rejectedNext, progressNext) {
+					return action().then(fulfilledNext, rejectedNext, progressNext);
+				}
 
 				return action;
 			}

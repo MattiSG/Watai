@@ -4,7 +4,8 @@ result							: '#clock .time-holder .time' ,
 selectAutocompleteResultButton	: '.xLISTItem_dropdown',
 
 lookup: function(town) {
-	return	this.setField(town)()	// immediate execution to start the chain
+	return	this.setField(town)
+				.then()				// start the chain
 				.delay(800)			// autocompletion is quite slow, give it some time (note that this is a `Q` method, not `wd`'s)
 				.then(this.setField('\ue015'))	// down arrow
 				.then(this.submit());

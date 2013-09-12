@@ -107,6 +107,9 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 			setter.reference = setterName;
 			setter.title = setterName.humanize();
 			setter.args = [ input ];
+			action.then = function(fulfilledNext, rejectedNext, progressNext) {
+				return action().then(fulfilledNext, rejectedNext, progressNext);
+			}
 
 			return setter;
 		};
