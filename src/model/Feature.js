@@ -139,7 +139,7 @@ var Feature = new Class( /** @lends Feature# */ {
 
 	/** Asynchronously evaluates the scenario given to this feature.
 	*
-	*@returns	{Promise}	A promise that will be either:
+	*@returns	{QPromise}	A promise that will be either:
 	*	- rejected if any assertion or action fails, passing an array of strings that describe reason(s) for failure(s) (one reason per item in the array).
 	*	- resolved if all assertions pass, with this feature as a parameter.
 	*/
@@ -173,7 +173,7 @@ var Feature = new Class( /** @lends Feature# */ {
 
 		this.emit('start', this);
 
-		process.nextTick(evaluateNext);	// all other steps will be aync, decrease discrepancies and give control back ASAP
+		process.nextTick(evaluateNext);	// all other steps will be async, decrease discrepancies and give control back ASAP
 
 		return this.promise;
 	},

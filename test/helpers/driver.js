@@ -1,13 +1,14 @@
-require('mocha');
-require('should');
-var pathsUtils = require('path'),
-	webdriver = require('selenium-webdriver'),
+/** This file mocks a Runner by providing two objects that would be provided by a Runner: a `config` and `driver` (through the async `getDriverHolder`).
+* The mocked Runner is more efficient for short-lived tests, as only one driver (hence browser) is actually created.
+*/
+
+var webdriver = require('wd'),
 	ConfigLoader = require('mattisg.configloader');
 
 /** Loaded configuration for the test runs.
 *@type	{Object}
 */
-exports.config = config = new ConfigLoader({
+config = new ConfigLoader({
 	from: __dirname,
 	appName: 'watai'
 }).load('config');
@@ -30,7 +31,7 @@ var driver,
 *
 *@return	{Object}	holder	An Object whose `driver` key will be eventually set to a ready-to-use WebDriver instance.
 */
-exports.getDriverHolder = function getDriverHolder() {
+function getDriverHolder() {
 	var result = Object.create(null);
 	setDriverIn(result);
 	return result;
@@ -74,22 +75,23 @@ function openDriverWithin(destination) {
 *@private
 */
 function makeDriver(done) {
-	var result = new webdriver.Builder()
-							  .usingServer(config.seleniumServerURL)
-							  .withCapabilities(config.driverCapabilities)
-							  .build();
+	var result = webdriver.promiseRemote(),
+		seleniumServer = require('url').parse(config.seleniumServerURL);	// TODO: get the URL already parsed from the config instead of serializing it at each step
 
-	result.session_.then(null, function() {
-		console.error('');
-		console.error('**The Selenium server could not be reached!**');
-		console.error('> Did you start it up?');
-		console.error('  See the troubleshooting guide if you need help  ;)');
-		process.exit(1);
-	});
+	result.init(Object.merge(config.driverCapabilities, {
+		host: seleniumServer.hostname,
+		port: seleniumServer.port
+	})).then(function() {
+		return result.get(config.baseURL);
+	}, function() {
+		console.error(['',
+			'**The Selenium server could not be reached!**',
+			'> Did you start it up?',
+			'  See the troubleshooting guide if you need help  ;)'
+		].join('\n'));
 
-	result.get(config.baseURL).then(function() {
-			done();	// remove arguments for compatibility with mocha
-		}, done);
+		process.exit(4);
+	}).done(done);
 
 	return result;
 }
@@ -105,8 +107,13 @@ function closeDriverWithin(source) {
 		this.timeout(10000);
 
 		if (--driverClientsCount <= 0)
-			source.driver.quit().then(done, done);
+			source.driver.quit().done(done);
 		else
 			done();
 	}
 }
+
+
+// CommonJS export
+exports.config = config;
+exports.getDriverHolder = getDriverHolder;

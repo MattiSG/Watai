@@ -1,28 +1,77 @@
-var FunctionalStep = new Class({
+var promises = require('q');
+
+/**@class	A step that parses and evaluates a function in a scenario.
+* A function may be a widget action, or a user-provided function.
+*
+*@extends	steps.AbstractStep
+*@memberOf	steps
+*/
+var FunctionalStep = new Class(/** @lends steps.FunctionalStep# */{
 	Extends: require('./AbstractStep'),
+
+	type: 'functional',
+
+	/** A function, promise-returning or not, to be executed. If it throws, or returns a rejected promise, this step will fail. Otherwise, it will succeed.
+	*
+	*@type	{Function}
+	*@private
+	*/
+	action: null,
 
 	/**
 	*@param	{Function}	action	A function, promise-returning or not, to be executed. If it throws, or returns a rejected promise, this step will fail. Otherwise, it will succeed.
+	*@constructs
 	*/
 	initialize: function init(action) {
 		this.action = action;
 	},
 
 	start: function start() {
-		var result;
+		promises.fcall(this.action)
+				.done(this.succeed.bind(this), this.fail.bind(this));
+	},
 
-		try {
-			result = this.action();	// unfortunately, due to WebDriverJS' Promises/A implementation, we can't promises.fcall(this.action) and have to redo its logic
-		} catch (err) {
-			return this.fail(err);
+	formatFailure: function formatFailure(report) {
+		return (this
+				+ ' failed'
+				+ (report
+					? ', returning "' + report + '"'
+					: '')
+				);
+	},
+
+	toString: function toString() {
+		if (this.action.widget) {	// this is a Widget action
+			return this.describeAction();
+		} else if (this.action.name) {	// this is a custom user function, hopefully the user provided a good name for it
+			var humanized = this.action.name.humanize();
+
+			if (humanized != this.action.name)
+				humanized += ' (as ' + this.action.name + ')';
+
+			return humanized;
 		}
 
-		if (result && result.then) {	// that was a promise, wait for it to be resolved
-			result.then(this.succeed.bind(this),
-						this.fail.bind(this));
-		} else {	// we can't second-guess anything from the returned value, so as long as it didn't throw, we'll consider it worked
-			this.succeed(result);
-		}
+		return '[unnamed action]';
+	},
+
+	/** Tries to describe the wrapped step, assuming it is a Widget-generated action.
+	*
+	*@returns	{String}	A user-presentable action description.
+	*@see	Widget
+	*/
+	describeAction: function describeAction() {
+		var humanizedAction = (this.action.title || this.action.reference).humanize()	// makes naming functions themselves optional, but let them have higher precedence over widget key: users can thus provide more details in function names without making it long to access them in tests
+
+		return	this.action.widget
+				+ ' '
+				+ humanizedAction
+				+ (this.action.args.length
+					? ' with "' + this.action.args.join('", "') + '"'
+					: '')
+				+ (humanizedAction != this.action.reference	// make it easier to locate source
+					? ' (as ' + this.action.widget + '.' + this.action.reference + ')'
+					: '')
 	}
 });
 

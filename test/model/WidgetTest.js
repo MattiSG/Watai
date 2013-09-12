@@ -12,7 +12,7 @@ var Watai = require('../helpers/subject'),
 *@private
 */
 var checkerElements = {
-	output:	{ id: 'output' }
+	output:	'#output'
 }
 
 
@@ -28,9 +28,7 @@ describe('Widget', function() {
 		expectedOutputs = testWidget.expectedOutputs;
 		subject = testWidget.getWidget(my.driver);
 
-		checker = new Watai.Widget('Events results widget', {
-			elements: checkerElements
-		}, my.driver);
+		checker = new Watai.Widget('Events results widget', checkerElements, my.driver);
 	});
 
 	describe('parsing', function() {
@@ -39,56 +37,44 @@ describe('Widget', function() {
 				if (elements.hasOwnProperty(key)
 					&& key != 'missing') {	// Should.js' property checker accesses the property, which would therefore make the missing element throw because it is unreachable
 					subject.should.have.property(key);
-					should(typeof subject[key] == 'object');	// prototype of WebDriver internal objects is not augmented
+					should(typeof subject[key] == 'object', 'Key "' + key + '" is not an object');	// prototype of WebDriver internal objects is not augmented
 				}
 		});
 
 		it('should bind methods properly', function(done) {
-			subject.submit('something')();
-
-			subject.inputField.getAttribute('value').then(function(value) {
+			subject.submit('something')().then(function() {
+				return subject.inputField;
+			}).then(function(element) {
+				return element.getValue();
+			}).then(function(value) {
 				value.should.equal('Default');	// because the page has been reloaded
-				done();
-			});
+			}).done(done);
 		});
 	});
 
 
 	describe('magic', function() {
+
 		it('should do some magic on *Link names', function() {
-			subject.should.have.property('immediateAction');
-			subject.immediateAction.should.be.a('function');	// on 'link', this should be a shortcut to clicking the element, not a simple access
+			subject.should.have.property('changeTextareaValueNow');
+			subject.changeTextareaValueNow.should.be.a('function');	// on 'link', this should be a shortcut to clicking the element, not a simple access
 		});
 
-		it('should bind magically created `link` methods to clicking', function(done) {
-			subject.immediateAction()();
-			checker.output.getText().then(function(text) {
-				text.should.equal(expectedOutputs.immediateActionLink);
-				done();
-			});
-		});
 
-		it('should bind magically created `button` methods to clicking', function(done) {
-			subject.press()();
-			checker.output.getText().then(function(text) {
-				text.should.equal(expectedOutputs.pressButton);
-				done();
-			});
-		});
-
-		it('should bind magically created `checkbox` methods to clicking', function(done) {
-			subject.toggle()();
-			checker.output.getText().then(function(text) {
-				text.should.equal(expectedOutputs.toggleCheckbox);
-				done();
-			});
-		});
-
-		it('should bind magically created `radio` methods to clicking', function(done) {
-			subject.select()();
-			checker.output.getText().then(function(text) {
-				text.should.equal(expectedOutputs.selectRadio);
-				done();
+		Object.each({
+			changeTextareaValueNow	: 'changeTextareaValueNowLink',
+			press					: 'pressButton',
+			toggle					: 'toggleCheckbox',
+			select					: 'selectRadio'
+		}, function(elementName, action) {
+			it('should bind magically created click actions on "' + elementName.replace(action, '') + '"-ending elements', function(done) {
+				subject[action]()().then(function() {
+					return checker.output;
+				}).then(function(checkerOutput) {
+					return checkerOutput.text();
+				}).then(function(checkerOutputText) {
+					checkerOutputText.should.equal(expectedOutputs[elementName]);
+				}).done(done, done);
 			});
 		});
 
@@ -104,41 +90,37 @@ describe('Widget', function() {
 				subject.setInputField(EXPECTED).should.be.a('function');
 			});
 
-			it('should return a promise when calling partial applicator', function() {
+			it('should return a promise when calling partial applicator', function(done) {
 				var typer = subject.setInputField(EXPECTED);
 
-				typer().then.should.be.a('function');
+				typer().done(function() { done() });
 			});
 
 			it('should actually send keys when calling partial applicator', function(done) {
 				var typer = subject.setInputField(EXPECTED);
 
-				typer().then(function() {
-					subject.inputField.getAttribute('value').then(function(text) {
-						text.should.equal(EXPECTED);
-						done();
-					});
-				});
+				typer().then(function(element) {
+					return element.getValue();
+				}).then(function(value) {
+					value.should.equal(EXPECTED);
+				}).done(done);
 			});
 		});
 	});
 
 
 	describe('element access', function() {
-		it('should map elements to hooks', function(done) {
-			subject.id.getText().then(function(text) {
-				text.should.equal(expectedContents.id);
-				done();
-			});
-		});
+		function textShouldBe(elementPromise, expectedText, done) {
+			return elementPromise.then(function(element) {
+				return element.text();
+			}).then(function(text) {
+				text.should.equal(expectedText);
+			}).done(done);
+		}
 
-		it('should be immediate (as much as local performance allows)', function(done) {
-			subject.immediateAction()();
-			subject.delayedAction()();
-			checker.output.getText().then(function(text) {
-				text.should.equal(expectedOutputs.immediateActionLink);
-				done();
-			});
+
+		it('should map elements to hooks', function(done) {
+			textShouldBe(subject.id, expectedContents.id, done);
 		});
 	});
 });

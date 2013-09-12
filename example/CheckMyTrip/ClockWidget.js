@@ -1,21 +1,20 @@
-{
-	elements: {
-		field:	{ css: '#clock input[type=text]' },
-		result:	{ css: '#clock .time-holder .time' }
-	},
-	
-	lookup: function lookup(town) {
-		this.field = town;
-		this.field.sendKeys('\n');
-		return this.field.submit();
-	},
+field							: '#clock input[type=text]' ,
+submitButton					: '#clock input[type=submit]' ,
+result							: '#clock .time-holder .time' ,
+selectAutocompleteResultButton	: '.xLISTItem_dropdown',
 
-	getCurrentHour: function getCurrentHour() {
-		return this.result
-				   .getText()
-				   .then(function(text) {
-				    	var hour = text.split(':')[0];	// get the hour only
-				    	return +hour;
-				   });
-	}
+lookup: function(town) {
+	return	this.setField(town)()	// immediate execution to start the chain
+				.delay(800)			// autocompletion is quite slow, give it some time (note that this is a `Q` method, not `wd`'s)
+				.then(this.setField('\ue015'))	// down arrow
+				.then(this.submit());
+},
+
+getCurrentHour: function() {
+	return this.result.then(function(resultElement) {
+		return resultElement.text();
+	}).then(function(text) {
+		var hour = text.split(':')[0];	// get the hour only
+		return +hour;	// coerce the hour into a Number
+	});
 }

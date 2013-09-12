@@ -1,6 +1,2 @@
-{
-	elements: {
-		openLink: { css: 'em.icon.triptools' },
-		toolsWrapper: { css: '.triptools-controls' }
-	}
-}
+openLink	: 'em.icon.triptools',
+toolsWrapper: '.triptools-controls'

@@ -53,36 +53,39 @@ case "$1" in
 		dirs=""
 
 		if [[ $1 = "--exhaustive" ]]
-		then shift
-			 dirs="$DEFAULT_TEST_DIRS $ADDITIONAL_DIRS"
+		then
+			shift
 
-			 echo '****************'
-			 echo 'Testing examples'
-			 echo '****************'
-			 if ./go 'example/DuckDuckGo' && ./go 'example/DuckDuckGo - advanced matchers' && ./go 'example/PDC'
-			 then
-			 	echo 'All examples pass'
-			 else
-			 	echo 'Some examples fail, cancelling tests'
-			 	exit 1
-			 fi
+			dirs="$DEFAULT_TEST_DIRS $ADDITIONAL_DIRS"
+
+			echo '****************'
+			echo 'Testing examples'
+			echo '****************'
+
+			for suite in $BASEDIR/example/*
+			do
+				if ! ./go "$suite"
+				then
+					echo 'Some examples fail, cancelling tests'
+					exit 1
+				fi
+			done
+
+			echo 'All examples pass'
 		fi
 
 		for arg in "$@"
 		do
-			if echo $arg | grep -q '^\-\-'
-			then opts="$arg $opts"
-			else dirs="$dirs $TEST_DIR/$arg"	# allows for "go test controller" for example, instead of "go test test/controller"
-
+			if [[ -e "$arg" ]]
+			then dirs="$dirs $arg"
 			fi
 		done
 
-		if [[ -z $dirs ]]
-		then dirs="$DEFAULT_TEST_DIRS"
-		fi
-
-		$MOCHA_CMD --bail $opts $dirs ;;
-	coverage )	# based on http://tjholowaychuk.com/post/18175682663
+		$MOCHA_CMD --bail $opts ${dirs:-$DEFAULT_TEST_DIRS} ;;
+	coverage )
+		echo "Coverage information is not computable at the moment, due to an incompatibility with the used coverage library. This will be fixed ASAP."
+		exit 1
+		# based on http://tjholowaychuk.com/post/18175682663
 		rm -rf $COVERAGE_DIR
 		$JSCOVERAGE $SRC_DIR $COVERAGE_DIR
 		export npm_config_coverage=true
@@ -100,9 +103,11 @@ case "$1" in
 		open $DOC_DIR/api/index.html
 		exit 0 ;;
 	dev )
+		echo "Installing user dependencies…"
+		npm install .
 		echo "Temporarily disabling shrinkwrap…"
 		mv "npm-shrinkwrap.json" "npm-shrinkwrap.json~"
-		echo "Installing dev dependencies"
+		echo "Installing dev dependencies…"
 		npm install .
 		echo "Re-enabling shrinkwrap"
 		mv "npm-shrinkwrap.json~" "npm-shrinkwrap.json"
@@ -112,22 +117,21 @@ case "$1" in
 		outputFile="doc/tutorials/Watai-DuckDuckGo-example.zip"
 		git archive -9 --output="$outputFile" HEAD example/DuckDuckGo/
 		echo "Created $outputFile"
-		outputFile="doc/tutorials/Watai-PDC-example.zip"
-		git archive -9 --output="$outputFile" HEAD example/PDC/
-		echo "Created $outputFile"
 		cd - > /dev/null
 		exit 0 ;;
 	dist )
+		$0 export-examples
 		cd $BASEDIR
-		outputFile=dist/watai-$(git describe)-NPMdeps.zip
+		outputFile=dist/watai-$(git describe --tags)-NPMdeps.zip
 		mkdir dist 2> /dev/null
 		git archive -9 --output="$outputFile" $(git describe) $DIST_INCLUDE
 		echo "Archived repository"
 		echo "Adding production dependencies…"
 		mv node_modules node_modules_dev
-		npm install --prod
+		rm 'npm-shrinkwrap.json'
+		npm install --production
 		zip -q -u $outputFile -r node_modules
-		echo "Updating shrinwrap…"
+		echo "Updating shrinkwrap…"
 		npm shrinkwrap
 		echo "Restoring dev dependencies…"
 		rm -rf node_modules

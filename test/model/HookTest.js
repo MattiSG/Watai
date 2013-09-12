@@ -15,10 +15,11 @@ exports.checkHook = checkHook = function checkHook(subject, hookName, expectedCo
 	});
 
 	it('should have the correct text in the retrieved element', function(done) {
-		subject[hookName].getText().then(function(content) {
+		subject[hookName].then(function(element) {
+			return element.text();
+		}).then(function(content) {
 			content.should.equal(expectedContent);
-			done();
-		});
+		}).done(done);
 	});
 }
 
@@ -29,6 +30,16 @@ describe('Hook', function() {
 
 
 	describe('selector', function() {
+		describe('default to css', function() {
+			var hookName = 'css';
+
+			before(function() {
+				Watai.Hook.addHook(hooksTarget, hookName, '#toto', my.driver);
+			});
+
+			checkHook(hooksTarget, hookName, 'This paragraph has id toto');
+		});
+
 		describe('with ID', function() {
 			var hookName = 'id';
 
@@ -39,11 +50,21 @@ describe('Hook', function() {
 			checkHook(hooksTarget, hookName, 'This paragraph has id toto');
 		});
 
-		describe('with CSS', function() {
+		describe('with css alias', function() {
 			var hookName = 'css';
 
 			before(function() {
 				Watai.Hook.addHook(hooksTarget, hookName, { css: '.tutu' }, my.driver);
+			});
+
+			checkHook(hooksTarget, hookName, 'This paragraph has class tutu');
+		});
+
+		describe('with css selector', function() {
+			var hookName = 'css selector';
+
+			before(function() {
+				Watai.Hook.addHook(hooksTarget, hookName, { 'css selector': '.tutu' }, my.driver);
 			});
 
 			checkHook(hooksTarget, hookName, 'This paragraph has class tutu');
@@ -59,11 +80,21 @@ describe('Hook', function() {
 			checkHook(hooksTarget, hookName, 'This paragraph is the third of the selectors div');
 		});
 
-		describe('with link text', function() {
+		describe('with linkText alias', function() {
 			var hookName = 'linkText';
 
 			before(function() {
 				Watai.Hook.addHook(hooksTarget, hookName, { linkText: 'This paragraph is embedded in a link' }, my.driver);
+			});
+
+			checkHook(hooksTarget, hookName, 'This paragraph is embedded in a link');
+		});
+
+		describe('with link text', function() {
+			var hookName = 'link text';
+
+			before(function() {
+				Watai.Hook.addHook(hooksTarget, hookName, { 'link text': 'This paragraph is embedded in a link' }, my.driver);
 			});
 
 			checkHook(hooksTarget, hookName, 'This paragraph is embedded in a link');
@@ -74,9 +105,10 @@ describe('Hook', function() {
 
 			Watai.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
 
-			hooksTarget[target].getAttribute('value').then(function(content) {
-				content.should.equal('Default');
-				done();
+			hooksTarget[target].then(function(element) {
+				element.getAttribute('value').then(function(content) {
+					content.should.equal('Default');
+				}).done(done);
 			});
 		});
 	});
@@ -90,9 +122,40 @@ describe('Hook', function() {
 
 			hooksTarget[target] = newContent;
 
-			hooksTarget[target].getAttribute('value').then(function(content) {
-				content.should.equal(newContent);
-				done();
+			setTimeout(function() {	// TODO: this has to be delayed because the setter above triggers a series of async actions, and we need the evaluation to be done *after* these actions. This should be modified along with a rethink of the way the setter works.
+				hooksTarget[target].then(function(element) {
+					return element.getAttribute('value');
+				}).then(function(content) {
+					content.should.equal(newContent);
+				}).done(done);
+			}, 200);
+		});
+
+		describe('metadata', function() {
+			var target		= 'field',
+				newContent	= 'new content',
+				setterName	= 'set' + target.capitalize(),
+				subject;
+
+			before(function() {
+				Watai.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
+				subject = hooksTarget[setterName](newContent);
+			});
+
+			it('should have title', function() {
+				subject.should.have.property('title').with.equal('set field');
+			});
+
+			it('should have reference', function() {
+				subject.should.have.property('reference').with.equal(setterName);
+			});
+
+			it('should have widget', function() {
+				subject.should.have.property('widget').with.equal(hooksTarget);
+			});
+
+			it('should have args', function() {
+				subject.should.have.property('args').with.include(newContent);
 			});
 		});
 	});

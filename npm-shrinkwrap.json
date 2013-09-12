@@ -1,47 +1,205 @@
 {
   "name": "watai",
-  "version": "0.5.2",
+  "version": "0.6.0-rc.1",
   "dependencies": {
     "q": {
-      "version": "0.9.6"
+      "version": "0.9.6",
+      "from": "https://registry.npmjs.org/q/-/q-0.9.6.tgz",
+      "resolved": "https://registry.npmjs.org/q/-/q-0.9.6.tgz"
     },
     "mootools": {
-      "version": "1.4.5"
+      "version": "1.4.5-2",
+      "from": "mootools@1.4.5-2"
     },
     "winston": {
       "version": "0.6.2",
+      "from": "https://registry.npmjs.org/winston/-/winston-0.6.2.tgz",
+      "resolved": "https://registry.npmjs.org/winston/-/winston-0.6.2.tgz",
       "dependencies": {
         "async": {
-          "version": "0.1.22"
+          "version": "0.1.22",
+          "from": "https://registry.npmjs.org/async/-/async-0.1.22.tgz",
+          "resolved": "https://registry.npmjs.org/async/-/async-0.1.22.tgz"
         },
         "colors": {
-          "version": "0.6.0-1"
+          "version": "0.6.2",
+          "from": "https://registry.npmjs.org/colors/-/colors-0.6.2.tgz",
+          "resolved": "https://registry.npmjs.org/colors/-/colors-0.6.2.tgz"
         },
         "cycle": {
-          "version": "1.0.0"
+          "version": "1.0.2",
+          "from": "cycle@1.0.2"
         },
         "eyes": {
-          "version": "0.1.8"
+          "version": "0.1.8",
+          "from": "eyes@0.1.8"
         },
         "pkginfo": {
-          "version": "0.2.3"
+          "version": "0.2.3",
+          "from": "pkginfo@0.2.3"
         },
         "request": {
-          "version": "2.9.203"
+          "version": "2.9.203",
+          "from": "https://registry.npmjs.org/request/-/request-2.9.203.tgz",
+          "resolved": "https://registry.npmjs.org/request/-/request-2.9.203.tgz"
         },
         "stack-trace": {
-          "version": "0.0.6"
+          "version": "0.0.7",
+          "from": "stack-trace@0.0.7"
         }
       }
     },
-    "selenium-webdriver": {
-      "version": "2.31"
+    "wd": {
+      "version": "0.1.1",
+      "from": "wd@0.1.1",
+      "resolved": "https://registry.npmjs.org/wd/-/wd-0.1.1.tgz",
+      "dependencies": {
+        "async": {
+          "version": "0.2.9",
+          "from": "async@0.2.9"
+        },
+        "underscore": {
+          "version": "1.4.4",
+          "from": "underscore@1.4.4"
+        },
+        "vargs": {
+          "version": "0.1.0",
+          "from": "vargs@0.1.0"
+        },
+        "request": {
+          "version": "2.21.0",
+          "from": "request@2.21.0",
+          "dependencies": {
+            "qs": {
+              "version": "0.6.5",
+              "from": "qs@0.6.5"
+            },
+            "json-stringify-safe": {
+              "version": "4.0.0",
+              "from": "json-stringify-safe@4.0.0"
+            },
+            "forever-agent": {
+              "version": "0.5.0",
+              "from": "forever-agent@0.5.0"
+            },
+            "tunnel-agent": {
+              "version": "0.3.0",
+              "from": "tunnel-agent@0.3.0"
+            },
+            "http-signature": {
+              "version": "0.9.11",
+              "from": "http-signature@0.9.11",
+              "dependencies": {
+                "assert-plus": {
+                  "version": "0.1.2",
+                  "from": "assert-plus@0.1.2"
+                },
+                "asn1": {
+                  "version": "0.1.11",
+                  "from": "asn1@0.1.11"
+                },
+                "ctype": {
+                  "version": "0.5.2",
+                  "from": "ctype@0.5.2"
+                }
+              }
+            },
+            "hawk": {
+              "version": "0.13.1",
+              "from": "hawk@0.13.1",
+              "dependencies": {
+                "hoek": {
+                  "version": "0.8.5",
+                  "from": "hoek@0.8.5"
+                },
+                "boom": {
+                  "version": "0.4.2",
+                  "from": "boom@0.4.2",
+                  "dependencies": {
+                    "hoek": {
+                      "version": "0.9.1",
+                      "from": "hoek@0.9.1"
+                    }
+                  }
+                },
+                "cryptiles": {
+                  "version": "0.2.2",
+                  "from": "cryptiles@0.2.2"
+                },
+                "sntp": {
+                  "version": "0.2.4",
+                  "from": "sntp@0.2.4",
+                  "dependencies": {
+                    "hoek": {
+                      "version": "0.9.1",
+                      "from": "hoek@0.9.1"
+                    }
+                  }
+                }
+              }
+            },
+            "aws-sign": {
+              "version": "0.3.0",
+              "from": "aws-sign@0.3.0"
+            },
+            "oauth-sign": {
+              "version": "0.3.0",
+              "from": "oauth-sign@0.3.0"
+            },
+            "cookie-jar": {
+              "version": "0.3.0",
+              "from": "cookie-jar@0.3.0"
+            },
+            "node-uuid": {
+              "version": "1.4.1",
+              "from": "node-uuid@1.4.1"
+            },
+            "mime": {
+              "version": "1.2.11",
+              "from": "mime@1.2.11"
+            },
+            "form-data": {
+              "version": "0.0.8",
+              "from": "form-data@0.0.8",
+              "dependencies": {
+                "combined-stream": {
+                  "version": "0.0.4",
+                  "from": "combined-stream@0.0.4",
+                  "dependencies": {
+                    "delayed-stream": {
+                      "version": "0.0.5",
+                      "from": "delayed-stream@0.0.5"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "archiver": {
+          "version": "0.4.9",
+          "from": "archiver@0.4.9",
+          "resolved": "https://registry.npmjs.org/archiver/-/archiver-0.4.9.tgz",
+          "dependencies": {
+            "readable-stream": {
+              "version": "1.0.17",
+              "from": "readable-stream@1.0.17"
+            },
+            "iconv-lite": {
+              "version": "0.2.11",
+              "from": "iconv-lite@0.2.11"
+            }
+          }
+        }
+      }
     },
     "mattisg.configloader": {
-      "version": "0.1.5"
+      "version": "0.1.5",
+      "from": "mattisg.configloader@0.1.5"
     },
     "growl": {
-      "version": "1.6.0"
+      "version": "1.7.0",
+      "from": "growl@"
     }
   }
 }

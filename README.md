@@ -44,9 +44,13 @@ This installation guide assumes a POSIX-compliant OS, such as Mac OS X or Linux.
 
 #### Node & NPM ####
 
-Watai runs as a [Node.js](http://nodejs.org) module. You will therefore need the Node runtime (v0.6+, v0.8+) and package manager (NPM).
+Watai runs as a [Node.js](http://nodejs.org) module. You will therefore need the Node runtime (>=0.6.8 <0.11) and package manager (NPM).
 
-[Download](http://nodejs.org/download) the Node+NPM package for your environment if you don't already have it.
+If you’re under OSX and have [Homebrew](http://mxcl.github.com/homebrew/):
+
+	brew install node
+
+Otherwise, [download](http://nodejs.org/download) the Node+NPM package for your environment if you don't already have it.
 
 #### Selenium Server ####
 
@@ -94,11 +98,11 @@ This will create a `node_modules` folder with all dependencies in the current di
 
 #### From behind a proxy ####
 
-If your proxy configuration prevents you from using `npm install` properly (i.e. you get `ERRTIMEOUT` errors), download the latest Watai **with NPM dependencies** package from the [Downloads](https://github.com/MattiSG/Watai/downloads) tab, unzip it and:
+If your proxy configuration prevents you from using `npm install` properly (i.e. you get `ERRTIMEOUT` errors), download the latest Watai **with NPM dependencies** package from the [Releases](https://github.com/MattiSG/Watai/releases) tab, unzip it and:
 
 	alias watai='node path/to/unzipped/folder/src'
 
-Mark the `/src` at the end!
+Note the `/src` at the end!
 
 ### Validation ###
 
@@ -106,13 +110,13 @@ Let’s make sure you’re fully ready to use Watai by typing:
 
 	watai --installed
 
-### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki/Introduction)! ###
+### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki/Tutorial)! ###
 
 - - - - - - -
 
 License
 -------
 
-The code for this software is distributed under an LGPL license. That means you may use it to test any type of software, be it free or proprietary. But if you make any changes to the test engine itself (i.e. this library), you have to share them back with the community. Sounds fair?  :)
+The code for this software is distributed under an [AGPL license](http://www.gnu.org/licenses/agpl.html). That means you may use it to test any type of software, be it free or proprietary. But if you make any changes to the test engine itself (i.e. this library), even if it is not redistributed and provided only as a webservice, you have to share them back with the community. Sounds fair?  :)
 
 Contact the author if you have any specific need or question regarding licensing.

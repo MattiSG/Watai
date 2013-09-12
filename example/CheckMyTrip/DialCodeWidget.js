@@ -1,12 +1,8 @@
-{
-	elements: {
-		selector: { css: '#dialingCode input[type=text]' },
-		result: { css: '#dialingCode .result-wrapper .main' }
-	},
-	
-	lookup: function lookup(country) {
-		this.selector = country;
-		this.selector.sendKeys('\n');
-		return this.selector.submit();
-	}
+selector		: '#dialingCode input[type=text]' ,
+submitButton	: '#dialingCode input[type=submit]' ,
+result			: '#dialingCode .result-wrapper .main',
+
+lookup: function(country) {
+	return	this.setSelector(country)()	// immediate execution to start the chain (yes, this syntax is ugly and will be fixed in an upcoming release, see issue #99)
+				.then(this.submit());
 }

@@ -4,22 +4,23 @@ var Watai = require('./subject');
 /** Widget description of elements existing in the test support page resource.
 */
 var elements = exports.elements = {
-	id:						{ id: 'toto' },
-	css:					{ css: '.tutu' },
-	missing:				{ id: 'missing' },
-	hidden:					{ id: 'hidden' },
-	regexpTestField:		{ css: 'input[name="regexpTestField"]' },
-	inputField:				{ css: 'input[name="field"]' },
-	immediateActionLink:	{ linkText: 'This paragraph is embedded in a link' },
-	delayedActionLink:		{ id: 'delayLink' },
-	otherDelayedActionLink:	{ id: 'delayLink2' },
-	pressButton:			{ id: 'button' },
-	toggleCheckbox:			{ id: 'box' },
-	selectRadio:			{ id: 'radio' },
-	overlayedActionLink:	{ id: 'under' },
-	hideOverlayLink:		{ id: 'removeOver' },
-	output:					{ id: 'output' },
-	outputField:			{ name: 'outputField' }
+	id									: '#toto',
+	css									: '.tutu',
+	missing								: '#missing',
+	hidden								: '#hidden',
+	regexpTestField						: 'input[name="regexpTestField"]',
+	inputField							: 'input[name="field"]',
+	changeTextareaValueNowLink			: { linkText: 'This paragraph is embedded in a link' },
+	changeTextareaValueLaterLink		: '#delayLink',
+	changeTextareaValueLaterAgainLink	: '#delayLink2',
+	pressButton							: '#button',
+	toggleCheckbox						: '#box',
+	selectRadio							: '#radio',
+	overlayedActionLink					: '#under',
+	hideOverlayLink						: '#removeOver',
+	output								: '#output',
+	outputField							: { name: 'outputField' },
+	badSelector							: { thisIsInvalid: 'sure' }
 }
 
 /** Expected values for the texts of the elements described above, as defined in the test support page.
@@ -38,9 +39,9 @@ exports.expectedContents = {
 *@see	#elements
 */
 exports.expectedOutputs = {
-	immediateActionLink:	'#link has been clicked',
-	delayedActionLink:		'#delayLink has been clicked',
-	otherDelayedActionLink:	'#delayLink2 has been clicked',
+	changeTextareaValueNowLink:	'#link has been clicked',
+	changeTextareaValueLaterLink:		'#delayLink has been clicked',
+	changeTextareaValueLaterAgainLink:	'#delayLink2 has been clicked',
 	pressButton:			'#button has been pressed',
 	toggleCheckbox:			'#box has been checked',
 	selectRadio:			'#radio has been selected',
@@ -54,11 +55,15 @@ exports.expectedOutputs = {
 *@see	#elements
 */
 exports.getWidget = function(driver) {
-	return new Watai.Widget('Test widget', {
-		elements: elements,
+	return new Watai.Widget('Test widget', Object.merge({
+
 		submit: function submit(value) {
-			this.inputField = value;
-			return this.inputField.submit();
+			return	this.setInputField(value)()
+						.then(driver.submit.bind(driver));
+		},
+
+		beClever: function doSomethingVeryClever() {	// used in report view test
+			return true;
 		}
-	}, driver);
+	}, elements), driver);
 }

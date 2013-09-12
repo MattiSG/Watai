@@ -1,14 +1,10 @@
-{
-	elements: {
-		openLink:	{ linkText: 'Connexion' },
-		email:		{ id: 'login_email' },
-		password:	{ id: 'login_password' },
-		requestPasswordLink:	{ css: 'form .details a' }
-	},
-	
-	login: function login(email, password) {
-		this.email = email;
-		this.password = password;
-		return this.password.submit();
-	}
+openLink			: { linkText: 'Connexion' },
+email				: '#login_email',
+password			: '#login_password',
+requestPasswordLink	: 'form .details a',
+
+login: function login(email, password) {
+	return	this.setEmail(email)()	// (yes, this syntax is ugly and will be fixed in an upcoming release, see issue #99)
+				.then(this.setPassword(password))
+				.then(driver.submit.bind(driver));
 }

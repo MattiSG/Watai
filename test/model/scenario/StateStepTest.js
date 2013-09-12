@@ -56,7 +56,7 @@ describe('StateStep', function() {
 
 		it('with a magically-added property path should throw', function() {
 			(function() {
-				new StateStep({ 'TestWidget.delayedAction': 'toto'}, { TestWidget: TestWidget });	// The actual element is `delayedActionLink`. `delayedAction` is an action shortcut, but may not be used as a property.]);
+				new StateStep({ 'TestWidget.changeTextareaValueLater': 'toto'}, { TestWidget: TestWidget });	// The actual element is `changeTextareaValueLaterLink`. `changeTextareaValueLater` is an action shortcut, but may not be used as a property.]);
 			}).should.throw(/not an element/);
 		});
 
@@ -87,7 +87,7 @@ describe('StateStep', function() {
 			new StateStep(wrongTexts, { TestWidget: TestWidget })
 				.test().then(function() {
 					done(new Error('Unmatched widget state description should not be resolved.'));
-				},function(reason) {
+				}, function(reason) {
 					Object.each(require('../../helpers/testWidget').expectedContents, function(text, key) {
 						if (! (reason
 							&& reason.contains(key)
@@ -127,11 +127,11 @@ describe('StateStep', function() {
 
 			it('should do immediate evaluation if set to 0', function(done) {
 				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.delayedAction(),
+					TestWidget.changeTextareaValueNow(),	// make sure the content of the output is reset
+					TestWidget.changeTextareaValueLater(),
 					{
 						timeout: 0,
-						'TestWidget.output': expectedOutputs.delayedActionLink
+						'TestWidget.output': expectedOutputs.changeTextareaValueLaterLink
 					}
 				]).test().then(function() {
 					done(new Error('Matched while the expected result should have been set later than evaluation.'))
@@ -142,11 +142,11 @@ describe('StateStep', function() {
 
 			it('should do delayed evaluation if set to a proper positive value', function(done) {
 				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.delayedAction(),
+					TestWidget.changeTextareaValueNow(),	// make sure the content of the output is reset
+					TestWidget.changeTextareaValueLater(),
 					{
 						timeout: DELAYED_ACTIONS_DELAY * 2,
-						'TestWidget.output': expectedOutputs.delayedActionLink
+						'TestWidget.output': expectedOutputs.changeTextareaValueLaterLink
 					}
 				]).test().then(function() {
 						done();
@@ -160,11 +160,11 @@ describe('StateStep', function() {
 				this.timeout(DELAYED_ACTIONS_DELAY * 3);
 
 				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.otherDelayedAction(),
+					TestWidget.changeTextareaValueNow(),	// make sure the content of the output is reset
+					TestWidget.changeTextareaValueLaterAgain(),
 					{
 						timeout: DELAYED_ACTIONS_DELAY * 2,
-						'TestWidget.output': expectedOutputs.otherDelayedActionLink
+						'TestWidget.output': expectedOutputs.changeTextareaValueLaterAgainLink
 					}
 				]).test().then(function() {
 						done();
@@ -174,32 +174,15 @@ describe('StateStep', function() {
 				).done();
 			});
 
-			it('should detect changes and fail earlier than maximum if there was a change', function(done) {
-				this.timeout(DELAYED_ACTIONS_DELAY * 3);
-
-				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.delayedAction(),
-					{
-						timeout: DELAYED_ACTIONS_DELAY * 2,
-						'TestWidget.output': expectedOutputs.otherDelayedActionLink
-					}
-				]).test().then(function() {
-					done(new Error('Matched while the expected result should have been set later than evaluation.'))
-				}, function() {
-					done();
-				});
-			});
-
 			it('should fail if expected state comes later than timeout', function(done) {
 				this.timeout(DELAYED_ACTIONS_DELAY * 2);
 
 				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.otherDelayedAction(),
+					TestWidget.changeTextareaValueNow(),	// make sure the content of the output is reset
+					TestWidget.changeTextareaValueLaterAgain(),
 					{
 						timeout: DELAYED_ACTIONS_DELAY / 10,
-						'TestWidget.output': expectedOutputs.otherDelayedActionLink
+						'TestWidget.output': expectedOutputs.changeTextareaValueLaterAgainLink
 					}
 				]).test().then(function() {
 					done(new Error('Matched while the expected result should have been set later than evaluation.'))
@@ -212,11 +195,11 @@ describe('StateStep', function() {
 				this.timeout(DELAYED_ACTIONS_DELAY * 2);
 
 				featureWithScenario([
-					TestWidget.immediateAction(),	// make sure the content of the output is reset
-					TestWidget.delayedAction(),
+					TestWidget.changeTextareaValueNow(),	// make sure the content of the output is reset
+					TestWidget.changeTextareaValueLater(),
 					{
 						timeout: 0,
-						'TestWidget.output': expectedOutputs.delayedActionLink
+						'TestWidget.output': expectedOutputs.changeTextareaValueLaterLink
 					}
 				]).test().then(function() {
 					done(new Error('Matched while the expected result should have been set later than evaluation.'))

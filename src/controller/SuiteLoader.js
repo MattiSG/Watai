@@ -17,20 +17,20 @@ var Widget					= require('../model/Widget'),
 
 var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	/** The promise for the configuration for this test suite.
-	*@type	Q
+	*@type	{QPromise}
 	*@private
 	*/
 	configPromise: null,
 
 	/** Runner that will be fed all features found in the loaded suite.
-	*@type	Runner
+	*@type	{Runner}
 	*@private
 	*/
 	runner: null,
 
 	/** Sandbox for features, widgets and data load.
 	*
-	*@type	VM
+	*@type	{vm}
 	*@see	http://nodejs.org/api/vm.html
 	*@private
 	*/
@@ -98,7 +98,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		}
 
 		if (! config.name)
-			config.name = pathsUtils.basename(this.path, '/');	// remove a possible trailing separator
+			config.name = pathsUtils.basename(this.path, '/');	// [RETROCOMPATIBILITY] remove a possible trailing separator for Node < 0.9.6
 
 		if (config.browser) {
 			if (! browserCapabilitiesMap[config.browser]) {
@@ -133,6 +133,26 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		return	asyncElements.length
 				? promises.all(asyncElements).then(function() { return config })
 				: promises(config);
+	},
+
+	/** Transforms the given partial config hash from a form that may contain user shortcuts to a more complete form that is usable for the loaded test suite.
+	*
+	*@param		{Hash}	config	The config values to load.
+	*@param		{Hash}	alreadyLoaded	The config values that were previously parsed.
+	*@returns	{Hash}	The given config values, possibly transformed.
+	*@private
+	*/
+	parseConfigStep: function parseConfigStep(config, alreadyLoaded) {
+		if (config.baseURL)
+			config.baseURL = this.objectifyURL(config.baseURL);
+
+		if (config.seleniumServerURL)
+			config.seleniumServerURL = this.objectifyURL(config.seleniumServerURL);
+
+		if (config.tags && alreadyLoaded.tags)
+			config.tags = alreadyLoaded.tags.concat(config.tags);
+
+		return config;
 	},
 
 	/** Uniforms an URL, specified as a string or an URL object (as specified by the `url` Node core module), to an "overridable" URL object, i.e. an object with keys that take precedence over others removed.
@@ -193,7 +213,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		result[SuiteLoader.contextGlobals.log] = winston.loggers.get('load').info;	// this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
 
 		result[SuiteLoader.contextGlobals.assert] = require('assert');
-		result[SuiteLoader.contextGlobals.storage] = Object.create(null);
+		result[SuiteLoader.contextGlobals.storage] = {};
 
 		return result;
 	},
@@ -288,8 +308,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		try {
 			vm.runInContext(widgetName + ' = '
 							+ '__widgets__["' + widgetName + '"] = '
-							+ 'new Widget("' + widgetName + '",'
-							+ fs.readFileSync(widgetFile) + ','
+							+ 'new Widget("' + widgetName + '", '
+							+ '{' + fs.readFileSync(widgetFile) + '},'
 							+ 'driver);',
 							this.context,
 							widgetFile);
@@ -321,7 +341,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		];
 
 		try {
-			vm.runInContext('var featureContents = ' + fs.readFileSync(featureFile) + ';'
+			vm.runInContext('var featureContents = {' + fs.readFileSync(featureFile) + '};'
 							+ '__features__.push(new Feature('
 							+ featureParams.join(',')
 							+ '));',

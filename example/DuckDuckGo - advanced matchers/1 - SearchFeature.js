@@ -1,7 +1,5 @@
-{
-	description: 'Look up an ambiguous term',
+description: 'Look up an ambiguous term',
 
-	scenario: [
-		SearchBarWidget.searchFor(lookupTerm)
-	]
-}
+scenario: [
+	SearchBarWidget.searchFor(lookupTerm)
+]

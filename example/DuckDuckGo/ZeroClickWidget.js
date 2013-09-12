@@ -1,5 +1,1 @@
-{
-	elements: {
-		header:	{ id: 'zero_click_heading' }
-	}
-}
+header:	'#zero_click_heading'

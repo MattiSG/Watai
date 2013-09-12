@@ -17,36 +17,68 @@ var Widget = new Class( /** @lends Widget# */ {
 	/**@class	Models a set of controls on a website.
 	*
 	*@constructs
-	*@param	name	User-visible name of this widget.
-	*@param	values	A hash with the following form:
-	*	`elements`: a hash mapping attribute names to a hook. A hook is a one-pair hash mapping a selector type to an actual selector.
-	*	a series of methods definitions, i.e. `name: function name(…) { … }`, that will be made available
-	*@param	driver	The WebDriver instance in which this widget should look for its elements.
+	*@param	{String}	name	User-visible name of this widget.
+	*@param	{Hash}		values	A hash describing a widget's elements and actions. Keys will be made available directly on the resulting test widget, and associated values can be hooks for elements or functions for actions.
+	*@param	{WebDriver}	driver	The WebDriver instance in which this widget should look for its elements.
 	*/
 	initialize: function init(name, values, driver) {
 		this.name = name;
 
-		var widget = this;
+		var widget				= this,
+			elementsAndActions	= this.extractElementsAndActions(values);
 
-		Object.each(values.elements, function(typeAndSelector, key) {
+		Object.each(elementsAndActions.elements, function(typeAndSelector, key) {
 			Hook.addHook(widget, key, typeAndSelector, driver);
 			widget.addMagic(key);
 		});
 
-		delete values.elements;	// this key is magic, we don't want to iterate over it, as other keys are user-defined actions
-
-		Object.each(values, function(method, key) {
+		Object.each(elementsAndActions.actions, function(method, key) {
 			widget[key] = function() {
 				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
 
-				return function() {
+				// in order to present a meaningful test report, we need to have actions provide as much description elements as possible
+				// in user-provided functions, the function's name takes this place
+				// however, when wrapping these names, we can't assign to a Function's name, and dynamically creating its name means creating it through evaluation, which means we'd first have to extract its arguments' names, which is getting very complicated
+				var action = function() {
 					return method.apply(widget, args);
 				}
+
+				action.widget = widget;
+				action.reference = key;
+				action.title = method.name;
+				action.args = args;
+
+				return action;
 			}
 		});
 	},
 
-	/** Add magic methods on specially-formatted elements.
+	/** Extract elements and actions from the given parameter
+	*
+	*@param	{Hash} values	A hash describing a widget's elements and actions. Keys will be made available directly on the resulting test widget, and associated values can be hooks for elements or functions for actions.
+	*@return {Hash} A hash containing the following keys:
+	*	- `elements`: A hash mapping all hook names to their description.
+	*	- `actions`: A hash mapping all method names to the actual function.
+	*@see Hook
+	*@private
+	*/
+	extractElementsAndActions: function extractElementsAndActions(values) {
+		var result = {
+			elements: {},
+			actions: {}
+		};
+
+		Object.each(values, function(value, key) {
+			if (typeof value != 'function')
+				result.elements[key] = value;
+			else
+				result.actions[key] = value;
+		});
+
+		return result;
+	},
+
+	/** Add magic actions on specially-formatted elements.
 	* _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`.
 	*
 	*@param	{String}	key	The key that should be considered for adding magic elements.
@@ -68,11 +100,18 @@ var Widget = new Class( /** @lends Widget# */ {
 			widget[basename] = function() {	// wrapping to allow immediate calls in scenario steps	//TODO: rather return an object with methods, and leave preparation for scenarios to the Widget constructor
 				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
 
-				return function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
+				var action = function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access
 					return widget[key].then(function(element) {
 						return element[method].apply(element, args);
 					});
 				}
+
+				action.widget = widget;
+				action.reference = basename;
+				action.title = basename;
+				action.args = args;
+
+				return action;
 			}
 		});
 	},
@@ -90,7 +129,7 @@ var Widget = new Class( /** @lends Widget# */ {
 /** Maps magic element regexps from the action that should be generated.
 * _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`._
 *
-* Keys are names of the methods that should be added to the element, and values are regexps that trigger the magic.
+* Keys are names of the actions that should be added to the element, and values are regexps that trigger the magic.
 * The name of the generated member is the content of the first capturing parentheses match in the regexp.
 *
 *@see	RegExp#exec

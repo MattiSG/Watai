@@ -48,7 +48,7 @@ describe('Exit code', function() {
 	it('should be 0 on a successful test', function(done) {
 		this.timeout(30 * 1000);
 
-		var subject = spawn(BIN, [ 'example/DuckDuckGo' ]);
+		var subject = spawn(BIN, [ 'test/resources/SucceedingSuite' ]);
 
 		subject.on('exit', function(code) {
 			code.should.equal(0);

@@ -1,14 +1,6 @@
-{
-	elements: {
-		username:		{ id: 'profile_display_name' }
-	},
-	
-	getUsername: function getUsername() {
-		return this.username.getAttribute('value');
-	},
-	
-	setUsername: function setUsername(newName) {
-		this.username = newName;
-		return this.username.submit();
-	}
+usernameField: '#profile_display_name',
+
+setUsername: function setUsername(newName) {
+	return	this.setUsernameField(newName)()	// (yes, this syntax is ugly and will be fixed in an upcoming release, see issue #99)
+				.then(driver.submit.bind(driver));
 }

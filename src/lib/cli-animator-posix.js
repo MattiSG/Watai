@@ -9,10 +9,13 @@ var CLIanimator = {};
 *@param	{String}	type			The type of information to present (i.e. "debug", "info", "warn"…).
 *@param	{String}	message			The actual content to present to the user.
 *@param	{String}	[messageType]	The type of the actual content, for different colouration.
+*@param	{Stream}	[out]			The stream to which the content should be written. Defaults to process.stdout.
 */
-CLIanimator.log = function log(prefix, type, message, messageType) {
+CLIanimator.log = function log(prefix, type, message, messageType, out) {
+	out = out || process.stdout;
+
 	stop();
-	process.stdout.write(makeLine(prefix, typeToColorCode[type], message + '\n', typeToColorCode[messageType]));
+	out.write(makeLine(prefix, typeToColorCode[type], message + '\n', typeToColorCode[messageType]));
 }
 
 /** Erases the current line.
@@ -71,8 +74,9 @@ function makeFrames(msg) {
 var typeToColorCode = {
 	'debug'	: 34,
 	'cyan'	: 36,
+	'purple': 35,
 	'info'	: 32,
-	'error'	: 35,
+	'error'	: 31,
 	'warn'	: 31,
 	'yellow': 33,
 	'grey'	: 90,

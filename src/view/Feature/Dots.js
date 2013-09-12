@@ -21,10 +21,11 @@ var FeatureDots = new Class(/** @lends FeatureDots# */{
 	*/
 	showFailureDetails: function showFailureDetails() {
 		var result = '[FAILED] '
+					+ '#' + this.model.id + ': '
 					+ this.model.description
-					+ ' (#' + this.model.id + ')'
 					+ ':\n\t- '
-					+ this.model.promise.valueOf().exception.join('\n\t- ');
+					+ this.model.promise.inspect().reason.join('\n\t- ')
+					+ '\n';
 
 		process.stdout.write(result);	// more details at <https://github.com/kriskowal/q/wiki/API-Reference>
 	}

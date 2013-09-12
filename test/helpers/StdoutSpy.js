@@ -1,26 +1,39 @@
-/** Will be set to `true` whenever `process.stdout.write` is called.
+/** Buffer for data that would have been printed while muted.
+*
+*@type	{String}
 */
-var printed = false,
+var buffer = '',
 /** Set to `true` to silence calls to `process.stdout.write`.
+*
+*@type	{Boolean}
 */
 	suspend = false;
 
 
 process.stdout.write = (function(write) {
 	return function(buf, encoding, fd) {
-		if (! suspend)
+		if (suspend)
+			buffer += buf;
+		else
 			write.call(process.stdout, buf, encoding, fd);
-		printed = true;
 	};
 }(process.stdout.write));
 
 
-/** Resets the "printed" flag.
+/** Resets the printing buffer.
 *
-*@see	#didPrint
+*@see	#called
 */
 exports.reset = function reset() {
-	printed = false;
+	buffer = '';
+}
+
+/** Returns what would have been printed while muted.
+*
+*@returns	{String}
+*/
+exports.printed = function printed() {
+	return buffer;
 }
 
 /** Tells whether `stdout.write` was called since the last call to `reset`.
@@ -28,7 +41,7 @@ exports.reset = function reset() {
 *@returns	{Boolean}
 */
 exports.called = function called() {
-	return printed;
+	return !! buffer;
 }
 
 /** Stops `stdout` output.

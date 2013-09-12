@@ -22,11 +22,13 @@ var RunnerPageDump = new Class(/** @lends RunnerPageDump# */{
 
 	/** The promise for a page source dump.
 	*
-	*@type	{Promise}
+	*@type	{QPromise}
 	*@private
 	*/
 	pageSourcePromise: null,
 
+	/** Events that are listened to.
+	*/
 	events: {
 		feature: function(feature) {
 			if (this.attached)
@@ -39,7 +41,7 @@ var RunnerPageDump = new Class(/** @lends RunnerPageDump# */{
 				step.once('start', function() {
 					step.promise.fail(function() {
 						if (! view.pageSourcePromise)
-							view.pageSourcePromise = driver.getPageSource();
+							view.pageSourcePromise = driver.source();
 					});
 				});
 			});
@@ -49,7 +51,8 @@ var RunnerPageDump = new Class(/** @lends RunnerPageDump# */{
 	},
 
 	showFailure: function() {
-		this.pageSourcePromise.then(this.dumpPage.bind(this));
+		if (this.pageSourcePromise)	// we might fail even before the first feature was started (unreachable server, bad syntax…). In this case, do not do anything.
+			this.pageSourcePromise.then(this.dumpPage.bind(this));
 	},
 
 	/** Presents the given DOM dump to the user.

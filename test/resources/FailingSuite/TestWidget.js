@@ -1,5 +1,1 @@
-{
-	elements: {
-		missing:	{ id: 'missing' }
-	}
-}
+missing: '#missing'
