@@ -82,16 +82,6 @@ case "$1" in
 		done
 
 		$MOCHA_CMD --bail $opts ${dirs:-$DEFAULT_TEST_DIRS} ;;
-	coverage )
-		echo "Coverage information is not computable at the moment, due to an incompatibility with the used coverage library. This will be fixed ASAP."
-		exit 1
-		# based on http://tjholowaychuk.com/post/18175682663
-		rm -rf $COVERAGE_DIR
-		$JSCOVERAGE $SRC_DIR $COVERAGE_DIR
-		export npm_config_coverage=true
-		$MOCHA_CMD $DEFAULT_TEST_DIRS $ADDITIONAL_DIRS --reporter html-cov > $DOC_DIR/coverage.html &&
-		open $DOC_DIR/coverage.html
-		exit 0 ;;
 	doc )
 		docToCodeRatio
 		if [[ $2 = "private" ]]

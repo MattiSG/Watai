@@ -1,7 +1,4 @@
-var loadPath = (process.env.npm_config_coverage	// the trigger is an env variable. See build automation script.
-												// we copy NPM’s coverage trigger, even though we might not use NPM to run the coverage report
-				? '../../coverage'	// Mocha test coverage generation needs instrumented source, see http://tjholowaychuk.com/post/18175682663
-				: '../../src');		// default to non-instrumented source
+var loadPath = '../../src';
 
 /** The library to test, namespacing all public classes.
 */
