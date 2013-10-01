@@ -117,7 +117,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			if (typeof value == 'function') {
 				if (! value.length) {	// a function with no arg is executed synchronously
 					config[key] = value();
-				} else {	// if it has args, consider the first one is a callback
+				} else if (value.length == 1) {	// if it has args, consider the first one is a callback	// DEPRECATED, TO REMOVE IN v0.7
 					var promise = promises.defer();
 
 					value(function(result) {
@@ -126,6 +126,16 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 					});
 
 					asyncElements.push(promise.promise);
+				} else {	// DEPRECATED CONDITION: should become the default in v0.7; to keep compatibility with v0.6.0, a second argument is used to trigger promises
+					var passedDeferredObject = promises.defer();
+					var asyncEntry = promises.fcall(value, passedDeferredObject, true)	// DEPRECATED second param, useless in v0.7; used to give meaning to the promise-triggering argument in v0.6
+							.then(function(configEntry) {
+								config[key] = configEntry;
+							}, function(err) {
+								err.code = 'BAD_CONFIG';
+								throw err;
+							});
+					asyncElements.push(asyncEntry);
 				}
 			}
 		});
