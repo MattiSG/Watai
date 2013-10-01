@@ -10,19 +10,18 @@ var FeatureWebSocketView = new Class({
 			type        : self.wsNamespace + 'feature',
 			runDate     : self.runDate,
 			status      : 'success',
-			description : self.model.description,
-			reasons     : []
+			description : self.model.description
 		});
 	},
 
-	showFailure: function showFailure(reasons) {
+	showFailure: function showFailure(reason) {
 		var self = this;
 		this.sender.emit('send', {
 			type        : self.wsNamespace + 'feature',
 			runDate     : self.runDate,
 			status      : 'failure',
 			description : self.model.description + ' (#' + self.model.id + ')',
-			reasons     : reasons
+			reason      : this.getErrorDescription(reason)
 		});
 	}
 
