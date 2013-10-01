@@ -194,8 +194,8 @@
       }
     },
     "mattisg.configloader": {
-      "version": "0.1.5",
-      "from": "mattisg.configloader@0.1.5"
+      "version": "0.2.0-alpha.2",
+      "from": "mattisg.configloader@0.2"
     },
     "growl": {
       "version": "1.7.0",
