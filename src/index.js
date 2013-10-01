@@ -40,6 +40,16 @@ var suitePath	= suites[0],
 suite.getRunner()
 	 .then(function(runner) {
 	 	return runner.test();
+	 }, function(err) {
+	 	var logger = require('winston').loggers.get('load');
+	 	logger.debug(err.stack);
+
+	 	var errorDescription = ERRORS_LIST[err && err.code];
+	 	if (errorDescription) {
+	 		logger.error(errorDescription.title);
+	 		logger.info(errorDescription.help);
+	 	}
+	 	throw err;
 	 }).fail(function(err) {
 	 	var error = ERRORS_LIST[err && err.code] || { code: 1 };
 	 	statusCode = error.code;

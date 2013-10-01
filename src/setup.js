@@ -8,7 +8,7 @@ module.exports = {
 		},
 		"load": {
 			"console": {
-				"level"		: "warn",
+				"level"		: "info",
 				"colorize"	: true
 			}
 		}
