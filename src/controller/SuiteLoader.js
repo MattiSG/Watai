@@ -140,9 +140,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			}
 		});
 
-		return	asyncElements.length
-				? promises.all(asyncElements).then(function() { return config })
-				: promises(config);
+		return promises.all(asyncElements).thenResolve(config);
 	},
 
 	/** Transforms the given partial config hash from a form that may contain user shortcuts to a more complete form that is usable for the loaded test suite.
