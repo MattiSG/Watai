@@ -4,8 +4,7 @@ var http             = require('http'),
 	WebSocketServer  = require('ws').Server,
 	FeatureWebSocket = require('../Feature/WebSocket'),
 	wsNamespace      = 'watai:websocket:',
-	EventEmitter     = require('events').EventEmitter,
-	sender           = new EventEmitter();
+	EventEmitter     = require('events').EventEmitter;
 
 
 /**
@@ -20,14 +19,14 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 	 * Initialize the view.
 	 * @param  {object} model - The model
 	 */
-	initialize: function initialize(model) {
-		this.httpServer = http.createServer();
-		this.wss        = new WebSocketServer({server: this.httpServer});
-		this.runDate    = new Date();
-		this.httpServer.listen(9999);
-		this.wss.on('connection', function(ws) {
-			sender.on('send', function(data) {
-				ws.send(JSON.stringify(data));
+	initialize: function initialize(model, options) {
+		var self     = this;
+		this.sender  = (options && options.sender) ? options.sender : new EventEmitter();
+		this.wss     = (options && options.wss)    ? options.wss    : new WebSocketServer({port: 9999});
+		this.runDate = new Date();
+		this.wss.on('connection', function(socket) {
+			self.sender.on('send', function(data) {
+				socket.send(JSON.stringify(data));
 			});
 		});
 		this.parent(model);
@@ -51,11 +50,10 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		 */
 		ready: function onReady() {
 			var self = this;
-			sender.emit('send', {
-				type    : wsNamespace + 'runner',
-				action  : 'start',
+			self.sender.emit('send', {
+				type    : wsNamespace + 'runner:start',
 				runDate : self.runDate,
-				name    : self.model.toString()
+				name    : self.model.toString() ? self.model.toString() : 'Runner'
 			});
 		},
 
@@ -72,11 +70,21 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		 */
 		feature: function onFeature(feature) {
 			var view         = new FeatureWebSocket(feature);
-			view.sender      = sender;
+			view.sender      = this.sender;
 			view.wsNamespace = wsNamespace;
 			view.runDate     = this.runDate;
 		}
+	},
+
+	/**
+	 * Emits a WebSocket message containg a single `type` property with
+	 * `watai:websocket:runner:stop` as value and closes the Websocket server.
+	 */
+	showEnd: function showEnd() {
+		this.sender.emit('send', {type: wsNamespace + 'runner:stop'});
+		this.wss.close();
 	}
+
 });
 
 module.exports = RunnerWebSocket;
