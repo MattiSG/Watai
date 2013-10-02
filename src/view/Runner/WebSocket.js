@@ -43,8 +43,7 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		 *
 		 * The WebSocket message object has the following properties:
 		 *
-		 *   - `type`        : Always set to `watai:websocket:runner`
-		 *   - `action`      : Always set to `start` for this event
+		 *   - `type`        : Always set to `watai:websocket:runner:start`
 		 *   - `runDate`     : The runner start date
 		 *   - `name`        : The Runner name
 		 */
