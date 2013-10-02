@@ -51,7 +51,7 @@
     },
     "wd": {
       "version": "0.1.1",
-      "from": "wd@0.1.1",
+      "from": "https://registry.npmjs.org/wd/-/wd-0.1.1.tgz",
       "resolved": "https://registry.npmjs.org/wd/-/wd-0.1.1.tgz",
       "dependencies": {
         "async": {
@@ -107,32 +107,39 @@
             "hawk": {
               "version": "0.13.1",
               "from": "hawk@0.13.1",
+              "resolved": "https://registry.npmjs.org/hawk/-/hawk-0.13.1.tgz",
               "dependencies": {
                 "hoek": {
                   "version": "0.8.5",
-                  "from": "hoek@0.8.5"
+                  "from": "hoek@0.8.5",
+                  "resolved": "https://registry.npmjs.org/hoek/-/hoek-0.8.5.tgz"
                 },
                 "boom": {
                   "version": "0.4.2",
                   "from": "boom@0.4.2",
+                  "resolved": "https://registry.npmjs.org/boom/-/boom-0.4.2.tgz",
                   "dependencies": {
                     "hoek": {
                       "version": "0.9.1",
-                      "from": "hoek@0.9.1"
+                      "from": "hoek@0.9.1",
+                      "resolved": "https://registry.npmjs.org/hoek/-/hoek-0.9.1.tgz"
                     }
                   }
                 },
                 "cryptiles": {
                   "version": "0.2.2",
-                  "from": "cryptiles@0.2.2"
+                  "from": "cryptiles@0.2.2",
+                  "resolved": "https://registry.npmjs.org/cryptiles/-/cryptiles-0.2.2.tgz"
                 },
                 "sntp": {
                   "version": "0.2.4",
                   "from": "sntp@0.2.4",
+                  "resolved": "https://registry.npmjs.org/sntp/-/sntp-0.2.4.tgz",
                   "dependencies": {
                     "hoek": {
                       "version": "0.9.1",
-                      "from": "hoek@0.9.1"
+                      "from": "hoek@0.9.1",
+                      "resolved": "https://registry.npmjs.org/hoek/-/hoek-0.9.1.tgz"
                     }
                   }
                 }
@@ -144,7 +151,8 @@
             },
             "oauth-sign": {
               "version": "0.3.0",
-              "from": "oauth-sign@0.3.0"
+              "from": "oauth-sign@0.3.0",
+              "resolved": "https://registry.npmjs.org/oauth-sign/-/oauth-sign-0.3.0.tgz"
             },
             "cookie-jar": {
               "version": "0.3.0",
@@ -152,11 +160,13 @@
             },
             "node-uuid": {
               "version": "1.4.1",
-              "from": "node-uuid@1.4.1"
+              "from": "node-uuid@1.4.1",
+              "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.1.tgz"
             },
             "mime": {
               "version": "1.2.11",
-              "from": "mime@1.2.11"
+              "from": "mime@1.2.11",
+              "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.11.tgz"
             },
             "form-data": {
               "version": "0.0.8",
@@ -178,7 +188,7 @@
         },
         "archiver": {
           "version": "0.4.9",
-          "from": "archiver@0.4.9",
+          "from": "https://registry.npmjs.org/archiver/-/archiver-0.4.9.tgz",
           "resolved": "https://registry.npmjs.org/archiver/-/archiver-0.4.9.tgz",
           "dependencies": {
             "readable-stream": {
@@ -195,11 +205,30 @@
     },
     "mattisg.configloader": {
       "version": "0.1.5",
-      "from": "mattisg.configloader@0.1.5"
+      "from": "mattisg.configloader@0.1.5",
+      "resolved": "https://registry.npmjs.org/mattisg.configloader/-/mattisg.configloader-0.1.5.tgz"
+    },
+    "ws": {
+      "version": "0.4.31",
+      "from": "ws@",
+      "dependencies": {
+        "commander": {
+          "version": "0.6.1",
+          "from": "commander@~0.6.1"
+        },
+        "nan": {
+          "version": "0.3.2",
+          "from": "nan@~0.3.0"
+        },
+        "tinycolor": {
+          "version": "0.0.1",
+          "from": "tinycolor@0.x"
+        }
+      }
     },
     "growl": {
       "version": "1.7.0",
-      "from": "growl@"
+      "from": "growl@1.7.0"
     }
   }
 }
