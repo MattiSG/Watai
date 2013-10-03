@@ -50,7 +50,18 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 	*	source:	the original passed error
 	*/
 	getErrorDescription: function getErrorDescription(error) {
-		var userDisplayable = ERRORS_LIST[error && error.code] || {};
+		var userDisplayable = {};
+
+		if (ERRORS_LIST[error && error.code]) {	// we have provided advanced help for such an error
+			userDisplayable = ERRORS_LIST[error && error.code];
+		} else if (error.data) {	// unknown Selenium error, for example by SauceLabs. Do our best to format it.
+			var lines = error.data.split('\n');
+
+			userDisplayable = {
+				title:	lines.shift(),
+				help:	lines.join('\n')
+			}
+		}
 
 		return {
 			title:	userDisplayable.title,	// no default value: this is how a client can know if a detailed description was found; don't try putting `error.toString()`: some values do _not_ have a toString() method
