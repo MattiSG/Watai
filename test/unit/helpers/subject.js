@@ -1,4 +1,4 @@
-var loadPath = '../../src';
+var loadPath = '../../../src';
 
 /** The library to test, namespacing all public classes.
 */

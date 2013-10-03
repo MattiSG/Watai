@@ -19,7 +19,7 @@ describe('Feature', function() {
 		WidgetTest = require('../helpers/testWidget').getWidget(my.driver);
 
 		featureWithScenario = function featureWithScenario(scenario) {
-			return new Watai.Feature('Test feature', scenario, { TestWidget: WidgetTest }, require('../config'));
+			return new Watai.Feature('Test feature', scenario, { TestWidget: WidgetTest }, require('../../config'));
 		}
 	});
 

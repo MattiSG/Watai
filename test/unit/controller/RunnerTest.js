@@ -66,7 +66,7 @@ describe('Runner', function() {
 
 	var feature = new Watai.Feature('RunnerTest feature', [
 		function() { featureEvaluationCount++ }
-	], {}, require('../config'));
+	], {}, require('../../config'));
 
 	var failingFeature = new Watai.Feature('RunnerTest failing feature', [
 		function() {
@@ -74,7 +74,7 @@ describe('Runner', function() {
 			result.reject('This is reason enough for rejection.');
 			return result.promise;
 		}
-	], {}, require('../config'));
+	], {}, require('../../config'));
 
 
 	describe('test()', function() {
