@@ -46,42 +46,6 @@ docToCodeRatio() {
 
 
 case "$1" in
-	test )
-		shift
-
-		opts=""
-		dirs=""
-
-		if [[ $1 = "--exhaustive" ]]
-		then
-			shift
-
-			dirs="$DEFAULT_TEST_DIRS $ADDITIONAL_DIRS"
-
-			echo '****************'
-			echo 'Testing examples'
-			echo '****************'
-
-			for suite in $BASEDIR/example/*
-			do
-				if ! ./go "$suite"
-				then
-					echo 'Some examples fail, cancelling tests'
-					exit 1
-				fi
-			done
-
-			echo 'All examples pass'
-		fi
-
-		for arg in "$@"
-		do
-			if [[ -e "$arg" ]]
-			then dirs="$dirs $arg"
-			fi
-		done
-
-		$MOCHA_CMD --bail $opts ${dirs:-$DEFAULT_TEST_DIRS} ;;
 	doc )
 		docToCodeRatio
 		if [[ $2 = "private" ]]
