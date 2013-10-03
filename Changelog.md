@@ -20,6 +20,7 @@ v0.6
 #### Minor changes
 
 - Async configuration entries can now [use a promise](https://github.com/MattiSG/Watai/wiki/Configuration#async-config) instead of a callback. This allows for async errors to be detected.
+- Improve display of unknown errors.
 
 
 ### v0.6.0
