@@ -63,7 +63,6 @@
     "growl": ">= 1.5"
   },
   "devDependencies": {
-    "longjohn": "0.2",
     "should": ">= 1.2.2",
     "mocha": ">= 1.4",
     "istanbul": "0.1"
