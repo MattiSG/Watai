@@ -53,6 +53,8 @@ suite.getRunner()
 	 }).fail(function(err) {
 	 	var error = ERRORS_LIST[err && err.code] || { code: 1 };
 	 	statusCode = error.code;
+	 	if (err.stack)	// TODO: improve detection of what is an actual uncaught exception (We currently have an ambiguity: is the promise rejected because the test failed or because an error occurred? If error, we should tell the user. This is (badly) approximated by the reason for rejection having a stack trace or not.)
+	 		console.error(err.stack);
 	 }).done();	// ensure any uncaught exception gets rethrown
 
 
