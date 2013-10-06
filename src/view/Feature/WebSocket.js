@@ -11,15 +11,15 @@ var FeatureWebSocket = new Class(/** @lends FeatureWebSocket# */{
 	*
 	* This will send a WebSocket message with the following properties:
 	*
-	*   - `type`        : Always set to `watai:websocket:feature`
-	*   - `runDate`     : The test suite running date (when `Runner` start)
-	*   - `status`      : Always set to `success`
-	*   - `description` : The current model description
+	*   - `type`        : Always set to `watai:websocket:feature`.
+	*   - `runner`      : Object containing the related runner data (`name` and `runDate` properties).
+	*   - `status`      : Always set to `success`.
+	*   - `description` : The current model description.
 	*/
 	showSuccess: function showSuccess() {
 		this.sender.emit('send', {
 			type        : this.WS_NAMESPACE + 'feature',
-			runDate     : this.runDate,
+			runner      : this.runner,
 			status      : 'success',
 			description : this.model.description
 		});
@@ -29,11 +29,11 @@ var FeatureWebSocket = new Class(/** @lends FeatureWebSocket# */{
 	*
 	* This will send a WebSocket message with the following properties:
 	*
-	*   - `type`        : Always set to `watai:websocket:feature`
-	*   - `runDate`     : The test suite running date (when `Runner` start)
-	*   - `status`      : Always set to `failure`
-	*   - `description` : The current model description (with feature ID)
-	*   - `reason`      : The failure error description
+	*   - `type`        : Always set to `watai:websocket:feature`.
+	*   - `runner`      : Object containing the related runner data (`name` and `runDate` properties).
+	*   - `status`      : Always set to `failure`.
+	*   - `description` : The current model description (with feature ID).
+	*   - `reason`      : The failure error description.
 	*
 	*  The `reason` property is an object with the following properties:
 	*
@@ -48,7 +48,7 @@ var FeatureWebSocket = new Class(/** @lends FeatureWebSocket# */{
 	showFailure: function showFailure(reason) {
 		this.sender.emit('send', {
 			type        : this.WS_NAMESPACE + 'feature',
-			runDate     : this.runDate,
+			runner      : this.runner,
 			status      : 'failure',
 			description : this.model.description + ' (#' + this.model.id + ')',
 			reason      : this.getErrorDescription(reason)

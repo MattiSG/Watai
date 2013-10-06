@@ -16,7 +16,7 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 
 	/** Initialize the view.
 	*
-	* @param  {object} model - The model
+	* @param  {object} model - The model.
 	*/
 	initialize: function initialize(model, options) {
 		this.parent(model);
@@ -40,9 +40,9 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		*
 		* The WebSocket message object has the following properties:
 		*
-		*   - `type`        : Always set to `watai:websocket:runner:start`
-		*   - `runDate`     : The runner start date
-		*   - `name`        : The Runner name
+		*   - `type`        : Always set to `watai:websocket:runner:start`.
+		*   - `runDate`     : The runner start date.
+		*   - `name`        : The Runner name.
 		*/
 		ready: function onReady() {
 			this.sender.emit('send', {
@@ -56,17 +56,20 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		*
 		* These properties are:
 		*
-		*   - `sender`      : `EventEmitter` instance with a `send` event that passes message to WebSocket's current connection
-		*   - `wsNamespace` : The prefix to use as namespace for WebSocket message `type` property
-		*   - `runDate`     : The test suite running date (when this runner starts)
+		*   - `sender`       : `EventEmitter` instance with a `send` event that passes message to WebSocket's current connection.
+		*   - `WS_NAMESPACE` : The prefix to use as namespace for WebSocket message `type` property.
+		*   - `runner`       : Object containing runner data (`name` and `runDate` properties).
 		*
-		* @param {object} feature - The feature
+		* @param {object} feature - The feature.
 		*/
 		feature: function onFeature(feature) {
 			var view          = new FeatureWebSocket(feature);
 			view.sender       = this.sender;
 			view.WS_NAMESPACE = WS_NAMESPACE;
-			view.runDate      = this.runDate;
+			view.runner       = {
+				name    : this.model.toString() || 'Runner',
+				runDate : this.runDate
+			};
 		}
 	},
 
