@@ -42,9 +42,7 @@ describe('Views', function() {
 		});
 
 		afterEach(function() {
-			try {
-				subject.wss.close();
-			} catch (e) {}
+			if (subject.wss && subject.wss._server) subject.wss.close();
 			sandbox.restore();
 		});
 
