@@ -3,9 +3,9 @@
 var http             = require('http'),
 	WebSocketServer  = require('ws').Server,
 	FeatureWebSocket = require('../Feature/WebSocket'),
-	wsNamespace      = 'watai:websocket:',
 	EventEmitter     = require('events').EventEmitter;
 
+var WS_NAMESPACE = 'watai:websocket:';
 
 /** @class A work-in-progress WebSocket interface that sends Runner's events through WebSocket.
 * WARNING: EXPERIMENTAL. This view is not ready for actual delivery yet.
@@ -47,7 +47,7 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		*/
 		ready: function onReady() {
 			this.sender.emit('send', {
-				type    : wsNamespace + 'runner:start',
+				type    : WS_NAMESPACE + 'runner:start',
 				runDate : this.runDate,
 				name    : this.model.toString() || 'Runner'
 			});
@@ -64,10 +64,10 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		* @param {object} feature - The feature
 		*/
 		feature: function onFeature(feature) {
-			var view         = new FeatureWebSocket(feature);
-			view.sender      = this.sender;
-			view.wsNamespace = wsNamespace;
-			view.runDate     = this.runDate;
+			var view          = new FeatureWebSocket(feature);
+			view.sender       = this.sender;
+			view.WS_NAMESPACE = WS_NAMESPACE;
+			view.runDate      = this.runDate;
 		}
 	},
 
@@ -75,7 +75,7 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 	* `watai:websocket:runner:stop` as value and closes the Websocket server.
 	*/
 	showEnd: function showEnd() {
-		this.sender.emit('send', {type: wsNamespace + 'runner:stop'});
+		this.sender.emit('send', {type: WS_NAMESPACE + 'runner:stop'});
 		this.wss.close();
 	}
 

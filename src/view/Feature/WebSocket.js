@@ -18,7 +18,7 @@ var FeatureWebSocket = new Class(/** @lends FeatureWebSocket# */{
 	*/
 	showSuccess: function showSuccess() {
 		this.sender.emit('send', {
-			type        : this.wsNamespace + 'feature',
+			type        : this.WS_NAMESPACE + 'feature',
 			runDate     : this.runDate,
 			status      : 'success',
 			description : this.model.description
@@ -47,7 +47,7 @@ var FeatureWebSocket = new Class(/** @lends FeatureWebSocket# */{
 	*/
 	showFailure: function showFailure(reason) {
 		this.sender.emit('send', {
-			type        : this.wsNamespace + 'feature',
+			type        : this.WS_NAMESPACE + 'feature',
 			runDate     : this.runDate,
 			status      : 'failure',
 			description : this.model.description + ' (#' + this.model.id + ')',
