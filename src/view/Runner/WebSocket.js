@@ -8,15 +8,16 @@ var http             = require('http'),
 
 
 /** @class A work-in-progress WebSocket interface that sends Runner's events through WebSocket.
- * WARNING: EXPERIMENTAL. This view is not ready for actual delivery yet.
- */
+* WARNING: EXPERIMENTAL. This view is not ready for actual delivery yet.
+*/
 var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 
 	Extends: require('../PromiseView'),
 
 	/** Initialize the view.
-	 * @param  {object} model - The model
-	 */
+	*
+	* @param  {object} model - The model
+	*/
 	initialize: function initialize(model, options) {
 		this.parent(model);
 		var self     = this;
@@ -31,18 +32,19 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 	},
 
 	/** The view events.
-	 * @type {object}
-	 */
+	*
+	* @type {object}
+	*/
 	events: {
 
 		/** Sends a WebSocket message when Runner is ready to start.
-		 *
-		 * The WebSocket message object has the following properties:
-		 *
-		 *   - `type`        : Always set to `watai:websocket:runner:start`
-		 *   - `runDate`     : The runner start date
-		 *   - `name`        : The Runner name
-		 */
+		*
+		* The WebSocket message object has the following properties:
+		*
+		*   - `type`        : Always set to `watai:websocket:runner:start`
+		*   - `runDate`     : The runner start date
+		*   - `name`        : The Runner name
+		*/
 		ready: function onReady() {
 			this.sender.emit('send', {
 				type    : wsNamespace + 'runner:start',
@@ -52,15 +54,15 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		},
 
 		/** Assigns new properties to each feature.
-		 *
-		 * These properties are:
-		 *
-		 *   - `sender`      : `EventEmitter` instance with a `send` event that passes message to WebSocket's current connection
-		 *   - `wsNamespace` : The prefix to use as namespace for WebSocket message `type` property
-		 *   - `runDate`     : The test suite running date (when this runner starts)
-		 *
-		 * @param {object} feature - The feature
-		 */
+		*
+		* These properties are:
+		*
+		*   - `sender`      : `EventEmitter` instance with a `send` event that passes message to WebSocket's current connection
+		*   - `wsNamespace` : The prefix to use as namespace for WebSocket message `type` property
+		*   - `runDate`     : The test suite running date (when this runner starts)
+		*
+		* @param {object} feature - The feature
+		*/
 		feature: function onFeature(feature) {
 			var view         = new FeatureWebSocket(feature);
 			view.sender      = this.sender;
@@ -70,8 +72,8 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 	},
 
 	/** Emits a WebSocket message containg a single `type` property with
-	 * `watai:websocket:runner:stop` as value and closes the Websocket server.
-	 */
+	* `watai:websocket:runner:stop` as value and closes the Websocket server.
+	*/
 	showEnd: function showEnd() {
 		this.sender.emit('send', {type: wsNamespace + 'runner:stop'});
 		this.wss.close();
