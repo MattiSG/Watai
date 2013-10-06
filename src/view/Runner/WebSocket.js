@@ -18,6 +18,7 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 	 * @param  {object} model - The model
 	 */
 	initialize: function initialize(model, options) {
+		this.parent(model);
 		var self     = this;
 		this.sender  = (options && options.sender) ? options.sender : new EventEmitter();
 		this.wss     = (options && options.wss)    ? options.wss    : new WebSocketServer({port: 9999});
@@ -27,7 +28,6 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 				socket.send(JSON.stringify(data));
 			});
 		});
-		this.parent(model);
 	},
 
 	/** The view events.
