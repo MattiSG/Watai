@@ -20,15 +20,14 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 	*/
 	initialize: function initialize(model, options) {
 		this.parent(model);
-		var self     = this;
 		this.sender  = (options && options.sender) ? options.sender : new EventEmitter();
 		this.wss     = (options && options.wss)    ? options.wss    : new WebSocketServer({port: 9999});
 		this.runDate = new Date();
 		this.wss.on('connection', function(socket) {
-			self.sender.on('send', function(data) {
+			this.sender.on('send', function(data) {
 				socket.send(JSON.stringify(data));
 			});
-		});
+		}.bind(this));
 	},
 
 	/** The view events.
