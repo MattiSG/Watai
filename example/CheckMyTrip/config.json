@@ -8,6 +8,6 @@
 
 	"timeout": 10000,
 
-	"views": [ "Dots", "Instafail", "WebSocket" ],
+	"views": [ "Dots", "Instafail" ],
 	"quit": "always"
 }
