@@ -17,12 +17,11 @@ var FeatureWebSocket = new Class(/** @lends FeatureWebSocket# */{
 	 *   - `description` : The current model description
 	 */
 	showSuccess: function showSuccess() {
-		var self = this;
 		this.sender.emit('send', {
-			type        : self.wsNamespace + 'feature',
-			runDate     : self.runDate,
+			type        : this.wsNamespace + 'feature',
+			runDate     : this.runDate,
 			status      : 'success',
-			description : self.model.description
+			description : this.model.description
 		});
 	},
 
@@ -47,12 +46,11 @@ var FeatureWebSocket = new Class(/** @lends FeatureWebSocket# */{
 	 * @param {object} reason - The failure error
 	 */
 	showFailure: function showFailure(reason) {
-		var self = this;
 		this.sender.emit('send', {
-			type        : self.wsNamespace + 'feature',
-			runDate     : self.runDate,
+			type        : this.wsNamespace + 'feature',
+			runDate     : this.runDate,
 			status      : 'failure',
-			description : self.model.description + ' (#' + self.model.id + ')',
+			description : this.model.description + ' (#' + this.model.id + ')',
 			reason      : this.getErrorDescription(reason)
 		});
 	}
