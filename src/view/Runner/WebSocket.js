@@ -7,16 +7,14 @@ var http             = require('http'),
 	EventEmitter     = require('events').EventEmitter;
 
 
-/**
- * @class A work-in-progress WebSocket interface that sends Runner's events through WebSocket.
+/** @class A work-in-progress WebSocket interface that sends Runner's events through WebSocket.
  * WARNING: EXPERIMENTAL. This view is not ready for actual delivery yet.
  */
 var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 
 	Extends: require('../PromiseView'),
 
-	/**
-	 * Initialize the view.
+	/** Initialize the view.
 	 * @param  {object} model - The model
 	 */
 	initialize: function initialize(model, options) {
@@ -32,14 +30,12 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		this.parent(model);
 	},
 
-	/**
-	 * The view events.
+	/** The view events.
 	 * @type {object}
 	 */
 	events: {
 
-		/**
-		 * Sends a WebSocket message when Runner is ready to start.
+		/** Sends a WebSocket message when Runner is ready to start.
 		 *
 		 * The WebSocket message object has the following properties:
 		 *
@@ -55,8 +51,7 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 			});
 		},
 
-		/**
-		 * Assigns new properties to each feature.
+		/** Assigns new properties to each feature.
 		 *
 		 * These properties are:
 		 *
@@ -74,8 +69,7 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		}
 	},
 
-	/**
-	 * Emits a WebSocket message containg a single `type` property with
+	/** Emits a WebSocket message containg a single `type` property with
 	 * `watai:websocket:runner:stop` as value and closes the Websocket server.
 	 */
 	showEnd: function showEnd() {

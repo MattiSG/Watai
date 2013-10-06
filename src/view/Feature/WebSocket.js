@@ -1,15 +1,13 @@
 'use strict';
 
-/**
- * @class A work-in-progress WebSocket interface that sends Feature's events through WebSocket.
+/** @class A work-in-progress WebSocket interface that sends Feature's events through WebSocket.
  * WARNING: EXPERIMENTAL. This view is not ready for actual delivery yet.
  */
 var FeatureWebSocket = new Class(/** @lends FeatureWebSocket# */{
 
 	Extends: require('../PromiseView'),
 
-	/**
-	 * Sends details of a test success.
+	/** Sends details of a test success.
 	 *
 	 * This will send a WebSocket message with the following properties:
 	 *
@@ -28,8 +26,7 @@ var FeatureWebSocket = new Class(/** @lends FeatureWebSocket# */{
 		});
 	},
 
-	/**
-	 * Sends details of a test failure.
+	/** Sends details of a test failure.
 	 *
 	 * This will send a WebSocket message with the following properties:
 	 *
@@ -45,7 +42,7 @@ var FeatureWebSocket = new Class(/** @lends FeatureWebSocket# */{
 	 *   - `help`   : The error help
 	 *   - `source` : The error source code
 	 *
-	 * This object is returned by `this.getErrorDescription()`.
+	 * This object is returned by @see PromiseView#getErrorDescription.
 	 *
 	 * @param {object} reason - The failure error
 	 */
