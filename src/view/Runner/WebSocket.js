@@ -48,11 +48,10 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		 *   - `name`        : The Runner name
 		 */
 		ready: function onReady() {
-			var self = this;
-			self.sender.emit('send', {
+			this.sender.emit('send', {
 				type    : wsNamespace + 'runner:start',
-				runDate : self.runDate,
-				name    : self.model.toString() ? self.model.toString() : 'Runner'
+				runDate : this.runDate,
+				name    : this.model.toString() || 'Runner'
 			});
 		},
 
