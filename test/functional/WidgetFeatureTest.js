@@ -1,6 +1,6 @@
-var Watai		= require('../helpers/subject'),
-	my			= require('../helpers/driver').getDriverHolder(),
-	testWidget	= require('../helpers/testWidget'),
+var Watai		= require('../unit/helpers/subject'),
+	my			= require('../unit/helpers/driver').getDriverHolder(),
+	testWidget	= require('../unit/helpers/testWidget'),
 	config		= require('../config'),
 	should		= require('should');
 

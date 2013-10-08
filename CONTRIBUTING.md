@@ -43,8 +43,8 @@ Merging your changes
 
 Once your changes are ready, i.e. you made sure:
 
-1. You didn't break anything (with `./go test --exhaustive`).
-2. You tested them properly _(coverage information is currently impossible to obtain due to an incompatibility with the coverage engine used — to be fixed)_.
+1. You didn't break anything (`npm run-script test-exhaustive`).
+2. You tested them properly (`npm test --coverage`).
 3. You cleanly documented the new code (with `./go doc private`).
 
 …you may open a [pull request](https://help.github.com/articles/using-pull-requests) to ask your new code to be merged in the baseline.

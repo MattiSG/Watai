@@ -10,7 +10,6 @@ npm-debug.log
 node_modules
 coverage
 doc/api
-doc/coverage.html
 dist
 
 # IDEs

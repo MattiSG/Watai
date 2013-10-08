@@ -43,7 +43,11 @@
     "url": "https://github.com/MattiSG/Watai.git"
   },
   "scripts": {
-    "test": "./go test --exhaustive"
+    "test": "istanbul test _mocha test/unit test/functional",
+    "test-integration": "istanbul test _mocha test/integration",
+    "test-examples": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite ./src/index.js suite",
+    "test-examples-parallel": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite -P 4 ./src/index.js suite",
+    "test-exhaustive": "npm run-script test-examples && npm test && npm run-script test-integration"
   },
   "engines": {
     "node": ">=0.6.18 <0.11"
@@ -61,7 +65,8 @@
   "devDependencies": {
     "longjohn": "0.2",
     "should": ">= 1.2.2",
-    "mocha": ">= 1.4"
+    "mocha": ">= 1.4",
+    "istanbul": "0.1"
   },
   "preferGlobal": true
 }
