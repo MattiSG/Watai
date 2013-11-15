@@ -264,7 +264,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	},
 
 	attachViewsTo: function attachViewsTo(runner) {
-		this.config.views.each(function(viewName) {
+		Array.from(this.config.views).each(function(viewName) {
 			try {
 				var viewClass = require('../view/Runner/' + viewName);
 				new viewClass(runner);
