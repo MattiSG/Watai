@@ -215,12 +215,12 @@ var Runner = new Class( /** @lends Runner# */ {
 	start: function start() {
 		this.failures = {};
 		this.currentFeature = -1;
+		this.startNextFeature();
 
-		return this.startNextFeature();
+		return this.promise;
 	},
 
 	/** Increments the feature index, starts evaluation of the next feature, and quits the driver if all features were evaluated.
-	*@returns	{QPromise}	The promise for this run to be finished.
 	*
 	*@private
 	*/
@@ -233,8 +233,6 @@ var Runner = new Class( /** @lends Runner# */ {
 			this.evaluateFeature(this.features[this.currentFeature]);
 		else
 			this.finish();
-
-		return this.promise;
 	},
 
 	/** Prepares and triggers the evaluation of the given feature.
@@ -245,20 +243,18 @@ var Runner = new Class( /** @lends Runner# */ {
 	evaluateFeature: function evaluateFeature(feature) {
 		this.emit('feature', feature);
 
-		feature.test().done(this.startNextFeature.bind(this),
-							this.handleFeatureFailure.bind(this, feature)); // leave last arg to pass failure description
+		feature.test()
+			   .fail(this.storeFailure.bind(this, feature)) // leave last arg to pass failure description
+			   .done(this.startNextFeature.bind(this));	// TODO: make startNextFeature return a promise for the next feature to be evaluated, and orchestrate flow around it with an array reduce
 	},
 
-	/** Callback handler upon feature evaluation. Flags failures and calls the `startNextFeature` handler.
+	/** Callback handler upon feature evaluation. Flags failures and prepares final error report.
 	*
 	*@private
-	*@see	#startNextFeature
 	*/
-	handleFeatureFailure: function handleFeatureFailure(feature, message) {
+	storeFailure: function storeFailure(feature, message) {
 		this.failures[feature] = message;
 		this.failed = true;
-
-		this.startNextFeature();
 	},
 
 	/** Informs of the end result and cleans the instance up after tests runs.
