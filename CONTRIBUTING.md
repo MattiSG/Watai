@@ -43,7 +43,7 @@ Merging your changes
 
 Once your changes are ready, i.e. you made sure:
 
-1. You didn't break anything (`npm run-script test-exhaustive`).
+1. You didn't break anything (`npm run test-exhaustive`).
 2. You tested them properly (`npm test --coverage`).
 3. You cleanly documented the new code (with `./go doc private`).
 
