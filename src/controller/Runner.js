@@ -227,12 +227,11 @@ var Runner = new Class( /** @lends Runner# */ {
 	startNextFeature: function startNextFeature() {
 		this.currentFeature++;
 
-		if (this.config.bail && Object.getLength(this.failures))
+		if (this.currentFeature >= this.features.length
+			|| (this.config.bail && Object.getLength(this.failures)))
 			this.finish();
-		else if (this.currentFeature < this.features.length)
-			this.evaluateFeature(this.features[this.currentFeature]);
 		else
-			this.finish();
+			this.evaluateFeature(this.features[this.currentFeature]);
 	},
 
 	/** Prepares and triggers the evaluation of the given feature.
