@@ -53,11 +53,12 @@
     "mootools": "1.4",
     "winston": "0.6",
     "wd": "0.1",
-    "mattisg.configloader": "0.1.5",
-    "ws": "0.4.x"
+    "mattisg.configloader": "0.1.5"
   },
   "optionalDependencies": {
-    "growl": ">= 1.5"
+    "growl": ">= 1.5",
+    "options": ">=0.0.5",
+    "ws": ">=0.4"
   },
   "devDependencies": {
     "longjohn": "0.2",
