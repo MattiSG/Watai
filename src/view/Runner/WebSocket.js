@@ -1,11 +1,12 @@
 'use strict';
 
-var http             = require('http'),
-	WebSocketServer  = require('ws').Server,
+var WebSocketClient  = require('websocket').client,
 	FeatureWebSocket = require('../Feature/WebSocket'),
 	EventEmitter     = require('events').EventEmitter;
 
-var WS_NAMESPACE = 'watai:websocket:';
+var WS_NAMESPACE = 'watai:websocket:',
+	WS_HOST      = 'localhost',
+	WS_PORT      = 8888;
 
 /** @class A work-in-progress WebSocket interface that sends Runner's events through WebSocket.
 * WARNING: EXPERIMENTAL. This view is not ready for actual delivery yet.
@@ -18,14 +19,31 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 	*
 	* @param  {object} model - The model.
 	*/
-	initialize: function initialize(model, options) {
+	initialize: function initialize(model) {
 		this.parent(model);
-		this.sender  = (options && options.sender) ? options.sender : new EventEmitter();
-		this.wss     = (options && options.wss)    ? options.wss    : new WebSocketServer({port: 9999});
+		this.sender  = new EventEmitter();
+		this.ws      = new WebSocketClient();
 		this.runDate = new Date();
-		this.wss.on('connection', function(socket) {
+		this.initWebSocket();
+	},
+
+	initWebSocket: function initWebSocket() {
+		this.ws.on('connectFailed', function(error) {
+			console.log('WebSocket client connection error: ' + error.toString());
+		});
+		this.ws.on('connect', function(connection) {
+			connection.on('error', function(error) {
+				console.log('WebSocket client connected but connection error: ' + error.toString());
+			});
+			connection.on('close', function() {
+				console.log('WebSocket client connection close');
+			});
 			this.sender.on('send', function(data) {
-				socket.send(JSON.stringify(data));
+				console.log('WebSocket client sending data...');
+				connection.sendUTF(JSON.stringify(data));
+			});
+			this.sender.on('close', function() {
+				connection.close();
 			});
 		}.bind(this));
 	},
@@ -45,6 +63,7 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		*   - `name`        : The Runner name.
 		*/
 		ready: function onReady() {
+			this.ws.connect('ws:' + WS_HOST + ':' + WS_PORT);
 			this.sender.emit('send', {
 				type    : WS_NAMESPACE + 'runner:start',
 				runDate : this.runDate,
@@ -74,11 +93,11 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 	},
 
 	/** Emits a WebSocket message containg a single `type` property with
-	* `watai:websocket:runner:stop` as value and closes the Websocket server.
+	* `watai:websocket:runner:stop` as value and closes the client connection.
 	*/
 	showEnd: function showEnd() {
 		this.sender.emit('send', {type: WS_NAMESPACE + 'runner:stop'});
-		this.wss.close();
+		this.sender.emit('close');
 	}
 
 });

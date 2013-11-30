@@ -58,7 +58,7 @@
   "optionalDependencies": {
     "growl": ">= 1.5",
     "options": ">=0.0.5",
-    "ws": ">=0.4"
+    "websocket": ">=1.0"
   },
   "devDependencies": {
     "longjohn": "0.2",

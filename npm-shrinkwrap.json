@@ -212,14 +212,10 @@
       "version": "1.7.0",
       "from": "growl@1.7.0"
     },
-    "options": {
-      "version": "0.0.5",
-      "from": "options@0.0.5",
-      "resolved": "https://registry.npmjs.org/options/-/options-0.0.5.tgz"
-    },
-    "ws": {
-      "version": "0.4.31",
-      "from": "ws@0.4.31"
+    "websocket": {
+      "version": "1.0.8",
+      "from": "websocket@",
+      "resolved": "https://registry.npmjs.org/websocket/-/websocket-1.0.8.tgz"
     }
   }
 }
