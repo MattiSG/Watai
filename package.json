@@ -56,12 +56,14 @@
     "mattisg.configloader": "0.1.5"
   },
   "optionalDependencies": {
-    "growl": ">= 1.5"
+    "growl": ">= 1.5",
+    "websocket": ">=1.0"
   },
   "devDependencies": {
     "longjohn": "0.2",
     "should": ">= 1.2.2",
-    "mocha": ">= 1.4"
+    "mocha": ">= 1.4",
+    "sinon": ">=1.7"
   },
   "preferGlobal": true
 }
