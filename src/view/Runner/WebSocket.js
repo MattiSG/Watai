@@ -25,6 +25,7 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		this.ws      = new WebSocketClient();
 		this.runDate = new Date();
 		this.initWebSocket();
+		this.ws.connect('ws:' + WS_HOST + ':' + WS_PORT);
 	},
 
 	initWebSocket: function initWebSocket() {
@@ -63,7 +64,6 @@ var RunnerWebSocket = new Class(/** @lends RunnerWebSocket# */{
 		*   - `name`        : The Runner name.
 		*/
 		ready: function onReady() {
-			this.ws.connect('ws:' + WS_HOST + ':' + WS_PORT);
 			this.sender.emit('send', {
 				type    : WS_NAMESPACE + 'runner:start',
 				runDate : this.runDate,
