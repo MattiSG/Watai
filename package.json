@@ -1,6 +1,6 @@
 {
   "name": "watai",
-  "version": "0.6.1-alpha.4",
+  "version": "0.6.1-beta.1",
   "description": "Integration testing for the modern web",
   "keywords": [
     "test",
