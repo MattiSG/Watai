@@ -15,6 +15,16 @@ You are reminded that Watai uses [SemVer](http://semver.org), which means upgrad
 v0.6
 ----
 
+### v0.6.1
+
+#### Minor changes
+
+- Async configuration entries can now [use a promise](https://github.com/MattiSG/Watai/wiki/Configuration#async-config) instead of a callback. This allows for async errors to be detected.
+- Improve display of unknown errors.
+- Important improvements in development tools.
+- Use native `Q`'s long stack traces instead of `longjohn` module.
+
+
 ### v0.6.0
 
 #### New features

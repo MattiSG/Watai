@@ -36,8 +36,9 @@ var SetupLoader = {
 			override: override
 		}).load(SETUP_FILE);
 
+		require('q').longStackSupport = true;	// log stack traces across async calls: <https://github.com/kriskowal/q/wiki/API-Reference#qlongstacksupport>
+
 		this.initLoggers(setup.log);
-		this.initLongStackTraces(setup.asyncTracesLimit);
 	},
 
 	/** Initializes loggers.
@@ -51,29 +52,6 @@ var SetupLoader = {
 			winston.loggers.close(name);
 			winston.loggers.add(name, options);
 		});
-	},
-
-	/** Tries loading the long stack traces development module.
-	* If the longjohn module is installed, this will allow for exceptions to be traced even through async callbacks.
-	*
-	*@param	{Number}	[limit]	The maximum async bounces to log. Increases specificity, at the expenses of memory usage.
-	*@see	https://github.com/mattinsler/longjohn#limit-traced-async-calls
-	*@private
-	*/
-	initLongStackTraces: function initLongStackTraces(limit) {
-		var longjohn;
-
-		try {
-			longjohn = require('longjohn');
-		} catch (e) {
-			winston.loggers.get('init').warn('No long stack traces module found');
-			return false;
-		}
-
-		longjohn.async_trace_limit = limit;
-		winston.loggers.get('init').silly('Long stack traces loaded');
-
-		return true;
 	}
 }
 

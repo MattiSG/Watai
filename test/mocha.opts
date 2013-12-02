@@ -1,4 +1,5 @@
 --require should
 --reporter spec
+--slow 2000
 --growl
 --recursive

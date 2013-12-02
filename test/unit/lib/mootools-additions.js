@@ -1,6 +1,6 @@
 var should = require('should');
 require('mootools');
-require('../../src/lib/mootools-additions');
+require('../../../src/lib/mootools-additions');
 
 
 describe('MooTools additions', function() {

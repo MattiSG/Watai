@@ -8,10 +8,9 @@ module.exports = {
 		},
 		"load": {
 			"console": {
-				"level"		: "warn",
+				"level"		: "info",
 				"colorize"	: true
 			}
 		}
-	},
-	"asyncTracesLimit": 40	// set to -1 for unlimited, 0 for none. More details at <https://github.com/mattinsler/longjohn#README>.
+	}
 }

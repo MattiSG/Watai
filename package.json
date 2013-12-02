@@ -1,6 +1,6 @@
 {
   "name": "watai",
-  "version": "0.6.0",
+  "version": "0.6.1-beta.1",
   "description": "Integration testing for the modern web",
   "keywords": [
     "test",
@@ -43,7 +43,12 @@
     "url": "https://github.com/MattiSG/Watai.git"
   },
   "scripts": {
-    "test": "./go test --exhaustive"
+    "test": "istanbul test _mocha test/unit test/functional",
+    "test-integration": "istanbul test _mocha test/integration",
+    "test-examples": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite ./src/index.js suite",
+    "test-examples-parallel": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite -P 4 ./src/index.js suite",
+    "test-security": "retire --node --package",
+    "test-exhaustive": "npm run test-examples && npm test && npm run test-integration && npm run test-security"
   },
   "engines": {
     "node": ">=0.6.18 <0.11"
@@ -53,15 +58,16 @@
     "mootools": "1.4",
     "winston": "0.6",
     "wd": "0.1",
-    "mattisg.configloader": "0.1.5"
+    "mattisg.configloader": "0.2"
   },
   "optionalDependencies": {
     "growl": ">= 1.5"
   },
   "devDependencies": {
-    "longjohn": "0.2",
     "should": ">= 1.2.2",
-    "mocha": ">= 1.4"
+    "mocha": ">= 1.4",
+    "istanbul": "0.1",
+    "retire": "0.1"
   },
   "preferGlobal": true
 }

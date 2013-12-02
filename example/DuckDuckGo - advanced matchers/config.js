@@ -14,9 +14,14 @@ module.exports = {
 		return 'Advanced stuff';	// …either synchronously returning the value to use in its place…
 	},
 
-	build: function(done) {	// …or asynchronous, in which case it takes a callback as first parameter, passing it the result once it's ready
-		require('child_process').exec('git describe --all', function(err, stdout, stderr) {
-			done(stdout);
-		});
+	build: function(promise, promiseTrigger) {	// …or asynchronous, in which case it takes a Q deferred object as its first parameter	// note: the second parameter will be removed in v0.7. It is here for backwards compatibility.
+		require('child_process').exec('git rev-parse HEAD',	// set the build number to be the SHA of the Git repo available in the current working directory
+			function(err, stdout, stderr) {
+				if (err) return promise.reject(err);
+				promise.resolve(stdout.trim());
+			}
+		);
+
+		return promise.promise;
 	}
 }
