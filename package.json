@@ -1,6 +1,6 @@
 {
   "name": "watai",
-  "version": "0.6.1-beta.1",
+  "version": "0.6.1-beta.2",
   "description": "Integration testing for the modern web",
   "keywords": [
     "test",
@@ -51,7 +51,8 @@
     "test-exhaustive": "npm run test-examples && npm test && npm run test-integration && npm run test-security"
   },
   "engines": {
-    "node": ">=0.6.18 <0.11"
+    "node": ">=0.6.18 <0.11",
+    "npm" : "> 1.1"
   },
   "dependencies": {
     "q": ">= 0.9.5",
@@ -64,7 +65,7 @@
     "growl": ">= 1.5"
   },
   "devDependencies": {
-    "should": ">= 1.2.2",
+    "should": ">= 1.2.2 < 2",
     "mocha": ">= 1.4",
     "istanbul": "0.1",
     "retire": "0.1"
