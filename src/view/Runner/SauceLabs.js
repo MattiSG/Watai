@@ -20,8 +20,8 @@ var RunnerSauceLabs = new Class({
 		var authParts = require('url').parse(this.model.config.seleniumServerURL).auth.split(':');	// Node's url API stores authentication information as 'user:pass'
 
 		this.connection = new SauceLabs({
-			username: authParts[0],
-			password: authParts[1]
+			username: authParts[0] || process.env.SAUCE_USERNAME,
+			password: authParts[1] || process.env.SAUCE_ACCESS_KEY
 		});
 
 		this.connection.getServiceStatus(function(err, sauceStatus) {
