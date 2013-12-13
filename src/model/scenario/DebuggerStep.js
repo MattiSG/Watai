@@ -13,23 +13,22 @@ var DebuggerStep = new Class(/** @lends steps.DebuggerStep# */{
 
 	test: function test(timeout) {
 		this.deferred = promises.defer();
-		var promiseForUserAction = this.generatePromiseForUserAction();
 		this.deferred.resolve({
-			promiseForUserAction: promiseForUserAction,
+			promiseForUserActionGenerator: this.promiseForUserActionGenerator,
 			triggerDebugMode: true
 		});
 
 		return this.deferred.promise;
 	},
 
-	generatePromiseForUserAction: function generatePromiseForUserAction() {
+	promiseForUserActionGenerator: function promiseForUserActionGenerator() {
 		var deferred = promises.defer();
 		var rl = readline.createInterface({
 			input: process.stdin,
 			output: process.stdout
 		});
 
-		rl.question("Enter 'c' to continue:", function(answer) {
+		rl.question("Enter 'c' to continue: ", function(answer) {
 			deferred.resolve(answer);
 			rl.close();
 		});
