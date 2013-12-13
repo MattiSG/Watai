@@ -12,12 +12,20 @@ var RunnerSauceLabs = new Class({
 	*/
 	connection: null,
 
+	/** Used to approximate the amount of minutes left in a SauceLabs account.
+	*
+	*@type	{Date}
+	*/
+	startTime	: null,
+
 	/** Initiates the connection to SauceLabs.
 	* Smoke tests the service.
 	* Fetches some account data to log at the end of the test.
 	*/
 	showStart: function showStart() {
 		var authParts = require('url').parse(this.model.config.seleniumServerURL).auth.split(':');	// Node's url API stores authentication information as 'user:pass'
+
+		this.startTime = new Date();
 
 		this.connection = new SauceLabs({
 			username: authParts[0] || process.env.SAUCE_USERNAME,
@@ -56,8 +64,10 @@ var RunnerSauceLabs = new Class({
 	},
 
 	showEnd: function showEnd() {
+		var spentMinutes = (new Date() - this.startTime) / 1000 / 60;
+
 		console.log('See this job details on <https://saucelabs.com/jobs/' + this.model.driver.sessionID + '>.');
-		console.log('You had ' + this.accountDetails.minutes + ' minutes left on the ' + this.accountDetails.id + ' SauceLabs account before running this test.');	// we don't get the amount left at the end to avoid slowing down the closure process
+		console.log('You have about ' + Math.round(this.accountDetails.minutes - spentMinutes) + ' minutes left on the ' + this.accountDetails.id + ' SauceLabs account.');	// we don't get the exact amount left at the end to avoid slowing down the closure process
 	}
 });
 
