@@ -97,6 +97,10 @@ describe('Feature', function() {
 								+ ' actually calling the scenario function (but that’s still an error)'));
 			});
 		});
+
+		it('a debugger step should be called', function(done) {
+			featureWithScenario([ 'debugger' ]).test().done(function() { done() }, done);
+		});
 	});
 
 
