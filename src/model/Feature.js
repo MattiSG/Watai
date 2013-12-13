@@ -2,6 +2,8 @@ var promises	= require('q'),
 	assert		= require('assert'),
 	winston		= require('winston');
 
+var readline = require('readline');
+
 var steps		= require('./scenario');
 
 
@@ -171,7 +173,7 @@ var Feature = new Class( /** @lends Feature# */ {
 				.then(function(result) {
 					if (result.triggerDebugMode || this.debugMode) {
 						this.setDebugMode(true);
-						return result.promiseForUserAction;
+						return this.generatePromiseForUserAction();
 					}
 					return result;
 				}.bind(this))
@@ -193,6 +195,23 @@ var Feature = new Class( /** @lends Feature# */ {
 	setDebugMode: function(boolean) {
 		this.debugMode = boolean;
 	},
+
+
+	generatePromiseForUserAction: function generatePromiseForUserAction() {
+		var deferred = promises.defer();
+		var rl = readline.createInterface({
+			input: process.stdin,
+			output: process.stdout
+		});
+
+		rl.question("Enter 'c' to continue:", function(answer) {
+			deferred.resolve(answer);
+			rl.close();
+		});
+
+		return deferred.promise;
+	},
+
 
 	toString: function toString() {
 		return this.description;
