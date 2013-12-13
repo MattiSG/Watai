@@ -25,6 +25,7 @@ v0.6
 
 - Errors on suite loads are now visible ([#112](https://github.com/MattiSG/Watai/pull/112)).
 - Upgrade obsolete object getters and setters syntax ([#107](https://github.com/MattiSG/Watai/pull/107)).
+- Update `wd` to v0.2.6. [Some incompatibilities](https://github.com/admc/wd/blob/master/doc/release-notes.md#022) were introduced in v0.2.2. They are in advanced monkeypatching usage, you probably didn't do any with Watai.
 
 
 ### v0.6.1

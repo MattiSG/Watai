@@ -59,7 +59,7 @@
     "q": ">= 0.9.5",
     "mootools": "1.4",
     "winston": "0.6",
-    "wd": "0.1",
+    "wd": "~0.2.6",
     "mattisg.configloader": "0.2"
   },
   "optionalDependencies": {
