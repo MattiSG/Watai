@@ -182,7 +182,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		.then(promises.nfbind(fs.readdir))
 		.then(this.loadAllFiles.bind(this))
 		.fail(function(err) {
-			this.runner.killDriver();	// TODO: should starting the driver be delayed until all files have been loaded? Slower startup for functioning cases, less annoyance for erroneous suites.
+			this.runner.quitBrowser();	// TODO: should starting the driver be delayed until all files have been loaded? Slower startup for functioning cases, less annoyance for erroneous suites.
 			throw err;
 		}.bind(this));
 	},

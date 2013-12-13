@@ -98,7 +98,7 @@ describe('Runner', function() {
 		});
 
 		after(function(done) {
-			subjectWithFailure.killDriver().done(done, done);
+			subjectWithFailure.quitBrowser().done(done, done);
 		});
 
 
@@ -189,12 +189,12 @@ describe('Runner', function() {
 		});
 	});
 
-	describe('driver kill', function() {
+	describe('quitting browser', function() {
 		it('should be idempotent through repetition', function(done) {
 			this.timeout(config.browserWarmupTime / 2);	// this should be faster than warmup, but can still be longer than the default timeout
 
-			subject.killDriver().then(function() {
-				return subject.killDriver();
+			subject.quitBrowser().then(function() {
+				return subject.quitBrowser();
 			}).done(done);
 		});
 
@@ -211,7 +211,7 @@ describe('Runner', function() {
 
 			subject.config.quit = 'never';
 			subject.test().done(function() {
-				should.exist(subject.driver);
+				should.exist(subject.initialized);
 				done();
 			});
 		});
@@ -221,7 +221,7 @@ describe('Runner', function() {
 
 			subject.config.quit = 'on success';
 			subject.test().done(function() {
-				should.not.exist(subject.driver);
+				should.not.exist(subject.initialized);
 				done();
 			});
 		});
@@ -231,7 +231,7 @@ describe('Runner', function() {
 
 			subject.config.quit = 'always';
 			subject.test().done(function() {
-				should.not.exist(subject.driver);
+				should.not.exist(subject.initialized);
 				done();
 			});
 		});
