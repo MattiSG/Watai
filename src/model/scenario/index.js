@@ -5,7 +5,8 @@
 */
 var steps = {
 	FunctionalStep:	require('./FunctionalStep'),
-	StateStep:		require('./StateStep')
+	StateStep:		require('./StateStep'),
+	DebuggerStep:	require('./DebuggerStep')
 }
 
 module.exports = steps;
