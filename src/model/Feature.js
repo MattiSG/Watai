@@ -43,6 +43,8 @@ var Feature = new Class( /** @lends Feature# */ {
 	*/
 	id: 0,
 
+	debugMode: false,
+
 	promise: null,
 
 	/**@class	A Feature models a sequence of actions to be executed through Widgets.
@@ -99,6 +101,9 @@ var Feature = new Class( /** @lends Feature# */ {
 					step = new steps.StateStep(sourceStep, this.widgets);
 					break;
 				case 'string':
+					if (sourceStep == 'debugger')
+						step = new steps.DebuggerStep();
+					break;
 				case 'number':
 					winston.loggers.get('load').debug('Oops, encoutered "' + sourceStep + '" as a free step in a feature scenario!'	// TODO: remove this hint after v0.4
 							 + '\n'
@@ -163,6 +168,13 @@ var Feature = new Class( /** @lends Feature# */ {
 			this.emit('step', step, stepIndex);
 
 			step.test(this.config.timeout)
+				.then(function(result) {
+					if (result.triggerDebugMode || this.debugMode) {
+						this.setDebugMode(true);
+						return result.promiseForUserAction;
+					}
+					return result;
+				}.bind(this))
 				.fail(this.reasons.push.bind(this.reasons))
 				.fin(process.nextTick.bind(process, evaluateNext))
 				.done();
@@ -176,6 +188,10 @@ var Feature = new Class( /** @lends Feature# */ {
 		process.nextTick(evaluateNext);	// all other steps will be async, decrease discrepancies and give control back ASAP
 
 		return this.promise;
+	},
+
+	setDebugMode: function(boolean) {
+		this.debugMode = boolean;
 	},
 
 	toString: function toString() {
