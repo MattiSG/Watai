@@ -173,7 +173,8 @@ var Feature = new Class( /** @lends Feature# */ {
 				.then(function(result) {
 					if (result.triggerDebugMode || this.debugMode) {
 						this.setDebugMode(true);
-						return this.generatePromiseForUserAction();
+						this.promiseForUserActionGenerator = this.promiseForUserActionGenerator || result.promiseForUserActionGenerator;
+						return this.promiseForUserActionGenerator();
 					}
 					return result;
 				}.bind(this))
@@ -195,23 +196,6 @@ var Feature = new Class( /** @lends Feature# */ {
 	setDebugMode: function(boolean) {
 		this.debugMode = boolean;
 	},
-
-
-	generatePromiseForUserAction: function generatePromiseForUserAction() {
-		var deferred = promises.defer();
-		var rl = readline.createInterface({
-			input: process.stdin,
-			output: process.stdout
-		});
-
-		rl.question("Enter 'c' to continue:", function(answer) {
-			deferred.resolve(answer);
-			rl.close();
-		});
-
-		return deferred.promise;
-	},
-
 
 	toString: function toString() {
 		return this.description;

@@ -28,7 +28,7 @@ var DebuggerStep = new Class(/** @lends steps.DebuggerStep# */{
 			output: process.stdout
 		});
 
-		rl.question("Enter 'c' to continue: ", function(answer) {
+		rl.question("Hit Enter to continue: ", function(answer) {
 			deferred.resolve(answer);
 			rl.close();
 		});
