@@ -119,7 +119,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	initDriver: function initDriver() {
-		if (! this.driver)
+		if (! this.initialized)
 			this.initialized = this.buildDriverFrom(this.config);
 
 		return this.initialized;
@@ -264,16 +264,16 @@ var Runner = new Class( /** @lends Runner# */ {
 		var resolve			= this.deferred.resolve.bind(this.deferred, this),
 			reject			= this.deferred.reject.bind(this.deferred, this.failures),
 			fulfill			= resolve,
-			killDriver		= this.killDriver.bind(this),
+			quitBrowser		= this.quitBrowser.bind(this),
 			precondition	= (this.config.quit == 'always'
-								? killDriver
+								? quitBrowser
 								: promises);	// Q without params simply returns a fulfilled promise
 
 		if (Object.getLength(this.failures) > 0) {
 			fulfill = reject;
 		} else {
 			if (this.config.quit == 'on success')
-				precondition = killDriver;
+				precondition = quitBrowser;
 		}
 
 		precondition().then(fulfill, reject);
@@ -283,13 +283,9 @@ var Runner = new Class( /** @lends Runner# */ {
 	*
 	*@return	{QPromise}	A promise resolved once the browser has been properly quit.
 	*/
-	killDriver: function killDriver() {
-		var driver = this.driver;
-		this.driver = null;	// delete reference, as it won't be usable once quitted
-
-		return (driver	// multiple calls to killDriver() might be issued
-				? this.initialized.then(function() { return driver.quit() })
-				: promises());	// normalize return type to a promise, so that it can safely be called even if the driver had already been quit
+	quitBrowser: function quitBrowser() {
+		this.initialized = null;
+		return this.driver.quit();
 	},
 
 	toString: function toString() {
