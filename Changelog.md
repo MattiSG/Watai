@@ -15,6 +15,17 @@ You are reminded that Watai uses [SemVer](http://semver.org), which means upgrad
 v0.6
 ----
 
+### v0.6.2 [IN PROGRESS]
+
+#### New features
+
+- The `SauceLabs` view sends the test results to your
+
+#### Minor changes
+
+- Update `wd` to v0.2.6. See [their incompatibilities](https://github.com/admc/wd/blob/master/doc/release-notes.md#022) introduced in v0.2.2. They are for advanced monkeypatching usage, you probably didn't do any with Watai.
+
+
 ### v0.6.1
 
 #### Minor changes
