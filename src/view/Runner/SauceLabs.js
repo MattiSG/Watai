@@ -1,5 +1,11 @@
-var SauceLabs = require('saucelabs');
-
+var SauceLabs;
+try {
+	SauceLabs = require('saucelabs');
+} catch (e) {
+	console.warn('You requested the SauceLabs view but the "saucelabs" module could not be loaded.');
+	console.warn('You probably should `npm install saucelabs`.');
+	throw e;
+}
 
 /**@class A status transmitter to SauceLabs.
 */

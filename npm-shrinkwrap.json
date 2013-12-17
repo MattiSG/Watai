@@ -208,11 +208,6 @@
       "from": "mattisg.configloader@0.2.0-alpha.2",
       "resolved": "https://registry.npmjs.org/mattisg.configloader/-/mattisg.configloader-0.2.0-alpha.2.tgz"
     },
-    "saucelabs": {
-      "version": "0.1.1",
-      "from": "https://registry.npmjs.org/saucelabs/-/saucelabs-0.1.1.tgz",
-      "resolved": "https://registry.npmjs.org/saucelabs/-/saucelabs-0.1.1.tgz"
-    },
     "growl": {
       "version": "1.7.0",
       "from": "growl@1.7.0",
