@@ -132,7 +132,6 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	loadBaseURL: function loadBaseURL() {
 		this.loaded = this.driver.get(this.config.baseURL);
-
 		return this.loaded.then(this.onReady.bind(this));
 	},
 
@@ -199,12 +198,13 @@ var Runner = new Class( /** @lends Runner# */ {
 		var promise = this.promise = this.deferred.promise;
 
 		this.emit('start', this);
-
 		return this.initDriver()
 					.then(this.loadBaseURL.bind(this))
 					.then(this.start.bind(this),
 						  this.deferred.reject)	// ensure failures in driver init are propagated
-					.finally(function() { return promise });
+					.finally(function() { 
+						return promise 
+					}.bind(this));
 	},
 
 	/** Actually starts the evaluation process.
@@ -228,10 +228,18 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.currentFeature++;
 
 		if (this.currentFeature >= this.features.length
-			|| (this.config.bail && Object.getLength(this.failures)))
+			|| (this.config.bail && Object.getLength(this.failures))) {
+
+			this.driver.execute("return window.collectedErrors").then(function(errors) {
+				errors.forEach(function(error) {
+					console.log(error);
+				});
+			});
+
 			this.finish();
-		else
+		} else {
 			this.evaluateFeature(this.features[this.currentFeature]);
+		}
 	},
 
 	/** Prepares and triggers the evaluation of the given feature.
