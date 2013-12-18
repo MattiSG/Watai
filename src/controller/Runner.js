@@ -1,3 +1,4 @@
+var https = require('https');
 var url = require('url');
 
 
@@ -200,11 +201,15 @@ var Runner = new Class( /** @lends Runner# */ {
 
 		this.emit('start', this);
 
-		return this.initDriver()
+		return this.checkServerAvailability().then(function() {
+			return this.initDriver()
 					.then(this.loadBaseURL.bind(this))
 					.then(this.start.bind(this),
 						  this.deferred.reject)	// ensure failures in driver init are propagated
 					.finally(function() { return promise });
+		}.bind(this), function() {
+			throw new Error('The server is not reachable!');
+		}.bind(this));
 	},
 
 	/** Actually starts the evaluation process.
@@ -286,6 +291,23 @@ var Runner = new Class( /** @lends Runner# */ {
 	quitBrowser: function quitBrowser() {
 		this.initialized = null;
 		return this.driver.quit();
+	},
+
+	/** Checks the server availability.
+	*
+	*@return	{QPromise}	A promise that will be either fulfilled with the reponse status code passed, or rejected with an explicative message passed.
+	*/
+	checkServerAvailability: function checkServerAvailability() {
+		var deferred	= promises.defer(),
+			promise		= deferred.promise;
+
+		https.get(this.config.baseURL, function(response) {
+			deferred.resolve(response.statusCode);
+		}).on('error', function(error) {
+			deferred.reject(error.message);
+		});
+
+		return promise;
 	},
 
 	toString: function toString() {
