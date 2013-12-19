@@ -316,6 +316,7 @@ var Runner = new Class( /** @lends Runner# */ {
 
 		var successHandler = function successHandler(response) {
 			deferred.resolve(response.statusCode);
+			response.destroy();
 		};
 
 		var errorHandler = function errorHandler(error) {
