@@ -1,5 +1,5 @@
 {
-	"baseURL": "https://checkmytrip.com/",
+	"baseURL": "https://www.checkmytrip.com/cmt/apf/cmtng/index?LANGUAGE=FR&SITE=NCMTNCMT",
 
 	"driverCapabilities": {
 		"browserName": "chrome",
