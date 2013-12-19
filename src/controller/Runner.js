@@ -133,9 +133,18 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@private
 	*/
 	loadBaseURL: function loadBaseURL() {
-		this.loaded = this.driver.get(this.config.baseURL);
+		var serverReachable = function serverReachable() {
+			this.loaded = this.driver.get(this.config.baseURL);
+			return this.loaded.then(this.onReady.bind(this));
+		}.bind(this);
 
-		return this.loaded.then(this.onReady.bind(this));
+		var serverNotReachable = function serverNotReachable(errorMessage) {
+			return this.quitBrowser().finally(function() {
+					throw new Error('The server "' + this.config.baseURL + '" is not reachable: ' + errorMessage);
+			}.bind(this));
+		}.bind(this)
+
+		return this.checkServerAvailability().then(serverReachable, serverNotReachable);
 	},
 
 	/** Constructs a new WebDriver instance based on the given configuration.
@@ -200,19 +209,13 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.deferred = promises.defer();
 		var promise = this.promise = this.deferred.promise;
 
-		return this.checkServerAvailability().then(function() {
-			this.emit('start', this);
+		this.emit('start', this);
 
-			return this.initDriver()
-					.then(this.loadBaseURL.bind(this))
-					.then(this.start.bind(this),
-						  this.deferred.reject)	// ensure failures in driver init are propagated
-					.finally(function() { return promise });
-		}.bind(this), function(errorMessage) {
-			return this.quitBrowser().finally(function() {
-				throw new Error('The server "' + this.config.baseURL + '" is not reachable: ' + errorMessage);
-			}.bind(this));
-		}.bind(this));
+		return this.initDriver()
+				.then(this.loadBaseURL.bind(this))
+				.then(this.start.bind(this),
+					  this.deferred.reject)	// ensure failures in driver init are propagated
+				.finally(function() { return promise });
 	},
 
 	/** Actually starts the evaluation process.
