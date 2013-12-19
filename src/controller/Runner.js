@@ -289,8 +289,15 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@return	{QPromise}	A promise resolved once the browser has been properly quit.
 	*/
 	quitBrowser: function quitBrowser() {
+		var result = promises(),
+			quit = function() { return this.driver.quit.call(this.driver) }.bind(this);
+
+		if (this.initialized)
+			result = this.initialized.then(quit, quit);
+
 		this.initialized = null;
-		return this.driver.quit();
+
+		return result;
 	},
 
 	/** Checks the server availability.
