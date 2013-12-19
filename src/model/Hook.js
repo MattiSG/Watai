@@ -84,18 +84,23 @@ var Hook = function Hook(hook, driver) {
 Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	var hook = new Hook(typeAndSelector, driver);
 
-	target.__defineGetter__(key, function() {
-		target.emit('access', key);
-		return hook.toSeleniumElement(hook);
-	});
-
 	var inputHandler = function handleInputAndEmit(input) {
 		target.emit('action', key, 'write', [ input ]);
 
 		return hook.handleInput(input);
 	}
 
-	target.__defineSetter__(key, inputHandler);	// legacy support; works when setting inputs without any need to wait (for example, fails on animated elements)
+	var propertyDescriptor = {};
+
+	propertyDescriptor[key] = {
+		get: function() {
+			target.emit('access', key);
+			return hook.toSeleniumElement(hook);
+		},
+		set: inputHandler
+	};
+
+	Object.defineProperties(target, propertyDescriptor);
 
 	var setterName = 'set' + key.capitalize();
 
