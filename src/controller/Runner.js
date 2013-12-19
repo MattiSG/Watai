@@ -329,9 +329,8 @@ var Runner = new Class( /** @lends Runner# */ {
 			http.get(this.config.baseURL, successHandler).on('error', errorHandler);
 		else if (protocol == 'https:')
 			https.get(this.config.baseURL, successHandler).on('error', errorHandler);
-		else {
+		else
 			deferred.resolve(); // TODO: Find a better way to handle other protocol than http or https
-		}
 
 		return promise;
 	},
