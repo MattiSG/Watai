@@ -1,5 +1,6 @@
-var https = require('https');
-var url = require('url');
+var http	= require('http'),
+	https	= require('https'),
+	url		= require('url');
 
 
 var webdriver	= require('wd'),
@@ -199,16 +200,18 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.deferred = promises.defer();
 		var promise = this.promise = this.deferred.promise;
 
-		this.emit('start', this);
-
 		return this.checkServerAvailability().then(function() {
+			this.emit('start', this);
+
 			return this.initDriver()
 					.then(this.loadBaseURL.bind(this))
 					.then(this.start.bind(this),
 						  this.deferred.reject)	// ensure failures in driver init are propagated
 					.finally(function() { return promise });
-		}.bind(this), function() {
-			throw new Error('The server is not reachable!');
+		}.bind(this), function(errorMessage) {
+			return this.quitBrowser().finally(function() {
+				throw new Error('The server "' + this.config.baseURL + '" is not reachable: ' + errorMessage);
+			}.bind(this));
 		}.bind(this));
 	},
 
@@ -308,11 +311,23 @@ var Runner = new Class( /** @lends Runner# */ {
 		var deferred	= promises.defer(),
 			promise		= deferred.promise;
 
-		https.get(this.config.baseURL, function(response) {
+		var successHandler = function successHandler(response) {
 			deferred.resolve(response.statusCode);
-		}).on('error', function(error) {
+		};
+
+		var errorHandler = function errorHandler(error) {
 			deferred.reject(error.message);
-		});
+		};
+
+		var protocol = url.parse(this.config.baseURL).protocol;
+
+		if (protocol == 'http:')
+			http.get(this.config.baseURL, successHandler).on('error', errorHandler);
+		else if (protocol == 'https:')
+			https.get(this.config.baseURL, successHandler).on('error', errorHandler);
+		else {
+			deferred.resolve(); // TODO: Find a better way to handle other protocol than http or https
+		}
 
 		return promise;
 	},

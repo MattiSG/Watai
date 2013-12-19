@@ -158,6 +158,29 @@ describe('Runner', function() {
 			});
 		});
 
+		describe('server accessiblity', function() {
+			var subject;
+			var target = 'https://0.0.0.0:63213';
+
+			before(function() {
+				var unreachableServerConfig = Object.clone(config);
+
+				unreachableServerConfig.baseURL = target;
+
+				subject = new Watai.Runner(unreachableServerConfig);
+			});
+
+			it('should throw if the server is not reachable', function(done) {
+				this.timeout(10000); // The targeted server can take time to respond
+
+				subject.test().then(function() {
+					done(new Error('The server "' + target + '" should not be reachable'));
+				},function() {
+					done();
+				});
+			});
+		});
+
 		describe('with an unreachable Selenium server', function() {
 			var subject;
 
