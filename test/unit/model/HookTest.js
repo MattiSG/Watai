@@ -131,6 +131,15 @@ describe('Hook', function() {
 			}, 200);
 		});
 
+		it('should throw an exception if the setter already exist', function() {
+			var target = 'fieldSetter',
+				newContent = 'new content';
+
+			(function() {
+				Watai.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
+			}).should.throw(/Cannot redefine property/);
+		});
+
 		describe('metadata', function() {
 			var target		= 'field',
 				newContent	= 'new content',
