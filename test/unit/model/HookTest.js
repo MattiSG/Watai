@@ -131,7 +131,7 @@ describe('Hook', function() {
 			}, 200);
 		});
 
-		it('should throw an exception if the setter already exist', function() {
+		it('should throw an exception if the setter already exists', function() {
 			var target = 'fieldSetter',
 				newContent = 'new content';
 
