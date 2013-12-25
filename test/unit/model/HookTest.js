@@ -137,7 +137,7 @@ describe('Hook', function() {
 
 			(function() {
 				Watai.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
-			}).should.throw(/Cannot redefine property/);
+			}).should.throw(new RegExp('Cannot redefine.*' + target));
 		});
 
 		describe('metadata', function() {
