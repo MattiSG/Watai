@@ -1,6 +1,6 @@
 {
   "name": "watai",
-  "version": "0.6.1-beta.2",
+  "version": "0.6.1",
   "description": "Integration testing for the modern web",
   "keywords": [
     "test",
@@ -52,7 +52,7 @@
   },
   "engines": {
     "node": ">=0.6.18 <0.11",
-    "npm" : "> 1.1"
+    "npm": "> 1.1"
   },
   "dependencies": {
     "q": ">= 0.9.5",
