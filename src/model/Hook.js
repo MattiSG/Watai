@@ -97,7 +97,7 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 			target.emit('access', key);
 			return hook.toSeleniumElement(hook);
 		},
-		set: inputHandler
+		set: inputHandler	// TODO: remove in v0.7, deprecated since v0.6
 	};
 
 	Object.defineProperties(target, propertyDescriptor);
