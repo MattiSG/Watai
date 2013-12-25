@@ -31,7 +31,7 @@ describe('Hook', function() {
 
 	describe('selector', function() {
 		describe('default to css', function() {
-			var hookName = 'css';
+			var hookName = 'default';
 
 			before(function() {
 				Watai.Hook.addHook(hooksTarget, hookName, '#toto', my.driver);
@@ -101,7 +101,7 @@ describe('Hook', function() {
 		});
 
 		it('should work on a field too', function(done) {
-			var target = 'field';
+			var target = 'fieldGetter';
 
 			Watai.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
 
@@ -115,7 +115,7 @@ describe('Hook', function() {
 
 	describe('setter', function() {
 		it('should set the value upon attribution', function(done) {
-			var target = 'field',
+			var target = 'fieldSetter',
 				newContent = 'new content';
 
 			Watai.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
@@ -129,6 +129,15 @@ describe('Hook', function() {
 					content.should.equal(newContent);
 				}).done(done);
 			}, 200);
+		});
+
+		it('should throw an exception if the setter already exists', function() {
+			var target = 'fieldSetter',
+				newContent = 'new content';
+
+			(function() {
+				Watai.Hook.addHook(hooksTarget, target, { css: 'input[name="field"]' }, my.driver);
+			}).should.throw(new RegExp('Cannot redefine.*' + target));
 		});
 
 		describe('metadata', function() {

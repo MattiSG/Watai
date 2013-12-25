@@ -84,33 +84,36 @@ var Hook = function Hook(hook, driver) {
 Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	var hook = new Hook(typeAndSelector, driver);
 
-	target.__defineGetter__(key, function() {
-		target.emit('access', key);
-		return hook.toSeleniumElement(hook);
-	});
-
 	var inputHandler = function handleInputAndEmit(input) {
 		target.emit('action', key, 'write', [ input ]);
 
 		return hook.handleInput(input);
 	}
 
-	target.__defineSetter__(key, inputHandler);	// legacy support; works when setting inputs without any need to wait (for example, fails on animated elements)
+	var propertyDescriptor = {};
+
+	propertyDescriptor[key] = {
+		get: function() {
+			target.emit('access', key);
+			return hook.toSeleniumElement(hook);
+		},
+		set: inputHandler	// TODO: remove in v0.7, deprecated since v0.6
+	};
+
+	Object.defineProperties(target, propertyDescriptor);
 
 	var setterName = 'set' + key.capitalize();
 
-	if (! target[setterName]) {	// do not overwrite possibly preexisting setters
-		target[setterName] = function(input) {	// wrapping to allow call-like syntax in scenarios
-			var setter = inputHandler.bind(null, input);
+	target[setterName] = function(input) {	// wrapping to allow call-like syntax in scenarios
+		var setter = inputHandler.bind(null, input);
 
-			setter.widget = target;
-			setter.reference = setterName;
-			setter.title = setterName.humanize();
-			setter.args = [ input ];
+		setter.widget = target;
+		setter.reference = setterName;
+		setter.title = setterName.humanize();
+		setter.args = [ input ];
 
-			return setter;
-		};
-	}
+		return setter;
+	};
 }
 
 module.exports = Hook;	// CommonJS export
