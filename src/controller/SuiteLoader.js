@@ -241,7 +241,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		}
 
 		var featureFiles	= {},
-			widgetFiles		= [];
+			widgetFiles		= [],
+			without			= this.config.without.map(function(index) { return '' + index });	// cast to string to allow for comparison with parsed indices
 
 		files.forEach(function(file) {
 			var match;	// if capturing parentheses are used in the file type detection regexp (see SuiteLoader.paths), this var holds the `match()` result
@@ -252,12 +253,19 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 				widgetFiles.push(this.path + file);	// don't load them immediately in order to make referenced data values available first
 			} else if (match = file.match(SuiteLoader.paths.featureMarker)) {
 				var featureIndex = match[1];	// first capturing parentheses in the featureMarker RegExp have to match the feature's numerical ID
-				featureFiles[featureIndex] = this.path + file;	// don't load them immediately in order to make referenced widgets available first
+				if (without.contains(featureIndex))
+					without = without.erase(featureIndex);
+				else
+					featureFiles[featureIndex] = this.path + file;	// don't load them immediately in order to make referenced widgets available first
 			}
 		}, this);
 
 		if (Object.getLength(featureFiles) <= 0)
 			throw new Error('No feature found! Feature names have to match this RegExp: ' + SuiteLoader.paths.featureMarker);
+
+		if (without.length)
+			throw new Error('The following features were to be ignored but could not be found: ' + without);
+
 
 		widgetFiles.forEach(this.loadWidget.bind(this));
 		Object.each(featureFiles, this.loadFeature, this);
