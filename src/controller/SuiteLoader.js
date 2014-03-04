@@ -253,7 +253,9 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 				widgetFiles.push(this.path + file);	// don't load them immediately in order to make referenced data values available first
 			} else if (match = file.match(SuiteLoader.paths.featureMarker)) {
 				var featureIndex = match[1];	// first capturing parentheses in the featureMarker RegExp have to match the feature's numerical ID
-				if (! without.contains(featureIndex))
+				if (without.contains(featureIndex))
+					without = without.erase(featureIndex);
+				else
 					featureFiles[featureIndex] = this.path + file;	// don't load them immediately in order to make referenced widgets available first
 			}
 		}, this);
@@ -263,6 +265,10 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			error.code = 'NO_FEATURES';
 			throw error;
 		}
+
+		if (without.length)
+			throw new Error('The following features were to be ignored but could not be found: ' + without);
+
 
 		widgetFiles.forEach(this.loadWidget.bind(this));
 		Object.each(featureFiles, this.loadFeature, this);
