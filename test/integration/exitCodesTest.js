@@ -34,6 +34,15 @@ describe('Exit code', function() {
 		});
 	});
 
+	it('should be 16 on an empty suite', function(done) {
+		var subject = spawn(BIN, [ 'test/resources/EmptySuite' ]);
+
+		subject.on('exit', function(code) {
+			code.should.equal(16);
+			done();
+		});
+	});
+
 	it('should be 1 on a failed test', function(done) {
 		this.timeout(30 * 1000);
 
