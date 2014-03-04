@@ -1,1 +1,2 @@
-missing: '#missing'
+missing:	'#missing',
+present:	'body'
