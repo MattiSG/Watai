@@ -36,4 +36,34 @@ describe('--config without 1', function() {
 		});
 	});
 
+	describe('without a feature that does not exist', function() {
+		var subject,
+			message;
+
+		before(function() {
+			var config = {
+				without: [5555]
+			};
+
+			subject = spawn(BIN, [ '--config', JSON.stringify(config), 'test/resources/SucceedingSuite' ]);
+
+			subject.stderr.on('data', function(data) {
+				message = data.toString();
+			});
+		});
+
+		it('should fail', function(done) {
+			this.timeout(10000);
+
+			subject.on('exit', function(code) {
+				code.should.not.equal(0);
+				done();
+			});
+		});
+
+		it('should give details', function() {
+			message.should.match(/could not be found/);
+		});
+	});
+
 });
