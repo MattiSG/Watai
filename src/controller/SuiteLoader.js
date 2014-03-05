@@ -193,10 +193,15 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			this.attachViewsTo(this.runner);
 			this.context = vm.createContext(this.buildContext());
 
-			fs.readdir(this.path, this.loadAllFiles.bind(this));
-
-			return this.runner;
-		}.bind(this));
+			return this.path;
+		}.bind(this))
+		.then(promises.nfbind(fs.readdir))
+		.then(
+			this.loadAllFiles.bind(this),
+			function(err) {
+				winston.loggers.get('load').error('Error while trying to load description files in "' + this.path + '"', { path: this.path });
+			}.bind(this)
+		);
 	},
 
 	/** Generates the list of variables that will be offered globally to Widgets, Features and Data elements.
@@ -228,18 +233,13 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 	/** Callback handler after `readdir`ing the test description directory.
 	*
-	*@param	{Error}	err	An optional error object (to be used as callback).
 	*@param	{Array.<String>}	files	Array of file paths to examine.
+	*@returns	{Runner}	The runner in which all the elements have been loaded.
 	*
 	*@see	http://nodejs.org/api/fs.html#fs_fs_readdir_path_callback
 	*@private
 	*/
-	loadAllFiles: function loadAllFiles(err, files) {
-		if (err) {
-			winston.loggers.get('load').error('Error while trying to load description files in "' + this.path + '"!', { path: this.path });
-			throw err;
-		}
-
+	loadAllFiles: function loadAllFiles(files) {
 		var featureFiles	= {},
 			widgetFiles		= [];
 
@@ -261,6 +261,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 		widgetFiles.forEach(this.loadWidget.bind(this));
 		Object.each(featureFiles, this.loadFeature, this);
+
+		return this.runner;
 	},
 
 	attachViewsTo: function attachViewsTo(runner) {
