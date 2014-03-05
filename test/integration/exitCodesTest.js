@@ -40,6 +40,8 @@ describe('Exit code', function() {
 			code;
 
 		before(function(done) {
+			this.timeout(30 * 1000);
+
 			var subject = spawn(BIN, [ 'test/resources/EmptySuite' ]);
 
 			subject.stderr.on('data', function(data) {
