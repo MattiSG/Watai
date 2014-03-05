@@ -261,7 +261,12 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		}, this);
 
 		if (Object.getLength(featureFiles) <= 0) {
-			var error = new Error('No feature found');
+			var message = 'No feature found';
+
+			if (this.config.without.length)
+				message += ' after ignoring features ' + this.config.without.join(', ');
+
+			var error = new Error(message);
 			error.code = 'NO_FEATURES';
 			throw error;
 		}
