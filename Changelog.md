@@ -15,6 +15,18 @@ You are reminded that Watai uses [SemVer](http://semver.org), which means upgrad
 v0.6
 ----
 
+### v0.6.2 [IN PROGRESS]
+
+#### New features
+
+- [`ignore`](https://github.com/MattiSG/Watai/wiki/Configuration#wiki-ignore) config option has been added ([#111](https://github.com/MattiSG/Watai/pull/111)).
+
+#### Minor changes
+
+- Errors on suite loads are now visible ([#112](https://github.com/MattiSG/Watai/pull/112)).
+- Upgrade obsolete object getters and setters syntax ([#107](https://github.com/MattiSG/Watai/pull/107)).
+
+
 ### v0.6.1
 
 #### Minor changes
