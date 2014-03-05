@@ -6,7 +6,7 @@ var BIN = './src/index.js';
 
 describe('ignoring features', function() {
 
-	it('should be 1 on a failed test without the failing feature', function(done) {
+	it('exit code should be 0 on a failing test ignoring its failing feature', function(done) {
 		this.timeout(30 * 1000);
 
 		var config = {
