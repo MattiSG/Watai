@@ -21,7 +21,8 @@
   "bugs": "https://github.com/MattiSG/Watai/issues",
   "author": "Matti Schneider <hi@mattischneider.fr> (http://mattischneider.fr)",
   "contributors": [
-    "Nicolas Dupont (http://ontherailsagain.com)"
+    "Nicolas Dupont (http://ontherailsagain.com)",
+    "Thomas De Bona (https://github.com/debona)"
   ],
   "files": [
     "src",
