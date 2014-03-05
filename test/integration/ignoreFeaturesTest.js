@@ -4,13 +4,13 @@ var spawn = require('child_process').spawn;
 var BIN = './src/index.js';
 
 
-describe('--config without 1', function() {
+describe('ignoring features', function() {
 
 	it('should be 1 on a failed test without the failing feature', function(done) {
 		this.timeout(30 * 1000);
 
 		var config = {
-			without: [1]
+			ignore: [1]
 		};
 
 		var subject = spawn(BIN, [ '--config', JSON.stringify(config), 'test/resources/FailingSuite' ]);
@@ -25,7 +25,7 @@ describe('--config without 1', function() {
 		this.timeout(30 * 1000);
 
 		var config = {
-			without: [1]
+			ignore: [1]
 		};
 
 		var subject = spawn(BIN, [ '--config', JSON.stringify(config), 'test/resources/SucceedingSuite' ]);
@@ -36,7 +36,7 @@ describe('--config without 1', function() {
 		});
 	});
 
-	describe('without a feature that does not exist', function() {
+	describe('ignoring a feature that does not exist', function() {
 		var code,
 			message;
 
@@ -44,7 +44,7 @@ describe('--config without 1', function() {
 			this.timeout(30 * 1000);
 
 			var config = {
-				without: [5555]
+				ignore: [5555]
 			};
 
 			var subject = spawn(BIN, [ '--config', JSON.stringify(config), 'test/resources/SucceedingSuite' ]);

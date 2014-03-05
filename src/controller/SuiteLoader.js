@@ -240,9 +240,9 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@private
 	*/
 	loadAllFiles: function loadAllFiles(files) {
-		var featureFiles	= {},
-			widgetFiles		= [],
-			without			= this.config.without.map(function(index) { return '' + index });	// cast to string to allow for comparison with parsed indices
+		var featureFiles			= {},
+			widgetFiles				= [],
+			ignoredFeaturesIndices	= this.config.ignore.map(function(index) { return '' + index });	// cast to string to allow for comparison with parsed indices
 
 		files.forEach(function(file) {
 			var match;	// if capturing parentheses are used in the file type detection regexp (see SuiteLoader.paths), this var holds the `match()` result
@@ -253,15 +253,15 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 				widgetFiles.push(this.path + file);	// don't load them immediately in order to make referenced data values available first
 			} else if (match = file.match(SuiteLoader.paths.featureMarker)) {
 				var featureIndex = match[1];	// first capturing parentheses in the featureMarker RegExp have to match the feature's numerical ID
-				if (without.contains(featureIndex))
-					without = without.erase(featureIndex);
+				if (ignoredFeaturesIndices.contains(featureIndex))
+					ignoredFeaturesIndices = ignoredFeaturesIndices.erase(featureIndex);
 				else
 					featureFiles[featureIndex] = this.path + file;	// don't load them immediately in order to make referenced widgets available first
 			}
 		}, this);
 
-		if (without.length) {
-			var error = new Error('The following features were to be ignored but could not be found: ' + without);
+		if (ignoredFeaturesIndices.length) {
+			var error = new Error('The following features were to be ignored but could not be found: ' + ignoredFeaturesIndices);
 			error.code = 'FEATURES_NOT_FOUND';
 			throw error;
 		}
@@ -269,8 +269,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		if (Object.getLength(featureFiles) <= 0) {
 			var message = 'No feature found';
 
-			if (this.config.without.length)
-				message += ' after ignoring features ' + this.config.without.join(', ');
+			if (this.config.ignore.length)
+				message += ' after ignoring features ' + this.config.ignore.join(', ');
 
 			var error = new Error(message);
 			error.code = 'NO_FEATURES';
