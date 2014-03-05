@@ -266,8 +266,11 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			throw error;
 		}
 
-		if (without.length)
-			throw new Error('The following features were to be ignored but could not be found: ' + without);
+		if (without.length) {
+			var error = new Error('The following features were to be ignored but could not be found: ' + without);
+			error.code = 'FEATURES_NOT_FOUND';
+			throw error;
+		}
 
 
 		widgetFiles.forEach(this.loadWidget.bind(this));

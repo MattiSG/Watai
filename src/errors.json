@@ -18,5 +18,10 @@
 		"exitCode":	16,
 		"title":	"Some files in the given suite are not readable",
 		"help":		""
+	},
+	"FEATURES_NOT_FOUND": {
+		"exitCode":	2,
+		"title":	"Some of the features you specified were not found",
+		"help":		"Double-check the path to your suite, and the numerical indices you specified"
 	}
 }
