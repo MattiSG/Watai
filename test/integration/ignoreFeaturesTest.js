@@ -21,7 +21,7 @@ describe('ignoring features', function() {
 		});
 	});
 
-	it('should fail on a successful test without its only feature', function(done) {
+	it('should exit with 16 if all features are ignored', function(done) {
 		this.timeout(30 * 1000);
 
 		var config = {
@@ -31,7 +31,7 @@ describe('ignoring features', function() {
 		var subject = spawn(BIN, [ '--config', JSON.stringify(config), 'test/resources/SucceedingSuite' ]);
 
 		subject.on('exit', function(code) {
-			code.should.not.equal(0);
+			code.should.equal(16);
 			done();
 		});
 	});
