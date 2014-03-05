@@ -34,6 +34,35 @@ describe('Exit code', function() {
 		});
 	});
 
+	describe('on an empty suite', function() {
+		var subject,
+			message,
+			code;
+
+		before(function(done) {
+			this.timeout(30 * 1000);
+
+			var subject = spawn(BIN, [ 'test/resources/EmptySuite' ]);
+
+			subject.stderr.on('data', function(data) {
+				message = data.toString();
+			});
+
+			subject.on('exit', function(statusCode) {
+				code = statusCode;
+				done();
+			});
+		});
+
+		it('should be 16', function() {
+			code.should.equal(16);
+		});
+
+		it('should provide an explicit message', function() {
+			message.should.match(/no feature found/i);
+		});
+	});
+
 	it('should be 1 on a failed test', function(done) {
 		this.timeout(30 * 1000);
 

@@ -193,9 +193,13 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			this.attachViewsTo(this.runner);
 			this.context = vm.createContext(this.buildContext());
 
-			fs.readdir(this.path, this.loadAllFiles.bind(this));
-
-			return this.runner;
+			return this.path;
+		}.bind(this))
+		.then(promises.nfbind(fs.readdir))
+		.then(this.loadAllFiles.bind(this))
+		.fail(function(err) {
+			this.runner.killDriver();	// TODO: should starting the driver be delayed until all files have been loaded? Slower startup for functioning cases, less annoyance for erroneous suites.
+			throw err;
 		}.bind(this));
 	},
 
@@ -228,18 +232,14 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 	/** Callback handler after `readdir`ing the test description directory.
 	*
-	*@param	{Error}	err	An optional error object (to be used as callback).
 	*@param	{Array.<String>}	files	Array of file paths to examine.
+	*@returns	{Runner}	The runner in which all the elements have been loaded.
+	*@throws	{Error}		Code "NO_FEATURES" if no features are found.
 	*
 	*@see	http://nodejs.org/api/fs.html#fs_fs_readdir_path_callback
 	*@private
 	*/
-	loadAllFiles: function loadAllFiles(err, files) {
-		if (err) {
-			winston.loggers.get('load').error('Error while trying to load description files in "' + this.path + '"!', { path: this.path });
-			throw err;
-		}
-
+	loadAllFiles: function loadAllFiles(files) {
 		var featureFiles	= {},
 			widgetFiles		= [];
 
@@ -256,11 +256,16 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			}
 		}, this);
 
-		if (Object.getLength(featureFiles) <= 0)
-			throw new Error('No feature found! Feature names have to match this RegExp: ' + SuiteLoader.paths.featureMarker);
+		if (Object.getLength(featureFiles) <= 0) {
+			var error = new Error('No feature found');
+			error.code = 'NO_FEATURES';
+			throw error;
+		}
 
 		widgetFiles.forEach(this.loadWidget.bind(this));
 		Object.each(featureFiles, this.loadFeature, this);
+
+		return this.runner;
 	},
 
 	attachViewsTo: function attachViewsTo(runner) {
