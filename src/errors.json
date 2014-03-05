@@ -13,5 +13,10 @@
 		"exitCode":	16,
 		"title":	"No feature was found in this suite",
 		"help":		"Check the Feature Files reference: <https://github.com/MattiSG/Watai/wiki/Features#wiki-file-naming>"
+	},
+	"EACCES": {
+		"exitCode":	16,
+		"title":	"Some files in the given suite are not readable",
+		"help":		""
 	}
 }

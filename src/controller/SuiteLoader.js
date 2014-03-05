@@ -196,13 +196,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			return this.path;
 		}.bind(this))
 		.then(promises.nfbind(fs.readdir))
-		.then(
-			this.loadAllFiles.bind(this),
-			function(err) {
-				winston.loggers.get('load').error('Error while trying to load description files in "' + this.path + '"', { path: this.path });
-				throw err;
-			}.bind(this)
-		).fail(function(err) {
+		.then(this.loadAllFiles.bind(this))
+		.fail(function(err) {
 			this.runner.killDriver();	// TODO: should starting the driver be delayed until all files have been loaded? Slower startup for functioning cases, less annoyance for erroneous suites.
 			throw err;
 		}.bind(this));
