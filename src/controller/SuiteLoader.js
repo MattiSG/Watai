@@ -260,6 +260,12 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			}
 		}, this);
 
+		if (without.length) {
+			var error = new Error('The following features were to be ignored but could not be found: ' + without);
+			error.code = 'FEATURES_NOT_FOUND';
+			throw error;
+		}
+
 		if (Object.getLength(featureFiles) <= 0) {
 			var message = 'No feature found';
 
@@ -268,12 +274,6 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 			var error = new Error(message);
 			error.code = 'NO_FEATURES';
-			throw error;
-		}
-
-		if (without.length) {
-			var error = new Error('The following features were to be ignored but could not be found: ' + without);
-			error.code = 'FEATURES_NOT_FOUND';
 			throw error;
 		}
 
