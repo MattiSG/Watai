@@ -34,12 +34,30 @@ describe('Exit code', function() {
 		});
 	});
 
-	it('should be 16 on an empty suite', function(done) {
-		var subject = spawn(BIN, [ 'test/resources/EmptySuite' ]);
+	describe('on an empty suite', function() {
+		var subject,
+			message,
+			code;
 
-		subject.on('exit', function(code) {
+		before(function(done) {
+			var subject = spawn(BIN, [ 'test/resources/EmptySuite' ]);
+
+			subject.stderr.on('data', function(data) {
+				message = data.toString();
+			});
+
+			subject.on('exit', function(statusCode) {
+				code = statusCode;
+				done();
+			});
+		});
+
+		it('should be 16', function() {
 			code.should.equal(16);
-			done();
+		});
+
+		it('should provide an explicit message', function() {
+			message.should.match(/no feature found/i);
 		});
 	});
 
