@@ -8,5 +8,10 @@
 		"exitCode":	5,
 		"title":	"An error occurred while executing the configuration file for this suite",
 		"help":		"Check the Configuration Files reference: <https://github.com/MattiSG/Watai/wiki/Configuration>"
+	},
+	"NO_FEATURES": {
+		"exitCode":	16,
+		"title":	"No feature was found in this suite",
+		"help":		"Check the Feature Files reference: <https://github.com/MattiSG/Watai/wiki/Features#wiki-file-naming>"
 	}
 }
