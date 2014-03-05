@@ -35,8 +35,7 @@ describe('Exit code', function() {
 	});
 
 	describe('on an empty suite', function() {
-		var subject,
-			message,
+		var message,
 			code;
 
 		before(function(done) {

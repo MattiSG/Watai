@@ -37,28 +37,30 @@ describe('--config without 1', function() {
 	});
 
 	describe('without a feature that does not exist', function() {
-		var subject,
+		var code,
 			message;
 
-		before(function() {
+		before(function(done) {
+			this.timeout(30 * 1000);
+
 			var config = {
 				without: [5555]
 			};
 
-			subject = spawn(BIN, [ '--config', JSON.stringify(config), 'test/resources/SucceedingSuite' ]);
+			var subject = spawn(BIN, [ '--config', JSON.stringify(config), 'test/resources/SucceedingSuite' ]);
 
 			subject.stderr.on('data', function(data) {
 				message = data.toString();
 			});
-		});
 
-		it('should fail', function(done) {
-			this.timeout(10000);
-
-			subject.on('exit', function(code) {
-				code.should.not.equal(0);
+			subject.on('exit', function(statusCode) {
+				code = statusCode;
 				done();
 			});
+		});
+
+		it('should exit with 2', function() {
+			code.should.equal(2);
 		});
 
 		it('should give details', function() {
