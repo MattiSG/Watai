@@ -60,11 +60,11 @@
     "mootools": "1.4",
     "winston": "0.6",
     "wd": "~0.2.6",
-    "mattisg.configloader": "0.2",
-    "saucelabs": "~0.1.1"
+    "mattisg.configloader": "0.2"
   },
   "optionalDependencies": {
-    "growl": ">= 1.5"
+    "growl": ">= 1.5",
+    "saucelabs": "~0.1.1"
   },
   "devDependencies": {
     "should": ">= 1.2.2 < 2",
