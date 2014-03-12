@@ -77,6 +77,19 @@ describe('SauceLabs view', function() {
 			});
 		});
 
+		describe('when auth is set through both env and config', function() {
+			before(function() {
+				var seleniumServerURL = urlUtils.parse(runner.config.seleniumServerURL);
+				seleniumServerURL.auth = 'user-config:';
+				runner.config.seleniumServerURL = urlUtils.format(seleniumServerURL);
+				process.env.SAUCE_ACCESS_KEY = 'pass-env';
+			});
+
+			it('should obtain auth data half from configuration, half from environment variables', function() {
+				checkMatch('user-config', 'pass-env');
+			});
+		});
+
 	});
 
 });

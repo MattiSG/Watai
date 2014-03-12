@@ -54,17 +54,17 @@ var RunnerSauceLabs = new Class({
 	*@returns	{Object}	An object containing `username` and `password` keys, defining which SauceLabs username and access key should be used to access the account.
 	*/
 	getAuth: function getAuth() {
-		var result = {},
-			authString = require('url').parse(this.model.config.seleniumServerURL).auth;
+		var result		= {},
+			authString	= require('url').parse(this.model.config.seleniumServerURL).auth,
+			authParts	= [];
 
-		if (authString && authString.contains(':')) {	// Node's url API stores authentication information as 'user:pass'
-			var authParts = authString.split(':');
-			result.username = authParts[0];
-			result.password = authParts[1];
-		} else if (process.env.SAUCE_USERNAME && process.env.SAUCE_ACCESS_KEY) {
-			result.username = process.env.SAUCE_USERNAME;
-			result.password = process.env.SAUCE_ACCESS_KEY;
-		} else {
+		if (authString && authString.contains(':'))	// Node's url API stores authentication information as 'user:pass'
+			authParts = authString.split(':');
+
+		result.username = authParts[0] || process.env.SAUCE_USERNAME;
+		result.password = authParts[1] || process.env.SAUCE_ACCESS_KEY;
+
+		if (! (result.username && result.password)) {
 			this.animator.log('✘ ', 'warn', 'You requested the SauceLabs view, but the SauceLabs authentication information could not be found', 'warn');
 			this.animator.log('  ', 'debug', 'You should provide it through the `auth` part of the seleniumServerURL config key, or through the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables', 'debug');
 			throw new ReferenceError('Could not get SauceLabs authentication information');
