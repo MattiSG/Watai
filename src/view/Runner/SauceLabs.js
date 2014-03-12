@@ -7,15 +7,6 @@ try {
 	throw e;
 }
 
-
-/** The description of expected endpoints for SauceLabs on-demand service.
-*
-*@type	{RegExp}
-*@see	#checkEndpoint
-*/
-var SAUCE_ENDPOINT_HOSTNAME = /saucelabs.com$/;
-
-
 /**@class A status transmitter to SauceLabs.
 */
 var RunnerSauceLabs = new Class({
@@ -36,14 +27,8 @@ var RunnerSauceLabs = new Class({
 	/** Initiates the connection to SauceLabs.
 	* Smoke tests the service.
 	* Fetches some account data to log at the end of the test.
-	*
-	*@throws	{Error}	If SauceLabs is not targeted or if the authentication information for SauceLabs service can not be found.
-	*@see	#checkEndpoint
-	*@see	#getAuth
 	*/
 	showStart: function showStart() {
-		this.checkEndpoint();
-
 		this.startTime = new Date();
 
 		this.connection = new SauceLabs(this.getAuth());
@@ -61,21 +46,6 @@ var RunnerSauceLabs = new Class({
 			if (! sauceStatus.service_operational)
 				console.log('This job will probably fail, Sauce seems to be down: ' + sauceStatus.status_message);
 		});
-	},
-
-	/** Ensures that the targeted endpoint is SauceLabs’.
-	* Prevents giving bogus information if no job is created on Sauce while this view is active.
-	*
-	*@throws	{Error}	If SauceLabs is not targeted while this view is active.
-	*/
-	checkEndpoint: function checkEndpoint() {
-		var seleniumHostname = require('url').parse(this.model.config.seleniumServerURL).hostname;
-
-		if (! seleniumHostname.match(SAUCE_ENDPOINT_HOSTNAME)) {
-			this.animator.log('✘ ', 'warn', 'You requested the SauceLabs view, but the targeted Selenium endpoint is not SauceLabs', 'warn');
-			this.animator.log('  ', 'debug', 'You should set the `seleniumServerURL` configuration key to target the SauceLabs on-demand service; see details at <saucelabs.com/products/sauce-ondemand>', 'debug');
-			throw new Error('Did not target SauceLabs, job information would be bogus');
-		}
 	},
 
 	/** Obtains SauceLabs authentication data, from configuration or, if not available, from environment variables.
