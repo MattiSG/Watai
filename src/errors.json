@@ -23,5 +23,10 @@
 		"exitCode":	2,
 		"title":	"Some of the features you specified were not found",
 		"help":		"Double-check the path to your suite, and the numerical indices you specified"
+	},
+	"MISSING_SAUCE_AUTHENTICATION": {
+		"exitCode"	: 2,
+		"title"		: "You requested the SauceLabs view, but the SauceLabs authentication information could not be found",
+		"help"		: "You should provide it through the `auth` part of the seleniumServerURL config key, or through the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables"
 	}
 }
