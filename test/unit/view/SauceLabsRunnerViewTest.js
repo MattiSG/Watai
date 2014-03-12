@@ -16,8 +16,11 @@ describe('SauceLabs view', function() {
 		var config = new ConfigLoader({
 			from		: __dirname,
 			appName		: 'watai',
-			override	: { quit: 'always' },
-			visitAlso	: '../../src'
+			visitAlso	: '../../src',
+			override	: {
+				seleniumServerURL: 'https://ondemand.saucelabs.com:80',
+				quit: 'always'
+			}
 		}).load('config');
 
 		this.timeout(config.browserWarmupTime);
@@ -90,6 +93,31 @@ describe('SauceLabs view', function() {
 			});
 		});
 
+	});
+
+
+	describe('when not targeting SauceLabs endpoint', function() {
+		before(function() {
+			var seleniumServerURL = urlUtils.parse(runner.config.seleniumServerURL);
+			seleniumServerURL.auth = 'user:pass';
+			seleniumServerURL.host = '127.0.0.1:4444';
+			runner.config.seleniumServerURL = urlUtils.format(seleniumServerURL);
+
+			stdoutSpy.reset();
+		});
+
+		beforeEach(stdoutSpy.mute);
+		afterEach(stdoutSpy.unmute);
+
+		it('should throw', function() {
+			(subject.showStart.bind(subject)).should.throw(Error);
+		});
+
+		it('should provide information to the user', function() {
+			stdoutSpy.printed().should.include('endpoint');
+			stdoutSpy.printed().should.include('seleniumServerURL');
+			stdoutSpy.printed().should.include('ondemand');
+		});
 	});
 
 });
