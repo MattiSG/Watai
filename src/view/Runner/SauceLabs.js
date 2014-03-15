@@ -31,12 +31,6 @@ var RunnerSauceLabs = new Class({
 	showStart: function showStart() {
 		this.startTime = new Date();
 
-		if (this.model.config.quit != 'always') {
-			this.animator.log('⚠︎ ', 'info', 'You are using SauceLabs but are not quitting browsers immediately, thus wasting 90 seconds per failed test', 'info');
-			this.animator.log('  ', 'debug', 'You should set the "quit" configuration element to "always", and set it to something else through the CLI when you want to take control of the browser', 'debug');
-			this.animator.log('  ', 'debug', 'See more at <https://github.com/MattiSG/Watai/wiki/Configuration#wiki-quit>', 'debug');
-		}
-
 		this.connection = new SauceLabs(this.getAuth());
 
 		this.connection.getAccountDetails(function(err, accountDetails) {
@@ -52,6 +46,12 @@ var RunnerSauceLabs = new Class({
 			if (! sauceStatus.service_operational)
 				console.log('This job will probably fail, Sauce seems to be down: ' + sauceStatus.status_message);
 		});
+
+		if (this.model.config.quit != 'always') {
+			this.animator.log('⚠︎ ', 'info', 'You are using SauceLabs but are not quitting browsers immediately, thus wasting 90 seconds per failed test', 'info');
+			this.animator.log('  ', 'debug', 'You should set the "quit" configuration element to "always", and set it to something else through the CLI when you want to take control of the browser', 'debug');
+			this.animator.log('  ', 'debug', 'See more at <https://github.com/MattiSG/Watai/wiki/Configuration#wiki-quit>', 'debug');
+		}
 	},
 
 	/** Obtains SauceLabs authentication data, from configuration or, if not available, from environment variables.
