@@ -284,8 +284,19 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@return	{QPromise}	A promise resolved once the browser has been properly quit.
 	*/
 	quitBrowser: function quitBrowser() {
-		this.initialized = null;
-		return this.driver.quit();
+		var quit = this._quitBrowser.bind(this);
+		return this.initialized ? this.initialized.then(quit, quit) : promises();
+	},
+
+	/** Quits the managed browser immediately, ignoring its availability.
+	*
+	*@return	{QPromise}	A promise resolved once the browser has been quit.
+	*@private
+	*/
+	_quitBrowser: function _quitBrowser() {
+		return this.driver.quit().then(function() {
+			this.initialized = null;
+		}.bind(this));
 	},
 
 	toString: function toString() {

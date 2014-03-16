@@ -27,6 +27,10 @@ describe('SauceLabs view', function() {
 		subject = new SauceLabsView(runner);
 	});
 
+	after(function(done) {
+		runner.quitBrowser().finally(done);
+	});
+
 
 	describe('#getAuth', function() {
 
