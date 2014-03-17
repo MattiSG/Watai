@@ -3,7 +3,7 @@ try {
 	SauceLabs = require('saucelabs');
 } catch (e) {
 	console.warn('You requested the SauceLabs view but the "saucelabs" module could not be loaded.');
-	console.warn('You probably should `npm install saucelabs`.');
+	console.warn('You probably should `npm install saucelabs`.');	// TODO: require('npm').install('saucelabs'), see <https://www.npmjs.org/api/npm.html>. Complicated because async, needs adding support for lazy loading of views.
 	throw e;
 }
 
