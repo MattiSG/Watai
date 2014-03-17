@@ -1,6 +1,6 @@
-var SauceLabs;
+var SauceLabsTransmitter;
 try {
-	SauceLabs = require('saucelabs');
+	SauceLabsTransmitter = require('saucelabs');
 } catch (e) {
 	console.warn('You requested the SauceLabs view but the "saucelabs" module could not be loaded.');
 	console.warn('You probably should `npm install saucelabs`.');	// TODO: require('npm').install('saucelabs'), see <https://www.npmjs.org/api/npm.html>. Complicated because async, needs adding support for lazy loading of views.
@@ -12,11 +12,11 @@ try {
 var RunnerSauceLabs = new Class({
 	Extends: require('../PromiseView'),
 
-	/** The connection to the account data.
+	/** SauceLabs API wrapper object.
 	*
-	*@type	{SauceLabs}
+	*@type	{SauceLabsTransmitter}
 	*/
-	connection: null,
+	transmitter: null,
 
 	/** Used to approximate the amount of minutes left in a SauceLabs account.
 	*
@@ -31,9 +31,9 @@ var RunnerSauceLabs = new Class({
 	showStart: function showStart() {
 		this.startTime = new Date();
 
-		this.connection = new SauceLabs(this.getAuth());
+		this.transmitter = new SauceLabsTransmitter(this.getAuth());
 
-		this.connection.getAccountDetails(function(err, accountDetails) {
+		this.transmitter.getAccountDetails(function(err, accountDetails) {
 			if (err) {
 				this.animator.log('✘ ', 'warn', 'Could not get SauceLabs account details (' + err.error + ')', 'warn');
 				this.accountDetails = null;
@@ -42,7 +42,7 @@ var RunnerSauceLabs = new Class({
 			this.accountDetails = accountDetails;
 		}.bind(this));
 
-		this.connection.getServiceStatus(function(err, sauceStatus) {
+		this.transmitter.getServiceStatus(function(err, sauceStatus) {
 			if (! sauceStatus.service_operational)
 				console.log('This job will probably fail, Sauce seems to be down: ' + sauceStatus.status_message);
 		});
@@ -80,15 +80,20 @@ var RunnerSauceLabs = new Class({
 	},
 
 	showSuccess: function showSuccess() {
-		this.setPassed(true);
+		this.sendTestPassed(true);
 	},
 
 	showFailure: function showFailure(reason) {
-		this.setPassed(false, reason);
+		this.sendTestPassed(false, reason);
 	},
 
-	setPassed: function setPassed(passed, reason) {
-		this.connection.updateJob(this.model.driver.sessionID, {
+	/** Notifies SauceLabs about the status of the current job.
+	*
+	*@param	{Boolean}	passed	If `true`, flags the job as passed. If `false`, flags the job as failed.
+	*@param	{String}	[reason]	If passed, will be sent as a `custom-data` parameter to SauceLabs, under the `reason` key.
+	*/
+	sendTestPassed: function sendTestPassed(passed, reason) {
+		this.transmitter.updateJob(this.model.driver.sessionID, {
 			passed: passed,
 			'custom-data': {
 				reason: reason
