@@ -276,7 +276,7 @@ var Runner = new Class( /** @lends Runner# */ {
 				precondition = killDriver;
 		}
 
-		precondition().then(fulfill, reject);
+		precondition().done(fulfill, reject);
 	},
 
 	/** Quits the managed browser.
