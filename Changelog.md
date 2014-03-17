@@ -20,12 +20,13 @@ v0.6
 #### New features
 
 - [`ignore`](https://github.com/MattiSG/Watai/wiki/Configuration#wiki-ignore) config option has been added ([#111](https://github.com/MattiSG/Watai/pull/111)).
+- [SauceLabs](https://github.com/MattiSG/Watai/wiki/Configuration#wiki-views) view is now available, transmitting test status as pass/fail and outputting a direct link to the job as well as an estimate of how many minutes are left on your account ([#87](https://github.com/MattiSG/Watai/issues/87)).
 
 #### Minor changes
 
 - Errors on suite loads are now visible ([#112](https://github.com/MattiSG/Watai/pull/112)).
-- Upgrade obsolete object getters and setters syntax ([#107](https://github.com/MattiSG/Watai/pull/107)).
-- Update `wd` to v0.2.6. [Some incompatibilities](https://github.com/admc/wd/blob/master/doc/release-notes.md#022) were introduced in v0.2.2. They are in advanced monkeypatching usage, you probably didn't do any with Watai.
+- Upgraded obsolete object getters and setters syntax ([#107](https://github.com/MattiSG/Watai/pull/107)).
+- Updated `wd` to v0.2.6. [Some incompatibilities](https://github.com/admc/wd/blob/master/doc/release-notes.md#022) were introduced in v0.2.2. They are in advanced monkeypatching usage, you probably didn't do any with Watai.
 
 
 ### v0.6.1

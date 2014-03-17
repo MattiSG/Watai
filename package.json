@@ -1,6 +1,6 @@
 {
   "name": "watai",
-  "version": "0.6.2-alpha.2",
+  "version": "0.6.2-alpha.3",
   "description": "Integration testing for the modern web",
   "keywords": [
     "test",
@@ -63,7 +63,8 @@
     "mattisg.configloader": "0.2"
   },
   "optionalDependencies": {
-    "growl": ">= 1.5"
+    "growl": ">= 1.5",
+    "saucelabs": "~0.1.1"
   },
   "devDependencies": {
     "should": ">= 1.2.2 < 2",
