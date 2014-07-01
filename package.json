@@ -48,7 +48,8 @@
     "test-examples": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite ./src/index.js suite",
     "test-examples-parallel": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite -P 4 ./src/index.js suite",
     "test-security": "retire --node --package",
-    "test-exhaustive": "npm run test-examples && npm test && npm run test-integration && npm run test-security"
+    "test-exhaustive": "npm run test-examples && npm test && npm run test-integration && npm run test-security",
+    "lint": "jscs ."
   },
   "engines": {
     "node": ">=0.6.18 <0.11",
@@ -65,10 +66,11 @@
     "growl": ">= 1.5"
   },
   "devDependencies": {
-    "should": ">= 1.2.2 < 2",
-    "mocha": ">= 1.4",
     "istanbul": "0.1",
-    "retire": "0.1"
+    "jscs": "1.x",
+    "mocha": ">= 1.4",
+    "retire": "0.1",
+    "should": ">= 1.2.2 < 2"
   },
   "preferGlobal": true
 }
