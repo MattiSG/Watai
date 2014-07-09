@@ -1,4 +1,6 @@
 {
+	"baseURL"			: "http://0.0.0.0",
+	"browser"			: "firefox",
 	"timeout"			: 5000,
 	"quit"				: "always",
 	"views"				: ["CLI", "Growl"],
