@@ -76,7 +76,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*/
 	parseConfig: function parseConfig(config) {
 		if (! config.baseURL) {
-			var msg = 'No baseURL was found in any "' + SuiteLoader.paths.config + '" file in directories above "' + this.path + '"';
+			var msg = 'No baseURL was found in any "' + SuiteLoader.paths.config + '" file in "' + this.path + '" nor any parent directory';
 			winston.loggers.get('load').error(msg);
 			throw new ReferenceError(msg);
 		}
