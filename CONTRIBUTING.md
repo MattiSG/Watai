@@ -17,7 +17,7 @@ Simply fork the project, and clone the repository on your machine.
 Code conventions
 ----------------
 
-Please read the [Code conventions](https://github.com/MattiSG/Watai/wiki/Code-conventions) prior to coding, and make sure to follow them!
+Please read the [Code conventions](https://github.com/MattiSG/Watai/wiki/Code-conventions) prior to coding. An [`editorconfig`](http://editorconfig.org/) file is provided.
 
 
 Build tool
