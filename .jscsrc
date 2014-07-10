@@ -1,0 +1,14 @@
+{
+  "excludeFiles": [
+    "node_modules/**",
+    "test/resources/**",
+    "example",
+    "doc"
+  ],
+  "preset": "google",
+  "maximumLineLength": null,
+  "validateIndentation": null,
+  "disallowMixedSpacesAndTabs": "smart",
+  "disallowMultipleLineBreaks": null,
+  "disallowMultipleVarDecl": true
+}
