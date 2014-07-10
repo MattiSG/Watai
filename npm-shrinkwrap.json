@@ -1,6 +1,6 @@
 {
   "name": "watai",
-  "version": "0.6.1",
+  "version": "0.6.1-beta.2",
   "dependencies": {
     "growl": {
       "version": "1.7.0",
