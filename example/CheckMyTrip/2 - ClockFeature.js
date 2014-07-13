@@ -11,7 +11,7 @@ scenario: [
 	function hasExpectedTimeDiff() {
 		return ClockWidget.getCurrentHour()()
 						  .then(function(hour) {
-						  	assert.equal(hour, storage.previousHour - 1);
+						  	assert.equal(hour, timeDiff(storage.previousHour, - 1));
 						  });
 	}
 ]
