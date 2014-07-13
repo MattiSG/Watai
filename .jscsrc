@@ -5,10 +5,43 @@
     "example",
     "doc"
   ],
+
   "preset": "google",
+  "requireCurlyBraces": null,
   "maximumLineLength": null,
   "validateIndentation": null,
   "disallowMixedSpacesAndTabs": "smart",
   "disallowMultipleLineBreaks": null,
-  "disallowMultipleVarDecl": true
+
+  "requireSpacesInFunctionExpression": {
+    "beforeOpeningCurlyBrace": true
+  },
+  "disallowSpacesInFunctionExpression": {
+    "beforeOpeningRoundBrace": true
+  },
+  "requireMultipleVarDecl": true,
+  "requireBlocksOnNewline": 1,
+  "requireParenthesesAroundIIFE": true,
+  "disallowPaddingNewlinesInBlocks": true,
+  "disallowEmptyBlocks": true,
+  "requireSpacesInsideObjectBrackets": "allButNested",
+  "requireSpacesInsideArrayBrackets": "allButNested",
+  "disallowSpacesInsideParentheses": true,
+  "disallowQuotedKeysInObjects": "allButReserved",
+  "disallowSpaceAfterObjectKeys": true,
+  "requireCommaBeforeLineBreak": true,
+  "requireAlignedObjectValues": "ignoreLineBreak",
+  "disallowSpaceAfterPrefixUnaryOperators": [ "++", "--", "+", "-", "~" ],
+  "requireSpaceAfterPrefixUnaryOperators": [ "!" ],
+  "disallowSpaceBeforePostfixUnaryOperators": true,
+  "disallowImplicitTypeConversion": [ "numeric", "binary" ],
+  "validateLineBreaks": "LF",
+  "validateQuoteMarks": { "mark": "'", "escape": true },
+  "validateIndentation": "\t",
+  "disallowTrailingComma": true,
+  "disallowKeywordsOnNewLine": [ "else" ],
+  "requireCapitalizedConstructors": true,
+  "requireDotNotation": true,
+  "disallowYodaConditions": true,
+  "requireSpaceAfterLineComment": true
 }

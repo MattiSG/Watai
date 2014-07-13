@@ -70,7 +70,7 @@
   },
   "devDependencies": {
     "istanbul": "0.1",
-    "jscs": "1.x",
+    "jscs": ">= 1.4 < 2",
     "mocha": ">= 1.4",
     "retire": "0.1",
     "should": ">= 1.2.2 < 2"
