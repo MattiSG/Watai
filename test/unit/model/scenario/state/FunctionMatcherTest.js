@@ -36,31 +36,33 @@ describe('FunctionMatcher', function() {
 	});
 
 	it('should pass on a function returning a resolved promise', function(done) {
-		new FunctionMatcher(function(elm) {
-					return elm.getAttribute('checked').then(function() {	// this is just a way to obtain a promise
-						// do nothing
-					});
-				},
-				'TestWidget.toggleCheckbox',
-				{ TestWidget: TestWidget }
-			).test()
-			.done(function() { done() }, done);
+		new FunctionMatcher(
+			function(elm) {
+				return elm.getAttribute('checked').then(function() {	// this is just a way to obtain a promise
+					// do nothing
+				});
+			},
+			'TestWidget.toggleCheckbox',
+			{ TestWidget: TestWidget }
+		).test()
+		.done(function() { done() }, done);
 	});
 
 	it('should fail on a function returning a rejected promise', function(done) {
-		new FunctionMatcher(function(elm) {
-					return elm.getAttribute('checked').then(function() {	// this is just a way to obtain a promise
-						throw MESSAGE;
-					});
-				},
-				'TestWidget.toggleCheckbox',
-				{ TestWidget: TestWidget }
-			).test()
-			.done(function() {
-				done(new Error('Resolved instead of rejected!'));
-			}, function(reason) {
-				reason.should.match(new RegExp(MESSAGE));
-				done();
-			});
+		new FunctionMatcher(
+			function(elm) {
+				return elm.getAttribute('checked').then(function() {	// this is just a way to obtain a promise
+					throw MESSAGE;
+				});
+			},
+			'TestWidget.toggleCheckbox',
+			{ TestWidget: TestWidget }
+		).test()
+		.done(function() {
+			done(new Error('Resolved instead of rejected!'));
+		}, function(reason) {
+			reason.should.match(new RegExp(MESSAGE));
+			done();
+		});
 	});
 });

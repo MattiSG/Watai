@@ -33,7 +33,6 @@ describe('SauceLabs view', function() {
 
 
 	describe('#getAuth', function() {
-
 		describe('when there is no way to get the data', function() {
 			before(stdoutSpy.reset);
 			beforeEach(stdoutSpy.mute);
@@ -93,7 +92,6 @@ describe('SauceLabs view', function() {
 				checkMatch('user-config', 'pass-env');
 			});
 		});
-
 	});
 
 	describe('when not set to always quit', function() {
@@ -116,5 +114,4 @@ describe('SauceLabs view', function() {
 			stdoutSpy.printed().should.match(/wast.* 90 ?s/);	// wasting, wastes, waste, 90 seconds, 90s… doesn't matter
 		});
 	});
-
 });

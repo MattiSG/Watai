@@ -72,15 +72,15 @@ function makeFrames(msg) {
 *@private
 */
 var typeToColorCode = {
-	'debug'	: 34,
-	'cyan'	: 36,
-	'purple': 35,
-	'info'	: 32,
-	'error'	: 31,
-	'warn'	: 31,
-	'yellow': 33,
-	'grey'	: 90,
-	'gray'	: 90
+	debug	: 34,
+	cyan	: 36,
+	purple	: 35,
+	info	: 32,
+	error	: 31,
+	warn	: 31,
+	yellow	: 33,
+	grey	: 90,
+	gray	: 90
 }
 
 /** Plays the given array of strings.

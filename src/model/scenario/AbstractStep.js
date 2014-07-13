@@ -160,7 +160,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	/** Fulfill the promise.
 	* To be called by inheriting classes.
 	*
-	*@param	[data]	If passed, will be passed as the second parameter of the promise resolution, the first one being this step.
+	*@param	{*}	[data]	If passed, will be passed as the second parameter of the promise resolution, the first one being this step.
 	*/
 	succeed: function succeed(data) {
 		if (this.cancelled)
@@ -174,7 +174,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	/** Reject the promise.
 	* Calling this method gives no guarantee `start` won't be called again. There might be retries.
 	*
-	*@param	report	Information to justify the failure, either a string or an object to be later formatted by formatFailure.
+	*@param	{String|Object}	report	Information to justify the failure, either a string or an object to be later formatted by formatFailure.
 	*@see	#formatFailure
 	*/
 	fail: function fail(report) {
@@ -193,7 +193,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 	/** Makes this matcher fail immediately, not trying anymore.
 	*
-	*@param	report	Information to justify the failure, either a string or an object to be later formatted by formatFailure.
+	*@param	{String|Object}	report	Information to justify the failure, either a string or an object to be later formatted by formatFailure.
 	*@private
 	*/
 	failImmediately: function failImmediately(report) {
@@ -219,7 +219,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	* To be redefined by children classes, defaults to return the passed parameter.
 	* May be prefixed by timeout information when actually shown to the user.
 	*
-	*@param	report	Information to justify the failure passed to the `fail` method.
+	*@param	{String|Object}	report	Information to justify the failure passed to the `fail` method.
 	*@see	#fail
 	*/
 	formatFailure: function formatFailure(report) {
@@ -260,11 +260,11 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 		if (jsonWireError) {
 			var handler = this['formatJsonWireError' + jsonWireError.status];	// magic methods may be provided by any inheriting class, to decorate JSONwire errors
 
-			if (handler)
+			if (handler) {
 				return handler.call(this, error.cause);
-			else
+			} else {
 				return jsonWireError.detail;
-
+			}
 		} else if (error.data) {	// wd-generated error, but wd couldn't parse its contents, so we'll have to do it ourselves
 			return error.data	// feature prominently Selenium server's error details
 						.split('WebDriverException:').getLast()	// TODO: that stuff should get logged somewhere else than the terminal rather than being completely removed

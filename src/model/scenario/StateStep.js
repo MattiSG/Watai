@@ -109,12 +109,12 @@ var StateStep = new Class(/** @lends steps.StateStep# */{
 	*/
 	generateAssertion: function generateAssertion(elementName, expected) {
 		var deferred		= promises.defer(),
-			matcherClass	= stateMatchers.forValue(expected);
+			MatcherClass	= stateMatchers.forValue(expected);
 
-		if (! matcherClass)
+		if (! MatcherClass)
 			throw new TypeError('No matcher found for the given value type.\nHad to check for "' + expected + '", which is of type ' + typeof expected + '.');
 
-		var matcher = new matcherClass(expected, elementName, this.widgets);
+		var matcher = new MatcherClass(expected, elementName, this.widgets);
 
 		return function evaluateStateDescriptorMatcher() {
 			this.emit('matcher', matcher);
@@ -128,7 +128,7 @@ var StateStep = new Class(/** @lends steps.StateStep# */{
 
 	/** Extracts failures from descriptor promises and calls either `succeed` or `fail` based on this information.
 	*
-	*@param	{Array.<PromiseSnapshot>}	The snapshots of promises for each state descriptor.
+	*@param	{Array.<PromiseSnapshot>}	promiseSnapshots	The snapshots of promises for each state descriptor.
 	*@see	Q.allSettled
 	*/
 	onAllDescriptorsDone: function onAllDescriptorsDone(promiseSnapshots) {

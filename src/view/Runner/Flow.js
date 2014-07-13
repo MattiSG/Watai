@@ -31,7 +31,7 @@ var RunnerFlow = new Class({
 			this.animator.log('✘ ', 'warn', description.title, 'warn', process.stderr);
 			this.animator.log('', 'debug', description.help, 'debug', process.stderr);
 		}
-	},
+	}
 });
 
 module.exports = RunnerFlow;	// CommonJS export

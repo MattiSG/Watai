@@ -59,10 +59,10 @@ describe('VisibilityMatcher', function() {
 	it('should fail on `true` in state descriptors on hidden elements', function(done) {
 		new VisibilityMatcher(true, 'TestWidget.hidden', { TestWidget: TestWidget })
 			.test().then(function() {
-					done(new Error('Resolved instead of rejected!'));
+				done(new Error('Resolved instead of rejected!'));
 			}, function(reason) {
-					reason.should.match(/was not visible/);
-					done();
+				reason.should.match(/was not visible/);
+				done();
 			}
 		).done();
 	});

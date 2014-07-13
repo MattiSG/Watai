@@ -51,7 +51,6 @@ describe('Step flow view', function() {
 
 
 	describe('functional step', function() {
-
 		describe('arbitrary action report', function() {
 			var ACTION = 'testAction';
 

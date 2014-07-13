@@ -1,4 +1,4 @@
-module.exports = {
+{
 	"log": {
 		"init": {
 			"console": {

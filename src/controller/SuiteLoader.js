@@ -53,7 +53,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@param	{Hash}		[config]	A configuration object that will override the loaded config file.
 	*/
 	initialize: function init(path, config) {
-		this.path = pathsUtils.resolve(path) + '/';	//TODO: Node 0.8 has path.sep
+		this.path = pathsUtils.resolve(path) + '/';	// TODO: Node 0.8 has path.sep
 
 		var config = new ConfigLoader({
 			from		: this.path,
@@ -271,8 +271,8 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	attachViewsTo: function attachViewsTo(runner) {
 		Array.from(this.config.views).each(function(viewName) {
 			try {
-				var viewClass = require('../view/Runner/' + viewName);
-				new viewClass(runner);
+				var ViewClass = require('../view/Runner/' + viewName);
+				new ViewClass(runner);
 			} catch (err) {
 				throw new ReferenceError([
 					err.message, '',
@@ -286,7 +286,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 	/** Loads the given definitions globally into this Loader's managed namespace.
 	*
-	*@param	dataFile	Path to a data description file. This is simply a list of variable definitions.
+	*@param	{String}	dataFile	Path to a data description file. This is simply a list of variable definitions.
 	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
 	*
 	*@see	#loadAllFiles
@@ -308,7 +308,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 	/** Loads the given file as a widget globally into this Loader's managed namespace.
 	*
-	*@param	widgetFile	Path to a widget description file. See examples to see how such a file should be written.
+	*@param	{String}	widgetFile	Path to a widget description file. See examples to see how such a file should be written.
 	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
 	*
 	*@see	#loadAllFiles

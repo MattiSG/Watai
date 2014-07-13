@@ -12,6 +12,7 @@
   "validateIndentation": null,
   "disallowMixedSpacesAndTabs": "smart",
   "disallowMultipleLineBreaks": null,
+  "requireOperatorBeforeLineBreak": null,
 
   "requireSpacesInFunctionExpression": {
     "beforeOpeningCurlyBrace": true
@@ -19,7 +20,6 @@
   "disallowSpacesInFunctionExpression": {
     "beforeOpeningRoundBrace": true
   },
-  "requireMultipleVarDecl": true,
   "requireBlocksOnNewline": 1,
   "requireParenthesesAroundIIFE": true,
   "disallowPaddingNewlinesInBlocks": true,
@@ -28,9 +28,7 @@
   "requireSpacesInsideArrayBrackets": "allButNested",
   "disallowSpacesInsideParentheses": true,
   "disallowQuotedKeysInObjects": "allButReserved",
-  "disallowSpaceAfterObjectKeys": true,
   "requireCommaBeforeLineBreak": true,
-  "requireAlignedObjectValues": "ignoreLineBreak",
   "disallowSpaceAfterPrefixUnaryOperators": [ "++", "--", "+", "-", "~" ],
   "requireSpaceAfterPrefixUnaryOperators": [ "!" ],
   "disallowSpaceBeforePostfixUnaryOperators": true,
@@ -39,7 +37,6 @@
   "validateQuoteMarks": { "mark": "'", "escape": true },
   "validateIndentation": "\t",
   "disallowTrailingComma": true,
-  "disallowKeywordsOnNewLine": [ "else" ],
   "requireCapitalizedConstructors": true,
   "requireDotNotation": true,
   "disallowYodaConditions": true,

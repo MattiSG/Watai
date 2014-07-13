@@ -36,7 +36,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 
 	/** Creates a matcher, ready to be evaluated.
 	*
-	*@param	expected	Any kind of content this matcher should look for.
+	*@param	{*}	expected	Any kind of content this matcher should look for.
 	*@param	{String}	selector	The element selector to look for in this instance's referenced widgets.
 	*@param	{Object.<String,Widget>}	[widgets]	The widgets in which elements should be looked for.
 	*@constructs
@@ -70,7 +70,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	start: function start() {
 		Object.getFromPath(this.widgets, this.selector)
 			  .done(this.onElementFound.bind(this),	// this wrapping is needed because the promise from `getFromPath` is a WebDriver promise, so we can't add failure handlers only, we need to set all handlers at once through the `then` method
-			  		this.onElementMissing.bind(this));
+					this.onElementMissing.bind(this));
 	},
 
 	/** Handler called when the selected element is found. To be redefined by subclasses.
@@ -84,7 +84,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	/** Handler for missing element. May be redefined by subclasses.
 	* Defaults to failing.
 	*
-	*@param	{Error}	The error raised by WebDriver.
+	*@param	{Error}	error	The error raised by WebDriver.
 	*/
 	onElementMissing: function onElementMissing(error) {
 		this.fail(error);
@@ -92,7 +92,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 
 	/** Compares the given value to the expected value, using the `match` method, and fails or succeeds the match automatically.
 	*
-	*@param	actual	The value that should be compared against this instance's expected value.
+	*@param	{*}	actual	The value that should be compared against this instance's expected value.
 	*@see	#match
 	*/
 	compare: function compare(actual) {
@@ -105,8 +105,8 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	/** Compares the equality of the two given values.
 	* To be modified by inheriting classes. Defaults to testing loose equality with `==`.
 	*
-	*@param	actual	The value that should be compared against the expected value.
-	*@param	expected	The value to compare against.
+	*@param	{*}	actual	The value that should be compared against the expected value.
+	*@param	{*}	expected	The value to compare against.
 	*/
 	match: function match(actual, expected) {
 		return actual == expected;
@@ -116,7 +116,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	* May be redefined by children classes.
 	* May be prefixed by timeout information when actually shown to the user.
 	*
-	*@param	actual	The actual value that was encountered.
+	*@param	{*}	actual	The actual value that was encountered.
 	*/
 	formatFailure: function formatFailure(actual) {
 		if (typeof actual == 'undefined') {

@@ -50,8 +50,8 @@ describe('Views', function() {
 		describe(view, function() {
 			it('should exist', function() {
 				(function() {
-					var subjectClass = require(Watai.path + '/view/' + view);
-					subject = new subjectClass(emitter);
+					var SubjectClass = require(Watai.path + '/view/' + view);
+					subject = new SubjectClass(emitter);
 				}).should.not.throw();
 			});
 

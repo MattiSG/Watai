@@ -24,11 +24,10 @@ var DEFAULT_SELECTOR_TYPE = 'css';
 /**@class	A Hook allows one to target a specific element on a web page.
 * It is a wrapper around both a selector and its type (css, xpath, id…).
 *
-*@param	hook	A single value-pair hash whose key may be one of `css`, `id`, or any other value of Selenium's `By` class; and whose value must be a string of the matching form.
-*@param	driver	The WebDriver instance in which the described elements are to be sought.
+*@param	{Object}	hook	A single value-pair hash whose key may be one of `css`, `id`, or any other value of Selenium's `By` class; and whose value must be a string of the matching form.
+*@param	{WebDriver}	driver	The WebDriver instance in which the described elements are to be sought.
 */
 var Hook = function Hook(hook, driver) {
-
 	if (typeof hook == 'string') {
 		this.type = DEFAULT_SELECTOR_TYPE;
 		this.selector = hook;
@@ -50,7 +49,7 @@ var Hook = function Hook(hook, driver) {
 
 	/** Sends the given sequence of keystrokes to the element pointed by this hook.
 	*
-	*@param	input	A string that will be sent to this element.
+	*@param	{String}	input	A string that will be sent to this element.
 	*@returns	{QPromise}	A promise, resolved when keystrokes have been received, rejected in case of a failure.
 	*@see	http://seleniumhq.org/docs/03_webdriver.html#sendKeys
 	*@private
@@ -73,10 +72,10 @@ var Hook = function Hook(hook, driver) {
 * The getter dynamically retrieves the Selenium element pointed at by the given selector description.
 * The setter will pass the value to the `Hook.handleInput` method.
 *
-*@param	target			The Object to which the getter and setter will be added.
-*@param	key				The name of the property to add to the target object.
-*@param	typeAndSelector	A hook descriptor, as defined in the Hook constructor.
-*@param	driver			The WebDriver instance in which the described elements are to be sought.
+*@param	{Object}	target			The Object to which the getter and setter will be added.
+*@param	{String}	key				The name of the property to add to the target object.
+*@param	{Object}	typeAndSelector	A hook descriptor, as defined in the Hook constructor.
+*@param	{WebDriver}	driver			The WebDriver instance in which the described elements are to be sought.
 *
 *@see	Hook
 *@see	Hook#handleInput

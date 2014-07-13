@@ -10,7 +10,7 @@ var StepInstafail = new Class(/** @lends StepInstafail# */{
 	*@param	{String}	message	The reason why the step failed.
 	*/
 	showFailure: function showFailure(message) {
-		//stepIndex++;	// make the step index 1-based for the user	// TODO: add stepIndex back
+		// stepIndex++;	// make the step index 1-based for the user	// TODO: add stepIndex back
 		process.stdout.write('- ' + message + '\n');
 	}
 });
