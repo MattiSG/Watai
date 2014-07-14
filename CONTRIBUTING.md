@@ -17,7 +17,7 @@ Simply fork the project, and clone the repository on your machine.
 Code conventions
 ----------------
 
-Please read the [Code conventions](https://github.com/MattiSG/Watai/wiki/Code-conventions) prior to coding. An [`editorconfig`](http://editorconfig.org/) file is provided.
+Please read the [Code conventions](https://github.com/MattiSG/Watai/wiki/Code-conventions) prior to coding. An [`editorconfig`](http://editorconfig.org/) file is provided, as well as an [automated style checker](https://github.com/mdevils/node-jscs).
 
 
 Build tool
@@ -43,7 +43,7 @@ Merging your changes
 
 Once your changes are ready, i.e. you made sure:
 
-1. You didn't break anything (`npm run test-exhaustive`).
+1. You didn't break anything and respected the styleguide (`npm run test-exhaustive`).
 2. You tested them properly (`npm test --coverage`).
 3. You cleanly documented the new code (with `./go doc private`).
 
