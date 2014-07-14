@@ -3,6 +3,6 @@ description: 'Looking up an ambiguous term should make a Zero Click Info box app
 scenario: [
 	SearchBarWidget.searchFor(lookupTerm),
 	{
-		'ZeroClickWidget.header': 'Meanings of ' + lookupTerm
+		'ZeroClickWidget.meanings': expandedAcronym
 	}
 ]
