@@ -1,8 +1,8 @@
 description: 'Looking up an ambiguous term should make a Zero Click Info box appear.',
 
 scenario: [
-	SearchBarWidget.searchFor(lookupTerm),
+	SearchBarWidget.searchFor(query),
 	{
-		'ZeroClickWidget.header': 'Meanings of ' + lookupTerm
+		'ZeroClickWidget.meanings': expandedAcronym
 	}
 ]
