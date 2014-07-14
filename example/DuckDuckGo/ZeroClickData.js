@@ -1,2 +1,2 @@
-lookupTerm = 'TTIP'
+query = 'TTIP'
 expandedAcronym = /Transatlantic Trade/
