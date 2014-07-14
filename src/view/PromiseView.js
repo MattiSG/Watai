@@ -66,15 +66,13 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 		return {
 			title:	userDisplayable.title,	// no default value: this is how a client can know if a detailed description was found; don't try putting `error.toString()`: some values do _not_ have a toString() method
 			help:	(userDisplayable.help ? userDisplayable.help + '\n' : '')
-					+ "Get more help at <https://github.com/MattiSG/Watai/wiki/Troubleshooting>",
+					+ 'Get more help at <https://github.com/MattiSG/Watai/wiki/Troubleshooting>',
 			source:	error
 		}
 	},
 
 	/** Presents details of a test start to the user.
 	* Attaches to resolution handlers.
-	*
-	*@param	model	The model that is about to start.
 	*/
 	onStart: function onStart() {
 		this.model.promise.done(
@@ -100,7 +98,7 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 
 	/** Presents details of a model failure to the user.
 	*
-	*@param	{String}	message	The reason why the step failed.
+	*@param	{String}	reason	The reason why the step failed.
 	*/
 	showFailure: function showFailure(reason) {
 		// to be redefined by inheriting classes

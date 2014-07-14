@@ -50,13 +50,13 @@ describe('StateStep', function() {
 	describe('syntax checks', function() {
 		it('with a non-existing property path should throw', function() {
 			(function() {
-				new StateStep({ toto: 'toto'}, { TestWidget: TestWidget });	// no widget matches this property path. We have to protect users against misspelled paths.
+				new StateStep({ toto: 'toto' }, { TestWidget: TestWidget });	// no widget matches this property path. We have to protect users against misspelled paths.
 			}).should.throw(/Could not find/);
 		});
 
 		it('with a magically-added property path should throw', function() {
 			(function() {
-				new StateStep({ 'TestWidget.changeTextareaValueLater': 'toto'}, { TestWidget: TestWidget });	// The actual element is `changeTextareaValueLaterLink`. `changeTextareaValueLater` is an action shortcut, but may not be used as a property.]);
+				new StateStep({ 'TestWidget.changeTextareaValueLater': 'toto' }, { TestWidget: TestWidget });	// The actual element is `changeTextareaValueLaterLink`. `changeTextareaValueLater` is an action shortcut, but may not be used as a property.]);
 			}).should.throw(/not an element/);
 		});
 
@@ -64,7 +64,7 @@ describe('StateStep', function() {
 		*/
 		it('that are not accessible on the current page but properly written should not throw an error', function() {
 			(function() {
-				new StateStep({ 'TestWidget.missing': 'missing'}, { TestWidget: TestWidget });
+				new StateStep({ 'TestWidget.missing': 'missing' }, { TestWidget: TestWidget });
 			}).should.not.throw();
 		});
 	});
@@ -137,7 +137,7 @@ describe('StateStep', function() {
 					done(new Error('Matched while the expected result should have been set later than evaluation.'))
 				}, function() {
 					done();
-				});
+				}).done();
 			});
 
 			it('should do delayed evaluation if set to a proper positive value', function(done) {
@@ -149,11 +149,10 @@ describe('StateStep', function() {
 						'TestWidget.output': expectedOutputs.changeTextareaValueLaterLink
 					}
 				]).test().then(function() {
-						done();
-					}, function(reason) {
-						done(new Error(reason || 'No failure message passed.'));
-					}
-				).done();
+					done();
+				}, function(reason) {
+					done(new Error(reason || 'No failure message passed.'));
+				}).done();
 			});
 
 			it('should not be longer than needed if set to a positive value', function(done) {
@@ -167,11 +166,10 @@ describe('StateStep', function() {
 						'TestWidget.output': expectedOutputs.changeTextareaValueLaterAgainLink
 					}
 				]).test().then(function() {
-						done();
-					}, function(reason) {
-						done(new Error(reason || 'No failure message passed.'));
-					}
-				).done();
+					done();
+				}, function(reason) {
+					done(new Error(reason || 'No failure message passed.'));
+				}).done();
 			});
 
 			it('should fail if expected state comes later than timeout', function(done) {
@@ -188,7 +186,7 @@ describe('StateStep', function() {
 					done(new Error('Matched while the expected result should have been set later than evaluation.'))
 				}, function(err) {
 					done();
-				});
+				}).done();
 			});
 
 			it('should fail if expected state comes later than timeout and timeout is set to 0', function(done) {

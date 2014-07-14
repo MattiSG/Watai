@@ -12,7 +12,7 @@ var matchers = {
 
 /** Returns the matcher class that is able to test for the given expected value.
 *
-*@param	expected	Any value that matchers are to be found for.
+*@param	{*}	expected	Any value that matchers are to be found for.
 *@returns	{AbstractMatcher|undefined}	A *class*, to be initialized, or nothing if no matcher can be used for the given value.
 */
 matchers.forValue = function matcherForValue(expected) {

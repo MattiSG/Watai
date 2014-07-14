@@ -84,7 +84,8 @@ function makeDriver(done) {
 	})).then(function() {
 		return result.get(config.baseURL);
 	}, function() {
-		console.error(['',
+		console.error([
+			'',
 			'**The Selenium server could not be reached!**',
 			'> Did you start it up?',
 			'  See the troubleshooting guide if you need help  ;)'

@@ -1,6 +1,6 @@
 /** Parses an option hash given through the CLI.
 *
-*@param		{String}	A JSON-encoded series of config options.
+*@param		{String}	data	A JSON-encoded series of config options.
 *@returns	{Hash}		The config options, unserialized.
 */
 function parseOptions(data) {

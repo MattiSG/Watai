@@ -10,7 +10,7 @@ var StepCLI = new Class(/** @lends StepCLI# */{
 	*@param	{String}	message	The reason why the step failed.
 	*/
 	showFailure: function showFailure(message) {
-		//stepIndex++;	// make the step index 1-based for the user	// TODO: add stepIndex back
+		// stepIndex++;	// make the step index 1-based for the user	// TODO: add stepIndex back
 		this.animator.log('   ↳', 'cyan', message.replace(/\n/g, '\n    '), 'cyan');
 	}
 });

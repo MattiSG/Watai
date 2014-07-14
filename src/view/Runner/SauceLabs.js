@@ -43,8 +43,11 @@ var RunnerSauceLabs = new Class({
 		}.bind(this));
 
 		this.transmitter.getServiceStatus(function(err, sauceStatus) {
-			if (! sauceStatus.service_operational)
-				console.log('This job will probably fail, Sauce seems to be down: ' + sauceStatus.status_message);
+			var serviceOperationalKey	= 'service_operational',
+				statusMessageKey		= 'status_message';	// TODO: when jsrc implements ignoring lines, directly access the key in the conditional. See <https://github.com/mdevils/node-jscs/issues/20>.
+
+			if (! sauceStatus[serviceOperationalKey])
+				console.log('This job will probably fail, Sauce seems to be down: ' + sauceStatus[statusMessageKey]);
 		});
 
 		if (this.model.config.quit != 'always') {

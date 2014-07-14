@@ -68,7 +68,7 @@ var Feature = new Class( /** @lends Feature# */ {
 		this.description	= description;
 		this.id				= id || 0;
 		this.config			= config;
-		this.widgets		= widgets;	//TODO: transform so that they can be referred to with the "Widget" suffix optional?
+		this.widgets		= widgets;	// TODO: transform so that they can be referred to with the "Widget" suffix optional?
 
 		this.steps			= this.loadScenario(scenario);
 	},
@@ -127,14 +127,15 @@ var Feature = new Class( /** @lends Feature# */ {
 	*@param	{Number}	[stepIndex]	The scenario step (0-based) at which the syntax error was detected. If not defined, the syntax error will be described as global to the feature file.
 	*/
 	notifySyntaxError: function notifySyntaxError(message, stepIndex) {
-		throw new SyntaxError('Feature "' + this.description + '"'
-							  + (typeof stepIndex != 'undefined'	// we can't simply test for falsiness, since the stepIndex could be 0
-							  	? ', at step ' + (stepIndex + 1)
-							  	: '')
-							  + (message
-							  	? ': ' + message
-							  	: '')
-							 );
+		throw new SyntaxError(
+			'Feature "' + this.description + '"'
+			+ (typeof stepIndex != 'undefined'	// we can't simply test for falsiness, since the stepIndex could be 0
+				? ', at step ' + (stepIndex + 1)
+				: '')
+			+ (message
+				? ': ' + message
+				: '')
+		);
 	},
 
 	/** Asynchronously evaluates the scenario given to this feature.
@@ -166,7 +167,6 @@ var Feature = new Class( /** @lends Feature# */ {
 				.fail(this.reasons.push.bind(this.reasons))
 				.fin(process.nextTick.bind(process, evaluateNext))
 				.done();
-
 		}).bind(this);
 
 		this.promise = deferred.promise;

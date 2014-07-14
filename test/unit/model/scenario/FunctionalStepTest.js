@@ -35,19 +35,17 @@ describe('FunctionalStep', function() {
 	});
 
 	describe('user-visible errors', function() {
-
 		function expectMessage(elementName, message, done) {
 			new FunctionalStep(function() {
-					return TestWidget[elementName].then(function(elm) {
-						return elm.click();
-					});
-				})
-				.test().then(function() {
-					throw new Error('Accessing an element with an error did not trigger a failure.');
-				}, function(reason) {
-					if (! reason.match(message))
-						throw new Error('"' + reason + '" is not clear enough.');
-				}).done(done);
+				return TestWidget[elementName].then(function(elm) {
+					return elm.click();
+				});
+			}).test().then(function() {
+				throw new Error('Accessing an element with an error did not trigger a failure.');
+			}, function(reason) {
+				if (! reason.match(message))
+					throw new Error('"' + reason + '" is not clear enough.');
+			}).done(done);
 		}
 
 		it('should be clear for missing elements (code 7)', function(done) {

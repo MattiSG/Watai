@@ -46,7 +46,7 @@ describe('Runner', function() {
 				try {
 					subject.isReady().should.be.true;
 					done();
-				} catch(err) {
+				} catch (err) {
 					done(err);
 				}
 			});

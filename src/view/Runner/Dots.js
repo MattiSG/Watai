@@ -85,7 +85,7 @@ var getDurationString = function getDurationString(first, second) {
 			second	: Math.floor(durationSeconds) % 60
 		};	// don't you remove this semicolon
 
-	['hour', 'minute', 'second'].forEach(function(unit) {
+	[ 'hour', 'minute', 'second' ].forEach(function(unit) {
 		var value = durations[unit];
 		if (value > 0)
 			result += unit.count(value) + ' ';
