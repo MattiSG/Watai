@@ -1,1 +1,2 @@
-lookupTerm = "Toto"
+query = 'TTIP'
+expandedAcronym = /Transatlantic Trade/
