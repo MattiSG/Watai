@@ -1,9 +1,10 @@
 {
   "excludeFiles": [
-    "node_modules/**",
-    "test/resources/**",
-    "example",
-    "doc"
+    "node_modules",
+    "coverage",
+    "doc",
+    "test/resources",
+    "example"
   ],
 
   "preset": "google",
