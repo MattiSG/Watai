@@ -59,7 +59,9 @@ var RunnerDots = new Class({
 							 + getDurationString(this.startTime, new Date())
 							 + ': '
 							 + 'feature'.count(featuresCount)
-							 + ', '
+							 + ' ('
+							 + this.model.config.ignore.length
+							 + ' ignored),'
 							 + 'success'.count(successCount, 'es')
 							 + ', '
 							 + 'failure'.count(failuresCount)
