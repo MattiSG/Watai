@@ -15,18 +15,23 @@ You are reminded that Watai uses [SemVer](http://semver.org), which means upgrad
 v0.6
 ----
 
-### v0.6.2 [IN PROGRESS]
+### v0.6.2 [BETA]
 
 #### New features
 
-- [`ignore`](https://github.com/MattiSG/Watai/wiki/Configuration#wiki-ignore) config option has been added ([#111](https://github.com/MattiSG/Watai/pull/111)).
+- [`ignore`](https://github.com/MattiSG/Watai/wiki/Configuration#wiki-ignore) config option has been added ([#111](https://github.com/MattiSG/Watai/pull/111), thanks @debona).
 - [SauceLabs](https://github.com/MattiSG/Watai/wiki/Configuration#wiki-views) view is now available, transmitting test status as pass/fail and outputting a direct link to the job as well as an estimate of how many minutes are left on your account ([#87](https://github.com/MattiSG/Watai/issues/87)).
 
 #### Minor changes
 
-- Errors on suite loads are now visible ([#112](https://github.com/MattiSG/Watai/pull/112)).
 - Upgraded obsolete object getters and setters syntax ([#107](https://github.com/MattiSG/Watai/pull/107)).
 - Updated `wd` to v0.2.6. [Some incompatibilities](https://github.com/admc/wd/blob/master/doc/release-notes.md#022) were introduced in v0.2.2. They are in advanced monkeypatching usage, you probably didn't do any with Watai.
+- Added an [`editorconfig`](http://editorconfig.org/) file to help contributors ([#118](https://github.com/MattiSG/Watai/pull/118), thanks @GillesFabio).
+- Added [`jscs`](https://github.com/mdevils/node-jscs) to unify syntax and guide contributors ([#119](https://github.com/MattiSG/Watai/pull/119), thanks @GillesFabio).
+
+#### Bugfixes
+
+- Errors appearing on suite load are now visible ([#112](https://github.com/MattiSG/Watai/pull/112), thanks @debona).
 
 
 ### v0.6.1
