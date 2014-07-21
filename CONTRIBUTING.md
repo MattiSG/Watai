@@ -52,7 +52,7 @@ Coverage information is provided by [Istanbul](https://github.com/yahoo/istanbul
 
 Since Watai's integration tests (exit codes checks, CLI options) are long and little prone to fail suddenly, they are not executed in the default `test` command.
 
-To execute all tests, including the longer ones, to ensure no regression was made, use the `--exhaustive` option:
+To execute all tests, including the longer ones, to ensure no regression was made, use the following command:
 
 	npm run test-exhaustive
 
