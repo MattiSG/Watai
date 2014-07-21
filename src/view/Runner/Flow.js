@@ -32,6 +32,20 @@ var RunnerFlow = new Class({
 			this.animator.log('', 'debug', description.help, 'debug', process.stderr);
 		}
 	},
+
+	showEnd: function showEnd() {
+		if (this.model.config.ignore.length) {
+			this.animator.log(
+				'⨁ ',
+				'cyan',
+				'ignored feature'.count(this.model.config.ignore.length)
+				+ ' (#'
+				+ this.model.config.ignore.join(', #')
+				+ ')',
+				'cyan'
+			);
+		}
+	}
 });
 
 module.exports = RunnerFlow;	// CommonJS export

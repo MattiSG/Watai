@@ -53,7 +53,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@param	{Hash}		[config]	A configuration object that will override the loaded config file.
 	*/
 	initialize: function init(path, config) {
-		this.path = pathsUtils.resolve(path) + '/';	//TODO: Node 0.8 has path.sep
+		this.path = pathsUtils.resolve(path) + '/';	// TODO: Node 0.8 has path.sep
 
 		var config = new ConfigLoader({
 			from		: this.path,
@@ -67,22 +67,6 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		this.configPromise = this.parseConfig(config);
 	},
 
-	/** Transforms the given partial config hash from a form that may contain user shortcuts to a more complete form that is usable for the loaded test suite.
-	*
-	*@param		{Hash}	config	The config values to load.
-	*@returns	{Hash}	The given config values, possibly transformed.
-	*@private
-	*/
-	parseConfigStep: function parseConfigStep(config) {
-		if (config.baseURL)
-			config.baseURL = this.objectifyURL(config.baseURL);
-
-		if (config.seleniumServerURL)
-			config.seleniumServerURL = this.objectifyURL(config.seleniumServerURL);
-
-		return config;
-	},
-
 	/** Validates and possibly transforms the given config hash to a form that is usable for the loaded test suite.
 	*
 	*@param		{Hash}	config	The config values to use for this test suite.
@@ -92,7 +76,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*/
 	parseConfig: function parseConfig(config) {
 		if (! config.baseURL) {
-			var msg = 'No baseURL was found in any "' + SuiteLoader.paths.config + '" file in directories above "' + this.path + '"';
+			var msg = 'No baseURL was found in any "' + SuiteLoader.paths.config + '" file in "' + this.path + '" nor any parent directory';
 			winston.loggers.get('load').error(msg);
 			throw new ReferenceError(msg);
 		}
@@ -193,9 +177,13 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			this.attachViewsTo(this.runner);
 			this.context = vm.createContext(this.buildContext());
 
-			fs.readdir(this.path, this.loadAllFiles.bind(this));
-
-			return this.runner;
+			return this.path;
+		}.bind(this))
+		.then(promises.nfbind(fs.readdir))
+		.then(this.loadAllFiles.bind(this))
+		.fail(function(err) {
+			this.runner.quitBrowser();	// TODO: should starting the driver be delayed until all files have been loaded? Slower startup for functioning cases, less annoyance for erroneous suites.
+			throw err;
 		}.bind(this));
 	},
 
@@ -228,20 +216,17 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 	/** Callback handler after `readdir`ing the test description directory.
 	*
-	*@param	{Error}	err	An optional error object (to be used as callback).
 	*@param	{Array.<String>}	files	Array of file paths to examine.
+	*@returns	{Runner}	The runner in which all the elements have been loaded.
+	*@throws	{Error}		Code "NO_FEATURES" if no features are found.
 	*
 	*@see	http://nodejs.org/api/fs.html#fs_fs_readdir_path_callback
 	*@private
 	*/
-	loadAllFiles: function loadAllFiles(err, files) {
-		if (err) {
-			winston.loggers.get('load').error('Error while trying to load description files in "' + this.path + '"!', { path: this.path });
-			throw err;
-		}
-
-		var featureFiles	= {},
-			widgetFiles		= [];
+	loadAllFiles: function loadAllFiles(files) {
+		var featureFiles			= {},
+			widgetFiles				= [],
+			ignoredFeaturesIndices	= this.config.ignore.map(function(index) { return '' + index });	// cast to string to allow for comparison with parsed indices
 
 		files.forEach(function(file) {
 			var match;	// if capturing parentheses are used in the file type detection regexp (see SuiteLoader.paths), this var holds the `match()` result
@@ -252,22 +237,42 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 				widgetFiles.push(this.path + file);	// don't load them immediately in order to make referenced data values available first
 			} else if (match = file.match(SuiteLoader.paths.featureMarker)) {
 				var featureIndex = match[1];	// first capturing parentheses in the featureMarker RegExp have to match the feature's numerical ID
-				featureFiles[featureIndex] = this.path + file;	// don't load them immediately in order to make referenced widgets available first
+				if (ignoredFeaturesIndices.contains(featureIndex))
+					ignoredFeaturesIndices = ignoredFeaturesIndices.erase(featureIndex);
+				else
+					featureFiles[featureIndex] = this.path + file;	// don't load them immediately in order to make referenced widgets available first
 			}
 		}, this);
 
-		if (Object.getLength(featureFiles) <= 0)
-			throw new Error('No feature found! Feature names have to match this RegExp: ' + SuiteLoader.paths.featureMarker);
+		if (ignoredFeaturesIndices.length) {
+			var error = new Error('The following features were to be ignored but could not be found: ' + ignoredFeaturesIndices);
+			error.code = 'FEATURES_NOT_FOUND';
+			throw error;
+		}
+
+		if (Object.getLength(featureFiles) <= 0) {
+			var message = 'No feature found';
+
+			if (this.config.ignore.length)
+				message += ' after ignoring features ' + this.config.ignore.join(', ');
+
+			var error = new Error(message);
+			error.code = 'NO_FEATURES';
+			throw error;
+		}
+
 
 		widgetFiles.forEach(this.loadWidget.bind(this));
 		Object.each(featureFiles, this.loadFeature, this);
+
+		return this.runner;
 	},
 
 	attachViewsTo: function attachViewsTo(runner) {
 		Array.from(this.config.views).each(function(viewName) {
 			try {
-				var viewClass = require('../view/Runner/' + viewName);
-				new viewClass(runner);
+				var ViewClass = require('../view/Runner/' + viewName);
+				new ViewClass(runner);
 			} catch (err) {
 				throw new ReferenceError([
 					err.message, '',
@@ -281,7 +286,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 	/** Loads the given definitions globally into this Loader's managed namespace.
 	*
-	*@param	dataFile	Path to a data description file. This is simply a list of variable definitions.
+	*@param	{String}	dataFile	Path to a data description file. This is simply a list of variable definitions.
 	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
 	*
 	*@see	#loadAllFiles
@@ -303,7 +308,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 	/** Loads the given file as a widget globally into this Loader's managed namespace.
 	*
-	*@param	widgetFile	Path to a widget description file. See examples to see how such a file should be written.
+	*@param	{String}	widgetFile	Path to a widget description file. See examples to see how such a file should be written.
 	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
 	*
 	*@see	#loadAllFiles

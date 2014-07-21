@@ -56,16 +56,6 @@ case "$1" in
 		fi
 		open $DOC_DIR/api/index.html
 		exit 0 ;;
-	dev )
-		echo "Installing user dependencies…"
-		npm install .
-		echo "Temporarily disabling shrinkwrap…"
-		mv "npm-shrinkwrap.json" "npm-shrinkwrap.json~"
-		echo "Installing dev dependencies…"
-		npm install .
-		echo "Re-enabling shrinkwrap"
-		mv "npm-shrinkwrap.json~" "npm-shrinkwrap.json"
-		exit 0 ;;
 	export-examples )
 		cd $BASEDIR
 		outputFile="doc/tutorials/Watai-DuckDuckGo-example.zip"
@@ -82,11 +72,8 @@ case "$1" in
 		echo "Archived repository"
 		echo "Adding production dependencies…"
 		mv node_modules node_modules_dev
-		rm 'npm-shrinkwrap.json'
 		npm install --production
 		zip -q -u $outputFile -r node_modules
-		echo "Updating shrinkwrap…"
-		npm shrinkwrap
 		echo "Restoring dev dependencies…"
 		rm -rf node_modules
 		mv node_modules_dev node_modules

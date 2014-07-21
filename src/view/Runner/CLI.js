@@ -33,6 +33,18 @@ var RunnerCLI = new Class({
 	/** Resets the shell prompt.
 	*/
 	showEnd: function showEnd() {
+		if (this.model.config.ignore.length) {
+			this.animator.log(
+				'⨁ ',
+				'cyan',
+				'ignored feature'.count(this.model.config.ignore.length)
+				+ ' (#'
+				+ this.model.config.ignore.join(', #')
+				+ ')',
+				'cyan'
+			);
+		}
+
 		this.animator.clear();
 		this.animator.showCursor();
 	}

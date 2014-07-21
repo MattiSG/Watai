@@ -1,6 +1,5 @@
 module.exports = {
-	baseURL: 'https://duckduckgo.com/?kad=en_GB',	// you don't need to add any query string to test your own website
-													// passing the language code is used only because DuckDuckGo adjusts to your default language, which may make the test fail
+	baseURL: 'https://duckduckgo.com',
 
 	browser: 'firefox',	// if you’d rather test with Chrome, you will need to install chromedriver
 						// read more at https://github.com/MattiSG/Watai/wiki/Testing-with-Chrome

@@ -1,0 +1,45 @@
+{
+  "excludeFiles": [
+    "node_modules",
+    "coverage",
+    "doc",
+    "test/resources",
+    "example"
+  ],
+
+  "preset": "google",
+  "requireCurlyBraces": null,
+  "maximumLineLength": null,
+  "validateIndentation": null,
+  "disallowMixedSpacesAndTabs": "smart",
+  "disallowMultipleLineBreaks": null,
+  "requireOperatorBeforeLineBreak": null,
+
+  "requireSpacesInFunctionExpression": {
+    "beforeOpeningCurlyBrace": true
+  },
+  "disallowSpacesInFunctionExpression": {
+    "beforeOpeningRoundBrace": true
+  },
+  "requireBlocksOnNewline": 1,
+  "requireParenthesesAroundIIFE": true,
+  "disallowPaddingNewlinesInBlocks": true,
+  "disallowEmptyBlocks": true,
+  "requireSpacesInsideObjectBrackets": "allButNested",
+  "requireSpacesInsideArrayBrackets": "allButNested",
+  "disallowSpacesInsideParentheses": true,
+  "disallowQuotedKeysInObjects": "allButReserved",
+  "requireCommaBeforeLineBreak": true,
+  "disallowSpaceAfterPrefixUnaryOperators": [ "++", "--", "+", "-", "~" ],
+  "requireSpaceAfterPrefixUnaryOperators": [ "!" ],
+  "disallowSpaceBeforePostfixUnaryOperators": true,
+  "disallowImplicitTypeConversion": [ "numeric", "binary" ],
+  "validateLineBreaks": "LF",
+  "validateQuoteMarks": { "mark": "'", "escape": true },
+  "validateIndentation": "\t",
+  "disallowTrailingComma": true,
+  "requireCapitalizedConstructors": true,
+  "requireDotNotation": true,
+  "disallowYodaConditions": true,
+  "requireSpaceAfterLineComment": true
+}

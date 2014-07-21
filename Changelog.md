@@ -15,11 +15,30 @@ You are reminded that Watai uses [SemVer](http://semver.org), which means upgrad
 v0.6
 ----
 
+### v0.6.2
+
+#### New features
+
+- [`ignore`](https://github.com/MattiSG/Watai/wiki/Configuration#wiki-ignore) config option has been added ([#111](https://github.com/MattiSG/Watai/pull/111), thanks @debona).
+- [SauceLabs](https://github.com/MattiSG/Watai/wiki/Configuration#wiki-views) view is now available, transmitting test status as pass/fail and outputting a direct link to the job as well as an estimate of how many minutes are left on your account ([#87](https://github.com/MattiSG/Watai/issues/87)).
+
+#### Minor changes
+
+- Upgraded obsolete object getters and setters syntax ([#107](https://github.com/MattiSG/Watai/pull/107)).
+- Updated `wd` to v0.2.6. [Some incompatibilities](https://github.com/admc/wd/blob/master/doc/release-notes.md#022) were introduced in v0.2.2. They are in advanced monkeypatching usage, you probably didn't do any with Watai.
+- Added an [`editorconfig`](http://editorconfig.org/) file to help contributors ([#118](https://github.com/MattiSG/Watai/pull/118), thanks @GillesFabio).
+- Added [`jscs`](https://github.com/mdevils/node-jscs) to unify syntax and guide contributors ([#119](https://github.com/MattiSG/Watai/pull/119), thanks @GillesFabio).
+
+#### Bugfixes
+
+- Errors appearing on suite load are now visible ([#112](https://github.com/MattiSG/Watai/pull/112), thanks @debona).
+
+
 ### v0.6.1
 
 #### Minor changes
 
-- Async configuration entries can now [use a promise](https://github.com/MattiSG/Watai/wiki/Configuration#async-config) instead of a callback. This allows for async errors to be detected.
+- Async configuration entries can now [use a promise](https://github.com/MattiSG/Watai/wiki/Configuration#wiki-async-config) instead of a callback. This allows for async errors to be detected.
 - Improve display of unknown errors.
 - Important improvements in development tools.
 - Use native `Q`'s long stack traces instead of `longjohn` module.
@@ -31,9 +50,9 @@ v0.6
 
 - Automatic file upload support: if you set a file field to a local file path, the file will be [sent to the Selenium server](http://sauceio.com/index.php/2012/03/selenium-tips-uploading-files-in-remote-webdriver/), making test assets available anywhere automatically.
 - Add [support for (async) functions in configuration](https://github.com/MattiSG/Watai/wiki/Configuration#async-config).
-- Add [`bail` config key](https://github.com/MattiSG/Watai/wiki/Configuration#bail): if set to `true`, stops a test after the first failing feature.
+- Add [`bail` config key](https://github.com/MattiSG/Watai/wiki/Configuration#wiki-bail): if set to `true`, stops a test after the first failing feature.
 - Almost all errors now have a proper description (server not reachable, elements not found in state assertions, widget actions failures…).
-- Authentication data is now taken from [`seleniumServerURL`](https://github.com/MattiSG/Watai/wiki/Configuration#seleniumserverurl), allowing distant services such as SauceLabs to be used.
+- Authentication data is now taken from [`seleniumServerURL`](https://github.com/MattiSG/Watai/wiki/Configuration#wiki-seleniumserverurl), allowing distant services such as SauceLabs to be used.
 - [Metadata fields](https://github.com/MattiSG/Watai/wiki/Configuration#metadata) `name`, `tags` and `build` are now parsed in config files and sent to the Selenium server.
 - There is now a default hook type: `css` ([#92](https://github.com/MattiSG/Watai/pull/92)). If you target an element with only a String, it will be considered as a CSS selector.
 

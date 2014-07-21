@@ -97,7 +97,7 @@ var Widget = new Class( /** @lends Widget# */ {
 			var basename = matches[1],
 				type = matches[2];	// for example "Link", "Button"…
 
-			widget[basename] = function() {	// wrapping to allow immediate calls in scenario steps	//TODO: rather return an object with methods, and leave preparation for scenarios to the Widget constructor
+			widget[basename] = function() {	// wrapping to allow immediate calls in scenario steps	// TODO: rather return an object with methods, and leave preparation for scenarios to the Widget constructor
 				var args = Array.prototype.slice.call(arguments);	// make an array of prepared arguments
 
 				var action = function() {	// no immediate access to avoid calling the getter, which would trigger a Selenium access

@@ -28,9 +28,9 @@ describe('Widget usage within Feature', function() {
 
 
 		it('should bind one parameter', function(done) {
-			var feature = new Watai.Feature('Test feature', [
-					widget.setMarker(partOne)
-				], { TestWidget: widget },
+			var feature = new Watai.Feature('Test feature',
+				[ widget.setMarker(partOne) ],
+				{ TestWidget: widget },
 				config
 			);
 
@@ -38,7 +38,7 @@ describe('Widget usage within Feature', function() {
 				try {
 					should.equal(calledMarker, partOne);
 					done();
-				} catch(err) {
+				} catch (err) {
 					done(err);
 				}
 			}, function(report) {
@@ -47,9 +47,10 @@ describe('Widget usage within Feature', function() {
 		});
 
 		it('should bind two parameters', function(done) {
-			var feature = new Watai.Feature('Test feature', [
-					widget.concatenateTwo(partOne, partTwo)
-				], { TestWidget: widget },
+			var feature = new Watai.Feature(
+				'Test feature',
+				[ widget.concatenateTwo(partOne, partTwo) ],
+				{ TestWidget: widget },
 				config
 			);
 
@@ -57,7 +58,7 @@ describe('Widget usage within Feature', function() {
 				try {
 					should.equal(calledMarker, partOne + partTwo);
 					done();
-				} catch(err) {
+				} catch (err) {
 					done(err);
 				}
 			}, function(report) {
