@@ -66,7 +66,7 @@ case "$1" in
 	dist )
 		$0 export-examples
 		cd $BASEDIR
-		outputFile=dist/watai-$(git describe --tags)-NPMdeps.zip
+		outputFile=dist/watai-$(git describe --tags)-with-npm-dependencies.zip
 		mkdir dist 2> /dev/null
 		git archive -9 --output="$outputFile" $(git describe) $DIST_INCLUDE
 		echo "Archived repository"
