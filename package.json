@@ -50,7 +50,7 @@
     "test-examples": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite ./src/index.js suite",
     "test-examples-parallel": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite -P 4 ./src/index.js suite",
     "test-security": "retire --node --package",
-    "test-exhaustive": "npm run test-examples && npm test && npm run test-integration && npm run test-security && npm run lint",
+    "test-exhaustive": "npm run test-examples && npm test && npm run test-integration && npm run test-security && npm run lint && npm run doc-private",
     "lint": "jscs .",
     "doc": "jsdoc --recurse src --destination doc/api",
     "doc-private": "jsdoc --recurse src --destination doc/api --private"
