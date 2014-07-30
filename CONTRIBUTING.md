@@ -59,17 +59,15 @@ To execute all tests, including the longer ones, to ensure no regression was mad
 
 ### Documentation generation
 
-Documentation generator: [JSdoc-toolkit](https://code.google.com/p/jsdoc-toolkit/).
+Documentation generator and syntax: [JSdoc](http://usejsdoc.org).
 
-Documentation syntax: [JSdoc-toolkit tags](https://code.google.com/p/jsdoc-toolkit/w/list) and [Closure Annotations](https://developers.google.com/closure/compiler/docs/js-for-compiler).
+	npm run doc
 
-Assuming OS X and Homebrew:
+You will find the generated documentation as HTML files in the `doc/api` folder. Open `doc/api/index.html` to start.
 
-	brew install jsdoc-toolkit
+If you're hacking on the core of Watai rather than a plugin, you can use:
 
-For other environments, download the [toolkit JAR](https://code.google.com/p/jsdoc-toolkit/downloads/detail?name=jsdoc_toolkit-2.4.0.zip&can=2&q=) and change the `JSDOC_DIR` path in the `go` script.
-
-	./go doc [private]	# add private to include documentation of the private API
+	npm run doc-private
 
 
 Shrinkwrap
