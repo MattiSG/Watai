@@ -2,7 +2,7 @@ var promises = require('q');
 
 /** Mapping from short selector types to WebDriver's fully qualified selector types.
 *
-*@see	<http://code.google.com/p/selenium/wiki/JsonWireProtocol#POST_/session/:sessionId/element>
+*@see	{@link http://code.google.com/p/selenium/wiki/JsonWireProtocol#POST_/session/:sessionId/element|JsonWire sessionId}
 */
 var WATAI_SELECTOR_TYPES_TO_WEBDRIVER_TYPES = {
 	css		: 'css selector',
@@ -40,7 +40,7 @@ var Hook = function Hook(hook, driver) {
 
 	/** Returns the element this hook points to in the given driver, as an object with all WebDriver methods.
 	*
-	*@see	http://seleniumhq.org/docs/03_webdriver.html
+	*@see	{@link http://seleniumhq.org/docs/03_webdriver.html|WebDriver}
 	*@private
 	*/
 	this.toSeleniumElement = function toSeleniumElement() {
@@ -51,7 +51,7 @@ var Hook = function Hook(hook, driver) {
 	*
 	*@param	{String}	input	A string that will be sent to this element.
 	*@returns	{QPromise}	A promise, resolved when keystrokes have been received, rejected in case of a failure.
-	*@see	http://seleniumhq.org/docs/03_webdriver.html#sendKeys
+	*@see	{@link http://seleniumhq.org/docs/03_webdriver.html#sendKeys|WebDriver.sendKeys}
 	*@private
 	*/
 	this.handleInput = function handleInput(input) {
@@ -76,9 +76,6 @@ var Hook = function Hook(hook, driver) {
 *@param	{String}	key				The name of the property to add to the target object.
 *@param	{Object}	typeAndSelector	A hook descriptor, as defined in the Hook constructor.
 *@param	{WebDriver}	driver			The WebDriver instance in which the described elements are to be sought.
-*
-*@see	Hook
-*@see	Hook#handleInput
 */
 Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	var hook = new Hook(typeAndSelector, driver);

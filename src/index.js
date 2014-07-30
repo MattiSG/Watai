@@ -14,7 +14,7 @@ var Watai					= require('./Watai'),
 	Preprocessor			= require('./lib/Preprocessor'),
 	/** Path to the directory containing option-callable scripts.
 	*@type	{String}
-	*@see	#preProcessArguments
+	*@see	preProcessArguments
 	*@private
 	*/
 	OPTIONS_HANDLERS_DIR	= path.join(__dirname, 'plugins'),

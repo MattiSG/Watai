@@ -38,7 +38,7 @@ var RunnerGrowl = new Class({
 	*
 	*@param	{String}	message	The content to present to the user.
 	*@param	{Hash}		options	Options to pass to the `growl` method.
-	*@see	<https://github.com/visionmedia/node-growl>
+	*@see	{@link https://github.com/visionmedia/node-growl|node-growl}
 	*/
 	show: function show(message, options) {
 		var defaults = {

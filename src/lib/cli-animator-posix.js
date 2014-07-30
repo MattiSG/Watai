@@ -1,5 +1,7 @@
-/**@namespace A helper to ease CLI animation.
+/**A helper to ease CLI animation.
 * Most of this code is extracted from TJ Holowaychuk’s Mocha.
+*
+*@namespace
 */
 var CLIanimator = {};
 

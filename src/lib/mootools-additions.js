@@ -77,9 +77,9 @@ String.implement( /* @lends String */ {
 	},
 
 	/** Transforms this camel-cased or hyphenated string into a spaced string.
-	* Example: 'areCookiesGood' => 'are cookies good'
 	*
 	*@returns	{String}	This string, with capitals replaced by a space and a small letter.
+	*@example humanize('areCookiesGood')	// 'are cookies good'
 	*/
 	humanize: function humanize() {
 		return this.hyphenate().replace(/[-_]/g, ' ').clean();

@@ -47,7 +47,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	/** The [timeout ID](http://nodejs.org/docs/latest/api/all.html#all_settimeout_cb_ms) that makes this matcher retry.
 	* Needed to be able to cancel a match request.
 	*
-	*@see	#cancel
+	*@see	cancel
 	*@type	{Number}
 	*@private
 	*/
@@ -56,7 +56,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	/** A cancellation flag, set to true if this matcher was cancelled.
 	* This is needed in case the cancellation occurs after a match was started, and we're waiting for a callback from WebDriver with the element (found or missing, doesn't matter), so that we don't do call anyone back.
 	*
-	*@see	#cancel
+	*@see	cancel
 	*@type	{Boolean}
 	*@private
 	*/
@@ -175,7 +175,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	* Calling this method gives no guarantee `start` won't be called again. There might be retries.
 	*
 	*@param	{String|Object}	report	Information to justify the failure, either a string or an object to be later formatted by formatFailure.
-	*@see	#formatFailure
+	*@see	formatFailure
 	*/
 	fail: function fail(report) {
 		if (this.cancelled)
@@ -220,19 +220,15 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	* May be prefixed by timeout information when actually shown to the user.
 	*
 	*@param	{String|Object}	report	Information to justify the failure passed to the `fail` method.
-	*@see	#fail
+	*@see	fail
 	*/
 	formatFailure: function formatFailure(report) {
 		return report || 'There was a failure, but no information was given about it  :-/';
 	},
 
 	/** Formats a wd-generated error for presentation to the user.
-	*
-	*@param		{WdError}	error	The error to format.
-	*@returns	{String}	The formatted error.
-	*@throws	If the given error can not be parsed properly.
-	*
-	* Example `err` value passed by wd:
+	*@example
+	* `err` value passed by wd:
 	*	 {
 			"message":"Error response status: 13.",
 			"status":13,
@@ -252,8 +248,12 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 			}
 		}
 	*
-	* Another example:
+	*@example
 	* {"message":"Not JSON response","data":"<html>\n<head>\n<title>Error 500 org.openqa.selenium.WebDriverException: org.openqa.selenium.WebDriverException: Cannot find matching element locator to: null\nBuild info: version: '2.33.0', revision: '4e90c97', time: '2013-05-22 15:32:38'\nSystem info: os.name: 'Mac OS X',
+	*
+	*@param		{WdError}	error	The error to format.
+	*@returns	{String}	The formatted error.
+	*@throws	If the given error can not be parsed properly.
 	*/
 	formatWdError: function formatWdError(error) {
 		var jsonWireError = error['jsonwire-error'];	// that's a wd-generated error property with details from the Selenium server

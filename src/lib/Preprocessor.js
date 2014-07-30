@@ -11,7 +11,7 @@ var Preprocessor = function Preprocessor(pluginsDir) {
 /** Loads plugins based on arguments passed to the main Node process.
 *
 *@return	{Hash}	A hash whose keys are the processed plugins, mapped to their result; plus a magic key 'remaining' containing all non-processed args.
-*@see		Preprocessor#processAll
+*@see		processAll
 */
 Preprocessor.prototype.processArgv = function processArgv() {
 	var args = process.argv.slice(2);	// extract CLI arguments, see http://docs.nodejitsu.com/articles/command-line/how-to-parse-command-line-arguments

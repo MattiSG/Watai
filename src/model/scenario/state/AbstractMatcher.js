@@ -40,8 +40,8 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	*@param	{String}	selector	The element selector to look for in this instance's referenced widgets.
 	*@param	{Object.<String,Widget>}	[widgets]	The widgets in which elements should be looked for.
 	*@constructs
-	*@see	#test
-	*@see	#addWidgets
+	*@see	test
+	*@see	addWidgets
 	*/
 	initialize: function init(expected, selector, widgets) {
 		this.addWidgets(widgets);
@@ -93,7 +93,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	/** Compares the given value to the expected value, using the `match` method, and fails or succeeds the match automatically.
 	*
 	*@param	{*}	actual	The value that should be compared against this instance's expected value.
-	*@see	#match
+	*@see	match
 	*/
 	compare: function compare(actual) {
 		if (this.match(actual, this.expected))

@@ -77,7 +77,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*
 	*@param		{Object}	config	The configuration object to check (may not be defined, which will return an error).
 	*@throws	{Error}	An error object describing the encountered problem.
-	*@see	#initialize	For details on the configuration object.
+	*@see		{@link initialize}	For details on the configuration object.
 	*/
 	parseConfig: function parseConfig(config) {
 		if (! config)
@@ -140,7 +140,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*
 	*@param		{Object}	config	The configuration object based on which the driver will be built.
 	*@return	{QPromise}	The promise for the `driver` instance variable to be ready.
-	*@see		#initialize	For details on the configuration object.
+	*@see		{@link initialize}	For details on the configuration object.
 	*@private
 	*/
 	buildDriverFrom: function buildDriverFrom(config) {
@@ -192,7 +192,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	* Emits the "start" event.
 	*
 	*@returns	{QPromise}	A promise for results, resolved if all features pass (param: this Runner), rejected otherwise (param: hash mapping failed features to their reasons for rejection, or an Error if an error appeared in the runner itself or the evaluation was cancelled).
-	*@see	#addFeature
+	*@see	addFeature
 	*/
 	test: function test() {
 		this.deferred = promises.defer();

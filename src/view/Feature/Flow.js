@@ -46,7 +46,7 @@ var FeatureVerbose = new Class({
 	* The length is provided by the length of the `idPlaceholder` attribute.
 	*
 	*@private
-	*@see	#idPlaceholder
+	*@see	idPlaceholder
 	*/
 	getPaddedId: function getPaddedId() {
 		var result = '' + this.model.id;
