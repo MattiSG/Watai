@@ -3,6 +3,9 @@
 		"includePattern": ".+\\.js(doc)?$"
 	},
 	"plugins": [ "plugins/markdown" ],
+	"tags": {
+		"allowUnknownTags": false
+	},
 	"templates": {
 		"cleverLinks": true,
 		"default": {
