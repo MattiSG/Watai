@@ -1,0 +1,12 @@
+{
+	"source": {
+		"includePattern": ".+\\.js(doc)?$"
+	},
+	"plugins": [ "plugins/markdown" ],
+	"templates": {
+		"cleverLinks": true,
+		"default": {
+			"outputSourceFiles": true
+		}
+	}
+}

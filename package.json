@@ -52,8 +52,8 @@
     "test-security": "retire --node --package",
     "test-exhaustive": "npm run test-examples && npm test && npm run test-integration && npm run test-security && npm run lint && npm run doc-private",
     "lint": "jscs .",
-    "doc": "jsdoc --recurse src --destination doc/api README.md",
-    "doc-private": "jsdoc --recurse src --destination doc/api --private README.md"
+    "doc": "jsdoc --configure .jsdoc --recurse src --destination doc/api README.md",
+    "doc-private": "jsdoc --configure .jsdoc --recurse src --destination doc/api --private README.md"
   },
   "engines": {
     "node": ">=0.6.18 <0.11",
