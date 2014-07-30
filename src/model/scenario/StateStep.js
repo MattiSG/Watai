@@ -27,8 +27,9 @@ var StateStep = new Class(/** @lends steps.StateStep# */{
 	descriptors: {},
 
 	/** The assertions corresponding to the given description hash.
+	* An array of promise-returning functions.
 	*
-	*@type	{Array.<Function>}	An array of promise-returning functions.
+	*@type	{Array.<Function>}
 	*@private
 	*/
 	assertions: [],

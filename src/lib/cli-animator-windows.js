@@ -1,5 +1,7 @@
-/**@namespace A fake animation helper for the Windows console.
+/** A fake animation helper for the Windows console.
 * Has much less functionality than the POSIX one, but offers easy compatibility.
+*
+* @namespace
 */
 var WindowsCLI = {};
 

@@ -31,7 +31,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	/** Sandbox for features, widgets and data load.
 	*
 	*@type	{vm}
-	*@see	http://nodejs.org/api/vm.html
+	*@see	{@link http://nodejs.org/api/vm.html|Node::vm}
 	*@private
 	*/
 	context: null,
@@ -189,7 +189,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 	/** Generates the list of variables that will be offered globally to Widgets, Features and Data elements.
 	*
-	*@see	http://nodejs.org/api/vm.html#vm_vm_runincontext_code_context_filename
+	*@see	{@link http://nodejs.org/api/vm.html#vm_vm_runincontext_code_context_filename|Node::vm.runInContext}
 	*@returns	{Hash}	The context description, i.e. a list of elements to offer globally in the suite loading context.
 	*@private
 	*/
@@ -220,7 +220,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@returns	{Runner}	The runner in which all the elements have been loaded.
 	*@throws	{Error}		Code "NO_FEATURES" if no features are found.
 	*
-	*@see	http://nodejs.org/api/fs.html#fs_fs_readdir_path_callback
+	*@see	{@link http://nodejs.org/api/fs.html#fs_fs_readdir_path_callback|Node::fs.readdir}
 	*@private
 	*/
 	loadAllFiles: function loadAllFiles(files) {
@@ -289,7 +289,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@param	{String}	dataFile	Path to a data description file. This is simply a list of variable definitions.
 	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
 	*
-	*@see	#loadAllFiles
+	*@see	loadAllFiles
 	*/
 	loadData: function loadData(dataFile) {
 		winston.loggers.get('load').verbose('~ loading ' + dataFile);
@@ -311,7 +311,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@param	{String}	widgetFile	Path to a widget description file. See examples to see how such a file should be written.
 	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
 	*
-	*@see	#loadAllFiles
+	*@see	loadAllFiles
 	*/
 	loadWidget: function loadWidget(widgetFile) {
 		winston.loggers.get('load').verbose('- loading ' + widgetFile);
@@ -340,7 +340,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@param		{Number}	featureId	Numerical identifier of the feature to load.
 	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
 	*
-	*@see	#loadAllFiles
+	*@see	loadAllFiles
 	*/
 	loadFeature: function loadFeature(featureFile, featureId) {
 		winston.loggers.get('load').verbose('+ loading ' + featureFile);

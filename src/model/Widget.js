@@ -79,7 +79,7 @@ var Widget = new Class( /** @lends Widget# */ {
 	},
 
 	/** Add magic actions on specially-formatted elements.
-	* _Example: "loginLink" makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`.
+	*@example addMagic("loginLink")	// makes the `loginLink` element available to the widget, but also generates the `login()` method, which automagically calls `click` on `loginLink`
 	*
 	*@param	{String}	key	The key that should be considered for adding magic elements.
 	*@see	Widget.magic
@@ -119,7 +119,7 @@ var Widget = new Class( /** @lends Widget# */ {
 	/** Returns the user-provided name of this widget.
 	*
 	*@returns	{String}
-	*@see		#name
+	*@see		name
 	*/
 	toString: function toString() {
 		return this.name;

@@ -7,17 +7,14 @@ require('mootools');
 require('./lib/mootools-additions');
 
 
-/**@namespace	This module simply exports all public classes, letting you namespace them as you wish.
-*
-*Example usage:
+/** This module simply exports all public classes, letting you namespace them as you wish.
+*@example
 *	var Watai = require('Watai');
 *	var myWidget = new Watai.Widget(…);
-*
-*…which you could also decide to write this way:
+*@example
 *	var TR = require('Watai');
 *	var myWidget = new TR.Widget(…);
-*
-*You are therefore free of choosing your own namespacing pattern.
+*@namespace
 */
 var Watai = {
 	/**@see	Widget
@@ -33,7 +30,7 @@ var Watai = {
 	*/
 	SuiteLoader:	require('./controller/SuiteLoader'),
 	/**@see	Hook
-	*@private	(protected, exported for easier testing)
+	*@protected
 	*/
 	Hook:			require('./model/Hook'),
 	/**@see	SetupLoader

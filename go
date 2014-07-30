@@ -6,8 +6,6 @@ SRC_DIR="$BASEDIR/src"
 COVERAGE_DIR="$BASEDIR/coverage"
 BIN_DIR="$BASEDIR/node_modules/.bin/"
 TEST_DIR="$BASEDIR/test"
-DOC_DIR="$BASEDIR/doc"
-JSDOC_DIR="/usr/local/Cellar/jsdoc-toolkit/2.4.0/libexec/jsdoc-toolkit"	#TODO: make this more shareable
 DIST_DIR="$BASEDIR/dist"
 JSCOVERAGE="$BASEDIR/node_modules/visionmedia-jscoverage/jscoverage"
 
@@ -46,16 +44,6 @@ docToCodeRatio() {
 
 
 case "$1" in
-	doc )
-		docToCodeRatio
-		if [[ $2 = "private" ]]
-		then opts='-p'
-		fi
-		if ! java -Djsdoc.dir=$JSDOC_DIR -jar $JSDOC_DIR/jsrun.jar $JSDOC_DIR/app/run.js -t=$JSDOC_DIR/templates/jsdoc -d=$DOC_DIR/api $opts $SRC_DIR/*/*
-		then exit 1
-		fi
-		open $DOC_DIR/api/index.html
-		exit 0 ;;
 	export-examples )
 		cd $BASEDIR
 		outputFile="doc/tutorials/Watai-DuckDuckGo-example.zip"
@@ -93,7 +81,6 @@ case "$1" in
 		then exit 1
 		fi
 #		./go export-examples &&	#TODO: update examples only if needed
-		cd "$DOC_DIR" &&
 #		git commit -a -m "[AUTO] Updated examples for publication." &&
 		git tag -m "$3" $2 &&
 		git push &&
