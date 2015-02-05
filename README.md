@@ -26,6 +26,7 @@ Status
 This means that its stability and feature set are evolving. It is constantly improving, and a high level of quality control is applied to its development. But mistakes can always happen.
 
 [![Code Climate](https://codeclimate.com/github/MattiSG/Watai.png)](https://codeclimate.com/github/MattiSG/Watai)
+[![Inline docs](http://inch-ci.org/github/MattiSG/Watai.svg?branch=master)](http://inch-ci.org/github/MattiSG/Watai)
 
 We are currently using Watai in a big live project, and at least two other teams do so. You are highly encouraged to try out Watai and see if it fits your needs. Getting started and writing your first test should take you around 15 minutes, and the results should get you quite excited  :)
 
