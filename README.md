@@ -9,6 +9,10 @@ The tests you write will automate navigation on your webapp through actual brows
 
 ➥ Read more about [what is Watai](https://github.com/MattiSG/Watai/wiki/Definition).
 
+➥ Or watch a 4-minutes introduction: 
+[![We're bad at web integration testing](http://img.youtube.com/vi/fLP3NKUsx3k/3.jpg)](https://youtu.be/fLP3NKUsx3k?t=17s)
+
+
 Benefits
 --------
 
