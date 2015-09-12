@@ -91,15 +91,15 @@ Once you have both Node and a Selenium server, you can consider installing Watai
 
 #### Global install (easiest) ####
 
-	sudo npm install -g watai
+	npm install --global watai
 
-NPM will automatically create the `watai` alias for you. If you decide you don’t want to use Watai later on, simply `npm uninstall -g` it.
+NPM will automatically create the `watai` alias for you. If you decide you don’t want to use Watai later on, simply `npm uninstall --global` it.
 
 #### Local install ####
 
 	cd choose/your/install/folder
 	npm install watai
-	alias watai="$(pwd)/node_modules/watai/go"
+	alias watai="$(pwd)/node_modules/.bin/watai"
 
 This will create a `node_modules` folder with all dependencies in the current directory. A good way to give Watai a quick look if you’re afraid of `sudo`ing.
 
