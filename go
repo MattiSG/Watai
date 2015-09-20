@@ -2,19 +2,7 @@
 
 BASEDIR="$(cd `dirname $0`; pwd)"
 BASEDIR=$BASEDIR/$(dirname $(readlink $0) 2> /dev/null)	# readlink for NPM global install alias; error redirection in case of direct invocation, in which case readlink returns nothing
-SRC_DIR="$BASEDIR/src"
-COVERAGE_DIR="$BASEDIR/coverage"
-BIN_DIR="$BASEDIR/node_modules/.bin/"
-TEST_DIR="$BASEDIR/test"
 DIST_DIR="$BASEDIR/dist"
-JSCOVERAGE="$BASEDIR/node_modules/visionmedia-jscoverage/jscoverage"
-
-MOCHA_CMD="$BIN_DIR/mocha"
-
-# Not all tests are run each time, as some are long and little prone to failure.
-DEFAULT_TEST_DIRS="test/model test/controller test/functional test/lib test/view"
-# Used when running exhaustive tests.
-ADDITIONAL_DIRS="test/main"
 
 DIST_INCLUDE="package.json go src README.md" # list all files / folders to be included when `dist`ing, separated by spaces; this is a copy of npm’s "files", couldn't find an easy way to parse it
 
@@ -66,9 +54,4 @@ case "$1" in
 		git push --tags &&
 		npm publish &&
 		./go dist ;;
-	debug )	# run the tool in debug mode
-		shift
-		node debug $SRC_DIR "$@" ;;
-	* )	# simply run the tool
-		$SRC_DIR/index.js "$@" ;;
 esac

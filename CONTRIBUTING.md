@@ -103,7 +103,7 @@ Once your changes are ready, i.e. you made sure:
 
 1. You didn't break anything and respected the styleguide (`npm run test-exhaustive`).
 2. You tested them properly (`npm test --coverage`).
-3. You cleanly documented the new code (with `./go doc private`).
+3. You cleanly documented the new code (`npm run doc-private`).
 
 …you may open a [pull request](https://help.github.com/articles/using-pull-requests) to ask your new code to be merged in the baseline.
 
