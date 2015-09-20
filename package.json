@@ -60,11 +60,11 @@
     "npm": "> 1.1"
   },
   "dependencies": {
+    "mattisg.configloader": "0.2",
+    "mootools": "^1.4.5-2",
     "q": ">= 0.9.5",
-    "mootools": "1.4",
-    "winston": "0.6",
     "wd": "~0.2.6",
-    "mattisg.configloader": "0.2"
+    "winston": "0.6"
   },
   "optionalDependencies": {
     "growl": ">= 1.5",
@@ -73,10 +73,10 @@
   "devDependencies": {
     "istanbul": "0.1",
     "jscs": ">= 1.4 < 2",
+    "jsdoc": "3.x",
     "mocha": ">= 1.4",
     "retire": "0.1",
-    "should": ">= 1.2.2 < 2",
-    "jsdoc": "3.x"
+    "should": ">= 1.2.2 < 2"
   },
   "preferGlobal": true
 }
