@@ -1,20 +1,20 @@
 var Watai = require('../../../helpers/subject'),
 	my = require('../../../helpers/driver').getDriverHolder(),
 	ContentRegExpMatcher = Watai.matchers.ContentRegExpMatcher,
-	TestWidget = require('../../../helpers/testWidget');
+	TestComponent = require('../../../helpers/testComponent');
 
 
 describe('ContentRegExpMatcher', function() {
-	var widget;
+	var component;
 
 	function shouldPass(elementName, done) {
-		new ContentRegExpMatcher(/./, 'TestWidget.' + elementName, { TestWidget: widget })
+		new ContentRegExpMatcher(/./, 'TestComponent.' + elementName, { TestComponent: component })
 			.test()
 			.done(function() { done() });
 	}
 
 	function shouldFail(elementName, done) {
-		new ContentRegExpMatcher(/herpaderp/, 'TestWidget.' + elementName, { TestWidget: widget })
+		new ContentRegExpMatcher(/herpaderp/, 'TestComponent.' + elementName, { TestComponent: component })
 			.test()
 			.done(
 				function() { done(new Error('Resolved instead of rejected')) },
@@ -23,7 +23,7 @@ describe('ContentRegExpMatcher', function() {
 	}
 
 	before(function() {
-		widget = TestWidget.getWidget(my.driver);
+		component = TestComponent.getComponent(my.driver);
 	});
 
 	describe('on existing elements', function() {

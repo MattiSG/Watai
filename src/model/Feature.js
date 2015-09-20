@@ -23,13 +23,13 @@ var Feature = new Class( /** @lends Feature# */ {
 	*/
 	reasons: [],
 
-	/** A hash with all widgets accessible to this Feature, indexed on their names.
+	/** A hash with all components accessible to this Feature, indexed on their names.
 	*
-	*@type	{Object.<String, Widget>}
-	*@see	Widget
+	*@type	{Object.<String, Component>}
+	*@see	Component
 	*@private
 	*/
-	widgets: {},
+	components: {},
 
 	/** The user-provided feature name.
 	*
@@ -45,30 +45,30 @@ var Feature = new Class( /** @lends Feature# */ {
 
 	promise: null,
 
-	/**@class	A Feature models a sequence of actions to be executed through Widgets.
+	/**@class	A Feature models a sequence of actions to be executed through Components.
 	*
-	* A feature description file contains a simple descriptive array listing widget methods to execute and widget state descriptors to assert.
+	* A feature description file contains a simple descriptive array listing component methods to execute and component state descriptors to assert.
 	* More formally, such an array is ordered and its members may be:
 	* - a closure;
-	* - an object whose keys are some widgets' attributes identifiers (ex: "MyWidget.myAttr"), pointing at a string that contains the expected text content of the HTML element represented by the `myAttr` hook in `MyWidget`.
+	* - an object whose keys are some components' attributes identifiers (ex: "MyComponent.myAttr"), pointing at a string that contains the expected text content of the HTML element represented by the `myAttr` hook in `MyComponent`.
 	*
 	* Upon instantiation, a Feature translates this array into an array of promises:
 	* - closures are executed directly, either as promises if they are so themselves, or as basic functions;
-	* - a widget state describing hash maps each of its members to an assertion inside a promise, evaluating all of them asynchronously.
+	* - a component state describing hash maps each of its members to an assertion inside a promise, evaluating all of them asynchronously.
 	* All those promises are then evaluated sequentially upon calling the `test` method of a Feature.
 	*
 	*@constructs
 	*@param	{String}	description	A plain text description of the feature, advised to be written in a BDD fashion.
 	*@param	{Array}		scenario	An array that describes states and transitions. See class documentation for formatting.
-	*@param	{Object.<String, Widget>}	widgets	A hash listing all widgets accessible to this Feature, indexed on their names.
+	*@param	{Object.<String, Component>}	components	A hash listing all components accessible to this Feature, indexed on their names.
 	*@param	{Hash}		config		The test-suite-level configuration elements.
 	*@param	{Number}	[id]		The numerical identifier of this feature.
 	*/
-	initialize: function init(description, scenario, widgets, config, id) {
+	initialize: function init(description, scenario, components, config, id) {
 		this.description	= description;
 		this.id				= id || 0;
 		this.config			= config;
-		this.widgets		= widgets;	// TODO: transform so that they can be referred to with the "Widget" suffix optional?
+		this.components		= components;	// TODO: transform so that they can be referred to with the "Component" suffix optional?
 
 		this.steps			= this.loadScenario(scenario);
 	},
@@ -96,7 +96,7 @@ var Feature = new Class( /** @lends Feature# */ {
 					if (! sourceStep)	// yep, typeof null == 'object'  :)
 						break;	// do nothing, but make sure step is not defined, and that we eliminated any risk of using an illegal sourceStep
 
-					step = new steps.StateStep(sourceStep, this.widgets);
+					step = new steps.StateStep(sourceStep, this.components);
 					break;
 				case 'string':
 				case 'number':

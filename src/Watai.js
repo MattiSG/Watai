@@ -10,16 +10,16 @@ require('./lib/mootools-additions');
 /** This module simply exports all public classes, letting you namespace them as you wish.
 *@example
 *	var Watai = require('Watai');
-*	var myWidget = new Watai.Widget(…);
+*	var myComponent = new Watai.Component(…);
 *@example
 *	var TR = require('Watai');
-*	var myWidget = new TR.Widget(…);
+*	var myComponent = new TR.Component(…);
 *@namespace
 */
 var Watai = {
-	/**@see	Widget
+	/**@see	Component
 	*/
-	Widget:			require('./model/Widget'),
+	Component:		require('./model/Component'),
 	/**@see	Feature
 	*/
 	Feature:		require('./model/Feature'),

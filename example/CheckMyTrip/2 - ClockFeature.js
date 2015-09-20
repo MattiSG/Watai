@@ -2,14 +2,14 @@ description: 'A user should be able to look up ' + clockLookupTown + '’s local
 
 scenario: [
 	function storeCurrentTime() {
-		return ClockWidget.getCurrentHour()()
+		return ClockComponent.getCurrentHour()()
 						  .then(function(hour) {
 						  	storage.previousHour = hour;
 						  });
 	},
-	ClockWidget.lookup(clockLookupTown),
+	ClockComponent.lookup(clockLookupTown),
 	function hasExpectedTimeDiff() {
-		return ClockWidget.getCurrentHour()()
+		return ClockComponent.getCurrentHour()()
 						  .then(function(hour) {
 						  	assert.equal(hour, timeDiff(storage.previousHour, - 1));
 						  });

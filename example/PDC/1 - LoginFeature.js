@@ -1,8 +1,8 @@
 description: 'A user should be able to log in',
 
 scenario: [
-	LoginWidget.open(),
-	LoginWidget.login(email, password),
+	LoginComponent.open(),
+	LoginComponent.login(email, password),
 
-	{ 'ToolbarWidget.username': oldName }
+	{ 'ToolbarComponent.username': oldName }
 ]

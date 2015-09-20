@@ -1,20 +1,20 @@
 var Watai = require('../../../helpers/subject'),
 	my = require('../../../helpers/driver').getDriverHolder(),
 	ContentMatcher = Watai.matchers.ContentMatcher,
-	TestWidget = require('../../../helpers/testWidget');
+	TestComponent = require('../../../helpers/testComponent');
 
 
 describe('ContentMatcher', function() {
-	var widget;
+	var component;
 
 	function shouldPass(elementName, done) {
-		new ContentMatcher(TestWidget.expectedContents[elementName], 'TestWidget.' + elementName, { TestWidget: widget })
+		new ContentMatcher(TestComponent.expectedContents[elementName], 'TestComponent.' + elementName, { TestComponent: component })
 			.test()
 			.done(function() { done() });
 	}
 
 	function shouldFail(elementName, done) {
-		new ContentMatcher(TestWidget.expectedContents[elementName] + 'cannot match that', 'TestWidget.' + elementName, { TestWidget: widget })
+		new ContentMatcher(TestComponent.expectedContents[elementName] + 'cannot match that', 'TestComponent.' + elementName, { TestComponent: component })
 			.test()
 			.done(
 				function() { done(new Error('Resolved instead of rejected')) },
@@ -23,7 +23,7 @@ describe('ContentMatcher', function() {
 	}
 
 	before(function() {
-		widget = TestWidget.getWidget(my.driver);
+		component = TestComponent.getComponent(my.driver);
 	});
 
 	describe('on existing elements', function() {

@@ -1,14 +1,14 @@
 var Watai		= require('../unit/helpers/subject'),
 	my			= require('../unit/helpers/driver').getDriverHolder(),
-	testWidget	= require('../unit/helpers/testWidget'),
+	testComponent	= require('../unit/helpers/testComponent'),
 	config		= require('../config'),
 	should		= require('should');
 
 
 /** This test suite is written with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */
-describe('Widget usage within Feature', function() {
-	var widget;
+describe('Component usage within Feature', function() {
+	var component;
 
 	describe('actions', function() {
 		var calledMarker = '',
@@ -16,21 +16,21 @@ describe('Widget usage within Feature', function() {
 			partTwo = 'two';
 
 		before(function() {
-			widget = new Watai.Widget('Test widget 2', Object.merge({
+			component = new Watai.Component('Test component 2', Object.merge({
 				setMarker: function setMarker(one) {
 					calledMarker = one;
 				},
 				concatenateTwo: function concatenateTwo(first, second) {
 					calledMarker = first + second;
 				}
-			}, testWidget.elements), my.driver);
+			}, testComponent.elements), my.driver);
 		});
 
 
 		it('should bind one parameter', function(done) {
 			var feature = new Watai.Feature('Test feature',
-				[ widget.setMarker(partOne) ],
-				{ TestWidget: widget },
+				[ component.setMarker(partOne) ],
+				{ TestComponent: component },
 				config
 			);
 
@@ -49,8 +49,8 @@ describe('Widget usage within Feature', function() {
 		it('should bind two parameters', function(done) {
 			var feature = new Watai.Feature(
 				'Test feature',
-				[ widget.concatenateTwo(partOne, partTwo) ],
-				{ TestWidget: widget },
+				[ component.concatenateTwo(partOne, partTwo) ],
+				{ TestComponent: component },
 				config
 			);
 

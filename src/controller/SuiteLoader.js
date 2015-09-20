@@ -9,7 +9,7 @@ var fs			= require('fs'),
 var ConfigLoader	= require('mattisg.configloader');
 
 
-var Widget					= require('../model/Widget'),
+var Component				= require('../model/Component'),
 	Feature					= require('../model/Feature'),
 	Runner					= require('./Runner'),
 	browserCapabilitiesMap	= require('../lib/desiredCapabilities');
@@ -28,7 +28,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*/
 	runner: null,
 
-	/** Sandbox for features, widgets and data load.
+	/** Sandbox for features, components and data load.
 	*
 	*@type	{vm}
 	*@see	{@link http://nodejs.org/api/vm.html|Node::vm}
@@ -44,9 +44,9 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	features: [],
 
 	/**@class A SuiteLoader handles all test description files loading and Runner setup.
-	* A test description folder should contain a `config` file, and any number of feature (`*Feature.js`) and widget (`*Widget.js`) description files.
+	* A test description folder should contain a `config` file, and any number of feature (`*Feature.js`) and component (`*Component.js`) description files.
 	*
-	* Features will be loaded in an internally-managed Runner, and all Widgets, Features and datasets will be made available in an internally-managed VM context (i.e. every definition is made in isolation).
+	* Features will be loaded in an internally-managed Runner, and all Components, Features and datasets will be made available in an internally-managed VM context (i.e. every definition is made in isolation).
 	*
 	*@constructs
 	*@param	{String}	path		Path to the folder containing a test description. Trailing slashes will be normalized, don't worry about them  :)
@@ -179,7 +179,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		}.bind(this));
 	},
 
-	/** Generates the list of variables that will be offered globally to Widgets, Features and Data elements.
+	/** Generates the list of variables that will be offered globally to Components, Features and Data elements.
 	*
 	*@see	{@link http://nodejs.org/api/vm.html#vm_vm_runincontext_code_context_filename|Node::vm.runInContext}
 	*@returns	{Hash}	The context description, i.e. a list of elements to offer globally in the suite loading context.
@@ -188,7 +188,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	buildContext: function buildContext() {
 		var result = {
 			// used for instantiation
-			Widget: Widget,
+			Component: Component,
 			Feature: Feature,
 			// making it available for global access like loading URLs, getting title...
 			driver: this.runner.getDriver(),
@@ -196,7 +196,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		}
 
 		result[SuiteLoader.contextGlobals.featuresList] = this.features;	// hook to pass instantiated features to this context
-		result[SuiteLoader.contextGlobals.widgetsList] = {};	// stays in the managed context, but necessary for features to have a reference to all widgets, since they are evaluated in _this_ context, not their instanciation one…
+		result[SuiteLoader.contextGlobals.componentsList] = {};	// stays in the managed context, but necessary for features to have a reference to all components, since they are evaluated in _this_ context, not their instanciation one…
 
 		result[SuiteLoader.contextGlobals.log] = winston.loggers.get('load').info;	// this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
 
@@ -217,7 +217,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*/
 	loadAllFiles: function loadAllFiles(files) {
 		var featureFiles			= {},
-			widgetFiles				= [],
+			componentFiles			= [],
 			ignoredFeaturesIndices	= this.config.ignore.map(function(index) { return '' + index });	// cast to string to allow for comparison with parsed indices
 
 		files.forEach(function(file) {
@@ -225,14 +225,14 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 			if (file.match(SuiteLoader.paths.dataMarker)) {
 				this.loadData(this.path + file);
-			} else if (file.match(SuiteLoader.paths.widgetMarker)) {
-				widgetFiles.push(this.path + file);	// don't load them immediately in order to make referenced data values available first
+			} else if (file.match(SuiteLoader.paths.componentMarker)) {
+				componentFiles.push(this.path + file);	// don't load them immediately in order to make referenced data values available first
 			} else if (match = file.match(SuiteLoader.paths.featureMarker)) {
 				var featureIndex = match[1];	// first capturing parentheses in the featureMarker RegExp have to match the feature's numerical ID
 				if (ignoredFeaturesIndices.contains(featureIndex))
 					ignoredFeaturesIndices = ignoredFeaturesIndices.erase(featureIndex);
 				else
-					featureFiles[featureIndex] = this.path + file;	// don't load them immediately in order to make referenced widgets available first
+					featureFiles[featureIndex] = this.path + file;	// don't load them immediately in order to make referenced components available first
 			}
 		}, this);
 
@@ -254,7 +254,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		}
 
 
-		widgetFiles.forEach(this.loadWidget.bind(this));
+		componentFiles.forEach(this.loadComponent.bind(this));
 		Object.each(featureFiles, this.loadFeature, this);
 
 		return this.runner;
@@ -298,28 +298,28 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		return this;
 	},
 
-	/** Loads the given file as a widget globally into this Loader's managed namespace.
+	/** Loads the given file as a component globally into this Loader's managed namespace.
 	*
-	*@param	{String}	widgetFile	Path to a widget description file. See examples to see how such a file should be written.
+	*@param	{String}	componentFile	Path to a component description file. See examples to see how such a file should be written.
 	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
 	*
 	*@see	loadAllFiles
 	*/
-	loadWidget: function loadWidget(widgetFile) {
-		winston.loggers.get('load').verbose('- loading ' + widgetFile);
+	loadComponent: function loadComponent(componentFile) {
+		winston.loggers.get('load').verbose('- loading ' + componentFile);
 
-		var widgetName = pathsUtils.basename(widgetFile, '.js');
+		var componentName = pathsUtils.basename(componentFile, '.js');
 
 		try {
-			vm.runInContext(widgetName + ' = '
-							+ '__widgets__["' + widgetName + '"] = '
-							+ 'new Widget("' + widgetName + '", '
-							+ '{' + fs.readFileSync(widgetFile) + '},'
+			vm.runInContext(componentName + ' = '
+							+ '__components__["' + componentName + '"] = '
+							+ 'new Component("' + componentName + '", '
+							+ '{' + fs.readFileSync(componentFile) + '},'
 							+ 'driver);',
 							this.context,
-							widgetFile);
+							componentFile);
 		} catch (error) {
-			winston.loggers.get('load').error('**Error in file "' + widgetFile + '"**', { path: widgetFile });	// TODO: is it really useful to add this info?
+			winston.loggers.get('load').error('**Error in file "' + componentFile + '"**', { path: componentFile });	// TODO: is it really useful to add this info?
 			throw error;
 		}
 
@@ -340,7 +340,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		var featureParams = [
 			'featureContents.description',
 			'featureContents.scenario',
-			'__widgets__',
+			'__components__',
 			'config',
 			featureId
 		];
@@ -375,9 +375,9 @@ SuiteLoader.paths = {
 	/** If a file matches this RegExp, it is considered as a feature description to be loaded.
 	*/
 	featureMarker:	/^([0-9]+)(.+)Feature.js$/i,
-	/** If a file matches this RegExp, it is considered as a widget description to be loaded.
+	/** If a file matches this RegExp, it is considered as a component description to be loaded.
 	*/
-	widgetMarker:	/(.+)Widget.js$/i,
+	componentMarker:	/(.+)(Component|Widget).js$/i,	// Widget is kept for v<0.7 compatibility
 	/** If a file matches this RegExp, it is considered as a data suite to be loaded.
 	*/
 	dataMarker:		/(.+)Data.js$/i
@@ -388,9 +388,9 @@ SuiteLoader.paths = {
 *@constant
 */
 SuiteLoader.contextGlobals = {
-	/** A hash containing all loaded widgets, indexed on their name.
+	/** A hash containing all loaded components, indexed on their name.
 	*/
-	widgetsList:	'__widgets__',
+	componentsList:	'__components__',
 	/** An array containing all features, in their loading order.
 	*/
 	featuresList:	'__features__',

@@ -1,7 +1,7 @@
 var promises = require('q');
 
 /**@class	A step that parses and evaluates a function in a scenario.
-* A function may be a widget action, or a user-provided function.
+* A function may be a component action, or a user-provided function.
 *
 *@extends	steps.AbstractStep
 *@memberOf	steps
@@ -41,7 +41,7 @@ var FunctionalStep = new Class(/** @lends steps.FunctionalStep# */{
 	},
 
 	toString: function toString() {
-		if (this.action.widget) {	// this is a Widget action
+		if (this.action.component) {	// this is a Component action
 			return this.describeAction();
 		} else if (this.action.name) {	// this is a custom user function, hopefully the user provided a good name for it
 			var humanized = this.action.name.humanize();
@@ -55,22 +55,22 @@ var FunctionalStep = new Class(/** @lends steps.FunctionalStep# */{
 		return '[unnamed action]';
 	},
 
-	/** Tries to describe the wrapped step, assuming it is a Widget-generated action.
+	/** Tries to describe the wrapped step, assuming it is a Component-generated action.
 	*
 	*@returns	{String}	A user-presentable action description.
-	*@see	Widget
+	*@see	Component
 	*/
 	describeAction: function describeAction() {
-		var humanizedAction = (this.action.title || this.action.reference).humanize()	// makes naming functions themselves optional, but let them have higher precedence over widget key: users can thus provide more details in function names without making it long to access them in tests
+		var humanizedAction = (this.action.title || this.action.reference).humanize()	// makes naming functions themselves optional, but let them have higher precedence over component key: users can thus provide more details in function names without making it long to access them in tests
 
-		return	this.action.widget
+		return	this.action.component
 				+ ' '
 				+ humanizedAction
 				+ (this.action.args.length
 					? ' with "' + this.action.args.join('", "') + '"'
 					: '')
 				+ (humanizedAction != this.action.reference	// make it easier to locate source
-					? ' (as ' + this.action.widget + '.' + this.action.reference + ')'
+					? ' (as ' + this.action.component + '.' + this.action.reference + ')'
 					: '')
 	}
 });

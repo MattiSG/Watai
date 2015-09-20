@@ -2,8 +2,8 @@ var promises = require('q');
 
 var Watai = require('../helpers/subject'),
 	my = require('../helpers/driver').getDriverHolder(),
-	expectedOutputs = require('../helpers/testWidget').expectedOutputs,
-	WidgetTest;
+	expectedOutputs = require('../helpers/testComponent').expectedOutputs,
+	ComponentTest;
 
 /** Timeout value of the test's config.
 */
@@ -15,11 +15,15 @@ var GLOBAL_TIMEOUT = 500;
 describe('Feature', function() {
 	var featureWithScenario;
 
+	before(function(done) {
+		my.driver.refresh(done);
+	});
+
 	before(function() {
-		WidgetTest = require('../helpers/testWidget').getWidget(my.driver);
+		ComponentTest = require('../helpers/testComponent').getComponent(my.driver);
 
 		featureWithScenario = function featureWithScenario(scenario) {
-			return new Watai.Feature('Test feature', scenario, { TestWidget: WidgetTest }, require('../../config'));
+			return new Watai.Feature('Test feature', scenario, { TestComponent: ComponentTest }, require('../../config'));
 		}
 	});
 
@@ -143,8 +147,8 @@ describe('Feature', function() {
 			var start = new Date();
 
 			featureWithScenario([
-				WidgetTest.overlayedAction(),
-				{ 'TestWidget.output': expectedOutputs.overlayedActionLink }
+				ComponentTest.overlayedAction(),
+				{ 'TestComponent.output': expectedOutputs.overlayedActionLink }
 			]).test().then(function() {
 				throw new Error('Passed while the overlayed element should not have been clickable!');
 			}, function() {
@@ -154,7 +158,7 @@ describe('Feature', function() {
 
 		it('should give human-readable details', function(done) {
 			featureWithScenario([
-				WidgetTest.overlayedAction()
+				ComponentTest.overlayedAction()
 			]).test().done(function() {
 				done(new Error('Passed while the overlayed element should not have been clickable!'));
 			}, function(reasons) {
@@ -168,10 +172,10 @@ describe('Feature', function() {
 
 		it('should be fine if made clickable', function(done) {
 			featureWithScenario([
-				WidgetTest.hideOverlay(),
-				WidgetTest.overlayedAction(),
+				ComponentTest.hideOverlay(),
+				ComponentTest.overlayedAction(),
 				{
-					'TestWidget.output': expectedOutputs.overlayedActionLink
+					'TestComponent.output': expectedOutputs.overlayedActionLink
 				}
 			]).test().done(function() { done() }, function(report) {
 				done(new Error(report));

@@ -1,7 +1,7 @@
 var Watai = require('../../../helpers/subject'),
 	my = require('../../../helpers/driver').getDriverHolder(),
 	FunctionMatcher = Watai.matchers.FunctionMatcher,
-	TestWidget;
+	TestComponent;
 
 
 describe('FunctionMatcher', function() {
@@ -9,23 +9,23 @@ describe('FunctionMatcher', function() {
 
 
 	before(function() {
-		TestWidget = require('../../../helpers/testWidget').getWidget(my.driver);
+		TestComponent = require('../../../helpers/testComponent').getComponent(my.driver);
 	});
 
 	it('should pass on a function returning `true`', function(done) {
-		new FunctionMatcher(function() { return true }, 'TestWidget.toggleCheckbox', { TestWidget: TestWidget })
+		new FunctionMatcher(function() { return true }, 'TestComponent.toggleCheckbox', { TestComponent: TestComponent })
 			.test()
 			.done(function() { done() }, done);
 	});
 
 	it('should pass on a function returning `false`', function(done) {
-		new FunctionMatcher(function() { return false }, 'TestWidget.toggleCheckbox', { TestWidget: TestWidget })
+		new FunctionMatcher(function() { return false }, 'TestComponent.toggleCheckbox', { TestComponent: TestComponent })
 			.test()
 			.done(function() { done() }, done);
 	});
 
 	it('should fail on a throwing function', function(done) {
-		new FunctionMatcher(function() { throw MESSAGE }, 'TestWidget.toggleCheckbox', { TestWidget: TestWidget })
+		new FunctionMatcher(function() { throw MESSAGE }, 'TestComponent.toggleCheckbox', { TestComponent: TestComponent })
 			.test()
 			.done(function() {
 				done(new Error('Resolved instead of rejected!'));
@@ -42,8 +42,8 @@ describe('FunctionMatcher', function() {
 					// do nothing
 				});
 			},
-			'TestWidget.toggleCheckbox',
-			{ TestWidget: TestWidget }
+			'TestComponent.toggleCheckbox',
+			{ TestComponent: TestComponent }
 		).test()
 		.done(function() { done() }, done);
 	});
@@ -55,8 +55,8 @@ describe('FunctionMatcher', function() {
 					throw MESSAGE;
 				});
 			},
-			'TestWidget.toggleCheckbox',
-			{ TestWidget: TestWidget }
+			'TestComponent.toggleCheckbox',
+			{ TestComponent: TestComponent }
 		).test()
 		.done(function() {
 			done(new Error('Resolved instead of rejected!'));

@@ -7,11 +7,11 @@ var Watai = require('../../helpers/subject'),
 
 
 describe('FunctionalStep', function() {
-	var TestWidget,
+	var TestComponent,
 		subject;
 
 	before(function() {
-		TestWidget = require('../../helpers/testWidget').getWidget(my.driver);
+		TestComponent = require('../../helpers/testComponent').getComponent(my.driver);
 		subject = new FunctionalStep(function() { /* do nothing */ });
 	});
 
@@ -37,7 +37,7 @@ describe('FunctionalStep', function() {
 	describe('user-visible errors', function() {
 		function expectMessage(elementName, message, done) {
 			new FunctionalStep(function() {
-				return TestWidget[elementName].then(function(elm) {
+				return TestComponent[elementName].then(function(elm) {
 					return elm.click();
 				});
 			}).test().then(function() {

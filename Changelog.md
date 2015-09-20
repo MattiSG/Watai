@@ -11,6 +11,12 @@ To get all details, and changes at all versions, including development ones, use
 You are reminded that Watai uses [SemVer](http://semver.org), which means upgrades that have only a patch number (last digit) change are backwards-compatible, and versions with a minor number (second digit) are API-breaking while in `0` major versions.
 
 
+v0.7 (WIP)
+----
+
+#### Minor changes
+
+- Renamed `Widget` to `Component` ([#116](https://github.com/MattiSG/Watai/issues/116)).
 
 v0.6
 ----

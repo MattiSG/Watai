@@ -1,7 +1,7 @@
 var Watai = require('./subject');
 
 
-/** Widget description of elements existing in the test support page resource.
+/** Component description of elements existing in the test support page resource.
 */
 var elements = exports.elements = {
 	id									: '#toto',
@@ -48,14 +48,14 @@ exports.expectedOutputs = {
 	overlayedActionLink:	'#under has been clicked'
 }
 
-/** A full widget describing the “main” part of the test support page.
+/** A full component describing the “main” part of the test support page.
 * Exported for use in other tests.
 *
-*@param	{WebDriver}	driver	The driver in which the Widget should be described.
+*@param	{WebDriver}	driver	The driver in which the Component should be described.
 *@see	#elements
 */
-exports.getWidget = function(driver) {
-	return new Watai.Widget('Test widget', Object.merge({
+exports.getComponent = function(driver) {
+	return new Watai.Component('Test component', Object.merge({
 
 		submit: function submit(value) {
 			return	this.setInputField(value)()

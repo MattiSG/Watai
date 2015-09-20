@@ -21,13 +21,13 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	*/
 	expected: undefined,
 
-	/** The widgets in which elements should be looked for.
-	*@type	{Object.<String,Widget>}
+	/** The components in which elements should be looked for.
+	*@type	{Object.<String,Component>}
 	*@private
 	*/
-	widgets: [],
+	components: [],
 
-	/** A widget element selector, describing the element whose content is to be matched.
+	/** A component element selector, describing the element whose content is to be matched.
 	*@type	{String}
 	*@private
 	*/
@@ -37,14 +37,14 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	/** Creates a matcher, ready to be evaluated.
 	*
 	*@param	{*}	expected	Any kind of content this matcher should look for.
-	*@param	{String}	selector	The element selector to look for in this instance's referenced widgets.
-	*@param	{Object.<String,Widget>}	[widgets]	The widgets in which elements should be looked for.
+	*@param	{String}	selector	The element selector to look for in this instance's referenced components.
+	*@param	{Object.<String,Component>}	[components]	The components in which elements should be looked for.
 	*@constructs
 	*@see	test
-	*@see	addWidgets
+	*@see	addComponents
 	*/
-	initialize: function init(expected, selector, widgets) {
-		this.addWidgets(widgets);
+	initialize: function init(expected, selector, components) {
+		this.addComponents(components);
 		this.selector = selector;
 		this.expected = expected;
 
@@ -53,13 +53,13 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 		this.fail = this.fail.bind(this);
 	},
 
-	/** Adds the given widgets to the ones that are available to this matcher to seek elements in.
+	/** Adds the given components to the ones that are available to this matcher to seek elements in.
 	*
-	*@param	{Object.<String,Widget>}	widgets	The widgets in which elements should be looked for.
+	*@param	{Object.<String,Component>}	components	The components in which elements should be looked for.
 	*@returns	this	For chaining.
 	*/
-	addWidgets: function addWidgets(widgets) {
-		Object.append(this.widgets, widgets);
+	addComponents: function addComponents(components) {
+		Object.append(this.components, components);
 		return this;
 	},
 
@@ -68,7 +68,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	*@private
 	*/
 	start: function start() {
-		Object.getFromPath(this.widgets, this.selector)
+		Object.getFromPath(this.components, this.selector)
 			  .done(this.onElementFound.bind(this),	// this wrapping is needed because the promise from `getFromPath` is a WebDriver promise, so we can't add failure handlers only, we need to set all handlers at once through the `then` method
 					this.onElementMissing.bind(this));
 	},

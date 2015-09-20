@@ -103,7 +103,7 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	target[setterName] = function(input) {	// wrapping to allow call-like syntax in scenarios
 		var setter = inputHandler.bind(null, input);
 
-		setter.widget = target;
+		setter.component = target;
 		setter.reference = setterName;
 		setter.title = setterName.humanize();
 		setter.args = [ input ];

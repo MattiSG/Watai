@@ -7,7 +7,7 @@ var Watai = require('../helpers/subject'),
 	expectedOutputs;
 
 
-/** Widget description of elements existing in the “checking” part of the test support page resource.
+/** Component description of elements existing in the “checking” part of the test support page resource.
 * These elements have their content updated according to actions made on the “main” elements described above.
 *@private
 */
@@ -18,17 +18,21 @@ var checkerElements = {
 
 /** This test suite is written with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */
-describe('Widget', function() {
+describe('Component', function() {
 	var checker;
 
-	before(function() {
-		var testWidget = require('../helpers/testWidget');
-		elements = testWidget.elements;
-		expectedContents = testWidget.expectedContents;
-		expectedOutputs = testWidget.expectedOutputs;
-		subject = testWidget.getWidget(my.driver);
+	before(function(done) {
+		my.driver.refresh(done);
+	});
 
-		checker = new Watai.Widget('Events results widget', checkerElements, my.driver);
+	before(function() {
+		var testComponent = require('../helpers/testComponent');
+		elements = testComponent.elements;
+		expectedContents = testComponent.expectedContents;
+		expectedOutputs = testComponent.expectedOutputs;
+		subject = testComponent.getComponent(my.driver);
+
+		checker = new Watai.Component('Events results component', checkerElements, my.driver);
 	});
 
 	describe('parsing', function() {

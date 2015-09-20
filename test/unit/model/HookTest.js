@@ -3,7 +3,7 @@ var Watai = require('../helpers/subject'),
 	should = require('should');
 
 
-/* Exported to be also used in WidgetTest.
+/* Exported to be also used in ComponentTest.
 */
 exports.checkHook = checkHook = function checkHook(subject, hookName, expectedContent) {
 	it('should add a hook to the target object', function() {
@@ -28,6 +28,9 @@ exports.checkHook = checkHook = function checkHook(subject, hookName, expectedCo
 describe('Hook', function() {
 	var hooksTarget = new (require('events').EventEmitter)();
 
+	before(function(done) {
+		my.driver.refresh(done);
+	});
 
 	describe('selector', function() {
 		describe('default to css', function() {
@@ -159,8 +162,8 @@ describe('Hook', function() {
 				subject.should.have.property('reference').with.equal(setterName);
 			});
 
-			it('should have widget', function() {
-				subject.should.have.property('widget').with.equal(hooksTarget);
+			it('should have component', function() {
+				subject.should.have.property('component').with.equal(hooksTarget);
 			});
 
 			it('should have args', function() {

@@ -1,7 +1,7 @@
 var Watai			= require('../helpers/subject'),
 	stdoutSpy		= require('../helpers/StdoutSpy'),
-	StepFlowView	= require(Watai.path + '/view/Step/Flow'),
-	TestWidget		= require('../helpers/testWidget'),
+	StepVerboseView	= require(Watai.path + '/view/Step/Verbose'),
+	TestComponent	= require('../helpers/testComponent'),
 	my				= require('../helpers/driver').getDriverHolder();
 
 
@@ -10,10 +10,10 @@ var Watai			= require('../helpers/subject'),
 describe('Step flow view', function() {
 	var step,
 		subject,
-		testWidget;
+		testComponent;
 
 	before(function() {
-		testWidget = TestWidget.getWidget(my.driver);
+		testComponent = TestComponent.getComponent(my.driver);
 	});
 
 	beforeEach(function() {
@@ -85,15 +85,15 @@ describe('Step flow view', function() {
 			});
 		});
 
-		describe('widget action report', function() {
+		describe('component action report', function() {
 			var ACTION,
 				PARAM;
 
 			beforeEach(function() {
 				if (typeof PARAM != 'undefined')
-					step = new Watai.steps.FunctionalStep(testWidget[ACTION](PARAM));
+					step = new Watai.steps.FunctionalStep(testComponent[ACTION](PARAM));
 				else
-					step = new Watai.steps.FunctionalStep(testWidget[ACTION]());
+					step = new Watai.steps.FunctionalStep(testComponent[ACTION]());
 			});
 
 			describe('with a simple action name', function() {
@@ -177,9 +177,9 @@ describe('Step flow view', function() {
 
 		beforeEach(function() {
 			step = new Watai.steps.StateStep({
-				'TestWidget.id': VALUE
+				'TestComponent.id': VALUE
 			}, {
-				TestWidget: testWidget
+				TestComponent: testComponent
 			});
 		});
 
@@ -199,7 +199,7 @@ describe('Step flow view', function() {
 
 		describe('with a matching value', function() {
 			before(function() {
-				VALUE = TestWidget.expectedContents.id;
+				VALUE = TestComponent.expectedContents.id;
 			});
 
 			it('should mention the matched value', function(done) {
@@ -221,7 +221,7 @@ describe('Step flow view', function() {
 			});
 
 			it('should mention the actual value', function(done) {
-				testShouldContain(TestWidget.expectedContents.id, done);
+				testShouldContain(TestComponent.expectedContents.id, done);
 			});
 
 			it('should not mention that the "value" matcher fails', function(done) {

@@ -1,9 +1,9 @@
 description: 'A user should be able to request an account',
 
 scenario: [
-	RegisterWidget.register(firstName, lastName),
+	RegisterComponent.register(firstName, lastName),
 	{
-		'RegisterWidget.firstName'	: firstName,
-		'RegisterWidget.lastName'	: lastName
+		'RegisterComponent.firstName'	: firstName,
+		'RegisterComponent.lastName'	: lastName
 	}
 ]
