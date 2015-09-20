@@ -9,7 +9,12 @@ But first of all, thanks for wanting to contribute!  :)
 Fork & clone
 ------------
 
-Simply [fork the project and clone the repository](https://help.github.com/articles/fork-a-repo) on your machine.
+Simply [fork the project and clone the repository](https://help.github.com/articles/fork-a-repo) on your machine, and install the developer dependencies.
+
+```shell
+cd path/to/watai/clone
+npm install --no-shrinkwrap
+```
 
 
 Code conventions
@@ -22,12 +27,8 @@ Build tool
 ----------
 
 Build processes are mostly automated through [npm scripts](https://www.npmjs.org/doc/cli/npm-run-script.html).
-A bash script, `go`, is also provided for some more exceptional tasks. All Node dev dependencies can be installed with:
 
-	cd path/to/watai/clone
-	npm install --no-shrinkwrap
-
-The following commands will then be available.
+Most are documented here, and you can get a full list by running `npm run`.
 
 
 ### Test
