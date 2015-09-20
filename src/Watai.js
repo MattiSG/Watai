@@ -29,10 +29,10 @@ var Watai = {
 	/**@see	SuiteLoader
 	*/
 	SuiteLoader:	require('./controller/SuiteLoader'),
-	/**@see	Hook
+	/**@see	Locator
 	*@protected
 	*/
-	Hook:			require('./model/Hook'),
+	Locator:		require('./model/Locator'),
 	/**@see	SetupLoader
 	*/
 	setup:			require('./controller/SetupLoader'),

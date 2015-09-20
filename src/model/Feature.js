@@ -50,7 +50,7 @@ var Feature = new Class( /** @lends Feature# */ {
 	* A feature description file contains a simple descriptive array listing component methods to execute and component state descriptors to assert.
 	* More formally, such an array is ordered and its members may be:
 	* - a closure;
-	* - an object whose keys are some components' attributes identifiers (ex: "MyComponent.myAttr"), pointing at a string that contains the expected text content of the HTML element represented by the `myAttr` hook in `MyComponent`.
+	* - an object whose keys are some components' attributes identifiers (ex: "MyComponent.myAttr"), pointing at a string that contains the expected text content of the HTML element represented by the `myAttr` locator in `MyComponent`.
 	*
 	* Upon instantiation, a Feature translates this array into an array of promises:
 	* - closures are executed directly, either as promises if they are so themselves, or as basic functions;

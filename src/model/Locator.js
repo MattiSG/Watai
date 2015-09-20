@@ -21,24 +21,24 @@ var WATAI_SELECTOR_TYPES_TO_WEBDRIVER_TYPES = {
 */
 var DEFAULT_SELECTOR_TYPE = 'css';
 
-/**@class	A Hook allows one to target a specific element on a web page.
+/**@class	A Locator allows one to target a specific element on a web page.
 * It is a wrapper around both a selector and its type (css, xpath, id…).
 *
-*@param	{Object}	hook	A single value-pair hash whose key may be one of `css`, `id`, or any other value of Selenium's `By` class; and whose value must be a string of the matching form.
+*@param	{Object}	locator	A single value-pair hash whose key may be one of `css`, `id`, or any other value of Selenium's `By` class; and whose value must be a string of the matching form.
 *@param	{WebDriver}	driver	The WebDriver instance in which the described elements are to be sought.
 */
-var Hook = function Hook(hook, driver) {
-	if (typeof hook == 'string') {
+var Locator = function Locator(locator, driver) {
+	if (typeof locator == 'string') {
 		this.type = DEFAULT_SELECTOR_TYPE;
-		this.selector = hook;
+		this.selector = locator;
 	} else {
-		this.type = Object.getOwnPropertyNames(hook)[0]
-		this.selector = hook[this.type];
+		this.type = Object.getOwnPropertyNames(locator)[0]
+		this.selector = locator[this.type];
 	}
 
 	this.driver = driver;
 
-	/** Returns the element this hook points to in the given driver, as an object with all WebDriver methods.
+	/** Returns the element this locator points to in the given driver, as an object with all WebDriver methods.
 	*
 	*@see	{@link http://seleniumhq.org/docs/03_webdriver.html|WebDriver}
 	*@private
@@ -47,7 +47,7 @@ var Hook = function Hook(hook, driver) {
 		return this.driver.element(WATAI_SELECTOR_TYPES_TO_WEBDRIVER_TYPES[this.type] || this.type, this.selector);
 	}
 
-	/** Sends the given sequence of keystrokes to the element pointed by this hook.
+	/** Sends the given sequence of keystrokes to the element pointed by this locator.
 	*
 	*@param	{String}	input	A string that will be sent to this element.
 	*@returns	{QPromise}	A promise, resolved when keystrokes have been received, rejected in case of a failure.
@@ -68,22 +68,22 @@ var Hook = function Hook(hook, driver) {
 	}
 }
 
-/** Adds a getter and a setter to the given Object, allowing access to the Selenium element corresponding to the given hook description.
+/** Adds a getter and a setter to the given Object, allowing access to the Selenium element corresponding to the given locator description.
 * The getter dynamically retrieves the Selenium element pointed at by the given selector description.
-* The setter will pass the value to the `Hook.handleInput` method.
+* The setter will pass the value to the `Locator.handleInput` method.
 *
 *@param	{Object}	target			The Object to which the getter and setter will be added.
 *@param	{String}	key				The name of the property to add to the target object.
-*@param	{Object}	typeAndSelector	A hook descriptor, as defined in the Hook constructor.
+*@param	{Object}	typeAndSelector	A locator descriptor, as defined in the Locator constructor.
 *@param	{WebDriver}	driver			The WebDriver instance in which the described elements are to be sought.
 */
-Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
-	var hook = new Hook(typeAndSelector, driver);
+Locator.addLocator = function addLocator(target, key, typeAndSelector, driver) {
+	var locator = new Locator(typeAndSelector, driver);
 
 	var inputHandler = function handleInputAndEmit(input) {
 		target.emit('action', key, 'write', [ input ]);
 
-		return hook.handleInput(input);
+		return locator.handleInput(input);
 	}
 
 	var propertyDescriptor = {};
@@ -91,7 +91,7 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	propertyDescriptor[key] = {
 		get: function() {
 			target.emit('access', key);
-			return hook.toSeleniumElement(hook);
+			return locator.toSeleniumElement(locator);
 		},
 		set: inputHandler	// TODO: remove in v0.7, deprecated since v0.6
 	};
@@ -112,4 +112,4 @@ Hook.addHook = function addHook(target, key, typeAndSelector, driver) {
 	};
 }
 
-module.exports = Hook;	// CommonJS export
+module.exports = Locator;	// CommonJS export

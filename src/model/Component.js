@@ -1,6 +1,6 @@
 var promises = require('q');
 
-var Hook = require('./Hook');
+var Locator = require('./Locator');
 
 
 var Component = new Class( /** @lends Component# */ {
@@ -18,7 +18,7 @@ var Component = new Class( /** @lends Component# */ {
 	*
 	*@constructs
 	*@param	{String}	name	User-visible name of this component.
-	*@param	{Hash}		values	A hash describing a component's elements and actions. Keys will be made available directly on the resulting test component, and associated values can be hooks for elements or functions for actions.
+	*@param	{Hash}		values	A hash describing a component's elements and actions. Keys will be made available directly on the resulting test component, and associated values can be locators for elements or functions for actions.
 	*@param	{WebDriver}	driver	The WebDriver instance in which this component should look for its elements.
 	*/
 	initialize: function init(name, values, driver) {
@@ -28,7 +28,7 @@ var Component = new Class( /** @lends Component# */ {
 			elementsAndActions	= this.extractElementsAndActions(values);
 
 		Object.each(elementsAndActions.elements, function(typeAndSelector, key) {
-			Hook.addHook(component, key, typeAndSelector, driver);
+			Locator.addLocator(component, key, typeAndSelector, driver);
 			component.addMagic(key);
 		});
 
@@ -55,11 +55,11 @@ var Component = new Class( /** @lends Component# */ {
 
 	/** Extract elements and actions from the given parameter
 	*
-	*@param	{Hash} values	A hash describing a component's elements and actions. Keys will be made available directly on the resulting test component, and associated values can be hooks for elements or functions for actions.
+	*@param	{Hash} values	A hash describing a component's elements and actions. Keys will be made available directly on the resulting test component, and associated values can be locators for elements or functions for actions.
 	*@return {Hash} A hash containing the following keys:
-	*	- `elements`: A hash mapping all hook names to their description.
+	*	- `elements`: A hash mapping all locator names to their description.
 	*	- `actions`: A hash mapping all method names to the actual function.
-	*@see Hook
+	*@see Locator
 	*@private
 	*/
 	extractElementsAndActions: function extractElementsAndActions(values) {

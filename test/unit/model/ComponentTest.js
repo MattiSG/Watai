@@ -122,7 +122,7 @@ describe('Component', function() {
 		}
 
 
-		it('should map elements to hooks', function(done) {
+		it('should map elements to locators', function(done) {
 			textShouldBe(subject.id, expectedContents.id, done);
 		});
 	});
