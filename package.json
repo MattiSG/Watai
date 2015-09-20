@@ -64,8 +64,10 @@
     "mattisg.configloader": "0.2",
     "mootools": "^1.4.5-2",
     "q": ">= 0.9.5",
-    "wd": "~0.2.6",
-    "winston": "0.6"
+    "mootools": "1.4",
+    "winston": "0.6",
+    "wd": "~0.3.12",
+    "mattisg.configloader": "0.2"
   },
   "bundledDependencies": [
     "q",
