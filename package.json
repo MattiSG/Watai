@@ -66,6 +66,13 @@
     "wd": "~0.2.6",
     "winston": "0.6"
   },
+  "bundledDependencies": [
+    "q",
+    "mootools",
+    "winston",
+    "wd",
+    "mattisg.configloader"
+  ],
   "optionalDependencies": {
     "growl": ">= 1.5",
     "saucelabs": "~0.1.1"

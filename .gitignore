@@ -10,7 +10,6 @@ npm-debug.log
 node_modules
 coverage
 doc/api
-dist
 
 # IDEs
 *.sublime-project

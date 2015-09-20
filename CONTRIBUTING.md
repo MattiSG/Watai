@@ -71,8 +71,14 @@ If you're hacking on the core of Watai rather than a plugin, you can use:
 	npm run doc-private
 
 
-Distribution
-------------
+Packaging
+---------
+
+### Changelog
+
+Please update the `Changelog.md` at the root of the project for every change you bring.
+Remember we use [SemVer](http://semver.org).
+
 
 ### Shrinkwrap
 
@@ -110,3 +116,15 @@ Once your changes are ready, i.e. you made sure:
 Please make sure the reason why you made these changes is clear in the pull request comments, and please reference any linked issue in these same comments.
 
 Your pull request will then be reviewed, and eventually added to the mainline. Thanks for helping to improve Watai!  :)
+
+
+Distribution
+------------
+
+```shell
+npm version  # remember to use semver.org
+npm publish
+npm pack
+```
+
+Copy the changelog entries and upload the resulting pack to the [Releases](https://github.com/MattiSG/Watai/releases) tab of GitHub.
