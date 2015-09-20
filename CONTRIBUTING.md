@@ -71,8 +71,10 @@ If you're hacking on the core of Watai rather than a plugin, you can use:
 	npm run doc-private
 
 
-Shrinkwrap
-----------
+Distribution
+------------
+
+### Shrinkwrap
 
 If you ever update or add a module, you will need to update the [NPM shrinkwrap](https://npmjs.org/doc/shrinkwrap.html) file to lock down dependencies versions (Ruby folks, this is the same as a `Gemfile.lock`).
 
@@ -83,8 +85,7 @@ To do so, simply `cd` to your Watai clone and type:
 However, when committing, you will notice in the diff that many dependencies are added, not only the ones you added yourself. These are the developer dependencies, and **should never be committed**. Discard the hunk before committing the `npm-shrinkwrap.json` file.
 
 
-Distribution
-------------
+### Examples
 
 When updating examples, since this wiki uses some, new archives should be generated using `go export-examples`.
 
