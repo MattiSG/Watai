@@ -16,6 +16,7 @@ v0.7 (WIP)
 
 #### Minor changes
 
+- Renamed `Data` to `Fixture` ([#116](https://github.com/MattiSG/Watai/issues/116)).
 - Renamed `Hook` to `Locator` ([#116](https://github.com/MattiSG/Watai/issues/116)).
 - Renamed `Widget` to `Component` ([#116](https://github.com/MattiSG/Watai/issues/116)).
 

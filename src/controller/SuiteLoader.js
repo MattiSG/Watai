@@ -28,7 +28,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*/
 	runner: null,
 
-	/** Sandbox for features, components and data load.
+	/** Sandbox for features, components and fixture load.
 	*
 	*@type	{vm}
 	*@see	{@link http://nodejs.org/api/vm.html|Node::vm}
@@ -46,7 +46,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	/**@class A SuiteLoader handles all test description files loading and Runner setup.
 	* A test description folder should contain a `config` file, and any number of feature (`*Feature.js`) and component (`*Component.js`) description files.
 	*
-	* Features will be loaded in an internally-managed Runner, and all Components, Features and datasets will be made available in an internally-managed VM context (i.e. every definition is made in isolation).
+	* Features will be loaded in an internally-managed Runner, and all Components, Features and fixtures will be made available in an internally-managed VM context (i.e. every definition is made in isolation).
 	*
 	*@constructs
 	*@param	{String}	path		Path to the folder containing a test description. Trailing slashes will be normalized, don't worry about them  :)
@@ -179,7 +179,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		}.bind(this));
 	},
 
-	/** Generates the list of variables that will be offered globally to Components, Features and Data elements.
+	/** Generates the list of variables that will be offered globally to Components, Features and Fixture elements.
 	*
 	*@see	{@link http://nodejs.org/api/vm.html#vm_vm_runincontext_code_context_filename|Node::vm.runInContext}
 	*@returns	{Hash}	The context description, i.e. a list of elements to offer globally in the suite loading context.
@@ -223,10 +223,10 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		files.forEach(function(file) {
 			var match;	// if capturing parentheses are used in the file type detection regexp (see SuiteLoader.paths), this var holds the `match()` result
 
-			if (file.match(SuiteLoader.paths.dataMarker)) {
-				this.loadData(this.path + file);
+			if (file.match(SuiteLoader.paths.fixtureMarker)) {
+				this.loadFixture(this.path + file);
 			} else if (file.match(SuiteLoader.paths.componentMarker)) {
-				componentFiles.push(this.path + file);	// don't load them immediately in order to make referenced data values available first
+				componentFiles.push(this.path + file);	// don't load them immediately in order to make referenced fixture values available first
 			} else if (match = file.match(SuiteLoader.paths.featureMarker)) {
 				var featureIndex = match[1];	// first capturing parentheses in the featureMarker RegExp have to match the feature's numerical ID
 				if (ignoredFeaturesIndices.contains(featureIndex))
@@ -278,20 +278,20 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 	/** Loads the given definitions globally into this Loader's managed namespace.
 	*
-	*@param	{String}	dataFile	Path to a data description file. This is simply a list of variable definitions.
+	*@param	{String}	fixtureFile	Path to a fixture description file. This is simply a list of variable definitions.
 	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
 	*
 	*@see	loadAllFiles
 	*/
-	loadData: function loadData(dataFile) {
-		winston.loggers.get('load').verbose('~ loading ' + dataFile);
+	loadFixture: function loadFixture(fixtureFile) {
+		winston.loggers.get('load').verbose('~ loading ' + fixtureFile);
 
 		try {
-			vm.runInContext(fs.readFileSync(dataFile),
+			vm.runInContext(fs.readFileSync(fixtureFile),
 							this.context,
-							dataFile);
+							fixtureFile);
 		} catch (error) {
-			winston.loggers.get('load').error('**Error in file "' + dataFile + '"**', { path : dataFile });	// TODO: is it really useful to add this info?
+			winston.loggers.get('load').error('**Error in file "' + fixtureFile + '"**', { path : fixtureFile });	// TODO: is it really useful to add this info?
 			throw error;
 		}
 
@@ -380,7 +380,7 @@ SuiteLoader.paths = {
 	componentMarker:	/(.+)(Component|Widget).js$/i,	// Widget is kept for v<0.7 compatibility
 	/** If a file matches this RegExp, it is considered as a data suite to be loaded.
 	*/
-	dataMarker:		/(.+)Data.js$/i
+	fixtureMarker:		/(.+)(Fixture|Data).js$/i // Data is kept for v<1.0 compatibility
 }
 
 /** Lists all predefined global variables in the suite loading context, and how they are referenced in that context.
