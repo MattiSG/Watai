@@ -69,7 +69,7 @@ If you’re under OSX and have [Homebrew](http://mxcl.github.com/homebrew/):
 
 …and start it with the command given at the end of the “Caveats” section.
 
-Otherwise, [download the latest JAR](https://code.google.com/p/selenium/downloads/list?can=3&q=selenium-server-standalone) and start it (preferably in the background):
+Otherwise, [download the latest JAR](http://selenium-release.storage.googleapis.com/index.html) and start it (preferably in the background):
 
 	java -jar path/to/downloaded/selenium-server-standalone.jar
 
