@@ -91,17 +91,6 @@ To do so, simply `cd` to your Watai clone and type:
 However, when committing, you will notice in the diff that many dependencies are added, not only the ones you added yourself. These are the developer dependencies, and **should never be committed**. Discard the hunk before committing the `npm-shrinkwrap.json` file.
 
 
-### Examples
-
-When updating examples, since this wiki uses some, new archives should be generated using `go export-examples`.
-
-Similarly, for tagged releases, an archive with all dependencies should be exported, in order to allow for an easy install in environments with no fully functional NPM (i.e. behind corporate proxies). Such an archive is created by:
-
-	./go dist
-
-Unless you're an administrator of the main repository, you typically won't need this command.
-
-
 Merging your changes
 --------------------
 

@@ -52,6 +52,7 @@
     "test-security": "retire --node --package",
     "test-exhaustive": "npm run test-examples && npm test && npm run test-integration && npm run test-security && npm run lint && npm run doc-private",
     "lint": "jscs .",
+    "prepublish": "git archive -9 --output=doc/tutorials/Watai-DuckDuckGo-example.zip HEAD example/DuckDuckGo/",
     "doc": "jsdoc --configure .jsdoc --recurse src --destination doc/api README.md",
     "doc-private": "jsdoc --configure .jsdoc --recurse src --destination doc/api --private README.md"
   },
