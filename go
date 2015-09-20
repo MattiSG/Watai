@@ -19,17 +19,6 @@ ADDITIONAL_DIRS="test/main"
 DIST_INCLUDE="package.json go src README.md" # list all files / folders to be included when `dist`ing, separated by spaces; this is a copy of npm’s "files", couldn't find an easy way to parse it
 
 
-# Cross-platform Darwin open(1)
-# Simply add this function definition above any OSX script that uses the “open” command
-# For additional information on the “open” command, see https://developer.apple.com/library/mac/#documentation/darwin/reference/manpages/man1/open.1.html
-open() {
-	if [[ $(uname) = "Darwin" ]]
-	then /usr/bin/open "$@"	#OS X
-	else xdg-open "$@" &> /dev/null &	# credit: http://stackoverflow.com/questions/264395
-	fi
-}
-
-
 case "$1" in
 	export-examples )
 		cd $BASEDIR
@@ -41,8 +30,8 @@ case "$1" in
 	dist )
 		$0 export-examples
 		cd $BASEDIR
-		outputFile=dist/watai-$(git describe --tags)-with-npm-dependencies.zip
-		mkdir dist 2> /dev/null
+		outputFile=$DIST_DIR/watai-$(git describe --tags)-with-npm-dependencies.zip
+		mkdir $DIST_DIR 2> /dev/null
 		git archive -9 --output="$outputFile" $(git describe) $DIST_INCLUDE
 		echo "Archived repository"
 		echo "Adding production dependencies…"
@@ -52,8 +41,7 @@ case "$1" in
 		echo "Restoring dev dependencies…"
 		rm -rf node_modules
 		mv node_modules_dev node_modules
-		echo "Done."
-		open dist
+		echo "Wrote to $DIST_DIR"
 		cd - > /dev/null
 		exit 0 ;;
 	publish )	# marks this version as the latest, tags, pushes, publishes; params: <version> <message>
