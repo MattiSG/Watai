@@ -33,13 +33,6 @@ case "$1" in
 		cd - > /dev/null
 		exit 0 ;;
 	publish )	# marks this version as the latest, tags, pushes, publishes; params: <version> <message>
-		if ! git branch | grep -q "* master"
-		then
-			echo "Not in master branch! Deployment cancelled."
-			echo "Merge your changes and deploy from master."
-			echo "Deploying a feature branch is bad practice: what if you can't merge properly?"
-			exit 1
-		fi
 		if ! ./go test
 		then exit 1
 		fi
