@@ -7,7 +7,7 @@ var Watai			= require('../helpers/subject'),
 
 /** This test suite is written with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */
-describe('Step flow view', function() {
+describe('Step verbose view', function() {
 	var step,
 		subject,
 		testComponent;
@@ -26,7 +26,7 @@ describe('Step flow view', function() {
 
 
 	function testShouldContain(term, done) {
-		subject = new StepFlowView(step);
+		subject = new StepVerboseView(step);
 
 		var tester = function() {
 			stdoutSpy.unmute();
@@ -38,7 +38,7 @@ describe('Step flow view', function() {
 	}
 
 	function testShouldNotMatch(regexp, done) {
-		subject = new StepFlowView(step);
+		subject = new StepVerboseView(step);
 
 		var tester = function() {
 			stdoutSpy.unmute();
@@ -159,7 +159,7 @@ describe('Step flow view', function() {
 				});
 
 				it('should mention the generated action name', function(done) {
-					subject = new StepFlowView(step);
+					subject = new StepVerboseView(step);
 
 					stdoutSpy.mute();
 					step.test().then(function() {

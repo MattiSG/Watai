@@ -2,12 +2,12 @@
 *
 * WARNING: EXPERIMENTAL. This view is provided as a help for debugging cases, but it is not ready for actual delivery yet.
 */
-var RunnerFlow = new Class({
+var RunnerVerbose = new Class({
 	Extends: require('../PromiseView'),
 
 	submodel: {
 		name: 'feature',
-		view: require('../Feature/Flow')
+		view: require('../Feature/Verbose')
 	},
 
 	events: {
@@ -48,4 +48,4 @@ var RunnerFlow = new Class({
 	}
 });
 
-module.exports = RunnerFlow;	// CommonJS export
+module.exports = RunnerVerbose;	// CommonJS export

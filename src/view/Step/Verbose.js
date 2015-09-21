@@ -5,7 +5,7 @@ var StepVerbose = new Class({
 
 	submodel: {
 		name: 'matcher',
-		view: require('../Matcher/Flow')
+		view: require('../Matcher/Verbose')
 	},
 
 	/** Presents details of a test success to the user.

@@ -13,7 +13,7 @@ var FeatureVerbose = new Class({
 
 	submodel: {
 		name: 'step',
-		view: require('../Step/Flow')
+		view: require('../Step/Verbose')
 	},
 
 	showStart: function showStart() {
