@@ -52,6 +52,7 @@
     "test-security": "retire --node --package",
     "test-exhaustive": "npm run test-examples && npm test && npm run test-integration && npm run test-security && npm run lint && npm run doc-private",
     "lint": "jscs .",
+    "prepublish": "git archive -9 --output=doc/tutorials/Watai-DuckDuckGo-example.zip HEAD example/DuckDuckGo/",
     "doc": "jsdoc --configure .jsdoc --recurse src --destination doc/api README.md",
     "doc-private": "jsdoc --configure .jsdoc --recurse src --destination doc/api --private README.md"
   },
@@ -60,12 +61,19 @@
     "npm": "> 1.1"
   },
   "dependencies": {
+    "mattisg.configloader": "0.2",
+    "mootools": "^1.4.5-2",
     "q": ">= 0.9.5",
-    "mootools": "1.4",
-    "winston": "0.6",
     "wd": "~0.2.6",
-    "mattisg.configloader": "0.2"
+    "winston": "0.6"
   },
+  "bundledDependencies": [
+    "q",
+    "mootools",
+    "winston",
+    "wd",
+    "mattisg.configloader"
+  ],
   "optionalDependencies": {
     "growl": ">= 1.5",
     "saucelabs": "~0.1.1"
@@ -73,10 +81,10 @@
   "devDependencies": {
     "istanbul": "0.1",
     "jscs": ">= 1.4 < 2",
+    "jsdoc": "3.x",
     "mocha": ">= 1.4",
     "retire": "0.1",
-    "should": ">= 1.2.2 < 2",
-    "jsdoc": "3.x"
+    "should": ">= 1.2.2 < 2"
   },
   "preferGlobal": true
 }

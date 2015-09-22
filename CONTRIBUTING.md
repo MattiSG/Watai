@@ -9,7 +9,12 @@ But first of all, thanks for wanting to contribute!  :)
 Fork & clone
 ------------
 
-Simply [fork the project and clone the repository](https://help.github.com/articles/fork-a-repo) on your machine.
+Simply [fork the project and clone the repository](https://help.github.com/articles/fork-a-repo) on your machine, and install the developer dependencies.
+
+```shell
+cd path/to/watai/clone
+npm install --no-shrinkwrap
+```
 
 
 Code conventions
@@ -22,12 +27,8 @@ Build tool
 ----------
 
 Build processes are mostly automated through [npm scripts](https://www.npmjs.org/doc/cli/npm-run-script.html).
-A bash script, `go`, is also provided for some more exceptional tasks. All Node dev dependencies can be installed with:
 
-	cd path/to/watai/clone
-	npm install --no-shrinkwrap
-
-The following commands will then be available.
+Most are documented here, and you can get a full list by running `npm run`.
 
 
 ### Test
@@ -70,8 +71,16 @@ If you're hacking on the core of Watai rather than a plugin, you can use:
 	npm run doc-private
 
 
-Shrinkwrap
-----------
+Packaging
+---------
+
+### Changelog
+
+Please update the `Changelog.md` at the root of the project for every change you bring.
+Remember we use [SemVer](http://semver.org).
+
+
+### Shrinkwrap
 
 If you ever update or add a module, you will need to update the [NPM shrinkwrap](https://npmjs.org/doc/shrinkwrap.html) file to lock down dependencies versions (Ruby folks, this is the same as a `Gemfile.lock`).
 
@@ -82,18 +91,6 @@ To do so, simply `cd` to your Watai clone and type:
 However, when committing, you will notice in the diff that many dependencies are added, not only the ones you added yourself. These are the developer dependencies, and **should never be committed**. Discard the hunk before committing the `npm-shrinkwrap.json` file.
 
 
-Distribution
-------------
-
-When updating examples, since this wiki uses some, new archives should be generated using `go export-examples`.
-
-Similarly, for tagged releases, an archive with all dependencies should be exported, in order to allow for an easy install in environments with no fully functional NPM (i.e. behind corporate proxies). Such an archive is created by:
-
-	./go dist
-
-Unless you're an administrator of the main repository, you typically won't need this command.
-
-
 Merging your changes
 --------------------
 
@@ -101,10 +98,22 @@ Once your changes are ready, i.e. you made sure:
 
 1. You didn't break anything and respected the styleguide (`npm run test-exhaustive`).
 2. You tested them properly (`npm test --coverage`).
-3. You cleanly documented the new code (with `./go doc private`).
+3. You cleanly documented the new code (`npm run doc-private`).
 
 …you may open a [pull request](https://help.github.com/articles/using-pull-requests) to ask your new code to be merged in the baseline.
 
 Please make sure the reason why you made these changes is clear in the pull request comments, and please reference any linked issue in these same comments.
 
 Your pull request will then be reviewed, and eventually added to the mainline. Thanks for helping to improve Watai!  :)
+
+
+Distribution
+------------
+
+```shell
+npm version  # remember to use semver.org
+npm publish
+npm pack
+```
+
+Copy the changelog entries and upload the resulting pack to the [Releases](https://github.com/MattiSG/Watai/releases) tab of GitHub.
