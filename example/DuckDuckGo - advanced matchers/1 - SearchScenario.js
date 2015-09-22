@@ -1,5 +1,5 @@
 description: 'Look up an ambiguous term',
 
-scenario: [
+steps: [
 	SearchBarComponent.searchFor(query)
 ]

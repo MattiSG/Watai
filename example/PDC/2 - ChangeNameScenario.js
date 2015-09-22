@@ -1,6 +1,6 @@
 description: 'A user should be able to change his name',
 
-scenario: [
+steps: [
 	ToolbarComponent.editUser(),
 	{ 'ToolbarComponent.username': oldName },
 	NameEditorComponent.setUsername(newName),

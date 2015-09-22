@@ -25,5 +25,5 @@ module.exports = {
 		return promise.promise;
 	},
 
-	ignore: [ 5 ]	// list indices of features to be ignored; best used at the command-line
+	ignore: [ 5 ]	// list indices of scenarios to be ignored; best used at the command-line
 }

@@ -105,13 +105,13 @@ describe('StateStep', function() {
 
 	describe('options', function() {
 		describe('timeout', function() {
-			var featureWithScenario,
+			var scenarioWithSteps,
 				expectedOutputs;
 
 
 			before(function() {
-				featureWithScenario = function featureWithScenario(scenario) {
-					return new Watai.Feature('Test feature', scenario, { TestComponent: TestComponent }, require('../../../config'));
+				scenarioWithSteps = function scenarioWithSteps(scenario) {
+					return new Watai.Scenario('Test scenario', scenario, { TestComponent: TestComponent }, require('../../../config'));
 				}
 
 				expectedOutputs = require('../../helpers/testComponent').expectedOutputs;
@@ -126,7 +126,7 @@ describe('StateStep', function() {
 			});
 
 			it('should do immediate evaluation if set to 0', function(done) {
-				featureWithScenario([
+				scenarioWithSteps([
 					TestComponent.changeTextareaValueNow(),	// make sure the content of the output is reset
 					TestComponent.changeTextareaValueLater(),
 					{
@@ -141,7 +141,7 @@ describe('StateStep', function() {
 			});
 
 			it('should do delayed evaluation if set to a proper positive value', function(done) {
-				featureWithScenario([
+				scenarioWithSteps([
 					TestComponent.changeTextareaValueNow(),	// make sure the content of the output is reset
 					TestComponent.changeTextareaValueLater(),
 					{
@@ -158,7 +158,7 @@ describe('StateStep', function() {
 			it('should not be longer than needed if set to a positive value', function(done) {
 				this.timeout(DELAYED_ACTIONS_DELAY * 3);
 
-				featureWithScenario([
+				scenarioWithSteps([
 					TestComponent.changeTextareaValueNow(),	// make sure the content of the output is reset
 					TestComponent.changeTextareaValueLaterAgain(),
 					{
@@ -175,7 +175,7 @@ describe('StateStep', function() {
 			it('should fail if expected state comes later than timeout', function(done) {
 				this.timeout(DELAYED_ACTIONS_DELAY * 2);
 
-				featureWithScenario([
+				scenarioWithSteps([
 					TestComponent.changeTextareaValueNow(),	// make sure the content of the output is reset
 					TestComponent.changeTextareaValueLaterAgain(),
 					{
@@ -192,7 +192,7 @@ describe('StateStep', function() {
 			it('should fail if expected state comes later than timeout and timeout is set to 0', function(done) {
 				this.timeout(DELAYED_ACTIONS_DELAY * 2);
 
-				featureWithScenario([
+				scenarioWithSteps([
 					TestComponent.changeTextareaValueNow(),	// make sure the content of the output is reset
 					TestComponent.changeTextareaValueLater(),
 					{

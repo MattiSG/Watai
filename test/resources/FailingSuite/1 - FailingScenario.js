@@ -1,5 +1,5 @@
 description: 'Trying to access a missing element should fail.',
 
-scenario: [
+steps: [
 	{ 'TestComponent.missing': true }
 ]

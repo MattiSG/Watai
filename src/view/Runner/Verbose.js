@@ -6,8 +6,8 @@ var RunnerVerbose = new Class({
 	Extends: require('../PromiseView'),
 
 	submodel: {
-		name: 'feature',
-		view: require('../Feature/Verbose')
+		name: 'scenario',
+		view: require('../Scenario/Verbose')
 	},
 
 	events: {
@@ -38,7 +38,7 @@ var RunnerVerbose = new Class({
 			this.animator.log(
 				'⨁ ',
 				'cyan',
-				'ignored feature'.count(this.model.config.ignore.length)
+				'ignored scenario'.count(this.model.config.ignore.length)
 				+ ' (#'
 				+ this.model.config.ignore.join(', #')
 				+ ')',

@@ -1,6 +1,6 @@
 description: 'A password reset request should be protected by a captcha',
 
-scenario: [
+steps: [
 	LoginComponent.open(),
 	LoginComponent.requestPassword(),
 	{ 'PasswordRequestComponent.captcha': true },

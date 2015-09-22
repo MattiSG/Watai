@@ -59,7 +59,7 @@ describe('MooTools additions', function() {
 
 			describe('default pluralization', function() {
 				beforeEach(function() {
-					subject = 'feature';
+					subject = 'scenario';
 				});
 
 				it('should keep the same form if 1', function() {

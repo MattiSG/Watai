@@ -1,11 +1,11 @@
-/**@class A work-in-progress command-line interface that outputs and formats a Feature’s events in a tree-like format.
+/**@class A work-in-progress command-line interface that outputs and formats a Scenario’s events in a tree-like format.
 *
 * WARNING: EXPERIMENTAL. This view is provided as a help for debugging cases, but it is not ready for actual delivery yet.
 */
-var FeatureVerbose = new Class({
+var ScenarioVerbose = new Class({
 	Extends: require('../PromiseView'),
 
-	/** The amount of spaces expected for the numerical ID that will be prepended to features.
+	/** The amount of spaces expected for the numerical ID that will be prepended to Scenarios.
 	*
 	*@type	{String}
 	*/
@@ -22,7 +22,7 @@ var FeatureVerbose = new Class({
 
 	/** Presents details of a test success to the user.
 	*
-	*@param	{Feature}	feature	The feature whose results are given.
+	*@param	{Scenario}	scenario	The Scenario whose results are given.
 	*/
 	showSuccess: function showSuccess() {
 		this.animator.log('✔ ' + this.getPaddedId() + ' ┕', 'info', this.model.description);
@@ -36,13 +36,13 @@ var FeatureVerbose = new Class({
 		this.animator.log('✘ ' + this.getPaddedId() + ' ┕', 'warn', this.model.description, 'warn');
 	},
 
-	/** Visually separates two features.
+	/** Visually separates two Scenarios.
 	*/
 	showEnd: function showEnd() {
 		process.stdout.write('\n');
 	},
 
-	/** Returns the viewed feature's numerical ID, possibly padded with spaces so that they all have the same length.
+	/** Returns the viewed Scenario's numerical ID, possibly padded with spaces so that they all have the same length.
 	* The length is provided by the length of the `idPlaceholder` attribute.
 	*
 	*@private
@@ -59,4 +59,4 @@ var FeatureVerbose = new Class({
 });
 
 
-module.exports = FeatureVerbose;	// CommonJS export
+module.exports = ScenarioVerbose;	// CommonJS export

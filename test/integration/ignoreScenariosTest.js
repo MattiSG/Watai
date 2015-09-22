@@ -4,8 +4,8 @@ var spawn = require('child_process').spawn;
 var BIN = './src/index.js';
 
 
-describe('ignoring features', function() {
-	it('exit code should be 0 on a failing test ignoring its failing feature', function(done) {
+describe('ignoring scenarios', function() {
+	it('exit code should be 0 on a failing test ignoring its failing scenario', function(done) {
 		this.timeout(30 * 1000);
 
 		var config = {
@@ -20,7 +20,7 @@ describe('ignoring features', function() {
 		});
 	});
 
-	it('should exit with 16 if all features are ignored', function(done) {
+	it('should exit with 16 if all scenarios are ignored', function(done) {
 		this.timeout(30 * 1000);
 
 		var config = {
@@ -35,7 +35,7 @@ describe('ignoring features', function() {
 		});
 	});
 
-	describe('ignoring a feature that does not exist', function() {
+	describe('ignoring a scenario that does not exist', function() {
 		var code,
 			message;
 

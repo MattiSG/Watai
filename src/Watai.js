@@ -20,9 +20,9 @@ var Watai = {
 	/**@see	Component
 	*/
 	Component:		require('./model/Component'),
-	/**@see	Feature
+	/**@see	Scenario
 	*/
-	Feature:		require('./model/Feature'),
+	Scenario:		require('./model/Scenario'),
 	/**@see	Runner
 	*/
 	Runner:			require('./controller/Runner'),
@@ -36,8 +36,8 @@ var Watai = {
 	/**@see	SetupLoader
 	*/
 	setup:			require('./controller/SetupLoader'),
-	steps:			require('./model/scenario'),
-	matchers:		require('./model/scenario/state')
+	steps:			require('./model/steps'),
+	matchers:		require('./model/steps/state')
 }
 
 

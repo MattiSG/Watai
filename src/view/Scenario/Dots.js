@@ -1,8 +1,8 @@
-/** A command-line interface that outputs and formats a Feature’s events.
+/** A command-line interface that outputs and formats a Scenario’s events.
 *
 *@class
 */
-var FeatureDots = new Class(/** @lends FeatureDots# */{
+var ScenarioDots = new Class(/** @lends ScenarioDots# */{
 	Extends: require('../PromiseView'),
 
 	/** Presents a brief summary of a test success to the user.
@@ -31,4 +31,4 @@ var FeatureDots = new Class(/** @lends FeatureDots# */{
 	}
 });
 
-module.exports = FeatureDots;	// CommonJS export
+module.exports = ScenarioDots;	// CommonJS export

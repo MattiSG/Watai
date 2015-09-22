@@ -1,8 +1,8 @@
-/** A command-line interface that outputs and formats a Feature’s events.
+/** A command-line interface that outputs and formats a Scenario’s events.
 *
 *@class
 */
-var FeatureCLI = new Class(/** @lends FeatureCLI# */{
+var ScenarioCLI = new Class(/** @lends ScenarioCLI# */{
 	Extends: require('../PromiseView'),
 
 	submodel: {
@@ -35,11 +35,11 @@ var FeatureCLI = new Class(/** @lends FeatureCLI# */{
 		this.animator.log('✘', 'warn', this.model.description + ' (#' + this.model.id + ')', 'warn');
 	},
 
-	/** Clears the feature spinner.
+	/** Clears the scenario spinner.
 	*/
 	showEnd: function showEnd() {
 		this.animator.clear();
 	}
 });
 
-module.exports = FeatureCLI;	// CommonJS export
+module.exports = ScenarioCLI;	// CommonJS export

@@ -1,4 +1,4 @@
-/** Logs feature failures and errors as they come.
+/** Logs scenario failures and errors as they come.
 *
 *@class
 */

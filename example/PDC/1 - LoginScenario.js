@@ -1,6 +1,6 @@
 description: 'A user should be able to log in',
 
-scenario: [
+steps: [
 	LoginComponent.open(),
 	LoginComponent.login(email, password),
 

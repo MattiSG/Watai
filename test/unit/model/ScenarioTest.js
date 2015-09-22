@@ -12,8 +12,8 @@ var GLOBAL_TIMEOUT = 500;
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */
-describe('Feature', function() {
-	var featureWithScenario;
+describe('Scenario', function() {
+	var scenarioWithSteps;
 
 	before(function(done) {
 		my.driver.refresh(done);
@@ -22,8 +22,8 @@ describe('Feature', function() {
 	before(function() {
 		ComponentTest = require('../helpers/testComponent').getComponent(my.driver);
 
-		featureWithScenario = function featureWithScenario(scenario) {
-			return new Watai.Feature('Test feature', scenario, { TestComponent: ComponentTest }, require('../../config'));
+		scenarioWithSteps = function scenarioWithSteps(scenario) {
+			return new Watai.Scenario('Test scenario', scenario, { TestComponent: ComponentTest }, require('../../config'));
 		}
 	});
 
@@ -31,8 +31,8 @@ describe('Feature', function() {
 	describe('functional scenarios with', function() {
 		var failureReason = 'It’s a trap!';
 
-		var failingFeatureTest = function() {
-			return featureWithScenario([
+		var failingScenarioTest = function() {
+			return scenarioWithSteps([
 				function() { throw failureReason }
 			]).test();
 		}
@@ -48,8 +48,8 @@ describe('Feature', function() {
 		var failingPromise = makeFailingPromiseWithSuffix('');
 
 
-		it('an empty feature should be accepted', function(done) {
-			featureWithScenario([]).test().done(function() {
+		it('an empty scenario should be accepted', function(done) {
+			scenarioWithSteps([]).test().done(function() {
 				done();
 			}, function(err) {
 				done(new Error(err));
@@ -57,7 +57,7 @@ describe('Feature', function() {
 		});
 
 		it('a failing function should be rejected', function(done) {
-			failingFeatureTest().done(function() {
+			failingScenarioTest().done(function() {
 				done(new Error('Resolved instead of rejected!'));
 			}, function() {
 				done();	// can't pass it directly, Mocha complains about param not being an error
@@ -65,7 +65,7 @@ describe('Feature', function() {
 		});
 
 		it('a failing promise should be rejected', function(done) {
-			featureWithScenario([
+			scenarioWithSteps([
 				failingPromise
 			]).test().done(function() {
 				done(new Error('Resolved instead of rejected!'));
@@ -75,7 +75,7 @@ describe('Feature', function() {
 		});
 
 		it('multiple failing promises should be rejected', function(done) {
-			featureWithScenario([
+			scenarioWithSteps([
 				makeFailingPromiseWithSuffix(0),
 				makeFailingPromiseWithSuffix(1),
 				makeFailingPromiseWithSuffix(2)
@@ -89,7 +89,7 @@ describe('Feature', function() {
 		it('a function should be called', function(done) {
 			var called = false;
 
-			featureWithScenario([ function() {
+			scenarioWithSteps([ function() {
 				called = true;
 			} ]).test().done(function() {
 				if (called)
@@ -97,7 +97,7 @@ describe('Feature', function() {
 				else
 					done(new Error('Promise resolved without actually calling the scenario function'));
 			}, function() {
-				done(new Error('Feature evaluation failed, with' + (called ? '' : 'out')
+				done(new Error('Scenario evaluation failed, with' + (called ? '' : 'out')
 								+ ' actually calling the scenario function (but that’s still an error)'));
 			});
 		});
@@ -107,7 +107,7 @@ describe('Feature', function() {
 	describe('badly-formatted scenarios', function() {
 		function scenarioShouldThrowWith(responsibleStep) {
 			(function() {
-				featureWithScenario([
+				scenarioWithSteps([
 					responsibleStep
 				]);
 			}).should.throw(/at step 1/);
@@ -146,7 +146,7 @@ describe('Feature', function() {
 
 			var start = new Date();
 
-			featureWithScenario([
+			scenarioWithSteps([
 				ComponentTest.overlayedAction(),
 				{ 'TestComponent.output': expectedOutputs.overlayedActionLink }
 			]).test().then(function() {
@@ -157,7 +157,7 @@ describe('Feature', function() {
 		});
 
 		it('should give human-readable details', function(done) {
-			featureWithScenario([
+			scenarioWithSteps([
 				ComponentTest.overlayedAction()
 			]).test().done(function() {
 				done(new Error('Passed while the overlayed element should not have been clickable!'));
@@ -171,7 +171,7 @@ describe('Feature', function() {
 		});
 
 		it('should be fine if made clickable', function(done) {
-			featureWithScenario([
+			scenarioWithSteps([
 				ComponentTest.hideOverlay(),
 				ComponentTest.overlayedAction(),
 				{
@@ -213,9 +213,9 @@ describe('Feature', function() {
 			}
 		}
 
-		describe('of a feature with a failing step', function() {
+		describe('of a scenario with a failing step', function() {
 			beforeEach(function() {
-				subject = featureWithScenario([
+				subject = scenarioWithSteps([
 					function() { throw 'Boom!' }
 				]);
 			});
@@ -225,9 +225,9 @@ describe('Feature', function() {
 			});
 		});
 
-		describe('of a feature with an empty scenario', function() {
+		describe('of a scenario with an empty scenario', function() {
 			beforeEach(function() {
-				subject = featureWithScenario([ ]);
+				subject = scenarioWithSteps([ ]);
 			});
 
 			it('should fire a "start" event', expectFired('start'));

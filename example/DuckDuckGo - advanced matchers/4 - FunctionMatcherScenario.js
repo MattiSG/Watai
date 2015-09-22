@@ -1,6 +1,6 @@
 description: 'Check an HTML attribute on an element with custom matcher functions',
 
-scenario: [
+steps: [
 	{
 		'ZeroClickComponent.meanings': function isAlwaysValid(header) {	// providing a good name (i.e. prefixed with `is`) for the function will allow for better reports
 			/**

@@ -1,6 +1,6 @@
 description: 'A user should be able to request an account',
 
-scenario: [
+steps: [
 	RegisterComponent.register(firstName, lastName),
 	{
 		'RegisterComponent.firstName'	: firstName,

@@ -2,14 +2,14 @@ var promises	= require('q'),
 	assert		= require('assert'),
 	winston		= require('winston');
 
-var steps		= require('./scenario');
+var steps		= require('./steps');
 
 
-var Feature = new Class( /** @lends Feature# */ {
+var Scenario = new Class( /** @lends Scenario# */ {
 
 	Extends: require('events').EventEmitter,
 
-	/** Constructed after the scenario for this feature.
+	/** Constructed after the scenario for this scenario.
 	*
 	*@type	{Array.<Step>}
 	*@private
@@ -23,7 +23,7 @@ var Feature = new Class( /** @lends Feature# */ {
 	*/
 	reasons: [],
 
-	/** A hash with all components accessible to this Feature, indexed on their names.
+	/** A hash with all components accessible to this Scenario, indexed on their names.
 	*
 	*@type	{Object.<String, Component>}
 	*@see	Component
@@ -31,7 +31,7 @@ var Feature = new Class( /** @lends Feature# */ {
 	*/
 	components: {},
 
-	/** The user-provided feature name.
+	/** The user-provided scenario name.
 	*
 	*@type	{String}
 	*/
@@ -45,24 +45,24 @@ var Feature = new Class( /** @lends Feature# */ {
 
 	promise: null,
 
-	/**@class	A Feature models a sequence of actions to be executed through Components.
+	/**@class	A Scenario models a sequence of actions to be executed through Components.
 	*
-	* A feature description file contains a simple descriptive array listing component methods to execute and component state descriptors to assert.
+	* A scenario description file contains a simple descriptive array listing component methods to execute and component state descriptors to assert.
 	* More formally, such an array is ordered and its members may be:
 	* - a closure;
 	* - an object whose keys are some components' attributes identifiers (ex: "MyComponent.myAttr"), pointing at a string that contains the expected text content of the HTML element represented by the `myAttr` locator in `MyComponent`.
 	*
-	* Upon instantiation, a Feature translates this array into an array of promises:
+	* Upon instantiation, a Scenario translates this array into an array of promises:
 	* - closures are executed directly, either as promises if they are so themselves, or as basic functions;
 	* - a component state describing hash maps each of its members to an assertion inside a promise, evaluating all of them asynchronously.
-	* All those promises are then evaluated sequentially upon calling the `test` method of a Feature.
+	* All those promises are then evaluated sequentially upon calling the `test` method of a Scenario.
 	*
 	*@constructs
-	*@param	{String}	description	A plain text description of the feature, advised to be written in a BDD fashion.
+	*@param	{String}	description	A plain text description of the scenario, advised to be written in a BDD fashion.
 	*@param	{Array}		scenario	An array that describes states and transitions. See class documentation for formatting.
-	*@param	{Object.<String, Component>}	components	A hash listing all components accessible to this Feature, indexed on their names.
+	*@param	{Object.<String, Component>}	components	A hash listing all components accessible to this Scenario, indexed on their names.
 	*@param	{Hash}		config		The test-suite-level configuration elements.
-	*@param	{Number}	[id]		The numerical identifier of this feature.
+	*@param	{Number}	[id]		The numerical identifier of this scenario.
 	*/
 	initialize: function init(description, scenario, components, config, id) {
 		this.description	= description;
@@ -100,13 +100,13 @@ var Feature = new Class( /** @lends Feature# */ {
 					break;
 				case 'string':
 				case 'number':
-					winston.loggers.get('load').debug('Oops, encoutered "' + sourceStep + '" as a free step in a feature scenario!'	// TODO: remove this hint after v0.4
+					winston.loggers.get('load').debug('Oops, encoutered "' + sourceStep + '" as a free step in a scenario!'	// TODO: remove this hint after v0.4
 							 + '\n'
 							 + 'Maybe your test is still using pre-0.4 syntax?  :)'
 							 + '\n'
 							 + 'Since v0.4, action parameters are passed directly as a function call.'
 							 + '\n'
-							 + 'For more details, see the Features syntax reference: https://github.com/MattiSG/Watai/wiki/Features');
+							 + 'For more details, see the Scenarios syntax reference: https://github.com/MattiSG/Watai/wiki/Scenarios');
 					break;
 			}
 
@@ -121,14 +121,14 @@ var Feature = new Class( /** @lends Feature# */ {
 		return result;
 	},
 
-	/** Notifies the user that there was a syntax error in the feature description file.
+	/** Notifies the user that there was a syntax error in the scenario description file.
 	*
 	*@param	{String}	message	A description of the syntax error that was detected
-	*@param	{Number}	[stepIndex]	The scenario step (0-based) at which the syntax error was detected. If not defined, the syntax error will be described as global to the feature file.
+	*@param	{Number}	[stepIndex]	The scenario step (0-based) at which the syntax error was detected. If not defined, the syntax error will be described as global to the scenario file.
 	*/
 	notifySyntaxError: function notifySyntaxError(message, stepIndex) {
 		throw new SyntaxError(
-			'Feature "' + this.description + '"'
+			'Scenario "' + this.description + '"'
 			+ (typeof stepIndex != 'undefined'	// we can't simply test for falsiness, since the stepIndex could be 0
 				? ', at step ' + (stepIndex + 1)
 				: '')
@@ -138,11 +138,11 @@ var Feature = new Class( /** @lends Feature# */ {
 		);
 	},
 
-	/** Asynchronously evaluates the scenario given to this feature.
+	/** Asynchronously evaluates the scenario given to this scenario.
 	*
 	*@returns	{QPromise}	A promise that will be either:
 	*	- rejected if any assertion or action fails, passing an array of strings that describe reason(s) for failure(s) (one reason per item in the array).
-	*	- resolved if all assertions pass, with this feature as a parameter.
+	*	- resolved if all assertions pass, with this scenario as a parameter.
 	*/
 	test: function test() {
 		var deferred = promises.defer(),
@@ -184,4 +184,4 @@ var Feature = new Class( /** @lends Feature# */ {
 });
 
 
-module.exports = Feature;	// CommonJS export
+module.exports = Scenario;	// CommonJS export

@@ -1,4 +1,4 @@
-var FeatureDotsView = require('../Feature/Dots');
+var ScenarioDotsView = require('../Scenario/Dots');
 
 
 /**@class An output in dots format for Runner events.
@@ -6,7 +6,7 @@ var FeatureDotsView = require('../Feature/Dots');
 var RunnerDots = new Class({
 	Extends: require('../PromiseView'),
 
-	features	: [],
+	scenarios	: [],
 	startTime	: null,
 	readyTime	: null,
 
@@ -18,8 +18,8 @@ var RunnerDots = new Class({
 			process.stdout.write('Browser ready\n');
 		},
 
-		feature: function onFeature(feature) {
-			this.features.push(new FeatureDotsView(feature));
+		steps: function onScenario(scenario) {
+			this.scenarios.push(new ScenarioDotsView(scenario));
 		}
 	},
 
@@ -41,24 +41,24 @@ var RunnerDots = new Class({
 	/** Presents a summary of the test procedure to the user.
 	*/
 	showEnd: function showEnd() {
-		var featuresCount = this.features.length,
+		var scenariosCount = this.scenarios.length,
 			failuresCount = 0;
 
 		process.stdout.write('\n');
 
-		this.features.each(function(feature) {
-			if (feature.model.promise.isRejected()) {
+		this.scenarios.each(function(scenario) {
+			if (scenario.model.promise.isRejected()) {
 				failuresCount++;
-				feature.showFailureDetails();
+				scenario.showFailureDetails();
 			}
 		});
 
-		var successCount = (featuresCount - failuresCount);
+		var successCount = (scenariosCount - failuresCount);
 
 		process.stdout.write('\nFinished in '
 							 + getDurationString(this.startTime, new Date())
 							 + ': '
-							 + 'feature'.count(featuresCount)
+							 + 'scenario'.count(scenariosCount)
 							 + ' ('
 							 + this.model.config.ignore.length
 							 + ' ignored),'

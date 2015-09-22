@@ -1,6 +1,6 @@
 description: 'Match the Zero Click Info box header with RegExps',
 
-scenario: [
+steps: [
 	{
 		'ZeroClickComponent.meanings': expandedAcronym,	// match the textual content with a static regexp…
 		'SearchBarComponent.field': new RegExp('^' + query + '$')	// …or with a dynamic one

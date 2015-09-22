@@ -7,7 +7,7 @@ var Watai		= require('../unit/helpers/subject'),
 
 /** This test suite is written with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */
-describe('Component usage within Feature', function() {
+describe('Component usage within Scenario', function() {
 	var component;
 
 	describe('actions', function() {
@@ -28,13 +28,13 @@ describe('Component usage within Feature', function() {
 
 
 		it('should bind one parameter', function(done) {
-			var feature = new Watai.Feature('Test feature',
+			var scenario = new Watai.Scenario('Test scenario',
 				[ component.setMarker(partOne) ],
 				{ TestComponent: component },
 				config
 			);
 
-			feature.test().then(function() {
+			scenario.test().then(function() {
 				try {
 					should.equal(calledMarker, partOne);
 					done();
@@ -47,14 +47,14 @@ describe('Component usage within Feature', function() {
 		});
 
 		it('should bind two parameters', function(done) {
-			var feature = new Watai.Feature(
-				'Test feature',
+			var scenario = new Watai.Scenario(
+				'Test scenario',
 				[ component.concatenateTwo(partOne, partTwo) ],
 				{ TestComponent: component },
 				config
 			);
 
-			feature.test().then(function() {
+			scenario.test().then(function() {
 				try {
 					should.equal(calledMarker, partOne + partTwo);
 					done();

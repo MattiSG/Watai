@@ -9,29 +9,29 @@ var Runner = new Class( /** @lends Runner# */ {
 
 	Extends: require('events').EventEmitter,
 
-	/** The promise object for results, resolved when all features of this Runner have been evaluated.
+	/** The promise object for results, resolved when all scenarios of this Runner have been evaluated.
 	*@type	{QPromise}
 	*/
 	promise: null,
 
-	/** A hash mapping all failed features to their reasons for rejection.
+	/** A hash mapping all failed scenarios to their reasons for rejection.
 	*If empty, the run was successful.
-	*@type	{Object.<Feature, String>}
+	*@type	{Object.<Scenario, String>}
 	*@private
 	*/
 	failures: {},
 
-	/** The list of all features to evaluate with this configuration.
-	*@type	{Array.<Feature>}
+	/** The list of all scenarios to evaluate with this configuration.
+	*@type	{Array.<Scenario>}
 	*@private
 	*/
-	features: [],
+	scenarios: [],
 
-	/** Index of the currently evaluated feature.
+	/** Index of the currently evaluated scenario.
 	*@type	{integer}
 	*@private
 	*/
-	currentFeature: 0,
+	currentScenario: 0,
 
 	/** Promise for the driver to be initialized.
 	*
@@ -47,14 +47,14 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	baseUrlLoaded: null,
 
-	/** The promise controller (deferred object) for results, resolved when all features of this Runner have been evaluated.
+	/** The promise controller (deferred object) for results, resolved when all scenarios of this Runner have been evaluated.
 	*@type	{q.deferred}
 	*@private
 	*/
 	deferred: null,
 
 
-	/**@class	Manages a set of features and the driver in which they are run.
+	/**@class	Manages a set of scenarios and the driver in which they are run.
 	*
 	* A `Runner` is mostly set up through a configuration object.
 	* Such an object MUST contain the following items:
@@ -169,13 +169,13 @@ var Runner = new Class( /** @lends Runner# */ {
 		this.emit('ready', this);
 	},
 
-	/** Adds the given Feature to the list of those that this Runner will evaluate.
+	/** Adds the given Scenario to the list of those that this Runner will evaluate.
 	*
-	*@param	{Feature}	feature	A Feature for this Runner to evaluate.
+	*@param	{Scenario}	scenario	A Scenario for this Runner to evaluate.
 	*@return	This Runner, for chaining.
 	*/
-	addFeature: function addFeature(feature) {
-		this.features.push(feature);
+	addScenario: function addScenario(scenario) {
+		this.scenarios.push(scenario);
 
 		return this;
 	},
@@ -188,11 +188,11 @@ var Runner = new Class( /** @lends Runner# */ {
 		return this.driver;
 	},
 
-	/** Evaluates all features added to this Runner.
+	/** Evaluates all scenarios added to this Runner.
 	* Emits the "start" event.
 	*
-	*@returns	{QPromise}	A promise for results, resolved if all features pass (param: this Runner), rejected otherwise (param: hash mapping failed features to their reasons for rejection, or an Error if an error appeared in the runner itself or the evaluation was cancelled).
-	*@see	addFeature
+	*@returns	{QPromise}	A promise for results, resolved if all scenarios pass (param: this Runner), rejected otherwise (param: hash mapping failed scenarios to their reasons for rejection, or an Error if an error appeared in the runner itself or the evaluation was cancelled).
+	*@see	addScenario
 	*/
 	test: function test() {
 		this.deferred = promises.defer();
@@ -214,45 +214,45 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	start: function start() {
 		this.failures = {};
-		this.currentFeature = -1;
-		this.startNextFeature();
+		this.currentScenario = -1;
+		this.startNextScenario();
 
 		return this.promise;
 	},
 
-	/** Increments the feature index, starts evaluation of the next feature, and quits the driver if all features were evaluated.
+	/** Increments the scenario index, starts evaluation of the next scenario, and quits the driver if all scenarios were evaluated.
 	*
 	*@private
 	*/
-	startNextFeature: function startNextFeature() {
-		this.currentFeature++;
+	startNextScenario: function startNextScenario() {
+		this.currentScenario++;
 
-		if (this.currentFeature >= this.features.length
+		if (this.currentScenario >= this.scenarios.length
 			|| (this.config.bail && Object.getLength(this.failures)))
 			this.finish();
 		else
-			this.evaluateFeature(this.features[this.currentFeature]);
+			this.evaluateScenario(this.scenarios[this.currentScenario]);
 	},
 
-	/** Prepares and triggers the evaluation of the given feature.
-	* Emits "feature".
+	/** Prepares and triggers the evaluation of the given scenario.
+	* Emits "scenario".
 	*
 	*@private
 	*/
-	evaluateFeature: function evaluateFeature(feature) {
-		this.emit('feature', feature);
+	evaluateScenario: function evaluateScenario(scenario) {
+		this.emit('scenario', scenario);
 
-		feature.test()
-			   .fail(this.storeFailure.bind(this, feature)) // leave last arg to pass failure description
-			   .done(this.startNextFeature.bind(this));	// TODO: make startNextFeature return a promise for the next feature to be evaluated, and orchestrate flow around it with an array reduce
+		scenario.test()
+			   .fail(this.storeFailure.bind(this, scenario)) // leave last arg to pass failure description
+			   .done(this.startNextScenario.bind(this));	// TODO: make startNextScenario return a promise for the next scenario to be evaluated, and orchestrate flow around it with an array reduce
 	},
 
-	/** Callback handler upon feature evaluation. Flags failures and prepares final error report.
+	/** Callback handler upon scenario evaluation. Flags failures and prepares final error report.
 	*
 	*@private
 	*/
-	storeFailure: function storeFailure(feature, message) {
-		this.failures[feature] = message;
+	storeFailure: function storeFailure(scenario, message) {
+		this.failures[scenario] = message;
 		this.failed = true;
 	},
 

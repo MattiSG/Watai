@@ -10,7 +10,7 @@ var ConfigLoader	= require('mattisg.configloader');
 
 
 var Component				= require('../model/Component'),
-	Feature					= require('../model/Feature'),
+	Scenario				= require('../model/Scenario'),
 	Runner					= require('./Runner'),
 	browserCapabilitiesMap	= require('../lib/desiredCapabilities');
 
@@ -22,13 +22,13 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*/
 	configPromise: null,
 
-	/** Runner that will be fed all features found in the loaded suite.
+	/** Runner that will be fed all scenarios found in the loaded suite.
 	*@type	{Runner}
 	*@private
 	*/
 	runner: null,
 
-	/** Sandbox for features, components and fixture load.
+	/** Sandbox for scenarios, components and fixture load.
 	*
 	*@type	{vm}
 	*@see	{@link http://nodejs.org/api/vm.html|Node::vm}
@@ -36,17 +36,17 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*/
 	context: null,
 
-	/** List of all loaded features.
-	* This array will act as a bridge between this execution context and the loading context: upon loading (in a different context), features are referenced inside this array, hence making them available in _this_ context.
+	/** List of all loaded scenarios.
+	* This array will act as a bridge between this execution context and the loading context: upon loading (in a different context), scenarios are referenced inside this array, hence making them available in _this_ context.
 	*
 	*@private
 	*/
-	features: [],
+	scenarios: [],
 
 	/**@class A SuiteLoader handles all test description files loading and Runner setup.
-	* A test description folder should contain a `config` file, and any number of feature (`*Feature.js`) and component (`*Component.js`) description files.
+	* A test description folder should contain a `config` file, and any number of scenario (`*Scenario.js`) and component (`*Component.js`) description files.
 	*
-	* Features will be loaded in an internally-managed Runner, and all Components, Features and fixtures will be made available in an internally-managed VM context (i.e. every definition is made in isolation).
+	* Scenarios will be loaded in an internally-managed Runner, and all Components, Scenarios and fixtures will be made available in an internally-managed VM context (i.e. every definition is made in isolation).
 	*
 	*@constructs
 	*@param	{String}	path		Path to the folder containing a test description. Trailing slashes will be normalized, don't worry about them  :)
@@ -155,7 +155,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		return url;
 	},
 
-	/** Returns a promise for the runner that contains all features of this suite.
+	/** Returns a promise for the runner that contains all scenarios of this suite.
 	*
 	*@returns	{Promise<Runner>}
 	*/
@@ -179,7 +179,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		}.bind(this));
 	},
 
-	/** Generates the list of variables that will be offered globally to Components, Features and Fixture elements.
+	/** Generates the list of variables that will be offered globally to Components, Scenarios and Fixture elements.
 	*
 	*@see	{@link http://nodejs.org/api/vm.html#vm_vm_runincontext_code_context_filename|Node::vm.runInContext}
 	*@returns	{Hash}	The context description, i.e. a list of elements to offer globally in the suite loading context.
@@ -189,14 +189,14 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		var result = {
 			// used for instantiation
 			Component: Component,
-			Feature: Feature,
+			Scenario: Scenario,
 			// making it available for global access like loading URLs, getting title...
 			driver: this.runner.getDriver(),
 			config: this.config
 		}
 
-		result[SuiteLoader.contextGlobals.featuresList] = this.features;	// hook to pass instantiated features to this context
-		result[SuiteLoader.contextGlobals.componentsList] = {};	// stays in the managed context, but necessary for features to have a reference to all components, since they are evaluated in _this_ context, not their instanciation one…
+		result[SuiteLoader.contextGlobals.scenariosList] = this.scenarios;	// hook to pass instantiated scenarios to this context
+		result[SuiteLoader.contextGlobals.componentsList] = {};	// stays in the managed context, but necessary for scenarios to have a reference to all components, since they are evaluated in _this_ context, not their instanciation one…
 
 		result[SuiteLoader.contextGlobals.log] = winston.loggers.get('load').info;	// this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
 
@@ -210,15 +210,15 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*
 	*@param	{Array.<String>}	files	Array of file paths to examine.
 	*@returns	{Runner}	The runner in which all the elements have been loaded.
-	*@throws	{Error}		Code "NO_FEATURES" if no features are found.
+	*@throws	{Error}		Code "NO_SCENARIOS" if no scenarios are found.
 	*
 	*@see	{@link http://nodejs.org/api/fs.html#fs_fs_readdir_path_callback|Node::fs.readdir}
 	*@private
 	*/
 	loadAllFiles: function loadAllFiles(files) {
-		var featureFiles			= {},
+		var scenarioFiles			= {},
 			componentFiles			= [],
-			ignoredFeaturesIndices	= this.config.ignore.map(function(index) { return '' + index });	// cast to string to allow for comparison with parsed indices
+			ignoredScenariosIndices	= this.config.ignore.map(function(index) { return '' + index });	// cast to string to allow for comparison with parsed indices
 
 		files.forEach(function(file) {
 			var match;	// if capturing parentheses are used in the file type detection regexp (see SuiteLoader.paths), this var holds the `match()` result
@@ -227,35 +227,35 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 				this.loadFixture(this.path + file);
 			} else if (file.match(SuiteLoader.paths.componentMarker)) {
 				componentFiles.push(this.path + file);	// don't load them immediately in order to make referenced fixture values available first
-			} else if (match = file.match(SuiteLoader.paths.featureMarker)) {
-				var featureIndex = match[1];	// first capturing parentheses in the featureMarker RegExp have to match the feature's numerical ID
-				if (ignoredFeaturesIndices.contains(featureIndex))
-					ignoredFeaturesIndices = ignoredFeaturesIndices.erase(featureIndex);
+			} else if (match = file.match(SuiteLoader.paths.scenarioMarker)) {
+				var scenarioIndex = match[1];	// first capturing parentheses in the scenarioMarker RegExp have to match the scenario's numerical ID
+				if (ignoredScenariosIndices.contains(scenarioIndex))
+					ignoredScenariosIndices = ignoredScenariosIndices.erase(scenarioIndex);
 				else
-					featureFiles[featureIndex] = this.path + file;	// don't load them immediately in order to make referenced components available first
+					scenarioFiles[scenarioIndex] = this.path + file;	// don't load them immediately in order to make referenced components available first
 			}
 		}, this);
 
-		if (ignoredFeaturesIndices.length) {
-			var error = new Error('The following features were to be ignored but could not be found: ' + ignoredFeaturesIndices);
-			error.code = 'FEATURES_NOT_FOUND';
+		if (ignoredScenariosIndices.length) {
+			var error = new Error('The following scenarios were to be ignored but could not be found: ' + ignoredScenariosIndices);
+			error.code = 'SCENARIOS_NOT_FOUND';
 			throw error;
 		}
 
-		if (Object.getLength(featureFiles) <= 0) {
-			var message = 'No feature found';
+		if (Object.getLength(scenarioFiles) <= 0) {
+			var message = 'No scenario found';
 
 			if (this.config.ignore.length)
-				message += ' after ignoring features ' + this.config.ignore.join(', ');
+				message += ' after ignoring scenarios ' + this.config.ignore.join(', ');
 
 			var error = new Error(message);
-			error.code = 'NO_FEATURES';
+			error.code = 'NO_SCENARIOS';
 			throw error;
 		}
 
 
 		componentFiles.forEach(this.loadComponent.bind(this));
-		Object.each(featureFiles, this.loadFeature, this);
+		Object.each(scenarioFiles, this.loadScenario, this);
 
 		return this.runner;
 	},
@@ -326,38 +326,38 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		return this;
 	},
 
-	/** Loads the given file as a feature into this SuiteLoader's underlying runner.
+	/** Loads the given file as a scenario into this SuiteLoader's underlying runner.
 	*
-	*@param		{String}	featureFile	Path to a feature description file. See examples to see how such a file should be written.
-	*@param		{Number}	featureId	Numerical identifier of the feature to load.
+	*@param		{String}	scenarioFile	Path to a scenario description file. See examples to see how such a file should be written.
+	*@param		{Number}	scenarioId	Numerical identifier of the scenario to load.
 	*@returns	{SuiteLoader}	This SuiteLoader, for chaining.
 	*
 	*@see	loadAllFiles
 	*/
-	loadFeature: function loadFeature(featureFile, featureId) {
-		winston.loggers.get('load').verbose('+ loading ' + featureFile);
+	loadScenario: function loadScenario(scenarioFile, scenarioId) {
+		winston.loggers.get('load').verbose('+ loading ' + scenarioFile);
 
-		var featureParams = [
-			'featureContents.description',
-			'featureContents.scenario',
+		var scenarioParams = [
+			'scenarioContents.description',
+			'scenarioContents.scenario',
 			'__components__',
 			'config',
-			featureId
+			scenarioId
 		];
 
 		try {
-			vm.runInContext('var featureContents = {' + fs.readFileSync(featureFile) + '};'
-							+ '__features__.push(new Feature('
-							+ featureParams.join(',')
+			vm.runInContext('var scenarioContents = {' + fs.readFileSync(scenarioFile) + '};'
+							+ '__scenarios__.push(new Scenario('
+							+ scenarioParams.join(',')
 							+ '));',
 							this.context,
-							featureFile);
+							scenarioFile);
 		} catch (error) {
-			winston.loggers.get('load').error('**Error in file "' + featureFile + '"**', { path: featureFile });	// TODO: is it really useful to add this info?
+			winston.loggers.get('load').error('**Error in file "' + scenarioFile + '"**', { path: scenarioFile });	// TODO: is it really useful to add this info?
 			throw error;
 		}
 
-		this.runner.addFeature(this.features.pop());
+		this.runner.addScenario(this.scenarios.pop());
 
 		return this;
 	}
@@ -372,12 +372,12 @@ SuiteLoader.paths = {
 	/** Exact name of configuration files to look for in description folders.
 	*/
 	config:			'config',
-	/** If a file matches this RegExp, it is considered as a feature description to be loaded.
+	/** If a file matches this RegExp, it is considered as a scenario description to be loaded.
 	*/
-	featureMarker:	/^([0-9]+)(.+)Feature.js$/i,
+	scenarioMarker:	/^([0-9]+)(.+)(Scenario|Feature).js$/i, // Feature is kept for v<1.0 compatibility
 	/** If a file matches this RegExp, it is considered as a component description to be loaded.
 	*/
-	componentMarker:	/(.+)(Component|Widget).js$/i,	// Widget is kept for v<0.7 compatibility
+	componentMarker:	/(.+)(Component|Widget).js$/i,	// Widget is kept for v<1.0 compatibility
 	/** If a file matches this RegExp, it is considered as a data suite to be loaded.
 	*/
 	fixtureMarker:		/(.+)(Fixture|Data).js$/i // Data is kept for v<1.0 compatibility
@@ -391,16 +391,16 @@ SuiteLoader.contextGlobals = {
 	/** A hash containing all loaded components, indexed on their name.
 	*/
 	componentsList:	'__components__',
-	/** An array containing all features, in their loading order.
+	/** An array containing all scenarios, in their loading order.
 	*/
-	featuresList:	'__features__',
+	scenariosList:	'__scenarios__',
 	/** The name of the offered logging function.
 	*/
 	log:			'log',
 	/** The name of the offered assertion library.
 	*/
 	assert:			'assert',
-	/** The name of the offered storage hash, in which features may store values to compare them over time.
+	/** The name of the offered storage hash, in which scenarios may store values to compare them over time.
 	*/
 	storage:		'storage'
 }

@@ -8,9 +8,9 @@ var promises		= require('q');
 var FAILURE_RETRY_DELAY = 100;
 
 
-/**@class	Abstract class that represents a feature step.
+/**@class	Abstract class that represents a scenario step.
 *
-* A step is a basic element in a feature scenario.
+* A step is a basic element in a scenario.
 * This abstract class provides all the logic needed to retry an action, and to provide a promise for results.
 *
 *@memberOf	steps

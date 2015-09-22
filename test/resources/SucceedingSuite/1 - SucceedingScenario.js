@@ -1,5 +1,5 @@
 description: 'Trying to access a existing element should succeed.',
 
-scenario: [
+steps: [
 	{ 'TestComponent.present': true }
 ]
