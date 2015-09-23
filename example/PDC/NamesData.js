@@ -1,2 +1,0 @@
-oldName = 'Totok'
-newName = 'Totoka'
