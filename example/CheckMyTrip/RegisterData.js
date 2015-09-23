@@ -1,2 +1,0 @@
-firstName = "Toto"
-lastName = "Tutu"
