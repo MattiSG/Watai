@@ -15,12 +15,15 @@ v0.7 (WIP)
 ----
 
 #### Minor changes
+Renamed following concepts ([#116](https://github.com/MattiSG/Watai/issues/116)):
+- `Feature` to `Scenario`.
+- `Scenario` to `Steps` (inside a feature/scenario)
+- `Flow` to `Verbose`.
+- `Data` to `Fixture`.
+- `Hook` to `Locator`.
+- `Widget` to `Component`.
 
-- Renamed `Feature` to `Scenario` ([#116](https://github.com/MattiSG/Watai/issues/116)).
-- Renamed `Flow` to `Verbose` ([#116](https://github.com/MattiSG/Watai/issues/116)).
-- Renamed `Data` to `Fixture` ([#116](https://github.com/MattiSG/Watai/issues/116)).
-- Renamed `Hook` to `Locator` ([#116](https://github.com/MattiSG/Watai/issues/116)).
-- Renamed `Widget` to `Component` ([#116](https://github.com/MattiSG/Watai/issues/116)).
+Note: Previous concepts are marked as deprecated and backward compatibility support will be removed in next major release - i.e. v1.0
 
 v0.6
 ----

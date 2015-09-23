@@ -374,13 +374,13 @@ SuiteLoader.paths = {
 	config:			'config',
 	/** If a file matches this RegExp, it is considered as a scenario description to be loaded.
 	*/
-	scenarioMarker:	/^([0-9]+)(.+)(Scenario|Feature).js$/i, // Feature is kept for v<1.0 compatibility
+	scenarioMarker:	/^([0-9]+)(.+)(Scenario|Feature).js$/i, // Feature is kept for v<0.7 compatibility
 	/** If a file matches this RegExp, it is considered as a component description to be loaded.
 	*/
-	componentMarker:	/(.+)(Component|Widget).js$/i,	// Widget is kept for v<1.0 compatibility
+	componentMarker:	/(.+)(Component|Widget).js$/i,	// Widget is kept for v<0.7 compatibility
 	/** If a file matches this RegExp, it is considered as a data suite to be loaded.
 	*/
-	fixtureMarker:		/(.+)(Fixture|Data).js$/i // Data is kept for v<1.0 compatibility
+	fixtureMarker:		/(.+)(Fixture|Data).js$/i // Data is kept for v<0.7 compatibility
 }
 
 /** Lists all predefined global variables in the suite loading context, and how they are referenced in that context.
