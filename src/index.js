@@ -9,6 +9,7 @@ var path = require('path');
 
 var logger	= require('winston');
 
+var selenium = require('selenium-standalone');
 
 var Watai					= require('./Watai'),
 	Preprocessor			= require('./lib/Preprocessor'),
@@ -35,30 +36,43 @@ if (args.setup)
 
 var suitePath	= suites[0],
 	suite		= new Watai.SuiteLoader(suitePath, args.config),
-	statusCode	= 0;
+	statusCode	= 0,
+	seleniumServer;
 
-suite.getRunner()
-	.then(function(runner) {
-		return runner.test();
-	}, function(err) {
-		var logger = require('winston').loggers.get('load');
-		logger.debug(err.stack);
+selenium.start(function(err, serverInstance) {
+	if (err) {
+		logger.error(err);
+	}
 
-		var errorDescription = ERRORS_LIST[err && err.code];
-		if (errorDescription) {
-			logger.error(errorDescription.title);
-			logger.info(errorDescription.help);
-		}
-		throw err;
-	}).fail(function(err) {
-		var error = ERRORS_LIST[err && err.code] || { exitCode: 1 };
-		statusCode = error.exitCode;
-		if (err.stack)	// TODO: improve detection of what is an actual uncaught exception (We currently have an ambiguity: is the promise rejected because the test failed or because an error occurred? If error, we should tell the user. This is (badly) approximated by the reason for rejection having a stack trace or not.)
-			console.error(err.stack);
-	}).done();	// ensure any uncaught exception gets rethrown
+	seleniumServer = serverInstance;
+
+	suite.getRunner()
+		.then(function(runner) {
+			return runner.test()
+				.finally(function() {
+					seleniumServer.kill();
+				});
+		}, function(err) {
+			var logger = require('winston').loggers.get('load');
+			logger.debug(err.stack);
+
+			var errorDescription = ERRORS_LIST[err && err.code];
+			if (errorDescription) {
+				logger.error(errorDescription.title);
+				logger.info(errorDescription.help);
+			}
+			throw err;
+		}).fail(function(err) {
+			var error = ERRORS_LIST[err && err.code] || { exitCode: 1 };
+			statusCode = error.exitCode;
+			if (err.stack)	// TODO: improve detection of what is an actual uncaught exception (We currently have an ambiguity: is the promise rejected because the test failed or because an error occurred? If error, we should tell the user. This is (badly) approximated by the reason for rejection having a stack trace or not.)
+				console.error(err.stack);
+		}).done();	// ensure any uncaught exception gets rethrown
+});
 
 
 process.on('exit', function() {
+	seleniumServer.kill();
 	process.exit(statusCode);
 });
 

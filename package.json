@@ -84,6 +84,7 @@
     "jsdoc": "3.x",
     "mocha": ">= 1.4",
     "retire": "0.1",
+    "selenium-standalone": "^4.6.0",
     "should": ">= 1.2.2 < 2"
   },
   "preferGlobal": true

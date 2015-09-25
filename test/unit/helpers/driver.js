@@ -3,7 +3,8 @@
 */
 
 var webdriver = require('wd'),
-	ConfigLoader = require('mattisg.configloader');
+	ConfigLoader = require('mattisg.configloader'),
+	selenium = require('selenium-standalone');
 
 /** Loaded configuration for the test runs.
 *@type	{Object}
@@ -26,6 +27,11 @@ var driver,
 */
 	driverClientsCount = 0;
 
+/** The single selenium instance to be used during the test run.
+*@type	{SeleniumStandalone}
+*@private
+*/
+var selenium,
 
 /** Returns an object with a `driver` key, which will be set before the test suite in which this function is called, and will be quit after the suite if it is the last one of this test run.
 *
@@ -78,21 +84,30 @@ function makeDriver(done) {
 	var result = webdriver.promiseRemote(),
 		seleniumServer = require('url').parse(config.seleniumServerURL);	// TODO: get the URL already parsed from the config instead of serializing it at each step
 
-	result.init(Object.merge(config.driverCapabilities, {
-		host: seleniumServer.hostname,
-		port: seleniumServer.port
-	})).then(function() {
-		return result.get(config.baseURL);
-	}, function() {
-		console.error([
-			'',
-			'**The Selenium server could not be reached!**',
-			'> Did you start it up?',
-			'  See the troubleshooting guide if you need help  ;)'
-		].join('\n'));
+	selenium.start(function(err, serverInstance) {
+		if (err) {
+			console.error('derpy', err);
+		}
 
-		process.exit(4);
-	}).done(done);
+		console.log( 'derpderp', err );
+		selenium = serverInstance;
+
+		result.init(Object.merge(config.driverCapabilities, {
+			host: seleniumServer.hostname,
+			port: seleniumServer.port
+		})).then(function() {
+			return result.get(config.baseURL);
+		}, function() {
+			console.error([
+				'',
+				'**The Selenium server could not be reached!**',
+				'> Did you start it up?',
+				'  See the troubleshooting guide if you need help  ;)'
+			].join('\n'));
+
+			process.exit(4);
+		}).done(done);
+	});
 
 	return result;
 }
@@ -111,6 +126,8 @@ function closeDriverWithin(source) {
 			source.driver.quit().done(done);
 		else
 			done();
+
+		selenium.kill();
 	}
 }
 
