@@ -82,7 +82,7 @@ function openDriverWithin(destination) {
 */
 function makeDriver(done) {
 	var result = webdriver.promiseRemote(),
-		seleniumServer = require('url').parse(config.seleniumServerURL);	// TODO: get the URL already parsed from the config instead of serializing it at each step
+		seleniumServerUrl = require('url').parse(config.seleniumServerURL);	// TODO: get the URL already parsed from the config instead of serializing it at each step
 
 	selenium.start(function(err, serverInstance) {
 		if (err) {
@@ -93,8 +93,8 @@ function makeDriver(done) {
 		selenium = serverInstance;
 
 		result.init(Object.merge(config.driverCapabilities, {
-			host: seleniumServer.hostname,
-			port: seleniumServer.port
+			host: seleniumServerUrl.hostname,
+			port: seleniumServerUrl.port
 		})).then(function() {
 			return result.get(config.baseURL);
 		}, function() {
