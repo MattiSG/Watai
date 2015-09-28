@@ -11,7 +11,7 @@ var Watai			= require('../helpers/subject'),
 var views = [
 		'Runner/CLI',
 		'Runner/Dots',
-		'Runner/Flow',
+		'Runner/Verbose',
 		'Runner/Instafail'
 	],
 /** Event names mapped to the parameters expected by the event.

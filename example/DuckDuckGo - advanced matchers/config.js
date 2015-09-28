@@ -8,7 +8,7 @@ module.exports = {
 	browser: 'chrome',	// this is a shortcut, relying on chromedriver having been installed, and on browsers being in their default paths
 						// for more information, see the [documentation](https://github.com/MattiSG/Watai/wiki/Testing-with-Chrome) or check out the DuckDuckGo simple example
 
-	views: [ 'Flow', 'PageDump', 'Growl' ],	// you may specify any combination of views you want; see more at <https://github.com/MattiSG/Watai/wiki/Configuration#views>
+	views: [ 'Verbose', 'PageDump', 'Growl' ],	// you may specify any combination of views you want; see more at <https://github.com/MattiSG/Watai/wiki/Configuration#views>
 
 	name: function() {	// any configuration element may also be a function
 		return 'Advanced stuff';	// …either synchronously returning the value to use in its place…
@@ -25,5 +25,5 @@ module.exports = {
 		return promise.promise;
 	},
 
-	ignore: [ 5 ]	// list indices of features to be ignored; best used at the command-line
+	ignore: [ 5 ]	// list indices of scenarios to be ignored; best used at the command-line
 }

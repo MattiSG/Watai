@@ -9,19 +9,19 @@
 		"title":	"An error occurred while executing the configuration file for this suite",
 		"help":		"Check the Configuration Files reference: <https://github.com/MattiSG/Watai/wiki/Configuration>"
 	},
-	"NO_FEATURES": {
+	"NO_SCENARIOS": {
 		"exitCode":	16,
-		"title":	"No feature was found in this suite",
-		"help":		"Check the Feature Files reference: <https://github.com/MattiSG/Watai/wiki/Features#wiki-file-naming>"
+		"title":	"No scenario was found in this suite",
+		"help":		"Check the Scenario Files reference: <https://github.com/MattiSG/Watai/wiki/Scenarios#wiki-file-naming>"
 	},
 	"EACCES": {
 		"exitCode":	16,
 		"title":	"Some files in the given suite are not readable",
 		"help":		""
 	},
-	"FEATURES_NOT_FOUND": {
+	"SCENARIOS_NOT_FOUND": {
 		"exitCode":	2,
-		"title":	"Some of the features you specified were not found",
+		"title":	"Some of the scenarios you specified were not found",
 		"help":		"Double-check the path to your suite, and the numerical indices you specified"
 	}
 }

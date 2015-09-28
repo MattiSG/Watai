@@ -3,7 +3,7 @@
 var RunnerPageDump = new Class(/** @lends RunnerPageDump# */{
 	Extends: require('../PromiseView'),
 
-	/** Whether the first feature has already been found or not.
+	/** Whether the first scenario has already been found or not.
 	*
 	*@type	{Boolean}
 	*@private
@@ -30,14 +30,14 @@ var RunnerPageDump = new Class(/** @lends RunnerPageDump# */{
 	/** Events that are listened to.
 	*/
 	events: {
-		feature: function(feature) {
+		steps: function(scenario) {
 			if (this.attached)
 				return;
 
 			var view = this,	// callbacks reference traversal
 				driver = this.model.getDriver();
 
-			feature.on('step', function(step) {
+			scenario.on('step', function(step) {
 				step.once('start', function() {
 					step.promise.fail(function() {
 						if (! view.pageSourcePromise)
@@ -51,7 +51,7 @@ var RunnerPageDump = new Class(/** @lends RunnerPageDump# */{
 	},
 
 	showFailure: function() {
-		if (this.pageSourcePromise)	// we might fail even before the first feature was started (unreachable server, bad syntax…). In this case, do not do anything.
+		if (this.pageSourcePromise)	// we might fail even before the first scenario was started (unreachable server, bad syntax…). In this case, do not do anything.
 			this.pageSourcePromise.then(this.dumpPage.bind(this));
 	},
 

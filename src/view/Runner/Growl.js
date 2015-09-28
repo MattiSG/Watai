@@ -21,7 +21,7 @@ var RunnerGrowl = new Class({
 	},
 
 	showSuccess: function showSuccess() {
-		this.show('feature'.count(this.model.features.length) + ' passed', {
+		this.show('scenario'.count(this.model.scenarios.length) + ' passed', {
 			title: this.model + ' succeeded'
 		});
 	},

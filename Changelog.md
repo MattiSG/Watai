@@ -11,6 +11,19 @@ To get all details, and changes at all versions, including development ones, use
 You are reminded that Watai uses [SemVer](http://semver.org), which means upgrades that have only a patch number (last digit) change are backwards-compatible, and versions with a minor number (second digit) are API-breaking while in `0` major versions.
 
 
+v0.7 (WIP)
+----
+
+#### Minor changes
+Renamed following concepts ([#116](https://github.com/MattiSG/Watai/issues/116)):
+- `Feature` to `Scenario`.
+- `Scenario` to `Steps` (inside a feature/scenario)
+- `Flow` to `Verbose`.
+- `Data` to `Fixture`.
+- `Hook` to `Locator`.
+- `Widget` to `Component`.
+
+Note: Previous concepts are marked as deprecated and backward compatibility support will be removed in next major release - i.e. v1.0
 
 v0.6
 ----

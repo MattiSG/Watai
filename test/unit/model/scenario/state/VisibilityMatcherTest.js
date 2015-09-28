@@ -1,16 +1,16 @@
 var Watai = require('../../../helpers/subject'),
 	my = require('../../../helpers/driver').getDriverHolder(),
 	VisibilityMatcher = Watai.matchers.VisibilityMatcher,
-	TestWidget;
+	TestComponent;
 
 
 describe('VisibilityMatcher', function() {
 	before(function() {
-		TestWidget = require('../../../helpers/testWidget').getWidget(my.driver);
+		TestComponent = require('../../../helpers/testComponent').getComponent(my.driver);
 	});
 
 	it('should pass on `true` in state descriptors on existing elements', function(done) {
-		new VisibilityMatcher(true, 'TestWidget.output', { TestWidget: TestWidget })
+		new VisibilityMatcher(true, 'TestComponent.output', { TestComponent: TestComponent })
 			.test().then(function() {
 				done();
 			}, function(report) {
@@ -25,7 +25,7 @@ describe('VisibilityMatcher', function() {
 	});
 
 	it('should fail on `false` in state descriptors on existing elements', function(done) {
-		new VisibilityMatcher(false, 'TestWidget.output', { TestWidget: TestWidget })
+		new VisibilityMatcher(false, 'TestComponent.output', { TestComponent: TestComponent })
 			.test().then(function() {
 				done(new Error('Resolved instead of rejected!'));
 			}, function(reason) {
@@ -36,7 +36,7 @@ describe('VisibilityMatcher', function() {
 	});
 
 	it('should fail on `true` in state descriptors on missing elements', function(done) {
-		new VisibilityMatcher(true, 'TestWidget.missing', { TestWidget: TestWidget })
+		new VisibilityMatcher(true, 'TestComponent.missing', { TestComponent: TestComponent })
 			.test().then(function() {
 				done(new Error('Resolved instead of rejected!'));
 			}, function(reason) {
@@ -47,7 +47,7 @@ describe('VisibilityMatcher', function() {
 	});
 
 	it('should pass on `false` in state descriptors on missing elements', function(done) {
-		new VisibilityMatcher(false, 'TestWidget.missing', { TestWidget: TestWidget })
+		new VisibilityMatcher(false, 'TestComponent.missing', { TestComponent: TestComponent })
 			.test().then(function() {
 				done();
 			}, function(reason) {
@@ -57,7 +57,7 @@ describe('VisibilityMatcher', function() {
 	});
 
 	it('should fail on `true` in state descriptors on hidden elements', function(done) {
-		new VisibilityMatcher(true, 'TestWidget.hidden', { TestWidget: TestWidget })
+		new VisibilityMatcher(true, 'TestComponent.hidden', { TestComponent: TestComponent })
 			.test().then(function() {
 				done(new Error('Resolved instead of rejected!'));
 			}, function(reason) {
@@ -68,7 +68,7 @@ describe('VisibilityMatcher', function() {
 	});
 
 	it('should pass on `false` in state descriptors on hidden elements', function(done) {
-		new VisibilityMatcher(false, 'TestWidget.hidden', { TestWidget: TestWidget })
+		new VisibilityMatcher(false, 'TestComponent.hidden', { TestComponent: TestComponent })
 			.test().then(function() {
 				done();
 			}, function(reason) {

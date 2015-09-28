@@ -58,7 +58,7 @@ describe('Exit code', function() {
 		});
 
 		it('should provide an explicit message', function() {
-			message.should.match(/no feature found/i);
+			message.should.match(/no scenario found/i);
 		});
 	});
 

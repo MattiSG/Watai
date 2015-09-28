@@ -64,8 +64,10 @@
     "mattisg.configloader": "0.2",
     "mootools": "^1.4.5-2",
     "q": ">= 0.9.5",
-    "wd": "~0.2.6",
-    "winston": "0.6"
+    "mootools": "1.4",
+    "winston": "0.6",
+    "wd": "~0.3.12",
+    "mattisg.configloader": "0.2"
   },
   "bundledDependencies": [
     "q",
@@ -75,8 +77,7 @@
     "mattisg.configloader"
   ],
   "optionalDependencies": {
-    "growl": ">= 1.5",
-    "saucelabs": "~0.1.1"
+    "growl": ">= 1.5"
   },
   "devDependencies": {
     "istanbul": "0.1",
@@ -84,7 +85,9 @@
     "jsdoc": "3.x",
     "mocha": ">= 1.4",
     "retire": "0.1",
-    "should": ">= 1.2.2 < 2"
+    "should": ">= 1.2.2 < 2",
+    "jsdoc": "3.x",
+    "saucelabs": "~1.0.1"
   },
   "preferGlobal": true
 }

@@ -62,13 +62,13 @@ describe('Runner', function() {
 
 	var emitted = {},	// observer storage for event-emitted data
 		passed = {},	// observer storage for data passed through promises, to compare with events
-		featureEvaluationCount = 0;
+		scenarioEvaluationCount = 0;
 
-	var feature = new Watai.Feature('RunnerTest feature', [
-		function() { featureEvaluationCount++ }
+	var scenario = new Watai.Scenario('RunnerTest scenario', [
+		function() { scenarioEvaluationCount++ }
 	], {}, require('../../config'));
 
-	var failingFeature = new Watai.Feature('RunnerTest failing feature', [
+	var failingScenario = new Watai.Scenario('RunnerTest failing scenario', [
 		function() {
 			var result = promises.defer();
 			result.reject('This is reason enough for rejection.');
@@ -78,7 +78,7 @@ describe('Runner', function() {
 
 
 	describe('test()', function() {
-		var subjectWithFailure;	// a second subject that will have a failing feature added
+		var subjectWithFailure;	// a second subject that will have a failing scenario added
 
 
 		before(function() {
@@ -90,10 +90,10 @@ describe('Runner', function() {
 				emitted.start++;
 			});
 
-			emitted.feature = 0;
+			emitted.scenario = 0;
 
-			subjectWithFailure.on('feature', function() {
-				emitted.feature++;
+			subjectWithFailure.on('scenario', function() {
+				emitted.scenario++;
 			});
 		});
 
@@ -108,50 +108,50 @@ describe('Runner', function() {
 			subject.test().done(function() { done() });
 		});
 
-		it('should evaluate features once', function(done) {
+		it('should evaluate scenarios once', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			subject.addFeature(feature);
+			subject.addScenario(scenario);
 
 			subject.test().then(function() {
-				featureEvaluationCount.should.equal(1);
+				scenarioEvaluationCount.should.equal(1);
 			}).done(done);
 		});
 
-		it('should evaluate features once again if called again', function(done) {
+		it('should evaluate scenarios once again if called again', function(done) {
 			this.timeout(config.browserWarmupTime);
 
 			subject.test().then(function() {
-				featureEvaluationCount.should.equal(2);
+				scenarioEvaluationCount.should.equal(2);
 			}).done(done);
 		});
 
-		it('with failing features should be rejected', function(done) {
+		it('with failing scenarios should be rejected', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			subjectWithFailure.addFeature(failingFeature).test().then(function() {
+			subjectWithFailure.addScenario(failingScenario).test().then(function() {
 				throw new Error('Resolved instead of rejected.');
 			}, function(report) {
 				should.equal(typeof report, 'object');
-				if (! report[failingFeature])
-					throw new Error('Missing feature.');
-				if (! report[failingFeature].length)
-					throw new Error('Missing feature failures details.');
+				if (! report[failingScenario])
+					throw new Error('Missing scenario.');
+				if (! report[failingScenario].length)
+					throw new Error('Missing scenario failures details.');
 				passed.failures = report;
 			}).done(done);
 		});
 
 		describe('with bail option', function() {
-			it('should not evaluate a feature after one has failed', function(done) {
-				var calledCount = featureEvaluationCount;
+			it('should not evaluate a scenario after one has failed', function(done) {
+				var calledCount = scenarioEvaluationCount;
 
 				subjectWithFailure.config.bail = true;
-				subjectWithFailure.addFeature(feature).test().then(
+				subjectWithFailure.addScenario(scenario).test().then(
 					function() {
 						throw new Error('Resolved instead of being rejected!');
 					},
 					function() {
-						if (featureEvaluationCount > calledCount)
+						if (scenarioEvaluationCount > calledCount)
 							throw new Error('Bail option does not stop evaluation');
 					}
 				).done(done, done);
@@ -180,8 +180,8 @@ describe('Runner', function() {
 	});
 
 	describe('events', function() {
-		it('should have emitted as many "feature" events as loaded features', function() {
-			should.strictEqual(emitted.feature, 2);
+		it('should have emitted as many "scenario" events as loaded scenarios', function() {
+			should.strictEqual(emitted.scenario, 2);
 		});
 
 		it('should have emitted as many "start" events as was started', function() {
