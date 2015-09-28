@@ -1,5 +1,5 @@
 module.exports = {
-	build: function(promise, promiseTrigger) {
+	build: function(promise) {
 		setTimeout(function() {
 			promise.reject(new Error('boom'));
 		}, 0);
