@@ -339,7 +339,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 
 		var scenarioParams = [
 			'scenarioContents.description',
-			'scenarioContents.scenario',
+			'scenarioContents.steps',
 			'__components__',
 			'config',
 			scenarioId

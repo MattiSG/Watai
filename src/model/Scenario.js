@@ -59,31 +59,31 @@ var Scenario = new Class( /** @lends Scenario# */ {
 	*
 	*@constructs
 	*@param	{String}	description	A plain text description of the scenario, advised to be written in a BDD fashion.
-	*@param	{Array}		scenario	An array that describes states and transitions. See class documentation for formatting.
+	*@param	{Array}		stepsArray	An array that describes states and transitions. See class documentation for formatting.
 	*@param	{Object.<String, Component>}	components	A hash listing all components accessible to this Scenario, indexed on their names.
 	*@param	{Hash}		config		The test-suite-level configuration elements.
 	*@param	{Number}	[id]		The numerical identifier of this scenario.
 	*/
-	initialize: function init(description, scenario, components, config, id) {
+	initialize: function init(description, stepsArray, components, config, id) {
 		this.description	= description;
 		this.id				= id || 0;
 		this.config			= config;
 		this.components		= components;	// TODO: transform so that they can be referred to with the "Component" suffix optional?
 
-		this.steps			= this.loadScenario(scenario);
+		this.steps			= this.loadSteps(stepsArray);
 	},
 
 	/** Parses an array that describes states and transitions and transforms it into a sequence of promises to be evaluated.
 	*
-	*@param		{Array}	scenario	An array that describes states and transitions. See class documentation for formatting.
-	*@returns	{Array.<function>}	An array of promises representing the given scenario.
+	*@param		{Array}	stepsArray	An array that describes states and transitions. See class documentation for formatting.
+	*@returns	{Array.<function>}	An array of promises representing the given steps.
 	*@private
 	*/
-	loadScenario: function loadScenario(scenario) {
+	loadSteps: function loadSteps(stepsArray) {
 		var result = [];
 
-		for (var stepIndex = 0; stepIndex < scenario.length; stepIndex++) {
-			var sourceStep = scenario[stepIndex], // takes all values listed in a scenario
+		for (var stepIndex = 0; stepIndex < stepsArray.length; stepIndex++) {
+			var sourceStep = stepsArray[stepIndex],
 				step = null;	// this is going to be an actual AbstractStep-inheriting instance
 
 			winston.loggers.get('load').silly('Loading step ' + stepIndex + ' (source type: ' + typeof sourceStep + ', full source: ' + sourceStep + ')…');
@@ -100,7 +100,7 @@ var Scenario = new Class( /** @lends Scenario# */ {
 					break;
 				case 'string':
 				case 'number':
-					winston.loggers.get('load').debug('Oops, encoutered "' + sourceStep + '" as a free step in a scenario!'	// TODO: remove this hint after v0.4
+					winston.loggers.get('load').debug('Oops, encoutered "' + sourceStep + '" as a free step!'	// TODO: remove this hint after v0.4
 							 + '\n'
 							 + 'Maybe your test is still using pre-0.4 syntax?  :)'
 							 + '\n'
