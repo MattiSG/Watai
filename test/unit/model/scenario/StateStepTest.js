@@ -32,7 +32,7 @@ describe('StateStep', function() {
 
 	it('should offer a `test` method', function() {
 		var result = new StateStep(expectedContents, { TestComponent: TestComponent });
-		result.test.should.be.a('function');
+		result.test.should.be.a.Function();
 		promises.isPromise(result.test()).should.be.ok;
 	});
 

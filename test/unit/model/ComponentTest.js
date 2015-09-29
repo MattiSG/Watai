@@ -60,7 +60,7 @@ describe('Component', function() {
 	describe('magic', function() {
 		it('should do some magic on *Link names', function() {
 			subject.should.have.property('changeTextareaValueNow');
-			subject.changeTextareaValueNow.should.be.a('function');	// on 'link', this should be a shortcut to clicking the element, not a simple access
+			subject.changeTextareaValueNow.should.be.a.Function();	// on 'link', this should be a shortcut to clicking the element, not a simple access
 		});
 
 
@@ -86,11 +86,11 @@ describe('Component', function() {
 			var EXPECTED = 'set method test';
 
 			it('should be added for all field-type elements', function() {
-				subject.setInputField.should.be.a('function');
+				subject.setInputField.should.be.a.Function();
 			});
 
 			it('should be partial applicators for actually sending keys', function() {
-				subject.setInputField(EXPECTED).should.be.a('function');
+				subject.setInputField(EXPECTED).should.be.a.Function();
 			});
 
 			it('should return a promise when calling partial applicator', function(done) {

@@ -45,10 +45,10 @@ describe('SauceLabs view', function() {
 			});
 
 			it('should provide information to the user', function() {
-				stdoutSpy.printed().should.include('SauceLabs authentication');
-				stdoutSpy.printed().should.include('config');
-				stdoutSpy.printed().should.include('SAUCE_USERNAME');
-				stdoutSpy.printed().should.include('SAUCE_ACCESS_KEY');
+				stdoutSpy.printed().should.containEql('SauceLabs authentication');
+				stdoutSpy.printed().should.containEql('config');
+				stdoutSpy.printed().should.containEql('SAUCE_USERNAME');
+				stdoutSpy.printed().should.containEql('SAUCE_ACCESS_KEY');
 			});
 		});
 
@@ -114,8 +114,8 @@ describe('SauceLabs view', function() {
 
 		it('should provide information to the user', function() {
 			subject.showStart();
-			stdoutSpy.printed().should.include('quit');
-			stdoutSpy.printed().should.include('always');
+			stdoutSpy.printed().should.containEql('quit');
+			stdoutSpy.printed().should.containEql('always');
 			stdoutSpy.printed().should.match(/wast.* 90 ?s/);	// wasting, wastes, waste, 90 seconds, 90s… doesn't matter
 		});
 	});
