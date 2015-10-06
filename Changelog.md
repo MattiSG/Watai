@@ -14,7 +14,7 @@ You are reminded that Watai uses [SemVer](http://semver.org), which means upgrad
 v0.7 (WIP)
 ----
 
-#### Minor changes
+### Minor changes
 
 An [upgrade guide](https://github.com/MattiSG/Watai/wiki/Upgrading-from-v0-6-to-v0-7) is available to help you update your tests through breaking changes.
 
@@ -26,7 +26,8 @@ Renamed following concepts ([#116](https://github.com/MattiSG/Watai/issues/116))
 - `Hook` to `Locator`.
 - `Widget` to `Component`.
 
-Note: Previous concepts are marked as deprecated and backward compatibility support will be removed in next major release - i.e. v1.0
+_Note:_ previous concept names are deprecated and backward compatibility support will be removed in v1.0.
+
 
 v0.6
 ----
