@@ -15,6 +15,9 @@ v0.7 (WIP)
 ----
 
 #### Minor changes
+
+An [upgrade guide](https://github.com/MattiSG/Watai/wiki/Upgrading-from-v0-6-to-v0-7) is available to help you update your tests through breaking changes.
+
 Renamed following concepts ([#116](https://github.com/MattiSG/Watai/issues/116)):
 - `Feature` to `Scenario`.
 - `Scenario` to `Steps` (inside a feature/scenario)
