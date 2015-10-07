@@ -57,7 +57,7 @@
     "doc-private": "jsdoc --configure .jsdoc --recurse src --destination doc/api --private README.md"
   },
   "engines": {
-    "node": ">=0.6.18 <0.11",
+    "node": ">=0.6.18 <1",
     "npm": "> 1.1"
   },
   "dependencies": {
