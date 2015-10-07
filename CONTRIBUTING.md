@@ -110,6 +110,19 @@ Your pull request will then be reviewed, and eventually added to the mainline. T
 Distribution
 ------------
 
+### Versioning
+
+We use [Semantic Versioning](http://semver.org) to convey compatibility information through version numbers. If merged changes in `master` impact the end user in any way, the version number should be updated as specified by [SemVer](http://semver.org).
+
+To ensure quality, we use field testing before publishing official versions. Thus, when the version number is updated, it should be sufficed by `-alpha` or `-beta` upon merge, with a numeric indicator incremented on each later merge. The switch from alpha to beta happens on feature freeze, decided by the maintainers. The switch from beta to official release happens after 2 weeks without issues.
+
+> This means there could be a time within which both a beta and an alpha for the next version are both available.
+
+`master` is always the edge version. You can access stable versions through tags, as listed in the [Releases](https://github.com/MattiSG/Watai/releases) tab. Unstable versions are distributed under the `edge` NPM [tag](https://docs.npmjs.com/cli/dist-tag).
+
+
+### Publishing
+
 ```shell
 npm version  # remember to use semver.org
 npm publish
