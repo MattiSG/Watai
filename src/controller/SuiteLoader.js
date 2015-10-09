@@ -201,7 +201,6 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		result[SuiteLoader.contextGlobals.log] = winston.loggers.get('load').info;	// this has to be passed, for simpler access, but mostly because the `console` module is not automatically loaded
 
 		result[SuiteLoader.contextGlobals.assert] = require('assert');
-		result[SuiteLoader.contextGlobals.storage] = {};
 
 		return result;
 	},
@@ -400,9 +399,6 @@ SuiteLoader.contextGlobals = {
 	/** The name of the offered assertion library.
 	*/
 	assert:			'assert',
-	/** The name of the offered storage hash, in which scenarios may store values to compare them over time.
-	*/
-	storage:		'storage'
 }
 
 
