@@ -61,13 +61,12 @@
     "npm": "> 1.1"
   },
   "dependencies": {
-    "mattisg.configloader": "0.2",
+    "mattisg.configloader": "~0.2",
     "mootools": "^1.4.5-2",
     "q": ">= 0.9.5",
     "mootools": "1.4",
     "winston": "0.6",
-    "wd": "~0.3.12",
-    "mattisg.configloader": "0.2"
+    "wd": "~0.3.12"
   },
   "bundledDependencies": [
     "q",
