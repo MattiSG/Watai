@@ -28,6 +28,8 @@ describe('SauceLabs view', function() {
 	});
 
 	after(function(done) {
+		this.timeout(10 * 1000);
+
 		runner.quitBrowser().finally(done);
 	});
 
@@ -96,6 +98,9 @@ describe('SauceLabs view', function() {
 
 	describe('when not set to always quit', function() {
 		before(function() {
+			process.env.SAUCE_USERNAME = 'user-env';
+			process.env.SAUCE_ACCESS_KEY = 'pass-env';
+
 			runner.config.quit = 'never';
 		});
 
