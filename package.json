@@ -2,6 +2,7 @@
   "name": "watai",
   "version": "0.7.0-alpha.1",
   "description": "Integration testing for the modern web",
+  "license": "AGPL-1.0",
   "keywords": [
     "test",
     "testing",
