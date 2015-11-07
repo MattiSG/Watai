@@ -11,22 +11,29 @@ To get all details, and changes at all versions, including development ones, use
 You are reminded that Watai uses [SemVer](http://semver.org), which means upgrades that have only a patch number (last digit) change are backwards-compatible, and versions with a minor number (second digit) are API-breaking while in `0` major versions.
 
 
-v0.7 (WIP)
+v0.7
 ----
 
-### Minor changes
+### v0.7.0
+
+#### Breaking changes
 
 An [upgrade guide](https://github.com/MattiSG/Watai/wiki/Upgrading-from-v0-6-to-v0-7) is available to help you update your tests through breaking changes.
 
-Renamed following concepts ([#116](https://github.com/MattiSG/Watai/issues/116)):
-- `Feature` to `Scenario`.
-- `Scenario` to `Steps` (inside a feature/scenario)
-- `Flow` to `Verbose`.
-- `Data` to `Fixture`.
-- `Hook` to `Locator`.
-- `Widget` to `Component`.
+- Renamed following concepts ([#116](https://github.com/MattiSG/Watai/issues/116)):
+  - `Feature` to `Scenario`.
+  - `Scenario` to `Steps` (inside a feature/scenario)
+  - `Flow` to `Verbose`.
+  - `Data` to `Fixture`.
+  - `Hook` to `Locator`.
+  - `Widget` to `Component`.
 
-_Note:_ previous concept names are deprecated and backward compatibility support will be removed in v1.0.
+Backward compatibility is kept for this version, but support for previous names is deprecated and will be removed in a later version. Feedback on these names welcome.
+
+#### Minor changes
+
+- Added compatibility with NPM 3.
+- Update documentation generation tool from JSdoc 2 to [JSdoc 3](http://usejsdoc.org).
 
 
 v0.6

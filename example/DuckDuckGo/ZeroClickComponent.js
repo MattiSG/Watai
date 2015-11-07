@@ -1,1 +1,1 @@
-meanings:	'#zci-meanings'
+meanings:	'.zci__body'
