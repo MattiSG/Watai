@@ -28,11 +28,12 @@ An [upgrade guide](https://github.com/MattiSG/Watai/wiki/Upgrading-from-v0-6-to-
   - `Hook` to `Locator`.
   - `Widget` to `Component`.
 
-_Note:_ previous concept names are still supported, but are deprecated and backward compatibility support will be removed in v1.0.
+Backward compatibility is kept for this version, but support for previous names is deprecated and will be removed in a later version. Feedback on these names welcome.
 
 #### Minor changes
 
 - Added compatibility with NPM 3.
+- Update documentation generation tool from JSdoc 2 to [JSdoc 3](http://usejsdoc.org).
 
 
 v0.6
