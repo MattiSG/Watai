@@ -72,11 +72,11 @@
     "winston": "^2.1.0"
   },
   "bundledDependencies": [
-    "q",
+    "mattisg.configloader",
     "mootools",
-    "winston",
+    "q",
     "wd",
-    "mattisg.configloader"
+    "winston"
   ],
   "optionalDependencies": {
     "growl": "^1.8.1"
