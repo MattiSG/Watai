@@ -30,7 +30,7 @@ describe('Step verbose view', function() {
 
 		var tester = function() {
 			stdoutSpy.unmute();
-			stdoutSpy.printed().should.include(term);
+			stdoutSpy.printed().should.containEql(term);
 		}
 
 		stdoutSpy.mute();
@@ -164,7 +164,7 @@ describe('Step verbose view', function() {
 					stdoutSpy.mute();
 					step.test().then(function() {
 						stdoutSpy.unmute();
-						stdoutSpy.printed().should.include(ACTION);
+						stdoutSpy.printed().should.containEql(ACTION);
 						stdoutSpy.printed().should.not.match(/link/i);	// ensure the action name does not contain the original element name
 					}).done(done, done);
 				});

@@ -167,7 +167,7 @@ describe('Locator', function() {
 			});
 
 			it('should have args', function() {
-				subject.should.have.property('args').with.include(newContent);
+				subject.should.have.property('args').with.containEql(newContent);
 			});
 		});
 	});

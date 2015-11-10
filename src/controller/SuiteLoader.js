@@ -53,7 +53,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	*@param	{Hash}		[config]	A configuration object that will override the loaded config file.
 	*/
 	initialize: function init(path, config) {
-		this.path = pathsUtils.resolve(path) + '/';	// TODO: Node 0.8 has path.sep
+		this.path = pathsUtils.resolve(path) + pathsUtils.sep;
 
 		var config = new ConfigLoader({
 			from		: this.path,

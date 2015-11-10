@@ -11,6 +11,21 @@ To get all details, and changes at all versions, including development ones, use
 You are reminded that Watai uses [SemVer](http://semver.org), which means upgrades that have only a patch number (last digit) change are backwards-compatible, and versions with a minor number (second digit) are API-breaking while in `0` major versions.
 
 
+
+v0.8 [WIP]
+----
+
+### v0.8.0
+
+#### Breaking changes
+
+- Drop support for Node 0.6 to allow updating dependencies.
+
+#### Minor changes
+
+- Update all dependencies.
+
+
 v0.7
 ----
 

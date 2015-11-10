@@ -44,9 +44,9 @@ You can execute a subset of tests only if you're working on a specific part. For
 
 #### Coverage
 
-Coverage information is provided by [Istanbul](https://github.com/yahoo/istanbul). You can obtain it with:
+Coverage information is provided by [Istanbul](https://github.com/gotwarlost/istanbul). It is always output after tests. You can check the thresholds with:
 
-	npm test --coverage
+	npm run test-coverage
 
 
 #### Exhaustive mode
@@ -96,9 +96,8 @@ Merging your changes
 
 Once your changes are ready, i.e. you made sure:
 
-1. You didn't break anything and respected the styleguide (`npm run test-exhaustive`).
-2. You tested them properly (`npm test --coverage`).
-3. You cleanly documented the new code (`npm run doc-private`).
+1. You didn't break anything, tested properly, and respected the styleguide (`npm run test-exhaustive`).
+2. You cleanly documented the new code (`npm run doc-private`).
 
 …you may open a [pull request](https://help.github.com/articles/using-pull-requests) to ask your new code to be merged in the baseline.
 

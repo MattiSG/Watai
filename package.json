@@ -1,6 +1,6 @@
 {
   "name": "watai",
-  "version": "0.7.0",
+  "version": "0.8.0-alpha.1",
   "description": "Integration testing for the modern web",
   "license": "AGPL-3.0",
   "keywords": [
@@ -48,48 +48,47 @@
     "url": "https://github.com/MattiSG/Watai.git"
   },
   "scripts": {
-    "test": "istanbul test _mocha test/unit test/functional",
-    "test-integration": "istanbul test _mocha test/integration",
+    "test": "istanbul cover _mocha test/unit test/functional",
+    "test-coverage": "istanbul check-coverage --statements 70 --branches 60",
+    "test-integration": "mocha test/integration",
     "test-examples": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite ./src/index.js suite",
     "test-examples-parallel": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite -P 4 ./src/index.js suite",
     "test-security": "retire --node --package",
-    "test-exhaustive": "npm run test-examples && npm test && npm run test-integration && npm run test-security && npm run lint && npm run doc-private",
+    "test-exhaustive": "npm run test-examples && npm test && npm run test-integration && npm run test-coverage && npm run test-security && npm run lint && npm run doc-private",
     "lint": "jscs .",
     "prepublish": "git archive -9 --output=doc/tutorials/Watai-DuckDuckGo-example.zip HEAD example/DuckDuckGo/",
     "doc": "jsdoc --configure .jsdoc --recurse src --destination doc/api README.md",
     "doc-private": "jsdoc --configure .jsdoc --recurse src --destination doc/api --private README.md"
   },
   "engines": {
-    "node": ">=0.6.18 <1",
+    "node": ">=0.8 <1",
     "npm": "> 1.1"
   },
   "dependencies": {
-    "mattisg.configloader": "~0.2",
-    "mootools": "^1.4.5-2",
-    "q": ">= 0.9.5",
-    "mootools": "1.4",
-    "winston": "0.6",
-    "wd": "~0.3.12"
+    "mattisg.configloader": "~0.2.1",
+    "mootools": "~1.5.2",
+    "q": "^1.4.1",
+    "wd": "~0.3.12",
+    "winston": "^2.1.0"
   },
   "bundledDependencies": [
-    "q",
+    "mattisg.configloader",
     "mootools",
-    "winston",
+    "q",
     "wd",
-    "mattisg.configloader"
+    "winston"
   ],
   "optionalDependencies": {
-    "growl": ">= 1.5"
+    "growl": "^1.8.1"
   },
   "devDependencies": {
-    "istanbul": "0.1",
-    "jscs": ">= 1.4 < 2",
-    "jsdoc": "3.x",
-    "mocha": ">= 1.4",
-    "retire": "0.1",
-    "should": ">= 1.2.2 < 2",
-    "jsdoc": "3.x",
-    "saucelabs": "~1.0.1"
+    "istanbul": "~0.4.0",
+    "jscs": "^2.5.1",
+    "jsdoc": "^3.3.3",
+    "mocha": "^2.3.3",
+    "retire": "^1.1.1",
+    "saucelabs": "^1.0.1",
+    "should": "^7.1.0"
   },
   "preferGlobal": true
 }
