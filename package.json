@@ -86,7 +86,7 @@
     "jscs": ">= 1.4 < 2",
     "jsdoc": "3.x",
     "mocha": ">= 1.4",
-    "retire": "0.1",
+    "retire": "^1.1.1",
     "jsdoc": "3.x",
     "saucelabs": "^1.0.1",
     "should": "^7.1.0"
