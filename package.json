@@ -84,10 +84,9 @@
   "devDependencies": {
     "istanbul": "~0.4.0",
     "jscs": "^2.2.0",
-    "jsdoc": "3.x",
+    "jsdoc": "^3.3.3",
     "mocha": ">= 1.4",
     "retire": "^1.1.1",
-    "jsdoc": "3.x",
     "saucelabs": "^1.0.1",
     "should": "^7.1.0"
   },
