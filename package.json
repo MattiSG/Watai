@@ -68,7 +68,7 @@
     "mattisg.configloader": "~0.2.1",
     "mootools": "~1.5.2",
     "q": "^1.4.1",
-    "wd": "~0.3.12",
+    "wd": "~0.4.0",
     "winston": "^2.1.0"
   },
   "bundledDependencies": [
