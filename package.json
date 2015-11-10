@@ -61,7 +61,7 @@
     "doc-private": "jsdoc --configure .jsdoc --recurse src --destination doc/api --private README.md"
   },
   "engines": {
-    "node": ">=0.6.18 <1",
+    "node": ">=0.8 <1",
     "npm": "> 1.1"
   },
   "dependencies": {
@@ -85,7 +85,7 @@
     "istanbul": "~0.4.0",
     "jscs": "^2.5.1",
     "jsdoc": "^3.3.3",
-    "mocha": ">= 1.4",
+    "mocha": "^2.3.3",
     "retire": "^1.1.1",
     "saucelabs": "^1.0.1",
     "should": "^7.1.0"
