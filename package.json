@@ -67,7 +67,7 @@
   "dependencies": {
     "mattisg.configloader": "~0.2",
     "mootools": "~1.5.2",
-    "q": ">= 0.9.5",
+    "q": "^1.4.1",
     "wd": "~0.3.12",
     "winston": "^2.1.0"
   },
