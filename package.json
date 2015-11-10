@@ -88,7 +88,7 @@
     "mocha": ">= 1.4",
     "retire": "0.1",
     "jsdoc": "3.x",
-    "saucelabs": "~1.0.1",
+    "saucelabs": "^1.0.1",
     "should": "^7.1.0"
   },
   "preferGlobal": true
