@@ -83,8 +83,8 @@
     "growl": ">= 1.5"
   },
   "devDependencies": {
-    "jscs": ">= 1.4 < 2",
     "istanbul": "~0.4.0",
+    "jscs": "^2.2.0",
     "jsdoc": "3.x",
     "mocha": ">= 1.4",
     "retire": "^1.1.1",
