@@ -48,17 +48,17 @@
     "url": "https://github.com/MattiSG/Watai.git"
   },
   "scripts": {
-    "test": "istanbul cover _mocha test/unit test/functional",
+    "test": "npm run test-examples && npm run test-unit test/unit test/functional && npm run test-integration && npm run test-coverage && npm run test-security && npm run lint && npm run doc-private",
+    "test-unit": "istanbul cover _mocha",
     "test-coverage": "istanbul check-coverage --statements 70 --branches 60",
     "test-integration": "mocha test/integration",
     "test-examples": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite ./src/index.js suite",
     "test-examples-parallel": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite -P 4 ./src/index.js suite",
     "test-security": "retire --node --package",
-    "test-exhaustive": "npm run test-examples && npm test && npm run test-integration && npm run test-coverage && npm run test-security && npm run lint && npm run doc-private",
     "lint": "jscs .",
-    "prepublish": "git submodule update --init && git archive -9 --output=doc/tutorials/Watai-DuckDuckGo-example.zip HEAD example/DuckDuckGo/",
     "doc": "jsdoc --configure .jsdoc --recurse src --destination doc/api README.md",
-    "doc-private": "jsdoc --configure .jsdoc --recurse src --destination doc/api --private README.md"
+    "doc-private": "jsdoc --configure .jsdoc --recurse src --destination doc/api --private README.md",
+    "prepublish": "git submodule update --init && git archive -9 --output=doc/tutorials/Watai-DuckDuckGo-example.zip HEAD example/DuckDuckGo/"
   },
   "engines": {
     "node": ">=0.8 <1",
