@@ -65,7 +65,7 @@
     "npm": "> 1.1"
   },
   "dependencies": {
-    "mattisg.configloader": "~0.2.1",
+    "mattisg.configloader": "~1.0.0",
     "mootools": "~1.5.2",
     "q": "^1.4.1",
     "wd": "~0.3.12",
