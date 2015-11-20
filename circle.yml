@@ -13,9 +13,7 @@ test:
         parallel: true
         background: true
   override:
-    - ./src/index.js:
-        parallel: true
-        files: [ example/* ]
+    - npm run test-examples-parallel
     - npm run test-unit:
         parallel: true
         files: [ test/unit/**/*.js, test/functional/**/*.js ]
