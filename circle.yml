@@ -14,9 +14,7 @@ test:
         background: true
   override:
     - npm run test-examples-parallel
-    - npm run test-unit:
-        parallel: true
-        files: [ test/unit/**/*.js, test/functional/**/*.js ]
+    - npm run test-unit test/unit test/functional
     - ./node_modules/.bin/mocha:
         parallel: true
         files: [ test/integration/*.js ]
