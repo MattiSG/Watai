@@ -83,7 +83,7 @@
   },
   "devDependencies": {
     "istanbul": "~0.4.0",
-    "jscs": "^2.5.1",
+    "jscs": "^2.6.0",
     "jsdoc": "^3.3.3",
     "mocha": "^2.3.3",
     "retire": "^1.1.1",
