@@ -105,7 +105,7 @@ function makeDriver(done) {
 */
 function closeDriverWithin(source) {
 	return function quitDriver(done) {
-		this.timeout(10000);
+		this.timeout(config.browserWarmupTimeout);
 
 		if (--driverClientsCount <= 0)
 			source.driver.quit().done(done);

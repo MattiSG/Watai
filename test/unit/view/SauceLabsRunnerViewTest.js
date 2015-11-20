@@ -10,10 +10,11 @@ var Watai			= require('../helpers/subject'),
 */
 describe('SauceLabs view', function() {
 	var subject,
-		runner;
+		runner,
+		config;
 
 	before(function() {
-		var config = new ConfigLoader({
+		config = new ConfigLoader({
 			from		: __dirname,
 			appName		: 'watai',
 			override	: { quit: 'always' },
@@ -28,7 +29,7 @@ describe('SauceLabs view', function() {
 	});
 
 	after(function(done) {
-		this.timeout(10 * 1000);
+		this.timeout(config.browserWarmupTime);
 
 		runner.quitBrowser().finally(done);
 	});

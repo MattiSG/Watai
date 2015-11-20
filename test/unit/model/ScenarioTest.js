@@ -5,10 +5,6 @@ var Watai = require('../helpers/subject'),
 	expectedOutputs = require('../helpers/testComponent').expectedOutputs,
 	ComponentTest;
 
-/** Timeout value of the test's config.
-*/
-var GLOBAL_TIMEOUT = 500;
-
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */
@@ -142,9 +138,10 @@ describe('Scenario', function() {
 
 	describe('unclickable elements', function() {
 		it('should respect the global timeout', function(done) {
-			this.timeout(GLOBAL_TIMEOUT * 5);
+			var start = new Date(),
+				configTimeout = require('../../config').timeout;
 
-			var start = new Date();
+			this.timeout(configTimeout * 5);
 
 			scenarioWithSteps([
 				ComponentTest.overlayedAction(),
@@ -152,7 +149,7 @@ describe('Scenario', function() {
 			]).test().then(function() {
 				throw new Error('Passed while the overlayed element should not have been clickable!');
 			}, function() {
-				(new Date().getTime()).should.be.above(start.getTime() + GLOBAL_TIMEOUT);
+				(new Date().getTime()).should.be.above(start.getTime() + configTimeout);
 			}).done(done, done);
 		});
 
