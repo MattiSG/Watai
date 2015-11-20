@@ -1,5 +1,6 @@
 --require should
 --reporter spec
 --slow 2000
+--timeout 4000
 --growl
 --recursive
