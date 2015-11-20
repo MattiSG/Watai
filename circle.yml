@@ -10,10 +10,17 @@ dependencies:
 test:
   pre:
     - selenium > $CIRCLE_ARTIFACTS/selenium_log.txt:
+        parallel: true
         background: true
   override:
-    - npm run test-examples
-    - npm run test-unit test/unit test/functional
-    - npm run test-integration
+    - ./src/index.js:
+        parallel: true
+        files: [ example/* ]
+    - npm run test-unit:
+        parallel: true
+        files: [ test/unit/**/*.js, test/functional/**/*.js ]
+    - ./node_modules/.bin/mocha:
+        parallel: true
+        files: [ test/integration/*.js ]
     - npm run test-coverage
     - npm run test-security
