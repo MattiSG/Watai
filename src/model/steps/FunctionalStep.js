@@ -61,7 +61,7 @@ var FunctionalStep = new Class(/** @lends steps.FunctionalStep# */{
 	*@see	Component
 	*/
 	describeAction: function describeAction() {
-		var humanizedAction = (this.action.title || this.action.reference).humanize()	// makes naming functions themselves optional, but let them have higher precedence over component key: users can thus provide more details in function names without making it long to access them in tests
+		var humanizedAction = (this.action.title || this.action.reference).humanize();	// makes naming functions themselves optional, but let them have higher precedence over component key: users can thus provide more details in function names without making it long to access them in tests
 
 		return	this.action.component
 				+ ' '
@@ -71,7 +71,7 @@ var FunctionalStep = new Class(/** @lends steps.FunctionalStep# */{
 					: '')
 				+ (humanizedAction != this.action.reference	// make it easier to locate source
 					? ' (as ' + this.action.component + '.' + this.action.reference + ')'
-					: '')
+					: '');
 	}
 });
 

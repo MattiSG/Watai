@@ -32,7 +32,7 @@ var Locator = function Locator(locator, driver) {
 		this.type = DEFAULT_SELECTOR_TYPE;
 		this.selector = locator;
 	} else {
-		this.type = Object.getOwnPropertyNames(locator)[0]
+		this.type = Object.getOwnPropertyNames(locator)[0];
 		this.selector = locator[this.type];
 	}
 

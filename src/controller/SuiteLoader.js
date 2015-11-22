@@ -193,7 +193,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			// making it available for global access like loading URLs, getting title...
 			driver: this.runner.getDriver(),
 			config: this.config
-		}
+		};
 
 		result[SuiteLoader.contextGlobals.scenariosList] = this.scenarios;	// hook to pass instantiated scenarios to this context
 		result[SuiteLoader.contextGlobals.componentsList] = {};	// stays in the managed context, but necessary for scenarios to have a reference to all components, since they are evaluated in _this_ context, not their instanciation one…

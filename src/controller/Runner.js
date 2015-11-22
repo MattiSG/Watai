@@ -98,7 +98,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*/
 	formatURL: function formatURL(config, key) {
 		if (! config[key]) {
-			throw new Error('No ' + key + ' was found in the given config')
+			throw new Error('No ' + key + ' was found in the given config');
 		}
 
 		try {

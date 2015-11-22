@@ -135,7 +135,7 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 	*@abstract
 	*/
 	start: function start() {
-		throw new Error('A concrete step should define its own start method!')
+		throw new Error('A concrete step should define its own start method!');
 	},
 
 	/** Immediately cancels the requested match, ignoring any timeouts.
