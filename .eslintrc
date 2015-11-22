@@ -9,6 +9,7 @@ rules:
   no-extra-boolean-cast: 2
   no-extra-semi: 2
   no-implicit-coercion: 2
+  no-multiple-empty-lines: [ 2, { max: 3, maxEOF: 1 } ]
   no-unreachable: 2
   quotes: [ 2, single, avoid-escape ]
   semi: 2
