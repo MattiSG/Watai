@@ -4,6 +4,7 @@ rules:
   array-bracket-spacing: [ 2, always ]
   curly: [ 2, multi-or-nest ]
   eqeqeq: 0
+  indent: [ 2, tab, { SwitchCase: 1 } ]
   linebreak-style: [ 2, unix ]
   no-extra-boolean-cast: 2
   no-extra-semi: 2
