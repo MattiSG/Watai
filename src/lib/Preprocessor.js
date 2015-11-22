@@ -6,7 +6,7 @@ var path = require('path');
 */
 var Preprocessor = function Preprocessor(pluginsDir) {
 	this.pluginsDir = pluginsDir;
-}
+};
 
 /** Loads plugins based on arguments passed to the main Node process.
 *
@@ -17,7 +17,7 @@ Preprocessor.prototype.processArgv = function processArgv() {
 	var args = process.argv.slice(2);	// extract CLI arguments, see http://docs.nodejitsu.com/articles/command-line/how-to-parse-command-line-arguments
 
 	return this.processAll(args);
-}
+};
 
 /** Loads plugins based on any passed options.
 * More precisely: any option prefixed with `--` will be recognized as a plugin, and if a matching file is found, the corresponding argument will be removed from the passed in array.
@@ -70,7 +70,7 @@ Preprocessor.prototype.processAll = function processAll(args) {
 	}
 
 	return result;
-}
+};
 
 
 module.exports = Preprocessor;	// CommonJS export

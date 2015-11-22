@@ -20,7 +20,7 @@ describe('Scenario', function() {
 
 		scenarioWithSteps = function scenarioWithSteps(scenario) {
 			return new Watai.Scenario('Test scenario', scenario, { TestComponent: ComponentTest }, require('../../config'));
-		}
+		};
 	});
 
 
@@ -29,16 +29,16 @@ describe('Scenario', function() {
 
 		var failingScenarioTest = function() {
 			return scenarioWithSteps([
-				function() { throw failureReason }
+				function() { throw failureReason; }
 			]).test();
-		}
+		};
 
 		function makeFailingPromiseWithSuffix(suffix) {
 			return function() {
 				var deferred = promises.defer();
 				deferred.reject(failureReason + suffix);
 				return deferred.promise;
-			}
+			};
 		}
 
 		var failingPromise = makeFailingPromiseWithSuffix('');
@@ -174,7 +174,7 @@ describe('Scenario', function() {
 				{
 					'TestComponent.output': expectedOutputs.overlayedActionLink
 				}
-			]).test().done(function() { done() }, function(report) {
+			]).test().done(function() { done(); }, function(report) {
 				done(new Error(report));
 			});
 		});
@@ -195,7 +195,7 @@ describe('Scenario', function() {
 				});
 
 				subject.test();
-			}
+			};
 		}
 
 		function expectNotFired(eventName) {
@@ -207,13 +207,13 @@ describe('Scenario', function() {
 				subject.test();
 
 				setTimeout(done, 40);
-			}
+			};
 		}
 
 		describe('of a scenario with a failing step', function() {
 			beforeEach(function() {
 				subject = scenarioWithSteps([
-					function() { throw 'Boom!' }
+					function() { throw 'Boom!'; }
 				]);
 			});
 

@@ -16,32 +16,32 @@ var logger = require('winston');
 */
 WindowsCLI.log = function log(prefix, type, message, messageType) {
 	logger[method](prefix + '  ' + message);
-}
+};
 
 /** Erases the current line.
 */
 WindowsCLI.clear = function clear() {
 	process.stdout.write('\r');
-}
+};
 
 /** Hides the cursor.
 * Does nothing on Windows.
 */
 WindowsCLI.hideCursor = function hideCursor() {
 	// do nothing on Windows
-}
+};
 
 /** Shows the cursor.
 * Does nothing on Windows.
 */
 WindowsCLI.showCursor = function showCursor() {
 	// do nothing on Windows
-}
+};
 
 /** Logs the given message.
 */
 WindowsCLI.spin = function spin(message) {
 	logger.verbose(message);
-}
+};
 
 module.exports = WindowsCLI;	// CommonJS export

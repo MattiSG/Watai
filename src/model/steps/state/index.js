@@ -9,7 +9,7 @@ var matchers = {
 	ContentMatcher		: require('./ContentMatcher'),
 	ContentRegExpMatcher: require('./ContentRegExpMatcher'),
 	FunctionMatcher		: require('./FunctionMatcher')
-}
+};
 
 /** Returns the matcher class that is able to test for the given expected value.
 *
@@ -25,6 +25,6 @@ matchers.forValue = function matcherForValue(expected) {
 		return matchers.ContentRegExpMatcher;
 	else if (typeof expected == 'string')
 		return matchers.ContentMatcher;
-}
+};
 
 module.exports = matchers;

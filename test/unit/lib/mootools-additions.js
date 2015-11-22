@@ -10,7 +10,7 @@ describe('MooTools additions', function() {
 			outer: {
 				medium: { }
 			}
-		}
+		};
 
 		result.outer.medium.__defineGetter__('inner', function() {
 			result.touched = true;
@@ -18,7 +18,7 @@ describe('MooTools additions', function() {
 		});
 
 		return result;
-	}
+	};
 
 	var path = 'outer.medium.inner';
 

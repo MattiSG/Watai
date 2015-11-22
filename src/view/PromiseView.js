@@ -60,7 +60,7 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 			userDisplayable = {
 				title:	lines.shift(),
 				help:	lines.join('\n')
-			}
+			};
 		}
 
 		return {
@@ -68,7 +68,7 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 			help:	(userDisplayable.help ? userDisplayable.help + '\n' : '')
 					+ 'Get more help at <https://github.com/MattiSG/Watai/wiki/Troubleshooting>',
 			source:	error
-		}
+		};
 	},
 
 	/** Presents details of a test start to the user.

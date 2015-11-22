@@ -203,7 +203,7 @@ var Runner = new Class( /** @lends Runner# */ {
 					.then(this.loadBaseURL.bind(this))
 					.then(this.start.bind(this),
 						  this.deferred.reject)	// ensure failures in driver init are propagated
-					.finally(function() { return promise });
+					.finally(function() { return promise; });
 	},
 
 	/** Actually starts the evaluation process.

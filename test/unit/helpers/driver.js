@@ -65,7 +65,7 @@ function openDriverWithin(destination) {
 			destination.driver = driver;
 			done();
 		}
-	}
+	};
 }
 
 /** Creates a new WebDriver instance and loads the `baseURL` found in the loaded config, calling back when it is ready.
@@ -111,7 +111,7 @@ function closeDriverWithin(source) {
 			source.driver.quit().done(done);
 		else
 			done();
-	}
+	};
 }
 
 

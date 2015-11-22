@@ -13,7 +13,7 @@ var Watai = require('../helpers/subject'),
 */
 var checkerElements = {
 	output:	'#output'
-}
+};
 
 
 /** This test suite is written with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
@@ -96,7 +96,7 @@ describe('Component', function() {
 			it('should return a promise when calling partial applicator', function(done) {
 				var typer = subject.setInputField(EXPECTED);
 
-				typer().done(function() { done() });
+				typer().done(function() { done(); });
 			});
 
 			it('should actually send keys when calling partial applicator', function(done) {

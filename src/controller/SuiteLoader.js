@@ -217,7 +217,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	loadAllFiles: function loadAllFiles(files) {
 		var scenarioFiles			= {},
 			componentFiles			= [],
-			ignoredScenariosIndices	= this.config.ignore.map(function(index) { return String(index) });	// to allow comparison with parsed indices
+			ignoredScenariosIndices	= this.config.ignore.map(function(index) { return String(index); });	// to allow comparison with parsed indices
 
 		files.forEach(function(file) {
 			var match;	// if capturing parentheses are used in the file type detection regexp (see SuiteLoader.paths), this var holds the `match()` result
@@ -380,7 +380,7 @@ SuiteLoader.paths = {
 	/** If a file matches this RegExp, it is considered as a data suite to be loaded.
 	*/
 	fixtureMarker:		/(.+)(Fixture|Data).js$/i // Data is kept for v<0.7 compatibility
-}
+};
 
 /** Lists all predefined global variables in the suite loading context, and how they are referenced in that context.
 *
@@ -399,7 +399,7 @@ SuiteLoader.contextGlobals = {
 	/** The name of the offered assertion library.
 	*/
 	assert:			'assert',
-}
+};
 
 
 module.exports = SuiteLoader;	// CommonJS export

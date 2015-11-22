@@ -18,7 +18,7 @@ describe('FunctionalStep', function() {
 	describe('AstractStepTest (through FunctionalStep)', function() {
 		it('should offer a `test` method', function(done) {
 			subject.test.should.be.a.Function();
-			subject.test().done(function() { done() });
+			subject.test().done(function() { done(); });
 		});
 
 		it('should have a `startTime` date attribute', function() {

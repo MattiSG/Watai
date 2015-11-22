@@ -18,32 +18,32 @@ CLIanimator.log = function log(prefix, type, message, messageType, out) {
 
 	stop();
 	out.write(makeLine(prefix, typeToColorCode[type], message + '\n', typeToColorCode[messageType]));
-}
+};
 
 /** Erases the current line.
 */
 CLIanimator.clear = function clear() {
 	process.stdout.write('\r');
-}
+};
 
 /** Hides the cursor.
 */
 CLIanimator.hideCursor = function hideCursor() {
 	process.stdout.write('\033[?25l');
-}
+};
 
 /** Shows the cursor.
 */
 CLIanimator.showCursor = function showCursor() {
 	process.stdout.write('\033[?25h');
-}
+};
 
 /** Does a spinner animation with the given message.
 */
 CLIanimator.spin = function spin(message) {
 	stop();
 	play(makeFrames(message));
-}
+};
 
 /** Creates a coloured line out of the given pieces.
 *@return	String
@@ -66,7 +66,7 @@ function makeFrames(msg) {
 		makeLine('◞', 96, msg, 90),
 		makeLine('◡', 96, msg, 90),
 		makeLine('◟', 96, msg, 90)
-	]
+	];
 }
 
 /** Maps types to the corresponding ANSI color code.
@@ -83,7 +83,7 @@ var typeToColorCode = {
 	yellow	: 33,
 	grey	: 90,
 	gray	: 90
-}
+};
 
 /** Plays the given array of strings.
 *@private

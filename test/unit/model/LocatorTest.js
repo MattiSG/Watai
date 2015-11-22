@@ -21,7 +21,7 @@ exports.checkLocator = checkLocator = function checkLocator(subject, locatorName
 			content.should.equal(expectedContent);
 		}).done(done);
 	});
-}
+};
 
 /** This test suite is redacted with [Mocha](http://visionmedia.github.com/mocha/) and [Should](https://github.com/visionmedia/should.js).
 */

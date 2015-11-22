@@ -31,7 +31,7 @@ describe('Step verbose view', function() {
 		var tester = function() {
 			stdoutSpy.unmute();
 			stdoutSpy.printed().should.containEql(term);
-		}
+		};
 
 		stdoutSpy.mute();
 		step.test().then(tester, tester).done(done, done);
@@ -43,7 +43,7 @@ describe('Step verbose view', function() {
 		var tester = function() {
 			stdoutSpy.unmute();
 			stdoutSpy.printed().should.not.match(regexp);
-		}
+		};
 
 		stdoutSpy.mute();
 		step.test().then(tester, tester).done(done, done);
