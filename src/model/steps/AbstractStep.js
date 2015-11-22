@@ -185,10 +185,10 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 
 		if (new Date() - this.startTime >= this.timeout) {	// the timeout has expired
 			this.finish();
-			this.failImmediately(report);
-		} else {
-			this.retryTimeoutId = setTimeout(this.start.bind(this), FAILURE_RETRY_DELAY);
+			return this.failImmediately(report);
 		}
+
+		this.retryTimeoutId = setTimeout(this.start.bind(this), FAILURE_RETRY_DELAY);
 	},
 
 	/** Makes this matcher fail immediately, not trying anymore.
@@ -260,11 +260,10 @@ var AbstractStep = new Class( /** @lends steps.AbstractStep# */ {
 		if (jsonWireError) {
 			var handler = this['formatJsonWireError' + jsonWireError.status];	// magic methods may be provided by any inheriting class, to decorate JSONwire errors
 
-			if (handler) {
+			if (handler)
 				return handler.call(this, error.cause);
-			} else {
+			else
 				return jsonWireError.detail;
-			}
 		} else if (error.data) {	// wd-generated error, but wd couldn't parse its contents, so we'll have to do it ourselves
 			return error.data	// feature prominently Selenium server's error details
 						.split('WebDriverException:').getLast()	// TODO: that stuff should get logged somewhere else than the terminal rather than being completely removed

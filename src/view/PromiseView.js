@@ -52,9 +52,9 @@ var PromiseView = new Class(/** @lends PromiseView# */{
 	getErrorDescription: function getErrorDescription(error) {
 		var userDisplayable = {};
 
-		if (ERRORS_LIST[error && error.code]) {	// we have provided advanced help for such an error
+		if (ERRORS_LIST[error && error.code])	// we have provided advanced help for such an error
 			userDisplayable = ERRORS_LIST[error && error.code];
-		} else if (error.data) {	// unknown Selenium error, for example by SauceLabs. Do our best to format it.
+		else if (error.data) {	// unknown Selenium error, for example by SauceLabs. Do our best to format it.
 			var lines = error.data.split('\n');
 
 			userDisplayable = {

@@ -101,9 +101,9 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			if (typeof value != 'function')
 				return;
 
-			if (! value.length) {	// a function with no arg is executed synchronously
+			if (! value.length)	// a function with no arg is executed synchronously
 				config[key] = value();
-			} else {
+			else {
 				var passedDeferredObject = promises.defer();
 				var asyncEntry = promises.fcall(value, passedDeferredObject)
 						.then(function(configEntry) {
@@ -222,11 +222,11 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 		files.forEach(function(file) {
 			var match;	// if capturing parentheses are used in the file type detection regexp (see SuiteLoader.paths), this var holds the `match()` result
 
-			if (file.match(SuiteLoader.paths.fixtureMarker)) {
+			if (file.match(SuiteLoader.paths.fixtureMarker))
 				this.loadFixture(this.path + file);
-			} else if (file.match(SuiteLoader.paths.componentMarker)) {
+			else if (file.match(SuiteLoader.paths.componentMarker))
 				componentFiles.push(this.path + file);	// don't load them immediately in order to make referenced fixture values available first
-			} else if (match = file.match(SuiteLoader.paths.scenarioMarker)) {
+			else if (match = file.match(SuiteLoader.paths.scenarioMarker)) {
 				var scenarioIndex = match[1];	// first capturing parentheses in the scenarioMarker RegExp have to match the scenario's numerical ID
 				if (ignoredScenariosIndices.contains(scenarioIndex))
 					ignoredScenariosIndices = ignoredScenariosIndices.erase(scenarioIndex);

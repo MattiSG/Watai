@@ -41,9 +41,10 @@ var FunctionalStep = new Class(/** @lends steps.FunctionalStep# */{
 	},
 
 	toString: function toString() {
-		if (this.action.component) {	// this is a Component action
+		if (this.action.component)	// this is a Component action
 			return this.describeAction();
-		} else if (this.action.name) {	// this is a custom user function, hopefully the user provided a good name for it
+
+		if (this.action.name) {	// this is a custom user function, hopefully the user provided a good name for it
 			var humanized = this.action.name.humanize();
 
 			if (humanized != this.action.name)

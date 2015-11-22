@@ -2,6 +2,7 @@ env:
   node: true
 rules:
   array-bracket-spacing: [ 2, always ]
+  curly: [ 2, multi-or-nest ]
   eqeqeq: 0
   linebreak-style: [ 2, unix ]
   no-extra-boolean-cast: 2

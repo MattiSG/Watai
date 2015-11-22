@@ -92,9 +92,8 @@ describe('StateStep', function() {
 						if (! (reason
 							&& reason.contains(key)
 							&& reason.contains(wrongTexts['TestComponent.' + key])
-							&& reason.contains(expectedContents['TestComponent.' + key]))) {
+							&& reason.contains(expectedContents['TestComponent.' + key])))
 							done(new Error('Unmatched component state description was properly rejected, but the reason for rejection was not clear enough (got "' + reason + '", expected values associated with "' + key + '").'));
-						}
 					});
 					done();
 				}

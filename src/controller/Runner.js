@@ -97,9 +97,8 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@returns	{String}	The URL stored in the given config, normalized.
 	*/
 	formatURL: function formatURL(config, key) {
-		if (! config[key]) {
+		if (! config[key])
 			throw new Error('No ' + key + ' was found in the given config');
-		}
 
 		try {
 			var result = url.format(config[key]);	// allow taking objects describing the URL
@@ -269,12 +268,10 @@ var Runner = new Class( /** @lends Runner# */ {
 								? quitBrowser
 								: promises);	// Q without params simply returns a fulfilled promise
 
-		if (Object.getLength(this.failures) > 0) {
+		if (Object.getLength(this.failures) > 0)
 			fulfill = reject;
-		} else {
-			if (this.config.quit == 'on success')
-				precondition = quitBrowser;
-		}
+		else if (this.config.quit == 'on success')
+			precondition = quitBrowser;
 
 		precondition().done(fulfill, reject);
 	},
