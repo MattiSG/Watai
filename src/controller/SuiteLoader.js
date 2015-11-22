@@ -217,7 +217,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	loadAllFiles: function loadAllFiles(files) {
 		var scenarioFiles			= {},
 			componentFiles			= [],
-			ignoredScenariosIndices	= this.config.ignore.map(function(index) { return '' + index });	// cast to string to allow for comparison with parsed indices
+			ignoredScenariosIndices	= this.config.ignore.map(function(index) { return String(index) });	// to allow comparison with parsed indices
 
 		files.forEach(function(file) {
 			var match;	// if capturing parentheses are used in the file type detection regexp (see SuiteLoader.paths), this var holds the `match()` result

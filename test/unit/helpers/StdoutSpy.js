@@ -41,8 +41,8 @@ exports.printed = function printed() {
 *@returns	{Boolean}
 */
 exports.called = function called() {
-	return !! buffer;
-}
+	return Boolean(buffer);
+};
 
 /** Stops `stdout` output.
 */

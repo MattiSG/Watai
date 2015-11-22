@@ -6,6 +6,7 @@ rules:
   linebreak-style: [ 2, unix ]
   no-extra-boolean-cast: 2
   no-extra-semi: 2
+  no-implicit-coercion: 2
   semi: 2
   space-before-blocks: 2
   space-unary-ops: [ 2, { words: true, nonwords: true } ]

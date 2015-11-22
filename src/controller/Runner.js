@@ -158,7 +158,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@return	{Boolean}	`true` if the page has been loaded, `false` otherwise.
 	*/
 	isReady: function isReady() {
-		return !! (this.loaded && this.loaded.isFulfilled());
+		return Boolean(this.loaded && this.loaded.isFulfilled());
 	},
 
 	/** Emits the "ready" event.
