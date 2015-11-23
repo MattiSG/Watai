@@ -35,11 +35,11 @@ Most are documented here, and you can get a full list by running `npm run`.
 
 Test runner: [Mocha](http://visionmedia.github.com/mocha/).
 
-	npm test
+	npm run test-unit test/unit test/functional
 
 You can execute a subset of tests only if you're working on a specific part. For example, considering you're adding tests to controllers:
 
-	[node_modules/.bin/]mocha test [--watch] test/unit/controller
+	npm run test-unit [--watch] test/unit/controller
 
 
 #### Coverage
@@ -51,11 +51,9 @@ Coverage information is provided by [Istanbul](https://github.com/gotwarlost/ist
 
 #### Exhaustive mode
 
-Since Watai's integration tests (exit codes checks, CLI options) are long and little prone to fail suddenly, they are not executed in the default `test` command.
+Run all Watai tests, including CLI options and exit codes checks, which are much longer as they imply several browser startups and kills:
 
-To execute all tests, including the longer ones, to ensure no regression was made, use the following command:
-
-	npm run test-exhaustive
+	npm test
 
 
 ### Documentation generation
@@ -96,7 +94,7 @@ Merging your changes
 
 Once your changes are ready, i.e. you made sure:
 
-1. You didn't break anything, tested properly, and respected the styleguide (`npm run test-exhaustive`).
+1. You didn't break anything, tested properly, and respected the styleguide (`npm test`).
 2. You cleanly documented the new code (`npm run doc-private`).
 
 …you may open a [pull request](https://help.github.com/articles/using-pull-requests) to ask your new code to be merged in the baseline.

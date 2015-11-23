@@ -1,0 +1,19 @@
+machine:
+  node:
+    version: 0.12
+
+dependencies:
+  post:
+    - npm install --global selenium-server
+    - npm install saucelabs@0.1.1  # allow testing SauceLabs view
+
+test:
+  pre:
+    - selenium > $CIRCLE_ARTIFACTS/selenium_log.txt:
+        background: true
+  override:
+    - npm run test-examples
+    - npm run test-unit test/unit test/functional
+    - npm run test-integration
+    - npm run test-coverage
+    - npm run test-security
