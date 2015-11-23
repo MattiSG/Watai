@@ -7,6 +7,6 @@
 var steps = {
 	FunctionalStep:	require('./FunctionalStep'),
 	StateStep:		require('./StateStep')
-}
+};
 
 module.exports = steps;

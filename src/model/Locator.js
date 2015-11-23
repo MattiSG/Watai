@@ -13,7 +13,7 @@ var WATAI_SELECTOR_TYPES_TO_WEBDRIVER_TYPES = {
 	name	: 'name',
 	'class'	: 'class name',
 	tag		: 'tag name'
-}
+};
 
 /** Default Watai selector type
 *
@@ -32,7 +32,7 @@ var Locator = function Locator(locator, driver) {
 		this.type = DEFAULT_SELECTOR_TYPE;
 		this.selector = locator;
 	} else {
-		this.type = Object.getOwnPropertyNames(locator)[0]
+		this.type = Object.getOwnPropertyNames(locator)[0];
 		this.selector = locator[this.type];
 	}
 
@@ -45,7 +45,7 @@ var Locator = function Locator(locator, driver) {
 	*/
 	this.toSeleniumElement = function toSeleniumElement() {
 		return this.driver.element(WATAI_SELECTOR_TYPES_TO_WEBDRIVER_TYPES[this.type] || this.type, this.selector);
-	}
+	};
 
 	/** Sends the given sequence of keystrokes to the element pointed by this locator.
 	*
@@ -65,8 +65,8 @@ var Locator = function Locator(locator, driver) {
 		}).then(function() {
 			return element;	// allow easier chaining
 		});
-	}
-}
+	};
+};
 
 /** Adds a getter and a setter to the given Object, allowing access to the Selenium element corresponding to the given locator description.
 * The getter dynamically retrieves the Selenium element pointed at by the given selector description.
@@ -84,7 +84,7 @@ Locator.addLocator = function addLocator(target, key, typeAndSelector, driver) {
 		target.emit('action', key, 'write', [ input ]);
 
 		return locator.handleInput(input);
-	}
+	};
 
 	var propertyDescriptor = {};
 
@@ -110,6 +110,6 @@ Locator.addLocator = function addLocator(target, key, typeAndSelector, driver) {
 
 		return setter;
 	};
-}
+};
 
 module.exports = Locator;	// CommonJS export

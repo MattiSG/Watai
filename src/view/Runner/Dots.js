@@ -94,6 +94,6 @@ var getDurationString = function getDurationString(first, second) {
 	});
 
 	return result.trim();
-}
+};
 
 module.exports = RunnerDots;	// CommonJS export

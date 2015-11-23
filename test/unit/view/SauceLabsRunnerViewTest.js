@@ -67,7 +67,7 @@ describe('SauceLabs view', function() {
 			});
 
 			it('should obtain auth data from environment variables', function() {
-				checkMatch('user-env', 'pass-env')
+				checkMatch('user-env', 'pass-env');
 			});
 		});
 

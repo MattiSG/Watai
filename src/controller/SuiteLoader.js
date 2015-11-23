@@ -101,9 +101,9 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			if (typeof value != 'function')
 				return;
 
-			if (! value.length) {	// a function with no arg is executed synchronously
+			if (! value.length)	// a function with no arg is executed synchronously
 				config[key] = value();
-			} else {
+			else {
 				var passedDeferredObject = promises.defer();
 				var asyncEntry = promises.fcall(value, passedDeferredObject)
 						.then(function(configEntry) {
@@ -193,7 +193,7 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 			// making it available for global access like loading URLs, getting title...
 			driver: this.runner.getDriver(),
 			config: this.config
-		}
+		};
 
 		result[SuiteLoader.contextGlobals.scenariosList] = this.scenarios;	// hook to pass instantiated scenarios to this context
 		result[SuiteLoader.contextGlobals.componentsList] = {};	// stays in the managed context, but necessary for scenarios to have a reference to all components, since they are evaluated in _this_ context, not their instanciation one…
@@ -217,16 +217,16 @@ var SuiteLoader = new Class( /** @lends SuiteLoader# */ {
 	loadAllFiles: function loadAllFiles(files) {
 		var scenarioFiles			= {},
 			componentFiles			= [],
-			ignoredScenariosIndices	= this.config.ignore.map(function(index) { return '' + index });	// cast to string to allow for comparison with parsed indices
+			ignoredScenariosIndices	= this.config.ignore.map(function(index) { return String(index); });	// to allow comparison with parsed indices
 
 		files.forEach(function(file) {
 			var match;	// if capturing parentheses are used in the file type detection regexp (see SuiteLoader.paths), this var holds the `match()` result
 
-			if (file.match(SuiteLoader.paths.fixtureMarker)) {
+			if (file.match(SuiteLoader.paths.fixtureMarker))
 				this.loadFixture(this.path + file);
-			} else if (file.match(SuiteLoader.paths.componentMarker)) {
+			else if (file.match(SuiteLoader.paths.componentMarker))
 				componentFiles.push(this.path + file);	// don't load them immediately in order to make referenced fixture values available first
-			} else if (match = file.match(SuiteLoader.paths.scenarioMarker)) {
+			else if (match = file.match(SuiteLoader.paths.scenarioMarker)) {
 				var scenarioIndex = match[1];	// first capturing parentheses in the scenarioMarker RegExp have to match the scenario's numerical ID
 				if (ignoredScenariosIndices.contains(scenarioIndex))
 					ignoredScenariosIndices = ignoredScenariosIndices.erase(scenarioIndex);
@@ -380,7 +380,7 @@ SuiteLoader.paths = {
 	/** If a file matches this RegExp, it is considered as a data suite to be loaded.
 	*/
 	fixtureMarker:		/(.+)(Fixture|Data).js$/i // Data is kept for v<0.7 compatibility
-}
+};
 
 /** Lists all predefined global variables in the suite loading context, and how they are referenced in that context.
 *
@@ -399,7 +399,7 @@ SuiteLoader.contextGlobals = {
 	/** The name of the offered assertion library.
 	*/
 	assert:			'assert',
-}
+};
 
 
 module.exports = SuiteLoader;	// CommonJS export

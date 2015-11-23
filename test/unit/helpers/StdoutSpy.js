@@ -26,7 +26,7 @@ process.stdout.write = (function(write) {
 */
 exports.reset = function reset() {
 	buffer = '';
-}
+};
 
 /** Returns what would have been printed while muted.
 *
@@ -34,24 +34,24 @@ exports.reset = function reset() {
 */
 exports.printed = function printed() {
 	return buffer;
-}
+};
 
 /** Tells whether `stdout.write` was called since the last call to `reset`.
 *
 *@returns	{Boolean}
 */
 exports.called = function called() {
-	return !! buffer;
-}
+	return Boolean(buffer);
+};
 
 /** Stops `stdout` output.
 */
 exports.mute = function mute() {
 	suspend = true;
-}
+};
 
 /** Allows `stdout` output.
 */
 exports.unmute = function unmute() {
 	suspend = false;
-}
+};

@@ -39,7 +39,7 @@ describe('StateStep', function() {
 	it('that are empty should pass', function(done) {
 		new StateStep({}, { TestComponent: TestComponent })
 			.test().then(function() {
-				done()
+				done();
 			}, function(err) {
 				done(new Error('Should have passed (reason: "' + err + ')'));
 			}
@@ -92,9 +92,8 @@ describe('StateStep', function() {
 						if (! (reason
 							&& reason.contains(key)
 							&& reason.contains(wrongTexts['TestComponent.' + key])
-							&& reason.contains(expectedContents['TestComponent.' + key]))) {
+							&& reason.contains(expectedContents['TestComponent.' + key])))
 							done(new Error('Unmatched component state description was properly rejected, but the reason for rejection was not clear enough (got "' + reason + '", expected values associated with "' + key + '").'));
-						}
 					});
 					done();
 				}
@@ -112,7 +111,7 @@ describe('StateStep', function() {
 			before(function() {
 				scenarioWithSteps = function scenarioWithSteps(scenario) {
 					return new Watai.Scenario('Test scenario', scenario, { TestComponent: TestComponent }, require('../../../config'));
-				}
+				};
 
 				expectedOutputs = require('../../helpers/testComponent').expectedOutputs;
 			});
@@ -121,7 +120,7 @@ describe('StateStep', function() {
 			it('should be allowed without any harm', function(done) {
 				new StateStep({ timeout: 0 }, { StateStep: StateStep })
 					.test().then(function() {
-						done()
+						done();
 					}, done);
 			});
 
@@ -134,7 +133,7 @@ describe('StateStep', function() {
 						'TestComponent.output': expectedOutputs.changeTextareaValueLaterLink
 					}
 				]).test().then(function() {
-					done(new Error('Matched while the expected result should have been set later than evaluation.'))
+					done(new Error('Matched while the expected result should have been set later than evaluation.'));
 				}, function() {
 					done();
 				}).done();
@@ -183,7 +182,7 @@ describe('StateStep', function() {
 						'TestComponent.output': expectedOutputs.changeTextareaValueLaterAgainLink
 					}
 				]).test().then(function() {
-					done(new Error('Matched while the expected result should have been set later than evaluation.'))
+					done(new Error('Matched while the expected result should have been set later than evaluation.'));
 				}, function(err) {
 					done();
 				}).done();
@@ -200,7 +199,7 @@ describe('StateStep', function() {
 						'TestComponent.output': expectedOutputs.changeTextareaValueLaterLink
 					}
 				]).test().then(function() {
-					done(new Error('Matched while the expected result should have been set later than evaluation.'))
+					done(new Error('Matched while the expected result should have been set later than evaluation.'));
 				}, function() {
 					done();
 				});

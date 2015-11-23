@@ -12,6 +12,7 @@ test:
     - selenium > $CIRCLE_ARTIFACTS/selenium_log.txt:
         background: true
   override:
+    - npm run lint
     - npm run test-examples
     - npm run test-unit test/unit test/functional
     - npm run test-integration

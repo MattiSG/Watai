@@ -53,7 +53,7 @@ var SetupLoader = {
 			winston.loggers.add(name, options);
 		});
 	}
-}
+};
 
 
 module.exports = SetupLoader;	// CommonJS export

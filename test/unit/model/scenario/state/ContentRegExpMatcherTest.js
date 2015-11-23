@@ -10,15 +10,15 @@ describe('ContentRegExpMatcher', function() {
 	function shouldPass(elementName, done) {
 		new ContentRegExpMatcher(/./, 'TestComponent.' + elementName, { TestComponent: component })
 			.test()
-			.done(function() { done() });
+			.done(function() { done(); });
 	}
 
 	function shouldFail(elementName, done) {
 		new ContentRegExpMatcher(/herpaderp/, 'TestComponent.' + elementName, { TestComponent: component })
 			.test()
 			.done(
-				function() { done(new Error('Resolved instead of rejected')) },
-				function() { done() }
+				function() { done(new Error('Resolved instead of rejected')); },
+				function() { done(); }
 			);
 	}
 

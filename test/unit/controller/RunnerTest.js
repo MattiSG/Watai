@@ -65,7 +65,7 @@ describe('Runner', function() {
 		scenarioEvaluationCount = 0;
 
 	var scenario = new Watai.Scenario('RunnerTest scenario', [
-		function() { scenarioEvaluationCount++ }
+		function() { scenarioEvaluationCount++; }
 	], {}, require('../../config'));
 
 	var failingScenario = new Watai.Scenario('RunnerTest failing scenario', [
@@ -105,7 +105,7 @@ describe('Runner', function() {
 		it('should return a promise', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			subject.test().done(function() { done() });
+			subject.test().done(function() { done(); });
 		});
 
 		it('should evaluate scenarios once', function(done) {
@@ -201,7 +201,7 @@ describe('Runner', function() {
 		it('should not forbid a proper second run', function(done) {
 			this.timeout(config.browserWarmupTime);
 
-			subject.test().done(function() { done() }, done);
+			subject.test().done(function() { done(); }, done);
 		});
 	});
 

@@ -55,7 +55,7 @@
     "test-examples": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite ./src/index.js suite",
     "test-examples-parallel": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite -P 4 ./src/index.js suite",
     "test-security": "retire --node --package",
-    "lint": "jscs .",
+    "lint": "eslint src && eslint --env mocha test/{unit,functional,integration}",
     "doc": "jsdoc --configure .jsdoc --recurse src --destination doc/api README.md",
     "doc-private": "jsdoc --configure .jsdoc --recurse src --destination doc/api --private README.md",
     "prepublish": "git submodule update --init && git archive -9 --output=doc/tutorials/Watai-DuckDuckGo-example.zip HEAD example/DuckDuckGo/"
@@ -82,8 +82,8 @@
     "growl": "^1.8.1"
   },
   "devDependencies": {
+    "eslint": "^1.2.1",
     "istanbul": "~0.4.0",
-    "jscs": "^2.5.1",
     "jsdoc": "^3.3.3",
     "mocha": "^2.3.3",
     "retire": "^1.1.1",

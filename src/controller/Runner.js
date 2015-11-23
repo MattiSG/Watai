@@ -97,9 +97,8 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@returns	{String}	The URL stored in the given config, normalized.
 	*/
 	formatURL: function formatURL(config, key) {
-		if (! config[key]) {
-			throw new Error('No ' + key + ' was found in the given config')
-		}
+		if (! config[key])
+			throw new Error('No ' + key + ' was found in the given config');
 
 		try {
 			var result = url.format(config[key]);	// allow taking objects describing the URL
@@ -158,7 +157,7 @@ var Runner = new Class( /** @lends Runner# */ {
 	*@return	{Boolean}	`true` if the page has been loaded, `false` otherwise.
 	*/
 	isReady: function isReady() {
-		return !! (this.loaded && this.loaded.isFulfilled());
+		return Boolean(this.loaded && this.loaded.isFulfilled());
 	},
 
 	/** Emits the "ready" event.
@@ -204,7 +203,7 @@ var Runner = new Class( /** @lends Runner# */ {
 					.then(this.loadBaseURL.bind(this))
 					.then(this.start.bind(this),
 						  this.deferred.reject)	// ensure failures in driver init are propagated
-					.finally(function() { return promise });
+					.finally(function() { return promise; });
 	},
 
 	/** Actually starts the evaluation process.
@@ -269,12 +268,10 @@ var Runner = new Class( /** @lends Runner# */ {
 								? quitBrowser
 								: promises);	// Q without params simply returns a fulfilled promise
 
-		if (Object.getLength(this.failures) > 0) {
+		if (Object.getLength(this.failures) > 0)
 			fulfill = reject;
-		} else {
-			if (this.config.quit == 'on success')
-				precondition = quitBrowser;
-		}
+		else if (this.config.quit == 'on success')
+			precondition = quitBrowser;
 
 		precondition().done(fulfill, reject);
 	},

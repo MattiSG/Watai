@@ -13,19 +13,19 @@ describe('FunctionMatcher', function() {
 	});
 
 	it('should pass on a function returning `true`', function(done) {
-		new FunctionMatcher(function() { return true }, 'TestComponent.toggleCheckbox', { TestComponent: TestComponent })
+		new FunctionMatcher(function() { return true; }, 'TestComponent.toggleCheckbox', { TestComponent: TestComponent })
 			.test()
-			.done(function() { done() }, done);
+			.done(function() { done(); }, done);
 	});
 
 	it('should pass on a function returning `false`', function(done) {
-		new FunctionMatcher(function() { return false }, 'TestComponent.toggleCheckbox', { TestComponent: TestComponent })
+		new FunctionMatcher(function() { return false; }, 'TestComponent.toggleCheckbox', { TestComponent: TestComponent })
 			.test()
-			.done(function() { done() }, done);
+			.done(function() { done(); }, done);
 	});
 
 	it('should fail on a throwing function', function(done) {
-		new FunctionMatcher(function() { throw MESSAGE }, 'TestComponent.toggleCheckbox', { TestComponent: TestComponent })
+		new FunctionMatcher(function() { throw MESSAGE; }, 'TestComponent.toggleCheckbox', { TestComponent: TestComponent })
 			.test()
 			.done(function() {
 				done(new Error('Resolved instead of rejected!'));
@@ -45,7 +45,7 @@ describe('FunctionMatcher', function() {
 			'TestComponent.toggleCheckbox',
 			{ TestComponent: TestComponent }
 		).test()
-		.done(function() { done() }, done);
+		.done(function() { done(); }, done);
 	});
 
 	it('should fail on a function returning a rejected promise', function(done) {

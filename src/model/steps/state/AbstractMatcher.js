@@ -153,7 +153,7 @@ var AbstractMatcher = new Class( /** @lends matchers.AbstractMatcher# */ {
 	*@returns	{String}	The formatted error.
 	*/
 	formatJsonWireError7: function formatJsonWireError7(error) {
-		return this.selector + ' was not found.'
+		return this.selector + ' was not found.';
 	}
 });
 

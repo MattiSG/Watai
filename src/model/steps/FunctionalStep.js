@@ -41,9 +41,10 @@ var FunctionalStep = new Class(/** @lends steps.FunctionalStep# */{
 	},
 
 	toString: function toString() {
-		if (this.action.component) {	// this is a Component action
+		if (this.action.component)	// this is a Component action
 			return this.describeAction();
-		} else if (this.action.name) {	// this is a custom user function, hopefully the user provided a good name for it
+
+		if (this.action.name) {	// this is a custom user function, hopefully the user provided a good name for it
 			var humanized = this.action.name.humanize();
 
 			if (humanized != this.action.name)
@@ -61,7 +62,7 @@ var FunctionalStep = new Class(/** @lends steps.FunctionalStep# */{
 	*@see	Component
 	*/
 	describeAction: function describeAction() {
-		var humanizedAction = (this.action.title || this.action.reference).humanize()	// makes naming functions themselves optional, but let them have higher precedence over component key: users can thus provide more details in function names without making it long to access them in tests
+		var humanizedAction = (this.action.title || this.action.reference).humanize();	// makes naming functions themselves optional, but let them have higher precedence over component key: users can thus provide more details in function names without making it long to access them in tests
 
 		return	this.action.component
 				+ ' '
@@ -71,7 +72,7 @@ var FunctionalStep = new Class(/** @lends steps.FunctionalStep# */{
 					: '')
 				+ (humanizedAction != this.action.reference	// make it easier to locate source
 					? ' (as ' + this.action.component + '.' + this.action.reference + ')'
-					: '')
+					: '');
 	}
 });
 

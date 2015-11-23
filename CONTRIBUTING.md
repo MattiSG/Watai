@@ -20,7 +20,7 @@ npm install --no-shrinkwrap
 Code conventions
 ----------------
 
-Please read the [Code conventions](https://github.com/MattiSG/Watai/wiki/Code-conventions) prior to coding. An [`editorconfig`](http://editorconfig.org/) file is provided, as well as an [automated style checker](https://github.com/mdevils/node-jscs).
+Please read the [Code conventions](https://github.com/MattiSG/Watai/wiki/Code-conventions) prior to coding. An [`editorconfig`](http://editorconfig.org/) file is provided, as well as an automated style checker with `npm run lint`.
 
 
 Build tool

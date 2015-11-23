@@ -41,7 +41,7 @@ var Component = new Class( /** @lends Component# */ {
 				// however, when wrapping these names, we can't assign to a Function's name, and dynamically creating its name means creating it through evaluation, which means we'd first have to extract its arguments' names, which is getting very complicated
 				var action = function() {
 					return method.apply(component, args);
-				}
+				};
 
 				action.component = component;
 				action.reference = key;
@@ -49,7 +49,7 @@ var Component = new Class( /** @lends Component# */ {
 				action.args = args;
 
 				return action;
-			}
+			};
 		});
 	},
 
@@ -104,7 +104,7 @@ var Component = new Class( /** @lends Component# */ {
 					return component[key].then(function(element) {
 						return element[method].apply(element, args);
 					});
-				}
+				};
 
 				action.component = component;
 				action.reference = basename;
@@ -112,7 +112,7 @@ var Component = new Class( /** @lends Component# */ {
 				action.args = args;
 
 				return action;
-			}
+			};
 		});
 	},
 
@@ -137,6 +137,6 @@ var Component = new Class( /** @lends Component# */ {
 */
 Component.magic = {
 	click:	/(.+)(Link|Button|Checkbox|Option|Radio)$/i
-}
+};
 
 module.exports = Component;	// CommonJS export

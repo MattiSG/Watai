@@ -49,7 +49,7 @@ var ScenarioVerbose = new Class({
 	*@see	idPlaceholder
 	*/
 	getPaddedId: function getPaddedId() {
-		var result = '' + this.model.id;
+		var result = this.model.id;
 
 		while (result.length < this.idPlaceholder.length)
 			result = ' ' + result;

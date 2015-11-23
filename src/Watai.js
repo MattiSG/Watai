@@ -38,7 +38,7 @@ var Watai = {
 	setup:			require('./controller/SetupLoader'),
 	steps:			require('./model/steps'),
 	matchers:		require('./model/steps/state')
-}
+};
 
 
 Watai.setup.reload();	// ensure setup is initialized at least once

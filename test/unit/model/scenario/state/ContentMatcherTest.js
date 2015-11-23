@@ -10,15 +10,15 @@ describe('ContentMatcher', function() {
 	function shouldPass(elementName, done) {
 		new ContentMatcher(TestComponent.expectedContents[elementName], 'TestComponent.' + elementName, { TestComponent: component })
 			.test()
-			.done(function() { done() });
+			.done(function() { done(); });
 	}
 
 	function shouldFail(elementName, done) {
 		new ContentMatcher(TestComponent.expectedContents[elementName] + 'cannot match that', 'TestComponent.' + elementName, { TestComponent: component })
 			.test()
 			.done(
-				function() { done(new Error('Resolved instead of rejected')) },
-				function() { done() }
+				function() { done(new Error('Resolved instead of rejected')); },
+				function() { done(); }
 			);
 	}
 

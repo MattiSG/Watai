@@ -9,7 +9,7 @@ var matchers = {
 	ContentMatcher		: require('./ContentMatcher'),
 	ContentRegExpMatcher: require('./ContentRegExpMatcher'),
 	FunctionMatcher		: require('./FunctionMatcher')
-}
+};
 
 /** Returns the matcher class that is able to test for the given expected value.
 *
@@ -17,15 +17,14 @@ var matchers = {
 *@returns	{AbstractMatcher|undefined}	A *class*, to be initialized, or nothing if no matcher can be used for the given value.
 */
 matchers.forValue = function matcherForValue(expected) {
-	if (typeof expected == 'boolean') {	// TODO: make matchers responsible for defining which value types they can handle instead of this horrendous switch
+	if (typeof expected == 'boolean')	// TODO: make matchers responsible for defining which value types they can handle instead of this horrendous switch
 		return matchers.VisibilityMatcher;
-	} else if (typeof expected == 'function') {
+	else if (typeof expected == 'function')
 		return matchers.FunctionMatcher;
-	} else if (expected.constructor && expected.constructor.name === 'RegExp') {	// since elements are loaded in a separate context, the `instanceof` fails, as it compares constructors references
+	else if (expected.constructor && expected.constructor.name === 'RegExp')	// since elements are loaded in a separate context, the `instanceof` fails, as it compares constructors references
 		return matchers.ContentRegExpMatcher;
-	} else if (typeof expected == 'string') {
+	else if (typeof expected == 'string')
 		return matchers.ContentMatcher;
-	}
-}
+};
 
 module.exports = matchers;
