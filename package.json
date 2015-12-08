@@ -83,7 +83,7 @@
   },
   "devDependencies": {
     "eslint": "^1.10.3",
-    "istanbul": "~0.4.0",
+    "istanbul": "^0.4.1",
     "jsdoc": "^3.3.3",
     "mocha": "^2.3.3",
     "retire": "^1.1.1",
