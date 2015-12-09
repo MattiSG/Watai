@@ -50,7 +50,7 @@
   "scripts": {
     "test": "npm run test-examples && npm run test-unit test/unit test/functional && npm run test-integration && npm run test-coverage && npm run test-security && npm run lint && npm run doc-private",
     "test-unit": "istanbul cover _mocha",
-    "test-coverage": "istanbul check-coverage --statements 70 --branches 60",
+    "test-coverage": "istanbul check-coverage --statements 70 --branches 59",
     "test-integration": "mocha test/integration",
     "test-examples": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite ./src/index.js suite",
     "test-examples-parallel": "find example -mindepth 1 -maxdepth 1 -type d | xargs -I suite -P 4 ./src/index.js suite",
@@ -82,13 +82,13 @@
     "growl": "^1.8.1"
   },
   "devDependencies": {
-    "eslint": "^1.2.1",
-    "istanbul": "~0.4.0",
+    "eslint": "^1.10.3",
+    "istanbul": "^0.4.1",
     "jsdoc": "^3.3.3",
     "mocha": "^2.3.3",
     "retire": "^1.1.1",
     "saucelabs": "^1.0.1",
-    "should": "^7.1.0"
+    "should": "^8.0.0"
   },
   "preferGlobal": true
 }

@@ -10,6 +10,10 @@ describe('FunctionalStep', function() {
 	var TestComponent,
 		subject;
 
+	before(function(done) {
+		my.driver.refresh(done);
+	});
+
 	before(function() {
 		TestComponent = require('../../helpers/testComponent').getComponent(my.driver);
 		subject = new FunctionalStep(function() { /* do nothing */ });
