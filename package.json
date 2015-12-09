@@ -88,7 +88,7 @@
     "mocha": "^2.3.3",
     "retire": "^1.1.1",
     "saucelabs": "^1.0.1",
-    "should": "^7.1.0"
+    "should": "^8.0.0"
   },
   "preferGlobal": true
 }
