@@ -1,123 +1,54 @@
 Watai
 =====
 
-Watai _(Web Application Testing Automation Infrastructure)_ is a **declarative, bottom-up BDD, full-stack web testing** framework.
+Watai _(Web Application Testing Automation Infrastructure)_ is a **declarative web integration testing** framework.
 
-It is both a test runner engine (i.e. it executes tests) and a set of architectural patterns to make you write **maintainable**, **solid** end-to-end (GUI) tests. It automatically handles asynchronous operations without any work on your side.
-
-The tests you write will automate navigation on your webapp through actual browsers, just like an actual user would.
-
-➥ Read more about [what is Watai](https://github.com/MattiSG/Watai/wiki/Definition).
-
-➥ Or watch a 4-minutes introduction: 
-[![We're bad at web integration testing](http://img.youtube.com/vi/fLP3NKUsx3k/3.jpg)](https://youtu.be/fLP3NKUsx3k?t=17s)
-
-
-Benefits
---------
-
-1. Creating a safety net to catch regressions in your webapp.
-2. Checking cross-browser consistency automatically.
-3. Defining expected behavior and testing it at user level, not in isolation as in unit tests.
-
-➥ Read more about [when and how you should use Watai](https://github.com/MattiSG/Watai/wiki/Rationale).
-
-Status
-------
-
-### Watai is currently beta-level software ###
-
-This means that its stability and feature set are evolving. It is constantly improving, and a high level of quality control is applied to its development. But mistakes can always happen.
-
+[![Latest version](https://img.shields.io/github/release/MattiSG/Watai.svg)](https://github.com/MattiSG/Watai/releases)
 [![Code Climate](https://codeclimate.com/github/MattiSG/Watai.png)](https://codeclimate.com/github/MattiSG/Watai)
 [![Inline docs](http://inch-ci.org/github/MattiSG/Watai.svg?branch=master)](http://inch-ci.org/github/MattiSG/Watai)
 
-We are currently using Watai in a big live project, and at least two other teams do so. You are highly encouraged to try out Watai and see if it fits your needs. Getting started and writing your first test should take you around 15 minutes, and the results should get you quite excited  :)
+It is both a test runner engine and a set of architectural patterns that help [front-end ops](http://www.smashingmagazine.com/2013/06/front-end-ops/)-conscious developers write **maintainable** and **solid** end-to-end tests. These tests automate web application navigation through actual browsers, checking whether such interactions present the expected information to the end users along the way, including through asynchronous operations.
 
-If anything goes wrong, please open an issue, and I'll do my best to get you out of trouble!
+This allows to automate demonstration of features, to detect regressions when updating code and, since the same tests can be run in almost any browser, to easily check cross-browser functional support.
 
-### Versioning ###
+➥ Read more about [what is Watai](https://github.com/MattiSG/Watai/wiki/Definition).
 
-[SemVer](http://semver.org/) is followed to convey the state of the software through version numbers.
+➥ Or watch a 4-minutes introduction:
+[![We're bad at web integration testing](http://img.youtube.com/vi/fLP3NKUsx3k/3.jpg)](https://youtu.be/fLP3NKUsx3k?t=17s)
 
-You can rely on the fact that the syntax you write your tests in won't change until a minor version number (the `y` in `x.y.z`) is updated. Versions not sufficiently field-tested will be suffixed with `-alpha`.
+
+What a test looks like
+----------------------
+
+Have a look at a [simple example](https://github.com/MattiSG/Watai/tree/master/example/DuckDuckGo) or an [advanced example](https://github.com/MattiSG/Watai/tree/master/example/DuckDuckGo%20-%20advanced%20matchers)… or look at [real-world users](https://github.com/MattiSG/Watai/wiki/Examples)!
+
+> Our 10-minutes [tutorial](https://github.com/MattiSG/Watai/wiki/Tutorial) walks you through an example to introduce all concepts. You don't even need to install the software to do it.
+
 
 Installing
 ----------
 
-This installation guide assumes a POSIX-compliant OS, such as Mac OS X or Linux. If you're under Windows, see the [Windows installation guide](https://github.com/MattiSG/Watai/wiki/Windows-installation).
+	npm install --global selenium-server watai
 
-### Dependencies ###
-
-#### Node & NPM ####
-
-Watai runs as a [Node.js](http://nodejs.org) module. You will therefore need the Node runtime (≥0.6.8 <1.0) and package manager (NPM ≥ 1.2).
-
-If you’re under OSX and have [Homebrew](http://mxcl.github.com/homebrew/):
-
-	brew install node
-
-Otherwise, [download](http://nodejs.org/download) the Node+NPM package for your environment if you don't already have it.
-
-#### Selenium Server ####
-
-Watai uses Selenium-WebDriver to automate browsers. You will therefore need a Selenium _standalone server_ to send commands to the browsers.
-
-If you’re under OSX and have [Homebrew](http://mxcl.github.com/homebrew/):
-
-	brew install selenium-server-standalone
-
-…and start it with the command given at the end of the “Caveats” section.
-
-Otherwise, [download the latest JAR](http://selenium-release.storage.googleapis.com/index.html) and start it (preferably in the background):
-
-	java -jar path/to/downloaded/selenium-server-standalone.jar
-
-This will output many `INFO` lines over a few seconds. You know it is done when it says:
-
-	… INFO - Started org.openqa.jetty.jetty.Server@…
-
-You will obviously need Java (≥ 1.5). If you don’t have it yet (but you probably wouldn’t be reading this README), [download it now](http://java.com/download).
-
-#### Optional: ChromeDriver ####
-
-If you want to [test with Chrome](https://github.com/MattiSG/Watai/wiki/Testing-with-Chrome) (or with other browsers), you will have to install some additional software.
-
-This is completely optional, and you will be operational faster if you do the tutorial with Firefox. The testing itself will be a bit slower, but you may come back to add Chrome later on if you like Watai  :)
-
-### Package ###
-
-Once you have both Node and a Selenium server, you can consider installing Watai itself.
-
-#### Global install (easiest) ####
-
-	npm install --global watai
-
-NPM will automatically create the `watai` alias for you. If you decide you don’t want to use Watai later on, simply `npm uninstall --global` it.
-
-#### Local install ####
-
-	cd choose/your/install/folder
-	npm install watai
-	alias watai="$(pwd)/node_modules/.bin/watai"
-
-This will create a `node_modules` folder with all dependencies in the current directory. A good way to give Watai a quick look if you’re afraid of `sudo`ing.
-
-#### From behind a proxy ####
-
-If your proxy configuration prevents you from using `npm install` properly (i.e. you get `ERRTIMEOUT` errors), download the latest Watai **with NPM dependencies** package from the [Releases](https://github.com/MattiSG/Watai/releases) tab, unzip it and:
-
-	alias watai='node path/to/unzipped/folder/src'
-
-Note the `/src` at the end!
-
-### Validation ###
+> If you're not familiar with `npm install`, read the full [installation guide](https://github.com/MattiSG/Watai/wiki/Installing)  :)
 
 Let’s make sure you’re fully ready to use Watai by typing:
 
 	watai --installed
 
-### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki/Tutorial)! ###
+### Then, [get started with Watai](https://github.com/MattiSG/Watai/wiki/Tutorial)!
+
+
+Strengths
+---------
+
+- Enforcement of a highly decoupled, [component](http://addyosmani.com/blog/the-webs-declarative-composable-future/)-based architecture for maintainable tests.
+- Out-of-the-box support for async operations (AJAX…), as well as much more resilience than WebDriver, whose failures are wrapped.
+- Simple cascading configuration makes sharing tests across environments (dev, CI, prod) very easy.
+- Aiming for helpful error messages.
+- [High quality code](https://codeclimate.com/github/MattiSG/Watai) and [developer documentation](http://inch-ci.org/github/MattiSG/Watai), so that you can _actually_ fix things or add functionality without depending on the original developer.
+
+➥ Read more about [how Watai is different](https://github.com/MattiSG/Watai/wiki/Comparison) from other integration testing tools.
 
 - - - - - - -
 
