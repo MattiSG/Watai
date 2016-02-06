@@ -86,7 +86,7 @@
     "istanbul": "^0.4.1",
     "jsdoc": "^3.3.3",
     "mocha": "^2.3.3",
-    "retire": "^1.1.1",
+    "retire": "^1.1.4",
     "saucelabs": "^1.0.1",
     "should": "^8.0.0"
   },
