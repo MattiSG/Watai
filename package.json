@@ -82,7 +82,7 @@
     "growl": "^1.8.1"
   },
   "devDependencies": {
-    "eslint": "^1.10.3",
+    "eslint": "^2.8.0",
     "istanbul": "^0.4.1",
     "jsdoc": "^3.3.3",
     "mocha": "^2.3.3",
