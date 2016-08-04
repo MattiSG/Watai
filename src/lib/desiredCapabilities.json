@@ -10,6 +10,12 @@
 		"platform"			: "WINDOWS",
 		"javascriptEnabled"	: true
 	},
+	
+	"edge": {
+		"browserName"       : "microsoftedge",
+		"platform"          : "Windows 10",
+		"javascriptEnabled"	: true
+	}
 
 	"chrome": {
 		"browserName"		: "chrome",
